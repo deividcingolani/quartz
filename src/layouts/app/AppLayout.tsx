@@ -1,9 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Flex } from 'rebass';
+import { Dispatch } from '../../store';
 
 // Components
 import AppHeader from './header/AppHeader';
 import AppNavigation from './navigation/AppNavigation';
+import Suspense from '../../components/suspense/Suspense';
 import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
 
 // Styles
@@ -13,19 +16,37 @@ export interface AppLayoutProps {
   children: React.ReactElement;
 }
 
-const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => (
-  <Flex width="100%" height="100%" flexDirection="column">
-    <AppHeader />
+const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
+  const dispatch = useDispatch<Dispatch>();
 
-    <Flex width="100%" height="100%">
-      <AppNavigation />
+  useEffect(() => {
+    dispatch.projectsList.getProjects();
+  }, [dispatch]);
 
-      {/* Content */}
-      <Flex flexGrow={1} sx={styles} p="30px">
-        <ErrorBoundary>{children}</ErrorBoundary>
+  return (
+    <Flex width="100%" height="100%" overflow="auto" flexDirection="column">
+      <AppHeader />
+
+      <Flex width="100%" height="calc(100% - 70px)">
+        <AppNavigation />
+
+        {/* Content */}
+        <Flex
+          flexGrow={1}
+          justifyContent="center"
+          minWidth="939px"
+          sx={styles}
+          p="30px"
+        >
+          <Flex flexGrow={1} maxWidth="1274px">
+            <ErrorBoundary>
+              <Suspense>{children}</Suspense>
+            </ErrorBoundary>
+          </Flex>
+        </Flex>
       </Flex>
     </Flex>
-  </Flex>
-);
+  );
+};
 
 export default AppLayout;

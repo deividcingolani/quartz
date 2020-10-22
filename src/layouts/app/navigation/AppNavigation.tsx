@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Navigation } from 'quartz-design-system';
+import { Navigation } from '@logicalclocks/quartz';
 
 // Components
 import Footer from './Footer';

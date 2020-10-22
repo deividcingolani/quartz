@@ -1502,6 +1502,19 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@logicalclocks/quartz@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@logicalclocks/quartz/-/quartz-1.1.0.tgz#5c707b7c48802b1ca07ddd54884c2fbe2aa30a27"
+  integrity sha512-Bs5dznkENXb7HpXTL9bR6ECrI+9KKghwwrAFW7B1YVY50SZKMCwUu2LHNtpREWKMDJXhK7RSFuCpM9CAorgX3g==
+  dependencies:
+    "@emotion/core" "^10.0.35"
+    "@fortawesome/fontawesome-svg-core" "^1.2.30"
+    "@fortawesome/free-regular-svg-icons" "^5.14.0"
+    "@fortawesome/free-solid-svg-icons" "^5.14.0"
+    "@fortawesome/react-fontawesome" "^0.1.11"
+    "@rebass/forms" "^4.0.6"
+    "@styled-system/css" "^5.1.5"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1526,6 +1539,18 @@
   version "2.0.0-next.6"
   resolved "https://registry.yarnpkg.com/@rematch/core/-/core-2.0.0-next.6.tgz#f24eacededb08a9f78facf56c26d6b370c9b224f"
   integrity sha512-48yNHglcuuDufBqb07gazlMdVnJn4cGOepEHRpGcEnNwrbvxx6LkxarC4MdnMQFdeJxvYE/X5JTxWZrjkGTbJg==
+
+"@rematch/immer@^2.0.0-next.6":
+  version "2.0.0-next.6"
+  resolved "https://registry.yarnpkg.com/@rematch/immer/-/immer-2.0.0-next.6.tgz#db99c3750108daf9b70eb4cc04b1453d8dd1e5f7"
+  integrity sha512-OVlFHMImhCaU18ulsTD56MrecND3z371LL1XXNoc/S4fvjKDJDrLD56AAd9JruDKL4M98VYdxK80mSbGglfB/g==
+  dependencies:
+    immer "^7.0.9"
+
+"@rematch/loading@^2.0.0-next.6":
+  version "2.0.0-next.6"
+  resolved "https://registry.yarnpkg.com/@rematch/loading/-/loading-2.0.0-next.6.tgz#fbb5b20ad8b6d4cc8efd335ffc21233a8e3a5cb6"
+  integrity sha512-4v+HfCmJ7/dl2U4+kfvtUcQUn3Vjwhjc75QvyFaIklLr/fmPOz/3WZq8odio1GIKSuQLqCnccAHLnQjKKrYx7g==
 
 "@sheerun/mutationobserver-shim@^0.3.2":
   version "0.3.3"
@@ -3339,6 +3364,11 @@ chardet@^0.7.0:
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
+charenc@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
+  integrity sha1-wKHS86cJLgN3S/qD8UwPxXkKhmc=
+
 chokidar@^2.1.8:
   version "2.1.8"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.1.8.tgz#804b3a7b6a99358c3c5c61e71d8728f041cff917"
@@ -3783,6 +3813,11 @@ cross-spawn@^6.0.0, cross-spawn@^6.0.5:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
+crypt@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
+  integrity sha1-iNf/fsDfuG9xPch7u0LQRNPmxBs=
+
 crypto-browserify@^3.11.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/crypto-browserify/-/crypto-browserify-3.12.0.tgz#396cf9f3137f03e4b8e532c58f698254e00f80ec"
@@ -4064,6 +4099,11 @@ data-urls@^1.0.0, data-urls@^1.1.0:
     abab "^2.0.0"
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
+
+date-fns@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.16.1.tgz#05775792c3f3331da812af253e1a935851d3834b"
+  integrity sha512-sAJVKx/FqrLYHAQeN7VpJrPhagZc9R4ImZIWYRFZaaohR3KzmuK88touwsSwSVT8Qcbd4zoDsnGfX4GFB4imyQ==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
@@ -5927,6 +5967,11 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
+immer@^7.0.9:
+  version "7.0.9"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-7.0.9.tgz#28e7552c21d39dd76feccd2b800b7bc86ee4a62e"
+  integrity sha512-Vs/gxoM4DqNAYR7pugIxi0Xc8XAun/uy7AQu4fLLqaTBHxjOP9pJ266Q9MWA/ly4z6rAFZbvViOtihxUZ7O28A==
+
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
@@ -6143,7 +6188,7 @@ is-binary-path@~2.1.0:
   dependencies:
     binary-extensions "^2.0.0"
 
-is-buffer@^1.0.2, is-buffer@^1.1.5:
+is-buffer@^1.0.2, is-buffer@^1.1.5, is-buffer@~1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
   integrity sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
@@ -7329,6 +7374,15 @@ md5.js@^1.3.4:
     hash-base "^3.0.0"
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
+
+md5@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/md5/-/md5-2.3.0.tgz#c3da9a6aae3a30b46b7b0c349b87b110dc3bda4f"
+  integrity sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==
+  dependencies:
+    charenc "0.0.2"
+    crypt "0.0.2"
+    is-buffer "~1.1.6"
 
 mdn-data@2.0.4:
   version "2.0.4"
@@ -9196,19 +9250,6 @@ qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
-
-quartz-design-system@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/quartz-design-system/-/quartz-design-system-1.1.0.tgz#7553525cc065e924b02f1ea6ca20dd9835454db1"
-  integrity sha512-6G1CMmhxPoHOj2CEsqkynIwkfKBV0XVRs+M8BPbdbDCTHeOK95DrMzZIBQLg3OR0difK3V3k5KqNSLvKKx8b3g==
-  dependencies:
-    "@emotion/core" "^10.0.35"
-    "@fortawesome/fontawesome-svg-core" "^1.2.30"
-    "@fortawesome/free-regular-svg-icons" "^5.14.0"
-    "@fortawesome/free-solid-svg-icons" "^5.14.0"
-    "@fortawesome/react-fontawesome" "^0.1.11"
-    "@rebass/forms" "^4.0.6"
-    "@styled-system/css" "^5.1.5"
 
 query-string@^4.1.0:
   version "4.3.4"

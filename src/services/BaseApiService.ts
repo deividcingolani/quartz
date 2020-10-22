@@ -1,8 +1,8 @@
 import axios, { AxiosPromise } from 'axios';
 
-import TokenService from './TokenService';
+// import TokenService from './TokenService';
 
-axios.defaults.baseURL = `${process.env.REACT_APP_API_HOST}/api`;
+axios.defaults.baseURL = `${process.env.REACT_APP_API_HOST}/hopsworks-api/api`;
 
 interface ParamsInterface {
   [key: string]: string;
@@ -24,7 +24,7 @@ interface DataType {
 }
 
 interface RequestParamsInterface {
-  url: string;
+  url?: string;
   type?: RequestType;
   params?: ParamsInterface;
   data?: DataType;
@@ -36,12 +36,13 @@ export default class BaseApiService {
   constructor(private readonly baseUrl: string = '') {}
 
   static getHeaders(headers: HeadersInterface = {}): HeadersInterface {
-    const token = TokenService.get();
+    // const token = TokenService.get();
 
     return {
       ...headers,
       Accept: 'application/json, text/plain, */*',
-      ...(token && { Authorization: `Bearer ${token}` }),
+      Authorization: `ApiKey ${process.env.REACT_APP_API_KEY}`,
+      // ...(token && { Authorization: `Bearer ${token}` }),
     };
   }
 
@@ -51,7 +52,7 @@ export default class BaseApiService {
     return `${this.baseUrl}${divider}${uri}`;
   }
 
-  request(params: RequestParamsInterface): AxiosPromise {
+  request<R = undefined>(params: RequestParamsInterface): AxiosPromise<R> {
     return axios.request({
       ...params,
       url: this.getUrl(params.url),

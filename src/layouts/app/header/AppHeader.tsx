@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
-import { Header } from 'quartz-design-system';
+import { Header } from '@logicalclocks/quartz';
 
 // Components
-import ProjectsButton from './ProjectsButton';
+import ProjectsDropdown from './ProjectsDropdown';
 
 const AppHeader: FC = () => {
   return (
     <Header>
-      <ProjectsButton />
+      <ProjectsDropdown />
     </Header>
   );
 };

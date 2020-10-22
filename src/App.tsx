@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Provider } from 'react-redux';
 import { Global, css } from '@emotion/core';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider } from 'quartz-design-system';
+import { ThemeProvider } from '@logicalclocks/quartz';
 
 import Routes from './routes';
 import { store } from './store';

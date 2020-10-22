@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Box, SxStyleProp } from 'rebass';
-import { useNavigation, Logo } from 'quartz-design-system';
+import { useNavigation, Logo } from '@logicalclocks/quartz';
 
 import { version } from '../../../../package.json';
 

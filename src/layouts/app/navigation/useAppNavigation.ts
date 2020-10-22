@@ -1,20 +1,26 @@
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // eslint-disable-next-line import/no-unresolved
-import { TreeNode } from 'quartz-design-system/dist/components/navigation/types';
+import { TreeNode } from '@logicalclocks/quartz/dist/components/navigation/types';
 
 // Route names
 import routeNames from '../../../routes/routeNames';
+import useProjectNavigate from '../../../hooks/useProjectNavigate';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
   const navigate = useNavigate();
+  const navigateProject = useProjectNavigate();
 
-  const redirect = useCallback(
-    (route: string) => (): void => {
-      navigate(route);
+  const handleRedirect = useCallback((to: string) => (): void => navigate(to), [
+    navigate,
+  ]);
+
+  const handleRedirectProject = useCallback(
+    (to: string) => (): void => {
+      navigateProject(to);
     },
-    [navigate],
+    [navigateProject],
   );
 
   return useMemo<TreeNode[]>(() => {
@@ -24,12 +30,36 @@ const useAppNavigation = (): TreeNode[] => {
         icon: ['far', 'copy'],
         hasDivider: true,
 
-        // Todo: Create utility for it
         isActive: location.pathname === routeNames.home,
-        onClick: redirect(routeNames.home),
+        onClick: handleRedirect(routeNames.home),
+      },
+      {
+        title: 'Feature Groups',
+        icon: ['far', 'copy'],
+        isActive: location.pathname.includes('fg'),
+        onClick: handleRedirectProject(routeNames.featureGroupList),
+        children: [
+          {
+            title: 'Overview',
+            children: [
+              {
+                title: 'Feature List',
+              },
+              {
+                title: 'Schematised Tags',
+              },
+              {
+                title: 'Running Code',
+              },
+              {
+                title: 'API',
+              },
+            ],
+          },
+        ],
       },
     ];
-  }, [location.pathname, redirect]);
+  }, [location.pathname, handleRedirectProject, handleRedirect]);
 };
 
 export default useAppNavigation;

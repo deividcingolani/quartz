@@ -2,18 +2,37 @@ import React, { FC } from 'react';
 import { Route, Routes as RouterRoutes } from 'react-router-dom';
 
 import routeNames from './routeNames';
-// Layout
+// Layouts
 import AppLayout from '../layouts/app/AppLayout';
+import ProjectManagementLayout from '../layouts/project-management/ProjectManagementLayout';
 // Pages
-import HomePage from '../pages/home/HomePage';
+import AllProjects from '../pages/all-projects/AllProjects';
 
-const Routes: FC = () => (
-  <AppLayout>
+const Project = React.lazy(() => import('../pages/project/Project'));
+
+const Routes: FC = () => {
+  return (
     <RouterRoutes>
-      <Route path={routeNames.home} element={<HomePage />} />
-      <Route path="*" element={<div>Page Not Found</div>} />
+      <Route>
+        {/* Project Management Routes */}
+        <ProjectManagementLayout>
+          <RouterRoutes>
+            <Route path={routeNames.projectsList} element={<AllProjects />} />
+          </RouterRoutes>
+        </ProjectManagementLayout>
+      </Route>
+
+      <Route>
+        {/* App Routes */}
+        <AppLayout>
+          <RouterRoutes>
+            <Route path={routeNames.project} element={<Project />} />
+            <Route path="*" element={<div>Page Not Found</div>} />
+          </RouterRoutes>
+        </AppLayout>
+      </Route>
     </RouterRoutes>
-  </AppLayout>
-);
+  );
+};
 
 export default Routes;

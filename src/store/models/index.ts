@@ -1,12 +1,29 @@
 import { Models } from '@rematch/core';
 
 // Models
-import counter from './counter/counter.model';
+import profile from './profile/profile.model';
+import projectsList from './projects/projectsList.model';
+import featureGroups from './feature/featureGroups.model';
+import featureStores from './feature/featureStores.model';
+import featureGroupLabels from './feature/featureGroupLabels.model';
 
 export interface RootModel extends Models<RootModel> {
-  counter: typeof counter;
+  profile: typeof profile;
+
+  // Projects
+  projectsList: typeof projectsList;
+  // Feature
+  featureGroups: typeof featureGroups;
+  featureStores: typeof featureStores;
+  featureGroupLabels: typeof featureGroupLabels;
 }
 
-const models: RootModel = { counter };
+const models: RootModel = {
+  profile,
+  projectsList,
+  featureGroups,
+  featureStores,
+  featureGroupLabels,
+};
 
 export default models;
