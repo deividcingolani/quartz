@@ -1,21 +1,20 @@
 import { Models } from '@rematch/core';
-
-// Models
 import profile from './profile/profile.model';
 import projectsList from './projects/projectsList.model';
 import featureGroups from './feature/featureGroups.model';
 import featureStores from './feature/featureStores.model';
 import featureGroupLabels from './feature/featureGroupLabels.model';
+import { trainingDatasetModel } from './training-dataset';
+import { trainingDatasetLabelModel } from './training-dataset-label';
 
 export interface RootModel extends Models<RootModel> {
   profile: typeof profile;
-
-  // Projects
   projectsList: typeof projectsList;
-  // Feature
   featureGroups: typeof featureGroups;
   featureStores: typeof featureStores;
   featureGroupLabels: typeof featureGroupLabels;
+  trainingDatasets: typeof trainingDatasetModel;
+  trainingDatasetLabels: typeof trainingDatasetLabelModel;
 }
 
 const models: RootModel = {
@@ -24,6 +23,8 @@ const models: RootModel = {
   featureGroups,
   featureStores,
   featureGroupLabels,
+  trainingDatasets: trainingDatasetModel,
+  trainingDatasetLabels: trainingDatasetLabelModel,
 };
 
 export default models;

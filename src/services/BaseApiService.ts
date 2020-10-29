@@ -33,7 +33,7 @@ interface RequestParamsInterface {
 
 export default class BaseApiService {
   // eslint-disable-next-line no-useless-constructor
-  constructor(private readonly baseUrl: string = '') {}
+  constructor(protected readonly baseUrl: string = '') {}
 
   static getHeaders(headers: HeadersInterface = {}): HeadersInterface {
     // const token = TokenService.get();

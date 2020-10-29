@@ -19,6 +19,10 @@ const FeatureGroupEdit = React.lazy(
   () => import('./feature-group/FeatureGroupEdit'),
 );
 
+const TrainingDatasetList = React.lazy(
+  () => import('./training-dataset/list/TrainingDatasetList'),
+);
+
 const Project: FC = () => {
   const { id } = useParams();
   const { data: featureStoreData, isLoading: isFSLoading } = useSelector(
@@ -52,6 +56,12 @@ const Project: FC = () => {
       <Route path={routeNames.featureGroupList}>
         <Suspense>
           <FeatureGroupList projectId={+id} />
+        </Suspense>
+      </Route>
+
+      <Route path={routeNames.trainingDatasetList}>
+        <Suspense>
+          <TrainingDatasetList projectId={+id} />
         </Suspense>
       </Route>
     </Routes>

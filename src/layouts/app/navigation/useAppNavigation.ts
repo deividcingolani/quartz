@@ -58,6 +58,15 @@ const useAppNavigation = (): TreeNode[] => {
           },
         ],
       },
+
+      {
+        title: 'Training Datasets',
+        icon: ['far', 'copy'],
+        hasDivider: true,
+
+        isActive: location.pathname.includes(routeNames.trainingDatasetList),
+        onClick: handleRedirectProject(routeNames.trainingDatasetList),
+      },
     ];
   }, [location.pathname, handleRedirectProject, handleRedirect]);
 };
