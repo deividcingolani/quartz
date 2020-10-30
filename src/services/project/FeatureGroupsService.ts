@@ -15,6 +15,19 @@ class FeatureGroupsService extends BaseApiService {
 
     return data;
   };
+
+  get = async (
+    projectId: number,
+    featureStoreId: number,
+    featureGroupId: number,
+  ): Promise<FeatureGroup> => {
+    const { data } = await this.request<FeatureGroup>({
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}`,
+      type: RequestType.get,
+    });
+
+    return data;
+  };
 }
 
 export default new FeatureGroupsService('project');

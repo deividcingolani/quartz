@@ -10,17 +10,22 @@ import {
   IconButton,
 } from '@logicalclocks/quartz';
 
+import routeNames from '../../../routes/routeNames';
 // Types
-import { Dispatch, RootState } from '../../../../store';
-import { FeatureGroup } from '../../../../types/feature-group';
+import { Dispatch } from '../../../store';
+import { FeatureGroup } from '../../../types/feature-group';
 // Components
-import Card from './Card';
-import Loader from '../../../../components/loader/Loader';
+import Card from './components/Card';
+import Loader from '../../../components/loader/Loader';
 // Utils
-import useFeatureGroups from '../useFeatureGroups';
-import { sortOptions, filterFG, sortFG, searchFGText } from '../utils';
+import useFeatureGroups from './hooks/useFeatureGroups';
+import useNavigateRelative from '../../../hooks/useNavigateRelative';
+import { sortOptions, filterFG, sortFG, searchFGText } from './utils';
 // Selectors
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import {
+  selectFeatureStoreData,
+  selectLabelsLoading,
+} from '../../../store/models/feature/selectors';
 
 export interface FeatureGroupProps {
   projectId: number;
@@ -32,10 +37,9 @@ const FeatureGroupList: FC<FeatureGroupProps> = ({
   const [filter, setFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
+  const navigate = useNavigateRelative();
 
-  const isLabelsLoading = useSelector(
-    ({ loading }: RootState) => loading.models.featureGroupLabels,
-  );
+  const isLabelsLoading = useSelector(selectLabelsLoading);
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
@@ -63,11 +67,12 @@ const FeatureGroupList: FC<FeatureGroupProps> = ({
   // Handlers
   const handleRefresh = useCallback(() => {
     dispatch.featureGroups.setFeatureGroups([]);
+    dispatch.featureGroupLabels.clear();
   }, [dispatch]);
 
   const handleCreate = useCallback(() => {
-    console.log('New Feature Group');
-  }, []);
+    navigate(routeNames.featureGroup.create, routeNames.project.view);
+  }, [navigate]);
 
   const handleSearchChange = ({
     target,

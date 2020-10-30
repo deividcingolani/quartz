@@ -35,11 +35,7 @@ export const sortOptions: SortParams = {
 export const sortFG = (data: FeatureGroup[], sort: string): FeatureGroup[] => {
   const sortFunction = sortOptions[sort];
 
-  if (sortFunction) {
-    return data.sort(sortFunction);
-  }
-
-  return data;
+  return sortFunction ? data.sort(sortFunction) : data;
 };
 
 export const searchFGText = (

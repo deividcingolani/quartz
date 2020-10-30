@@ -1,19 +1,19 @@
 import React, { FC } from 'react';
 import { Flex } from 'rebass';
 import { Button, Subtitle, Labeling } from '@logicalclocks/quartz';
-import useProjectNavigate from '../../../../hooks/useProjectNavigate';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 
-interface INoTDProps {
+export interface NoTDProps {
   handleCreate: () => void;
 }
 
-export const NoResults: FC<INoTDProps> = (props: INoTDProps) => {
+export const NoResults: FC<NoTDProps> = (props: NoTDProps) => {
   const { handleCreate } = props;
-  const navigate = useProjectNavigate();
+  const navigate = useNavigateRelative();
 
   function handleClickFG() {
-    navigate(routeNames.featureGroupList);
+    navigate(routeNames.featureGroup.list, 'p/:id/*');
   }
 
   return (

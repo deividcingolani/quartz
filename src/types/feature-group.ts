@@ -1,8 +1,19 @@
 export interface Feature {
+  defaultValue: string | number;
+  description?: string;
   name: string;
   partition: boolean;
   primary: boolean;
-  type: string; // Todo: Change to Enum
+  type: string;
+}
+
+export interface Job {
+  jobId: number;
+  jobName: string;
+  lastComputed: string;
+  jobStatus: 'Succeeded' | 'Failed' | 'Running';
+  featurestoreId: number;
+  featuregroupId: number;
 }
 
 export interface FeatureGroup {
@@ -18,7 +29,7 @@ export interface FeatureGroup {
   featurestoreName: string;
   hudiEnabled: boolean;
   id: number;
-  jobs: any; // Todo: Update
+  jobs: Job[]; // Todo: Update
   location: string;
   name: string;
   onlineEnabled: boolean;

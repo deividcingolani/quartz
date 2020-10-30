@@ -10,7 +10,6 @@ import {
   Microlabeling,
   Card as QuartzCard,
 } from '@logicalclocks/quartz';
-import { format } from 'date-fns';
 import React, { FC, memo, useCallback } from 'react';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, CardProps as RebassCardProps } from 'rebass';
@@ -24,9 +23,10 @@ import ProfileService from '../../../../services/ProfileService';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
 // Utils
-import useProjectNavigate from '../../../../hooks/useProjectNavigate';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Components
 import CardLabels from './CardLabels';
+import DateValue from './DateValue';
 
 const contentStyles: RebassCardProps = { overflowY: 'unset' };
 
@@ -36,11 +36,11 @@ export interface CardProps {
 }
 
 const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
-  const navigate = useProjectNavigate();
+  const navigate = useNavigateRelative();
 
-  const handleEditRedirect = useCallback(
-    (id: number) => (): void => {
-      navigate(routeNames.featureGroupEdit.replace(':fgId', String(id)));
+  const handleNavigate = useCallback(
+    (id: number, route: string) => (): void => {
+      navigate(route.replace(':fgId', String(id)), routeNames.project.view);
     },
     [navigate],
   );
@@ -70,28 +70,21 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
             variant="inline"
             p="0"
             mt="15px"
-            onClick={handleEditRedirect(data.id)}
+            onClick={handleNavigate(data.id, routeNames.featureGroup.edit)}
           >
             + add a description
           </Button>
         )}
 
         <Flex mt="15px" alignItems="center">
-          <Avatar src={ProfileService.avatar('')} />
+          <Avatar src={ProfileService.avatar(data.creator)} />
           <Flex flexDirection="column" ml="20px">
             <Microlabeling mb="3px" gray>
               Latest version
             </Microlabeling>
             <Value primary>{data.version}</Value>
           </Flex>
-          <Flex flexDirection="column" ml="20px">
-            <Microlabeling mb="3px" gray>
-              Creation
-            </Microlabeling>
-            <Value primary>
-              {format(new Date(data.created), 'M.d.yyyy - hh:mm::ss')}
-            </Value>
-          </Flex>
+          <DateValue ml="20px" label="Creation" date={new Date(data.created)} />
           <Flex width="max-content" flexDirection="column" ml="20px">
             <Microlabeling gray mb="3px" width="100%">
               Last update
@@ -111,6 +104,7 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
               tooltip="tooltip"
               tooltipProps={{ ml: '40px' } as TooltipProps}
               icon="ellipsis-v"
+              onClick={handleNavigate(data.id, '/fg/:fgId')}
             />
             <IconButton
               tooltip="tooltip"

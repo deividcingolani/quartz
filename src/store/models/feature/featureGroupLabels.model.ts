@@ -34,7 +34,6 @@ const featureGroupLabels = createModel()({
         featureGroupId,
       );
 
-      // Get labels
       dispatch.featureGroupLabels.addFeatureGroupLabels({
         id: featureGroupId,
         data,

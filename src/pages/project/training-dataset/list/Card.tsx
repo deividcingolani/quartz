@@ -11,25 +11,28 @@ import {
   Card as QuartzCard,
 } from '@logicalclocks/quartz';
 import formatDistance from 'date-fns/formatDistance';
-import { Flex, CardProps as RebassCardProps, Box } from 'rebass';
+import { Flex, CardProps as RebassCardProps } from 'rebass';
 import routeNames from '../../../../routes/routeNames';
 import ProfileService from '../../../../services/ProfileService';
-import useProjectNavigate from '../../../../hooks/useProjectNavigate';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import CardLabels from './CardLabels';
 
 const contentStyles: RebassCardProps = { overflowY: 'unset' };
 
-export interface ICardProps {
+export interface CardProps {
   data: any;
   isLabelsLoading: boolean;
 }
 
-const Card: FC<ICardProps> = ({ data, isLabelsLoading }: ICardProps) => {
-  const navigate = useProjectNavigate();
+const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
+  const navigate = useNavigateRelative();
 
   const handleEditRedirect = useCallback(
     (id: number) => (): void => {
-      navigate(routeNames.trainingDatasetEdit.replace(':id', String(id)));
+      navigate(
+        routeNames.trainingDatasetEdit.replace(':id', String(id)),
+        'p/:id/*',
+      );
     },
     [navigate],
   );

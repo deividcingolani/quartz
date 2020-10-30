@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, memo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Flex } from 'rebass';
 import { Dispatch } from '../../store';
@@ -35,10 +35,12 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
           flexGrow={1}
           justifyContent="center"
           minWidth="939px"
+          id="content"
           sx={styles}
           p="30px"
+          pr="50px"
         >
-          <Flex flexGrow={1} maxWidth="1274px">
+          <Flex flexGrow={1} maxWidth="1274px" height="max-content">
             <ErrorBoundary>
               <Suspense>{children}</Suspense>
             </ErrorBoundary>
@@ -49,4 +51,4 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
   );
 };
 
-export default AppLayout;
+export default memo(AppLayout);

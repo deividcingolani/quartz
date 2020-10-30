@@ -20,8 +20,6 @@ const featureGroups = createModel()({
       projectId: number;
       featureStoreId: number;
     }): Promise<void> => {
-      dispatch.featureGroupLabels.clear();
-
       const data = await FeatureGroupsService.getList(
         projectId,
         featureStoreId,

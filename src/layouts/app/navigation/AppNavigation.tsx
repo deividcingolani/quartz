@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { Navigation } from '@logicalclocks/quartz';
 
 // Components
@@ -12,4 +12,4 @@ const AppNavigation: FC = () => {
   return <Navigation tree={treeNavigation} footer={<Footer />} />;
 };
 
-export default AppNavigation;
+export default memo(AppNavigation);

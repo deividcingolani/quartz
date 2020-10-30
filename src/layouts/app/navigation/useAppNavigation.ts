@@ -1,60 +1,103 @@
 import { useCallback, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { matchPath, useLocation } from 'react-router-dom';
 // eslint-disable-next-line import/no-unresolved
 import { TreeNode } from '@logicalclocks/quartz/dist/components/navigation/types';
+import useAnchor from '../../../components/anchor/useAnchor';
 
 // Route names
 import routeNames from '../../../routes/routeNames';
-import useProjectNavigate from '../../../hooks/useProjectNavigate';
+// Hooks
+import useNavigateRelative from '../../../hooks/useNavigateRelative';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const navigateProject = useProjectNavigate();
+  const overviewAnchors = useAnchor('overview');
+  const navigateRelative = useNavigateRelative();
 
-  const handleRedirect = useCallback((to: string) => (): void => navigate(to), [
-    navigate,
-  ]);
-
-  const handleRedirectProject = useCallback(
-    (to: string) => (): void => {
-      navigateProject(to);
+  const handleNavigateRelative = useCallback(
+    (to: string, relativeTo?: string) => (): void => {
+      navigateRelative(to, relativeTo);
     },
-    [navigateProject],
+    [navigateRelative],
+  );
+
+  const handleJumpToAnchor = useCallback(
+    (anchor: string) => () => {
+      window.location.hash = `#${anchor}`;
+    },
+    [],
+  );
+
+  const isActive = useCallback(
+    (pattern: string | string[]): boolean => {
+      if (Array.isArray(pattern)) {
+        return pattern.some((p) => !!matchPath(p, location.pathname));
+      }
+
+      return !!matchPath(pattern, location.pathname);
+    },
+    [location],
+  );
+
+  const createAnchorLink = useCallback(
+    (title: string, to: string) => ({
+      title,
+      isActive: overviewAnchors.active === to,
+      onClick: handleJumpToAnchor(to),
+    }),
+    [overviewAnchors.active, handleJumpToAnchor],
   );
 
   return useMemo<TreeNode[]>(() => {
+    const {
+      featureList,
+      schematisedTags,
+      pipelineHistory,
+      runningCode,
+      api,
+    } = routeNames.featureGroup.overviewAnchors;
+
     return [
       {
         title: 'Home',
         icon: ['far', 'copy'],
         hasDivider: true,
 
-        isActive: location.pathname === routeNames.home,
-        onClick: handleRedirect(routeNames.home),
+        onClick: handleNavigateRelative(routeNames.home),
       },
       {
         title: 'Feature Groups',
         icon: ['far', 'copy'],
-        isActive: location.pathname.includes('fg'),
-        onClick: handleRedirectProject(routeNames.featureGroupList),
+        onClick: handleNavigateRelative(
+          routeNames.featureGroup.list,
+          routeNames.project.view,
+        ),
+        isActive: isActive('/p/:id/fg'),
         children: [
           {
             title: 'Overview',
+            isActive: isActive('/p/:id/fg/:fgId') && !location.hash,
+            onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
-              {
-                title: 'Feature List',
-              },
-              {
-                title: 'Schematised Tags',
-              },
-              {
-                title: 'Running Code',
-              },
-              {
-                title: 'API',
-              },
+              createAnchorLink('Feature List', featureList),
+              createAnchorLink('Schematised Tags', schematisedTags),
+              createAnchorLink('Pipeline History', pipelineHistory),
+              createAnchorLink('Running Code', runningCode),
+              createAnchorLink('API', api),
             ],
+          },
+          {
+            title: 'Data',
+            onClick: handleNavigateRelative(
+              '/data/preview',
+              '/p/:id/fg/:fgId/*',
+            ),
+            isActive: isActive('/p/:id/fg/:fgId/activity'),
+          },
+          {
+            title: 'Activity',
+            onClick: handleNavigateRelative('/activity', '/p/:id/fg/:fgId/*'),
+            isActive: isActive('/p/:id/fg/:fgId/activity'),
           },
         ],
       },
@@ -65,10 +108,13 @@ const useAppNavigation = (): TreeNode[] => {
         hasDivider: true,
 
         isActive: location.pathname.includes(routeNames.trainingDatasetList),
-        onClick: handleRedirectProject(routeNames.trainingDatasetList),
+        onClick: handleNavigateRelative(
+          routeNames.trainingDatasetList,
+          'p/:id/*',
+        ),
       },
     ];
-  }, [location.pathname, handleRedirectProject, handleRedirect]);
+  }, [createAnchorLink, location, isActive, handleNavigateRelative]);
 };
 
 export default useAppNavigation;

@@ -1,4 +1,4 @@
-import { FeatureGroup } from '../../../types/feature-group';
+import { FeatureGroup, FeatureGroupLabel } from '../../../types/feature-group';
 import { FeatureStore } from '../../../types/feature-store';
 import { RootState } from '../../index';
 
@@ -30,3 +30,12 @@ export const selectFeatureStoreData = ({
   data: featureStores?.length ? featureStores[0] : null,
   isLoading: loading.effects.featureStores.fetch,
 });
+
+export const selectLabelsLoading = ({ loading }: RootState): boolean =>
+  loading.models.featureGroupLabels;
+
+export const selectLabels = (featureGroupId = 0) => ({
+  featureGroupLabels,
+}: RootState): FeatureGroupLabel[] => {
+  return featureGroupLabels[featureGroupId] || [];
+};
