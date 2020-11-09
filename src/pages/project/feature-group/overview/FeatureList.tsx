@@ -1,12 +1,5 @@
 import { Box, Flex } from 'rebass';
-import React, {
-  ComponentType,
-  FC,
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { ComponentType, FC, memo } from 'react';
 import {
   Row as QRow,
   Card,
@@ -18,8 +11,8 @@ import {
 
 // Types
 import { Feature } from '../../../../types/feature-group';
-// Utils
-import filterByAttribute from './utils';
+// Hooks
+import useFeatureFilter, { KeyFilters } from '../hooks/useFeatureFilters';
 import useFeatureListRowData from './useFeatureListRowData';
 // Styles
 import featureListStyles from './feature-lists-styles';
@@ -28,62 +21,21 @@ export interface FeatureListProps {
   data: Feature[];
 }
 
-enum KeyFilters {
-  'primary',
-  'partition',
-  null,
-}
-
 const Row = memo(QRow);
 
 const FeatureList: FC<FeatureListProps> = ({ data }) => {
-  // State
-  const [search, setSearch] = useState<string>('');
-  const [typeFilters, setTypeFilters] = useState<string[]>([]);
-  const [keyFilter, setKeyFilter] = useState<KeyFilters>(KeyFilters.null);
+  const {
+    dataFiltered,
+    types,
+    search,
+    typeFilters,
+    keyFilter,
+    onTypeFiltersChange,
+    onSearchChange,
+    onToggleKey,
+  } = useFeatureFilter(data);
 
-  // Handlers
-  const handleSearch = useCallback(
-    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-      setSearch(target.value);
-    },
-    [setSearch],
-  );
-
-  const handleToggleKey = useCallback(
-    (key: KeyFilters) => (): void => {
-      setKeyFilter((current) => (current === key ? KeyFilters.null : key));
-    },
-    [setKeyFilter],
-  );
-
-  // Data
-  const typeFilterOptions = useMemo(
-    () => Array.from(new Set(data.map(({ type }) => type))),
-    [data],
-  );
-
-  const featuresFiltered = useMemo<Feature[]>(() => {
-    let result = data;
-
-    if (keyFilter === KeyFilters.partition) {
-      result = filterByAttribute<Feature>(result, true, 'partition');
-    }
-
-    if (keyFilter === KeyFilters.primary) {
-      result = filterByAttribute<Feature>(result, true, 'primary');
-    }
-
-    result = filterByAttribute<Feature>(
-      result,
-      typeFilters,
-      'type',
-    ).filter(({ name }) => name.toLowerCase().includes(search.toLowerCase()));
-
-    return result;
-  }, [data, search, keyFilter, typeFilters]);
-
-  const [groupComponents, groupProps] = useFeatureListRowData(featuresFiltered);
+  const [groupComponents, groupProps] = useFeatureListRowData(dataFiltered);
 
   return (
     <Card
@@ -101,7 +53,7 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           value={search}
           icon="search"
           placeholder="Find feature"
-          onChange={handleSearch}
+          onChange={onSearchChange}
         />
         <Select
           maxWidth="180px"
@@ -109,21 +61,21 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           ml="15px"
           isMulti
           value={typeFilters}
-          options={typeFilterOptions}
+          options={types}
           placeholder="type"
-          onChange={setTypeFilters}
+          onChange={onTypeFiltersChange}
         />
         <ToggleButton
           ml="15px"
           checked={keyFilter === KeyFilters.primary}
-          onChange={handleToggleKey(KeyFilters.primary)}
+          onChange={onToggleKey(KeyFilters.primary)}
         >
           primary key only
         </ToggleButton>
         <ToggleButton
           ml="15px"
           checked={keyFilter === KeyFilters.partition}
-          onChange={handleToggleKey(KeyFilters.partition)}
+          onChange={onToggleKey(KeyFilters.partition)}
         >
           partition key only
         </ToggleButton>

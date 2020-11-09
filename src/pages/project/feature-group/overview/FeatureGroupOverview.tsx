@@ -1,26 +1,26 @@
 import { Subtitle } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, memo, useCallback, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import React, { FC, memo, useCallback } from 'react';
 
 import routeNames from '../../../../routes/routeNames';
+import useFeatureGroupView from '../hooks/useFeatureGroupView';
 
 import OverviewContent from './OverviewContent';
 // Components
 import Loader from '../../../../components/loader/Loader';
+// Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
 import {
   FeatureGroup,
   FeatureGroupLabel,
 } from '../../../../types/feature-group';
-import { Dispatch, RootState } from '../../../../store';
-import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
+import { RootState } from '../../../../store';
 // Selectors
 import {
   selectLabels,
   selectLabelsLoading,
-  selectFeatureStoreData,
 } from '../../../../store/models/feature/selectors';
 
 export interface FeatureGroupOverviewProps {
@@ -30,19 +30,12 @@ export interface FeatureGroupOverviewProps {
 const FeatureGroupOverview: FC<FeatureGroupOverviewProps> = ({ projectId }) => {
   const { fgId } = useParams();
 
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
-  const isLoading = useSelector(
-    (state: RootState) => state.loading.effects.featureGroupView.fetch,
-  );
+  const { data, isLoading, fetchData } = useFeatureGroupView(projectId, +fgId);
+
   const isLabelsLoading = useSelector(selectLabelsLoading);
-  const data = useSelector<RootState, FeatureGroupViewState>(
-    (state) => state.featureGroupView,
-  );
   const labels = useSelector<RootState, FeatureGroupLabel[]>(
     selectLabels(data?.id),
   );
-
-  const dispatch = useDispatch<Dispatch>();
 
   const navigate = useNavigateRelative();
 
@@ -51,28 +44,6 @@ const FeatureGroupOverview: FC<FeatureGroupOverviewProps> = ({ projectId }) => {
       navigate(route.replace(':fgId', String(id)), routeNames.project.view);
     },
     [navigate],
-  );
-
-  const fetchData = useCallback(() => {
-    if (featureStoreData?.featurestoreId && !isLoading) {
-      dispatch.featureGroupView.fetch({
-        projectId,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-      });
-    }
-  }, [dispatch, fgId, isLoading, featureStoreData, projectId]);
-
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(
-    () => () => {
-      dispatch.featureGroupView.clear();
-    },
-    [dispatch],
   );
 
   if (isLoading) {

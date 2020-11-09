@@ -40,7 +40,13 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
           p="30px"
           pr="50px"
         >
-          <Flex flexGrow={1} maxWidth="1274px" height="max-content">
+          <Flex
+            width="100%"
+            maxWidth="1274px"
+            height="max-content"
+            minHeight="100%"
+            flexDirection="column"
+          >
             <ErrorBoundary>
               <Suspense>{children}</Suspense>
             </ErrorBoundary>

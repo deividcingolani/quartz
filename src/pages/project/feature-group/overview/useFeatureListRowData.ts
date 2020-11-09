@@ -65,8 +65,8 @@ const useFeatureListRowData = (features: Feature[]) => {
       {
         intent: 'ghost',
         icon: 'poll',
-        tooltip: 'Tooltip',
-        onClick: handleNavigate(1, '/statistics/:featureId'),
+        tooltip: 'Statistics',
+        onClick: handleNavigate(1, `/statistics/f/${name}`),
       },
     ]);
   }, [features, handleNavigate]);

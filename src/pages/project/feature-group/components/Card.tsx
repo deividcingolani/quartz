@@ -101,7 +101,7 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
           <Flex ml="auto">
             <IconButton tooltip="tooltip" icon="eye" />
             <IconButton
-              tooltip="tooltip"
+              tooltip="Overview"
               tooltipProps={{ ml: '40px' } as TooltipProps}
               icon="ellipsis-v"
               onClick={handleNavigate(data.id, '/fg/:fgId')}

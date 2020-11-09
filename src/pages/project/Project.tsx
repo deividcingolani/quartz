@@ -6,7 +6,6 @@ import routeNames from '../../routes/routeNames';
 // Components
 import Loader from '../../components/loader/Loader';
 import Redirect from '../../components/redirect/Redirect';
-import Suspense from '../../components/suspense/Suspense';
 // Selectors
 import { selectFeatureStoreData } from '../../store/models/feature/selectors';
 // Types
@@ -32,7 +31,7 @@ const FeatureGroupDataCorrelation = React.lazy(
   () => import('./feature-group/FeatureGroupDataCorrelation'),
 );
 const FeatureGroupStatistics = React.lazy(
-  () => import('./feature-group/FeatureGroupStatistics'),
+  () => import('./feature-group/data/FeatureGroupStatistics'),
 );
 const FeatureGroupOverview = React.lazy(
   () => import('./feature-group/overview/FeatureGroupOverview'),
@@ -52,6 +51,7 @@ const Project: FC = () => {
 
   const clearData = useCallback((): void => {
     dispatch.featureGroups.setFeatureGroups([]);
+    dispatch.trainingDatasets.clear();
     dispatch.featureStores.setFeatureStores(null);
   }, [dispatch]);
 
@@ -88,7 +88,39 @@ const Project: FC = () => {
         element={<FeatureGroupDataPreview />}
       />
       <Route
+        path={routeNames.featureGroup.dataCorrelation}
+        element={<FeatureGroupDataCorrelation />}
+      />
+      <Route
+        path={routeNames.featureGroup.overview}
+        element={<FeatureGroupOverview projectId={+id} />}
+      />
+      <Route
+        path={routeNames.featureGroup.edit}
+        element={<FeatureGroupEdit />}
+      />
+      <Route
+        path={routeNames.featureGroup.list}
+        element={<FeatureGroupList projectId={+id} />}
+      />
+      <Route
+        path={routeNames.featureGroup.create}
+        element={<FeatureGroupCreate projectId={+id} />}
+      />
+      <Route
+        path={routeNames.featureGroup.activity}
+        element={<FeatureGroupActivity />}
+      />
+      <Route
+        path={routeNames.featureGroup.dataPreview}
+        element={<FeatureGroupDataPreview />}
+      />
+      <Route
         path={routeNames.featureGroup.statistics}
+        element={<FeatureGroupStatistics />}
+      />
+      <Route
+        path={routeNames.featureGroup.statisticsViewOne}
         element={<FeatureGroupStatistics />}
       />
       <Route
@@ -99,23 +131,12 @@ const Project: FC = () => {
         path={routeNames.featureGroup.overview}
         element={<FeatureGroupOverview projectId={+id} />}
       />
-      <Route path={routeNames.trainingDatasetList}>
-        <Suspense>
-          <TrainingDatasetList projectId={+id} />
-        </Suspense>
-      </Route>
+      <Route
+        path={routeNames.trainingDatasetList}
+        element={<TrainingDatasetList projectId={+id} />}
+      />
       <Route path="/" element={<Redirect to={`${location.pathname}/fg`} />} />
       <Route path="*" element={<div>Page not Found</div>} />
-      <Route path={routeNames.featureGroup.edit}>
-        <Suspense>
-          <FeatureGroupEdit />
-        </Suspense>
-      </Route>
-      <Route path={routeNames.featureGroup.list}>
-        <Suspense>
-          <FeatureGroupList projectId={+id} />
-        </Suspense>
-      </Route>
     </Routes>
   );
 };

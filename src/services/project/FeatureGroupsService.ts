@@ -1,7 +1,7 @@
 import BaseApiService, { RequestType } from '../BaseApiService';
 
 // Types
-import { FeatureGroup } from '../../types/feature-group';
+import { FeatureGroup, FeatureGroupRowItem } from '../../types/feature-group';
 
 class FeatureGroupsService extends BaseApiService {
   getList = async (
@@ -28,6 +28,40 @@ class FeatureGroupsService extends BaseApiService {
 
     return data;
   };
+
+  getStatistics = (
+    projectId: number,
+    featureStoreId: number,
+    featureGroupId: number,
+  ) =>
+    this.request<GetStatisticsData>({
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/statistics?sort_by=commit_time:desc&fields=content`,
+      type: RequestType.get,
+    });
+
+  getRows = (
+    projectId: number,
+    featureStoreId: number,
+    featureGroupId: number,
+    limit = 100,
+  ) =>
+    this.request<GetRowsData>({
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/preview?storage=offline&limit=${limit}`,
+      type: RequestType.get,
+    });
 }
 
 export default new FeatureGroupsService('project');
+
+export interface GetStatisticsData {
+  items?: {
+    content: string;
+  }[];
+}
+
+export interface GetRowsData {
+  items?: {
+    type: string;
+    row: FeatureGroupRowItem[];
+  }[];
+}

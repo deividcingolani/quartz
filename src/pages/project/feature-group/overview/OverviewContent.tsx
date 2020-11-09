@@ -6,7 +6,7 @@ import { Button } from '@logicalclocks/quartz';
 import Anchor from '../../../../components/anchor/Anchor';
 import routeNames from '../../../../routes/routeNames';
 import CodeCard from './CodeCard';
-import Panel from './Panel';
+import Panel from '../../../../components/panel/Panel';
 
 // Types
 import {

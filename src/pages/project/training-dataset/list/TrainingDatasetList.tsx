@@ -10,10 +10,8 @@ import {
   IconButton,
 } from '@logicalclocks/quartz';
 import { Dispatch, RootState } from '../../../../store';
-import Card from './Card';
 import Loader from '../../../../components/loader/Loader';
 import useTrainingDatasets from '../useTrainingDatasets';
-import { NoResults } from './NoResults';
 import {
   sortFn,
   filterFn,
@@ -21,8 +19,11 @@ import {
 } from '../../../../utils/filter-sort.util';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { pipe } from '../../../../utils';
-import { NoFilterResults } from './NoFilterResults';
 import { ITrainingDataset } from '../../../../types/training-dataset';
+import TrainingDatasetListContent from './TrainingDatasetListContent';
+import NoData from '../../../../components/no-data/NoData';
+import routeNames from '../../../../routes/routeNames';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 
 export interface ITrainingDatasetListProps {
   projectId: number;
@@ -96,12 +97,17 @@ const TrainingDatasetList: FC<ITrainingDatasetListProps> = (
 
   function handleResetFilters(): void {
     setFilter([]);
-    setSort([]);
     setSearch('');
   }
 
+  const navigate = useNavigateRelative();
+
   function handleSearchChange(ev: ChangeEvent<HTMLInputElement>): void {
     setSearch(ev.target.value);
+  }
+
+  function handleClickFG() {
+    navigate(routeNames.featureGroup.list, 'p/:id/*');
   }
 
   const dataResult = useMemo(() => {
@@ -114,9 +120,7 @@ const TrainingDatasetList: FC<ITrainingDatasetListProps> = (
     )(data);
   }, [data, sort, filter, search]);
 
-  return isLoading ? (
-    <Loader />
-  ) : data.length ? (
+  return (
     <Flex flexGrow={1} flexDirection="column">
       <Flex alignItems="center">
         <Input
@@ -170,19 +174,29 @@ const TrainingDatasetList: FC<ITrainingDatasetListProps> = (
           <Button onClick={handleCreate}>New Training Dataset</Button>
         </Box>
       </Flex>
-
-      {dataResult.length ? (
-        <>
-          {dataResult.map((item) => (
-            <Card key={item.id} data={item} isLabelsLoading={isLabelsLoading} />
-          ))}
-        </>
-      ) : (
-        <NoFilterResults handleResetFilters={handleResetFilters} />
+      {isLoading && <Loader />}
+      {!isLoading && (
+        <TrainingDatasetListContent
+          data={dataResult}
+          isFiltered={data.length !== dataResult.length}
+          onResetFilters={handleResetFilters}
+          isLabelsLoading={isLabelsLoading}
+        />
+      )}
+      {!isLoading && !data.length && (
+        <NoData
+          mainText="No Training Dataset"
+          secondaryText="Create one from feature groups"
+        >
+          <Button intent="secondary" onClick={handleClickFG}>
+            Feature Groups
+          </Button>
+          <Button intent="primary" ml="20px" onClick={handleCreate}>
+            New Training Dataset
+          </Button>
+        </NoData>
       )}
     </Flex>
-  ) : (
-    <NoResults handleCreate={handleCreate} />
   );
 };
 

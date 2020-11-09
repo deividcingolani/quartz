@@ -21,8 +21,9 @@ const routeNames = {
     edit: '/fg/:fgId/edit',
     create: '/fg/new',
     activity: '/fg/:fgId/activity',
-    dataPreview: '/fg/:fgId/data/preview',
-    statistics: '/fg/:fgId/statistics/:featureId',
+    dataPreview: '/fg/:fgId/data/preview/*',
+    statistics: '/fg/:fgId/statistics',
+    statisticsViewOne: '/fg/:fgId/statistics/f/:featureName',
     dataCorrelation: '/fg/:fgId/data/correlation',
   },
 

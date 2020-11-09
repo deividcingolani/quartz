@@ -1,10 +1,18 @@
+export enum FeatureType {
+  float = 'float',
+  int = 'int',
+  bigInt = 'bigint',
+  string = 'string',
+  boolean = 'boolean',
+}
+
 export interface Feature {
   defaultValue: string | number;
   description?: string;
   name: string;
   partition: boolean;
   primary: boolean;
-  type: string;
+  type: FeatureType;
 }
 
 export interface Job {
@@ -43,4 +51,43 @@ export interface FeatureGroupLabel {
   href: string;
   name: string;
   value?: string;
+}
+
+export interface HistogramItem {
+  value: number | string;
+  count: number;
+  ratio: number;
+}
+
+export interface CorrelationItem {
+  column: string;
+  correlation: number;
+}
+
+export interface FeatureGroupStatistics {
+  column: string;
+  dataType: 'Integral' | 'none';
+  isDataTypeInferred: boolean;
+  completeness: number;
+  distinctness: number;
+  entropy: number;
+  uniqueness: number;
+  approximateNumDistinctValues: number;
+  histogram: HistogramItem[];
+  mean: number;
+  maximum: number;
+  minimum: number;
+  sum: number;
+  stdDev: number;
+  correlations: CorrelationItem[];
+  approxPercentiles: any; // Todo: update type
+}
+
+export interface FeatureGroupRow {
+  [key: string]: string | number;
+}
+
+export interface FeatureGroupRowItem {
+  columnName: string;
+  columnValue: string;
 }

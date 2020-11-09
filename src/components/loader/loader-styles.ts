@@ -15,11 +15,12 @@ export default {
   left: '50%',
   top: '50%',
 
+  transform: 'translate(-50%, -50%)',
+
   svg: {
+    animation: `${loadingAnimation} 1.5s ease infinite`,
     path: {
       fill: 'primary',
     },
   },
-
-  animation: `${loadingAnimation} 1.5s ease infinite`,
 };

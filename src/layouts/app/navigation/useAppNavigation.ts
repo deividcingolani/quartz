@@ -93,6 +93,28 @@ const useAppNavigation = (): TreeNode[] => {
               '/p/:id/fg/:fgId/*',
             ),
             isActive: isActive('/p/:id/fg/:fgId/activity'),
+            children: [
+              {
+                title: 'Data Preview',
+                isActive: isActive('p/:id/fg/:fgId/data/preview/*'),
+                onClick: handleNavigateRelative(
+                  '/data/preview',
+                  '/p/:id/fg/:fgId/*',
+                ),
+              },
+              {
+                title: 'Feature Statistics',
+                isActive: isActive('/p/:id/fg/:fgId/statistics/*'),
+                onClick: handleNavigateRelative(
+                  '/statistics',
+                  '/p/:id/fg/:fgId/*',
+                ),
+              },
+              {
+                title: 'Correlation',
+                isActive: isActive(routeNames.featureGroup.dataCorrelation),
+              },
+            ],
           },
           {
             title: 'Activity',

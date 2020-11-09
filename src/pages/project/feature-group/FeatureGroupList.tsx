@@ -14,9 +14,6 @@ import routeNames from '../../../routes/routeNames';
 // Types
 import { Dispatch } from '../../../store';
 import { FeatureGroup } from '../../../types/feature-group';
-// Components
-import Card from './components/Card';
-import Loader from '../../../components/loader/Loader';
 // Utils
 import useFeatureGroups from './hooks/useFeatureGroups';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
@@ -26,6 +23,9 @@ import {
   selectFeatureStoreData,
   selectLabelsLoading,
 } from '../../../store/models/feature/selectors';
+import NoData from '../../../components/no-data/NoData';
+import FeatureGroupListContent from './FeatureGroupListContent';
+import Loader from '../../../components/loader/Loader';
 
 export interface FeatureGroupProps {
   projectId: number;
@@ -66,9 +66,25 @@ const FeatureGroupList: FC<FeatureGroupProps> = ({
 
   // Handlers
   const handleRefresh = useCallback(() => {
-    dispatch.featureGroups.setFeatureGroups([]);
-    dispatch.featureGroupLabels.clear();
-  }, [dispatch]);
+    if (featureStoreData?.featurestoreId) {
+      dispatch.featureGroups.fetch({
+        projectId,
+        featureStoreId: featureStoreData?.featurestoreId,
+      });
+    }
+  }, [dispatch, projectId, featureStoreData]);
+
+  const handleResetFilters = useCallback(() => {
+    setFilter([]);
+    setSearch('');
+  }, []);
+
+  const handleRouteChange = useCallback(
+    (url: string) => () => {
+      console.log('Navigate to', url);
+    },
+    [],
+  );
 
   const handleCreate = useCallback(() => {
     navigate(routeNames.featureGroup.create, routeNames.project.view);
@@ -91,7 +107,7 @@ const FeatureGroupList: FC<FeatureGroupProps> = ({
       <Flex alignItems="center">
         <Input
           variant="white"
-          label=""
+          disabled={!data.length}
           value={search}
           width="180px"
           placeholder="Find a feature group..."
@@ -140,12 +156,28 @@ const FeatureGroupList: FC<FeatureGroupProps> = ({
           <Button onClick={handleCreate}>New Feature Group</Button>
         </Box>
       </Flex>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        dataResult.map((item) => (
-          <Card key={item.id} data={item} isLabelsLoading={isLabelsLoading} />
-        ))
+      {isLoading && <Loader />}
+      {!isLoading && (
+        <FeatureGroupListContent
+          data={dataResult}
+          isFiltered={data.length !== dataResult.length}
+          onResetFilters={handleResetFilters}
+          isLabelsLoading={isLabelsLoading}
+        />
+      )}
+      {!isLoading && !data.length && (
+        <NoData
+          mainText="No Feature Group"
+          secondaryText="Create or import feature groups from sources"
+        >
+          <Button intent="secondary" onClick={handleRouteChange('')} mr="14px">
+            All Sources
+          </Button>
+          <Button intent="secondary" onClick={handleRouteChange('')} mr="14px">
+            Feature Group Documentation
+          </Button>
+          <Button onClick={handleCreate}>New Feature Group</Button>
+        </NoData>
       )}
     </Flex>
   );
