@@ -23,14 +23,10 @@ import {
   selectLabelsLoading,
 } from '../../../../store/models/feature/selectors';
 
-export interface FeatureGroupOverviewProps {
-  projectId: number;
-}
+const FeatureGroupOverview: FC = () => {
+  const { fgId, id: projectId } = useParams();
 
-const FeatureGroupOverview: FC<FeatureGroupOverviewProps> = ({ projectId }) => {
-  const { fgId } = useParams();
-
-  const { data, isLoading, fetchData } = useFeatureGroupView(projectId, +fgId);
+  const { data, isLoading, fetchData } = useFeatureGroupView(+projectId, +fgId);
 
   const isLabelsLoading = useSelector(selectLabelsLoading);
   const labels = useSelector<RootState, FeatureGroupLabel[]>(

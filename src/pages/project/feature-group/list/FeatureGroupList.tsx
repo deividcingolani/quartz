@@ -1,6 +1,7 @@
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { FC, useCallback, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Button,
   Input,
@@ -9,31 +10,26 @@ import {
   Value,
   IconButton,
 } from '@logicalclocks/quartz';
-
-import routeNames from '../../../routes/routeNames';
+import routeNames from '../../../../routes/routeNames';
 // Types
-import { Dispatch } from '../../../store';
-import { FeatureGroup } from '../../../types/feature-group';
+import { Dispatch } from '../../../../store';
+import { FeatureGroup } from '../../../../types/feature-group';
 // Utils
-import useFeatureGroups from './hooks/useFeatureGroups';
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
-import { sortOptions, filterFG, sortFG, searchFGText } from './utils';
+import useFeatureGroups from '../hooks/useFeatureGroups';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { sortOptions, filterFG, sortFG, searchFGText } from '../utils';
 // Selectors
 import {
   selectFeatureStoreData,
   selectLabelsLoading,
-} from '../../../store/models/feature/selectors';
-import NoData from '../../../components/no-data/NoData';
+} from '../../../../store/models/feature/selectors';
+import NoData from '../../../../components/no-data/NoData';
 import FeatureGroupListContent from './FeatureGroupListContent';
-import Loader from '../../../components/loader/Loader';
+import Loader from '../../../../components/loader/Loader';
 
-export interface FeatureGroupProps {
-  projectId: number;
-}
+const FeatureGroupList: FC = () => {
+  const { id: projectId } = useParams();
 
-const FeatureGroupList: FC<FeatureGroupProps> = ({
-  projectId,
-}: FeatureGroupProps) => {
   const [filter, setFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
@@ -44,7 +40,7 @@ const FeatureGroupList: FC<FeatureGroupProps> = ({
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   const { data, isLoading } = useFeatureGroups(
-    projectId,
+    +projectId,
     featureStoreData?.featurestoreId,
   );
 
@@ -68,16 +64,11 @@ const FeatureGroupList: FC<FeatureGroupProps> = ({
   const handleRefresh = useCallback(() => {
     if (featureStoreData?.featurestoreId) {
       dispatch.featureGroups.fetch({
-        projectId,
+        projectId: +projectId,
         featureStoreId: featureStoreData?.featurestoreId,
       });
     }
   }, [dispatch, projectId, featureStoreData]);
-
-  const handleResetFilters = useCallback(() => {
-    setFilter([]);
-    setSearch('');
-  }, []);
 
   const handleRouteChange = useCallback(
     (url: string) => () => {
@@ -85,6 +76,11 @@ const FeatureGroupList: FC<FeatureGroupProps> = ({
     },
     [],
   );
+
+  const handleResetFilters = useCallback(() => {
+    setFilter([]);
+    setSearch('');
+  }, []);
 
   const handleCreate = useCallback(() => {
     navigate(routeNames.featureGroup.create, routeNames.project.view);

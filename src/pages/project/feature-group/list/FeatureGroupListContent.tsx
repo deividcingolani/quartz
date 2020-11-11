@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
 // Types
-import { FeatureGroup } from '../../../types/feature-group';
+import { FeatureGroup } from '../../../../types/feature-group';
 // Components
-import FilterResult from '../../../components/filter-result/FilterResult';
-import Card from './list/Card';
+import FilterResult from '../../../../components/filter-result/FilterResult';
+import Card from './Card';
 
 export interface FeatureGroupListContentProps {
   data: FeatureGroup[];

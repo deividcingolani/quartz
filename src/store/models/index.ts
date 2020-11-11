@@ -11,6 +11,7 @@ import featureGroupStatistics from './feature/statistics/featureGroupStatistics.
 import featureGroupRows from './feature/statistics/featureGroupRows.model';
 import { trainingDatasetModel } from './training-dataset';
 import { trainingDatasetLabelModel } from './training-dataset-label';
+import featureStoreSources from './feature/sources/featureStoreSources.model';
 
 export interface RootModel extends Models<RootModel> {
   profile: typeof profile;
@@ -26,6 +27,7 @@ export interface RootModel extends Models<RootModel> {
   featureGroupRows: typeof featureGroupRows;
   trainingDatasets: typeof trainingDatasetModel;
   trainingDatasetLabels: typeof trainingDatasetLabelModel;
+  featureStoreSources: typeof featureStoreSources;
 }
 
 const models: RootModel = {
@@ -39,6 +41,7 @@ const models: RootModel = {
   featureGroupRows,
   trainingDatasets: trainingDatasetModel,
   trainingDatasetLabels: trainingDatasetLabelModel,
+  featureStoreSources,
 };
 
 export default models;

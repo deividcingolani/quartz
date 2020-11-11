@@ -37,7 +37,7 @@ const pageLimits = {
 const sortKeys: {
   [key: string]: [keyof Feature, SortFunc<any>] | undefined;
 } = {
-  name: ['name', sort.strting],
+  name: ['name', sort.string],
   'default order': undefined,
 };
 
@@ -46,7 +46,6 @@ type PageLimitsType = typeof pageLimits;
 const StatisticsContent: FC<StatisticsContentProps> = ({
   featureGroupData,
   statistics,
-  view,
 }) => {
   const [[pageLimit], setPageLimit] = useState<[keyof PageLimitsType]>([
     '20 features',
@@ -67,7 +66,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
     onSearchChange,
     onToggleKey,
     onReset,
-  } = useFeatureFilter(featureGroupData.features, view);
+  } = useFeatureFilter(featureGroupData.features);
 
   // Computed data
   const { data: paginatedData, totalPages } = useMemo((): Paginate<Feature> => {

@@ -17,6 +17,7 @@ export enum RequestType {
   post = 'post',
   delete = 'delete',
   patch = 'patch',
+  put = 'put',
 }
 
 interface DataType {

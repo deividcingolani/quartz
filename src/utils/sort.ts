@@ -1,6 +1,6 @@
 export type SortFunc<T> = (a: T[keyof T], b: T[keyof T]) => number;
 
-enum SortDirection {
+export enum SortDirection {
   asc,
   desc,
 }
@@ -21,10 +21,14 @@ const sortDate: SortFunc<any> = (a, b) => {
 };
 
 const sort = <T>(
-  key: keyof T,
+  key?: keyof T,
   sortFunc: SortFunc<T> = sortString,
   direction: SortDirection = SortDirection.asc,
 ) => (data: T[]): T[] => {
+  if (!key) {
+    return data;
+  }
+
   const result = data.sort(({ [key]: a }, { [key]: b }) => sortFunc(a, b));
 
   if (direction === SortDirection.desc) {
@@ -33,7 +37,7 @@ const sort = <T>(
   return result;
 };
 
-sort.strting = sortString;
+sort.string = sortString;
 sort.number = sortNumber;
 sort.date = sortDate;
 

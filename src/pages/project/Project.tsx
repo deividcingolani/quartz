@@ -10,35 +10,23 @@ import Redirect from '../../components/redirect/Redirect';
 import { selectFeatureStoreData } from '../../store/models/feature/selectors';
 // Types
 import { Dispatch } from '../../store';
+import FeatureGroupData from './feature-group/data/FeatureGroupData';
 
-// Feature Group
-const FeatureGroupList = React.lazy(
-  () => import('./feature-group/FeatureGroupList'),
-);
-const FeatureGroupEdit = React.lazy(
-  () => import('./feature-group/FeatureGroupEdit'),
-);
-const FeatureGroupCreate = React.lazy(
-  () => import('./feature-group/FeatureGroupCreate'),
-);
-const FeatureGroupActivity = React.lazy(
-  () => import('./feature-group/FeatureGroupActivity'),
-);
-const FeatureGroupDataPreview = React.lazy(
-  () => import('./feature-group/FeatureGroupDataPreview'),
-);
-const FeatureGroupDataCorrelation = React.lazy(
-  () => import('./feature-group/FeatureGroupDataCorrelation'),
-);
-const FeatureGroupStatistics = React.lazy(
-  () => import('./feature-group/data/FeatureGroupStatistics'),
-);
-const FeatureGroupOverview = React.lazy(
-  () => import('./feature-group/overview/FeatureGroupOverview'),
-);
-const TrainingDatasetList = React.lazy(
-  () => import('./training-dataset/list/TrainingDatasetList'),
-);
+import {
+  FeatureGroupList,
+  FeatureGroupEdit,
+  FeatureGroupCreate,
+  FeatureGroupActivity,
+  FeatureGroupDataPreview,
+  FeatureGroupDataCorrelation,
+  FeatureGroupStatistics,
+  SourcesList,
+  SourcesCreate,
+  SourcesEdit,
+  SourcesImportSample,
+  FeatureGroupOverview,
+  TrainingDatasetList,
+} from './lazyComponents';
 
 const Project: FC = () => {
   const { id } = useParams();
@@ -52,6 +40,7 @@ const Project: FC = () => {
   const clearData = useCallback((): void => {
     dispatch.featureGroups.setFeatureGroups([]);
     dispatch.trainingDatasets.clear();
+    dispatch.featureStoreSources.clear();
     dispatch.featureStores.setFeatureStores(null);
   }, [dispatch]);
 
@@ -73,11 +62,11 @@ const Project: FC = () => {
       />
       <Route
         path={routeNames.featureGroup.list}
-        element={<FeatureGroupList projectId={+id} />}
+        element={<FeatureGroupList />}
       />
       <Route
         path={routeNames.featureGroup.create}
-        element={<FeatureGroupCreate projectId={+id} />}
+        element={<FeatureGroupCreate />}
       />
       <Route
         path={routeNames.featureGroup.activity}
@@ -88,12 +77,16 @@ const Project: FC = () => {
         element={<FeatureGroupDataPreview />}
       />
       <Route
+        path={routeNames.featureGroup.statistics}
+        element={<FeatureGroupData />}
+      />
+      <Route
         path={routeNames.featureGroup.dataCorrelation}
         element={<FeatureGroupDataCorrelation />}
       />
       <Route
         path={routeNames.featureGroup.overview}
-        element={<FeatureGroupOverview projectId={+id} />}
+        element={<FeatureGroupOverview />}
       />
       <Route
         path={routeNames.featureGroup.edit}
@@ -101,11 +94,11 @@ const Project: FC = () => {
       />
       <Route
         path={routeNames.featureGroup.list}
-        element={<FeatureGroupList projectId={+id} />}
+        element={<FeatureGroupList />}
       />
       <Route
         path={routeNames.featureGroup.create}
-        element={<FeatureGroupCreate projectId={+id} />}
+        element={<FeatureGroupCreate />}
       />
       <Route
         path={routeNames.featureGroup.activity}
@@ -129,11 +122,22 @@ const Project: FC = () => {
       />
       <Route
         path={routeNames.featureGroup.overview}
-        element={<FeatureGroupOverview projectId={+id} />}
+        element={<FeatureGroupOverview />}
       />
       <Route
         path={routeNames.trainingDatasetList}
-        element={<TrainingDatasetList projectId={+id} />}
+        element={<TrainingDatasetList />}
+      />
+      <Route
+        path={routeNames.source.importSample}
+        element={<SourcesImportSample />}
+      />
+      <Route path={routeNames.source.list} element={<SourcesList />} />
+      <Route path={routeNames.source.create} element={<SourcesCreate />} />
+      <Route path={routeNames.source.edit} element={<SourcesEdit />} />
+      <Route
+        path={routeNames.source.createWithProtocol}
+        element={<SourcesCreate />}
       />
       <Route path="/" element={<Redirect to={`${location.pathname}/fg`} />} />
       <Route path="*" element={<div>Page not Found</div>} />

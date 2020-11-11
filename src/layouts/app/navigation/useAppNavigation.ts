@@ -123,7 +123,6 @@ const useAppNavigation = (): TreeNode[] => {
           },
         ],
       },
-
       {
         title: 'Training Datasets',
         icon: ['far', 'copy'],
@@ -134,6 +133,13 @@ const useAppNavigation = (): TreeNode[] => {
           routeNames.trainingDatasetList,
           'p/:id/*',
         ),
+      },
+      {
+        title: 'Sources',
+        icon: ['far', 'copy'],
+
+        isActive: location.pathname.includes(routeNames.source.list),
+        onClick: handleNavigateRelative(routeNames.source.list, 'p/:id/*'),
       },
     ];
   }, [createAnchorLink, location, isActive, handleNavigateRelative]);

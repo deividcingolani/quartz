@@ -8,9 +8,9 @@ import {
   FeatureGroupStatistics,
 } from '../../../../types/feature-group';
 // Components
-import StatisticsTables from '../components/StatisticsTables';
 import StatisticsCharts from './StatisticsCharts';
 import StatisticsRows from './StatisticsRows';
+import StatisticsTables from './StatisticsTables';
 
 export interface StatisticsCardProps {
   data: Feature;

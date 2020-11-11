@@ -16,8 +16,8 @@ import {
   FeatureGroupLabel,
 } from '../../../../types/feature-group';
 // Components
-import CardLabels from '../components/CardLabels';
-import DateValue from '../components/DateValue';
+import CardLabels from '../list/CardLabels';
+import DateValue from '../list/DateValue';
 
 export interface SummaryDataProps {
   data: FeatureGroup;

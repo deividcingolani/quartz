@@ -14,3 +14,23 @@ export interface FeatureStore {
   projectId: number;
   projectName: string;
 }
+
+export enum StorageConnectorType {
+  hops = 'HopsFS',
+  jdbc = 'JDBC',
+  aws = 'S3',
+}
+
+export interface FeatureStoreSource {
+  arguments: string;
+  connectionString?: string;
+  hopsfsPath?: string;
+  description: string;
+  featurestoreId: number;
+  id: number;
+  name: string;
+  bucket?: string;
+  storageConnectorType: StorageConnectorType;
+  accessKey?: string;
+  secretKey?: string;
+}

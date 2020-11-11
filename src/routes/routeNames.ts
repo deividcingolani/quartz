@@ -29,6 +29,14 @@ const routeNames = {
 
   trainingDatasetList: '/td',
   trainingDatasetEdit: '/td/:id/edit',
+
+  source: {
+    list: '/sources',
+    create: '/sources/new/',
+    edit: '/sources/:sourceId/:connectorType/edit',
+    importSample: '/sources/import-sample',
+    createWithProtocol: '/sources/new/:protocol',
+  },
 };
 
 export default routeNames;

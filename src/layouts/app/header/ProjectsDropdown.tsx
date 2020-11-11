@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC, useCallback, useRef } from 'react';
+import React, { FC, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   List,
@@ -26,12 +26,8 @@ const ProjectsDropdown: FC = () => {
   const [isOpen, handleToggle, handleClickOutside] = useDropdown();
   useOnClickOutside(buttonRef, handleClickOutside);
 
-  const handleToggleList = useCallback(() => {
-    handleToggle();
-  }, [handleToggle]);
-
   return (
-    <Button onClick={handleToggleList} ref={buttonRef}>
+    <Button onClick={() => handleToggle()} ref={buttonRef}>
       <FolderIcon />
       <Subtitle ml="16px">PROJECT ACME</Subtitle>
 

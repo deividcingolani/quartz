@@ -1,4 +1,5 @@
 import React, { FC, useMemo, useState, ChangeEvent } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -13,54 +14,26 @@ import { Dispatch, RootState } from '../../../../store';
 import Loader from '../../../../components/loader/Loader';
 import useTrainingDatasets from '../useTrainingDatasets';
 import {
-  sortFn,
-  filterFn,
-  searchTextFn,
-} from '../../../../utils/filter-sort.util';
+  sort as sortFn,
+  filter as filterFn,
+  searchText,
+  pipe,
+} from '../../../../utils';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
-import { pipe } from '../../../../utils';
 import { ITrainingDataset } from '../../../../types/training-dataset';
 import TrainingDatasetListContent from './TrainingDatasetListContent';
 import NoData from '../../../../components/no-data/NoData';
 import routeNames from '../../../../routes/routeNames';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 
-export interface ITrainingDatasetListProps {
-  projectId: number;
-}
-
-interface SortParams {
-  [key: string]: (fg1: any, fg2: any) => number;
-}
-
-export const sortOptions: SortParams = {
-  'creation date': ({ created: c1 }, { created: c2 }) => {
-    const time1 = new Date(c1).getTime();
-    const time2 = new Date(c2).getTime();
-
-    if (time1 === time2) {
-      return 0;
-    }
-
-    return time1 < time2 ? 1 : -1;
-  },
-  'last updated': ({ updated: c1 }, { updated: c2 }) => {
-    const time1 = new Date(c1).getTime();
-    const time2 = new Date(c2).getTime();
-
-    if (time1 === time2) {
-      return 0;
-    }
-
-    return time1 < time2 ? 1 : -1;
-  },
-  name: ({ name: n1 }, { name: n2 }) => n1.localeCompare(n2),
+export const sortOptions: { [key: string]: keyof ITrainingDataset } = {
+  'creation date': 'created',
+  'last updated': 'created',
+  name: 'name',
 };
 
-const TrainingDatasetList: FC<ITrainingDatasetListProps> = (
-  props: ITrainingDatasetListProps,
-) => {
-  const { projectId } = props;
+const TrainingDatasetList: FC = () => {
+  const { id: projectId } = useParams();
   const dispatch = useDispatch<Dispatch>();
   const [filter, setFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string[]>([]);
@@ -70,7 +43,7 @@ const TrainingDatasetList: FC<ITrainingDatasetListProps> = (
   );
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
   const { data, isLoading } = useTrainingDatasets(
-    projectId,
+    +projectId,
     featureStoreData?.featurestoreId,
   );
   const labels = useMemo(
@@ -112,11 +85,12 @@ const TrainingDatasetList: FC<ITrainingDatasetListProps> = (
 
   const dataResult = useMemo(() => {
     const [sortKey] = sort;
+    const key = sortOptions[sortKey];
 
     return pipe<ITrainingDataset[]>(
-      sortFn(sortOptions, sortKey),
+      sortFn<ITrainingDataset>(key as keyof ITrainingDataset, sortFn.string),
       filterFn(filter, 'labels'),
-      searchTextFn(search),
+      searchText(search),
     )(data);
   }, [data, sort, filter, search]);
 

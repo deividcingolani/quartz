@@ -6,6 +6,7 @@
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
     "@fortawesome/react-fontawesome": "^0.1.11",
+    "@hookform/resolvers": "^1.0.0",
     "@logicalclocks/quartz": "^1.1.0",
     "@rematch/core": "^2.0.0-next.6",
     "@rematch/immer": "^2.0.0-next.6",
@@ -25,13 +26,15 @@
     "normalizr": "^3.6.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^6.10.1",
     "react-redux": "^7.2.1",
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "3.4.3",
     "rebass": "^4.0.7",
     "recharts": "^1.8.5",
     "redux": "^4.0.5",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -63,6 +66,7 @@
     "@types/rebass": "^4.0.7",
     "@types/recharts": "^1.8.16",
     "@types/redux": "^3.6.0",
+    "@types/yup": "^0.29.9",
     "eslint-config-airbnb-typescript-prettier": "^3.1.0",
     "prettier": "^2.1.2"
   }

@@ -1,11 +1,8 @@
-export const pipe = <R, T extends any[] = any>(
-  fn1: (...args: T) => R,
-  ...fns: Array<(a: R) => R>
-) => {
-  const piped = fns.reduce(
-    (acc, curr) => (v: R) => acc(curr(v)),
-    (v) => v,
-  );
+import filter from './filter';
+import paginate from './paginate';
+import pipe from './pipe';
+import randomArrayString from './randomArrayString';
+import searchText from './searchText';
+import sort from './sort';
 
-  return (...args: T) => piped(fn1(...args));
-};
+export { filter, paginate, pipe, randomArrayString, searchText, sort };
