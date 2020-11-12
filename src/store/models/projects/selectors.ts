@@ -4,7 +4,11 @@ import { ProjectsState } from './projectsList.model';
 
 export const projectsList = ({
   projectsList: list,
-}: RootState): ProjectsState => list;
+  loading,
+}: RootState): { projects: ProjectsState; isLoading: boolean } => ({
+  projects: list,
+  isLoading: loading.effects.projectsList.getProjects,
+});
 
 export const selectedProject = ({
   projectsList: list,

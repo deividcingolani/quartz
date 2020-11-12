@@ -4,8 +4,6 @@ import React, { FC, useCallback, useEffect } from 'react';
 
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-// Selectors
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 // Types
 import { SourceProtocol } from '../types';
 import { SourcesFormData } from '../forms/types';
@@ -25,10 +23,12 @@ const SourcesCreate: FC = () => {
   const error = useSelector(
     (state: RootState) => state.error.effects.featureStoreSources.create,
   );
-  const {
-    data: featureStoreData,
-    isLoading: isFeatureStoreLoading,
-  } = useSelector(selectFeatureStoreData);
+  const featureStoreData = useSelector((state: RootState) =>
+    state.featureStores?.length ? state.featureStores[0] : null,
+  );
+  const isFeatureStoreLoading = useSelector(
+    (state: RootState) => state.loading.effects.featureStores.fetch,
+  );
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();

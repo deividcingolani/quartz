@@ -1,20 +1,20 @@
 import * as yup from 'yup';
 import { Flex } from 'rebass';
-import React, { ChangeEvent, FC, useState } from 'react';
-import { Input, IconButton, Tooltip, Icon } from '@logicalclocks/quartz';
+import React, { ChangeEvent, FC, memo, useState } from 'react';
+import { Input, IconButton } from '@logicalclocks/quartz';
 import { useFieldArray } from 'react-hook-form';
 
 // Utils
-import getInputValidation from '../../../../utils/getInputValidation';
+import getInputValidation from '../../../../../utils/getInputValidation';
 // Default validators
-import { name, shortText } from '../../../../utils/validators';
+import { alphanum, shortText } from '../../../../../utils/validators';
 // Types
 import { SourceFormProps } from './types';
 // Styles
 import { tooltipProps, argumentRowStyles } from './jdbc-form.styles';
 
 export const schema = yup.object().shape({
-  name: name.label('Name'),
+  name: alphanum.label('Name'),
   description: shortText.label('Description'),
   connectionString: shortText.required().label('S3 Bucket'),
   arguments: yup.array(
@@ -41,33 +41,22 @@ const JdbcForm: FC<SourceFormProps> = ({
 
   return (
     <>
-      <Flex>
-        <Input
-          label="Name"
-          name="name"
-          disabled={isDisabled}
-          placeholder="name of the source"
-          ref={register}
-          labelAction={
-            <Tooltip
-              mainText="Only alphanumeric characters, dash or underscore"
-              ml="5px"
-            >
-              <Icon icon="info-circle" />
-            </Tooltip>
-          }
-          {...getInputValidation('name', errors)}
-        />
-        <Input
-          labelProps={{ width: '80%', ml: '20px' }}
-          label="Description"
-          name="description"
-          disabled={isDisabled}
-          placeholder="description"
-          ref={register}
-          {...getInputValidation('description', errors)}
-        />
-      </Flex>
+      <Input
+        label="Name"
+        name="name"
+        disabled={isDisabled}
+        placeholder="name of the source"
+        ref={register}
+        {...getInputValidation('name', errors)}
+      />
+      <Input
+        label="Description"
+        name="description"
+        disabled={isDisabled}
+        placeholder="description"
+        ref={register}
+        {...getInputValidation('description', errors)}
+      />
       <Input
         labelProps={{ width: '100%' }}
         label="Connection URL"
@@ -160,4 +149,4 @@ const JdbcForm: FC<SourceFormProps> = ({
   );
 };
 
-export default JdbcForm;
+export default memo(JdbcForm);

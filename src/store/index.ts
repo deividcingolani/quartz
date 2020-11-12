@@ -13,7 +13,7 @@ export const store = init<RootModel, FullModel>({
   plugins: [
     loadingPlugin(),
     immerPlugin({ whitelist: ['selectedProject'] }),
-    errorPlugin(),
+    errorPlugin({ globalErrors: [401, 404] }),
   ],
 });
 

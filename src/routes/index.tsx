@@ -5,6 +5,8 @@ import routeNames from './routeNames';
 // Layouts
 import AppLayout from '../layouts/app/AppLayout';
 import ProjectManagementLayout from '../layouts/project-management/ProjectManagementLayout';
+// Components
+import Error404 from '../pages/error/404Error';
 // Pages
 const Project = React.lazy(() => import('../pages/project/Project'));
 const ProjectEdit = React.lazy(() => import('../pages/project/ProjectEdit'));
@@ -37,7 +39,7 @@ const Routes: FC = () => {
         <AppLayout>
           <RouterRoutes>
             <Route path={routeNames.project.view} element={<Project />} />
-            <Route path="*" element={<div>Page Not Found</div>} />
+            <Route path="*" element={<Error404 />} />
           </RouterRoutes>
         </AppLayout>
       </Route>

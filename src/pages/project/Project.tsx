@@ -6,10 +6,9 @@ import routeNames from '../../routes/routeNames';
 // Components
 import Loader from '../../components/loader/Loader';
 import Redirect from '../../components/redirect/Redirect';
-// Selectors
-import { selectFeatureStoreData } from '../../store/models/feature/selectors';
+import Error404 from '../error/404Error';
 // Types
-import { Dispatch } from '../../store';
+import { Dispatch, RootState } from '../../store';
 import FeatureGroupData from './feature-group/data/FeatureGroupData';
 
 import {
@@ -31,8 +30,12 @@ import {
 const Project: FC = () => {
   const { id } = useParams();
   const location = useLocation();
-  const { data: featureStoreData, isLoading: isFSLoading } = useSelector(
-    selectFeatureStoreData,
+
+  const featureStoreData = useSelector((state: RootState) =>
+    state.featureStores?.length ? state.featureStores[0] : null,
+  );
+  const isFSLoading = useSelector(
+    (state: RootState) => state.loading.effects.featureStores.fetch,
   );
 
   const dispatch = useDispatch<Dispatch>();
@@ -140,7 +143,7 @@ const Project: FC = () => {
         element={<SourcesCreate />}
       />
       <Route path="/" element={<Redirect to={`${location.pathname}/fg`} />} />
-      <Route path="*" element={<div>Page not Found</div>} />
+      <Route path="*" element={<Error404 />} />
     </Routes>
   );
 };

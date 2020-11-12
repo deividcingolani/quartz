@@ -9,7 +9,7 @@ import {
 
 export class EffectError<T = string> {
   // eslint-disable-next-line no-useless-constructor
-  constructor(public readonly data: T, public readonly status?: number) {}
+  constructor(public readonly data: T, public readonly status: number) {}
 }
 
 interface ErrorState<TModels extends Models<TModels>> {
@@ -21,6 +21,8 @@ interface ErrorState<TModels extends Models<TModels>> {
       >]: EffectError | null;
     };
   };
+  globalError: EffectError | null;
+  error: EffectError | null;
 }
 
 interface InitialErrorState {
@@ -29,6 +31,8 @@ interface InitialErrorState {
       [effectName: string]: EffectError | null;
     };
   };
+  globalError: null;
+  error: null;
 }
 
 interface ErrorModel<TModels extends Models<TModels>>
@@ -36,6 +40,8 @@ interface ErrorModel<TModels extends Models<TModels>>
   reducers: {
     set: Reducer<ErrorState<TModels>>;
     clear: Reducer<ErrorState<TModels>>;
+    clearGlobal: Reducer<ErrorState<TModels>>;
+    clearError: Reducer<ErrorState<TModels>>;
   };
 }
 
@@ -51,13 +57,21 @@ const setErrorAction = <TModels extends Models<TModels>>(
   payload: Action<{
     name: string;
     action: string;
-    error: Error | null;
+    error: EffectError | null;
+    isGlobal?: boolean;
   }>['payload'],
 ): ErrorState<TModels> => {
-  const { name = '', action = '', error = initialErrorValue } = payload || {};
+  const {
+    name = '',
+    action = '',
+    error = initialErrorValue,
+    isGlobal = false,
+  } = payload || {};
 
   return {
     ...state,
+    globalError: isGlobal ? error : state.globalError,
+    error: isGlobal ? state.error : error,
     effects: {
       ...state.effects,
       [name]: {
@@ -86,11 +100,37 @@ const clearErrorAction = <TModels extends Models<TModels>>(
   };
 };
 
+const clearGlobalErrorAction = <TModels extends Models<TModels>>(
+  state: ErrorState<TModels>,
+): ErrorState<TModels> => {
+  return {
+    ...state,
+    globalError: null,
+  };
+};
+
+const clearNotGlobalAction = <TModels extends Models<TModels>>(
+  state: ErrorState<TModels>,
+): ErrorState<TModels> => {
+  return {
+    ...state,
+    error: null,
+  };
+};
+
+export interface ErrorsPluginOptions {
+  globalErrors: Array<number>;
+}
+
 export default <
   TModels extends Models<TModels>,
   TExtraModels extends Models<TModels>
->(): Plugin<TModels, TExtraModels, ExtraModelsFromError<TModels>> => {
+>(
+  options?: ErrorsPluginOptions,
+): Plugin<TModels, TExtraModels, ExtraModelsFromError<TModels>> => {
   const errorInitialState: InitialErrorState = {
+    globalError: null,
+    error: null,
     effects: {},
   };
 
@@ -99,6 +139,8 @@ export default <
     reducers: {
       set: setErrorAction,
       clear: clearErrorAction,
+      clearGlobal: clearGlobalErrorAction,
+      clearError: clearNotGlobalAction,
     },
     state: errorInitialState as ErrorState<TModels>,
   };
@@ -134,8 +176,16 @@ export default <
 
           if (effectResult?.then) {
             effectResult.catch((err: any) => {
-              if (err instanceof EffectError) {
-                rematch.dispatch.error.set({ name, action, error: err });
+              if (err.isAxiosError) {
+                const isGlobal = options?.globalErrors.includes(
+                  err.status || err.response?.status,
+                );
+                rematch.dispatch.error.set({
+                  name,
+                  action,
+                  error: err,
+                  isGlobal,
+                });
               } else {
                 throw err;
               }

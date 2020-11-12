@@ -11,13 +11,12 @@ import {
 } from '@logicalclocks/quartz';
 import { useNavigate, useParams } from 'react-router-dom';
 
-// Selectors
-import { projectsList } from '../../../store/models/projects/selectors';
 // Styled
 import Button from './project-button.styles';
+import { RootState } from '../../../store';
 
 const ProjectsDropdown: FC = () => {
-  const projects = useSelector(projectsList);
+  const projects = useSelector((state: RootState) => state.projectsList);
   const { id: projectId } = useParams();
   const navigate = useNavigate();
 

@@ -8,9 +8,11 @@ import AppHeader from './header/AppHeader';
 import AppNavigation from './navigation/AppNavigation';
 import Suspense from '../../components/suspense/Suspense';
 import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
+import GlobalErrors from '../../components/error/GlobalErrors';
 
 // Styles
 import styles from './app-layout-styles';
+import useErrorCleaner from '../../hooks/useErrorCleaner';
 
 export interface AppLayoutProps {
   children: React.ReactElement;
@@ -18,6 +20,8 @@ export interface AppLayoutProps {
 
 const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
   const dispatch = useDispatch<Dispatch>();
+
+  useErrorCleaner();
 
   useEffect(() => {
     dispatch.projectsList.getProjects();
@@ -48,7 +52,9 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
             flexDirection="column"
           >
             <ErrorBoundary>
-              <Suspense>{children}</Suspense>
+              <Suspense>
+                <GlobalErrors>{children}</GlobalErrors>
+              </Suspense>
             </ErrorBoundary>
           </Flex>
         </Flex>

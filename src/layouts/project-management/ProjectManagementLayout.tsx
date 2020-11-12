@@ -6,10 +6,12 @@ import { Flex } from 'rebass';
 import AppHeader from '../app/header/AppHeader';
 import Suspense from '../../components/suspense/Suspense';
 import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
+import GlobalErrors from '../../components/error/GlobalErrors';
 // Types
 import { Dispatch } from '../../store';
 // Styles
 import styles from './pm-layout-styles';
+import useErrorCleaner from '../../hooks/useErrorCleaner';
 
 export interface ProjectManagementLayoutProps {
   children: React.ReactElement;
@@ -24,6 +26,8 @@ const ProjectManagementLayout: FC<ProjectManagementLayoutProps> = ({
     dispatch.projectsList.getProjects();
   }, [dispatch]);
 
+  useErrorCleaner();
+
   return (
     <Flex width="100%" height="100%" flexDirection="column">
       <AppHeader />
@@ -37,7 +41,9 @@ const ProjectManagementLayout: FC<ProjectManagementLayoutProps> = ({
         <div />
         {/* Content */}
         <ErrorBoundary>
-          <Suspense>{children}</Suspense>
+          <Suspense>
+            <GlobalErrors>{children}</GlobalErrors>
+          </Suspense>
         </ErrorBoundary>
       </Flex>
     </Flex>

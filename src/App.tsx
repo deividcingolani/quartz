@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Provider } from 'react-redux';
 import { Global, css } from '@emotion/core';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider } from '@logicalclocks/quartz';
+import { NotificationsContainer, ThemeProvider } from '@logicalclocks/quartz';
 
 import Routes from './routes';
 import { store } from './store';
@@ -24,6 +24,7 @@ const App: FC = () => {
     <Provider store={store}>
       <ThemeProvider>
         <Global styles={globalStyles} />
+        <NotificationsContainer mt="90px" />
         <BrowserRouter>
           <Routes />
         </BrowserRouter>

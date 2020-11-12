@@ -13,8 +13,6 @@ const projectsList = createModel()({
   effects: (dispatch) => ({
     getProjects: async (): Promise<void> => {
       dispatch.projectsList.setProjects(await ProjectsService.getList());
-
-
     },
   }),
 });

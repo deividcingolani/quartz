@@ -1,17 +1,16 @@
-import React, { FC } from 'react';
-import { Icon, Input, Tooltip } from '@logicalclocks/quartz';
-import { Flex } from 'rebass';
-
+import React, { FC, memo } from 'react';
+import { Input } from '@logicalclocks/quartz';
 import * as yup from 'yup';
+
 // Utils
-import getInputValidation from '../../../../utils/getInputValidation';
+import getInputValidation from '../../../../../utils/getInputValidation';
 // Default validators
-import { name, shortText } from '../../../../utils/validators';
+import { alphanum, shortText } from '../../../../../utils/validators';
 // Types
 import { SourceFormProps } from './types';
 
 export const schema = yup.object().shape({
-  name: name.label('Name'),
+  name: alphanum.label('Name'),
   description: shortText.label('Description'),
   bucket: shortText.required().label('S3 Bucket'),
   accessKey: shortText.required().label('Access key'),
@@ -20,33 +19,22 @@ export const schema = yup.object().shape({
 
 const AwsForm: FC<SourceFormProps> = ({ register, isDisabled, errors }) => (
   <>
-    <Flex>
-      <Input
-        label="Name"
-        name="name"
-        disabled={isDisabled}
-        placeholder="name of the source"
-        ref={register}
-        labelAction={
-          <Tooltip
-            mainText="Only alphanumeric characters, dash or underscore"
-            ml="5px"
-          >
-            <Icon icon="info-circle" />
-          </Tooltip>
-        }
-        {...getInputValidation('name', errors)}
-      />
-      <Input
-        labelProps={{ ml: '20px', width: '80%' }}
-        label="Description"
-        name="description"
-        disabled={isDisabled}
-        placeholder="description"
-        ref={register}
-        {...getInputValidation('description', errors)}
-      />
-    </Flex>
+    <Input
+      label="Name"
+      name="name"
+      disabled={isDisabled}
+      placeholder="name of the source"
+      ref={register}
+      {...getInputValidation('name', errors)}
+    />
+    <Input
+      label="Description"
+      name="description"
+      disabled={isDisabled}
+      placeholder="description"
+      ref={register}
+      {...getInputValidation('description', errors)}
+    />
     <Input
       labelProps={{ width: '100%' }}
       label="S3 Bucket"
@@ -76,4 +64,4 @@ const AwsForm: FC<SourceFormProps> = ({ register, isDisabled, errors }) => (
   </>
 );
 
-export default AwsForm;
+export default memo(AwsForm);

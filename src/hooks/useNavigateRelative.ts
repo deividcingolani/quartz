@@ -20,7 +20,7 @@ const useNavigateRelative = (): UseProjectNavigate => {
         navigate(`${match.pathname}${to}`);
       }
     },
-    [navigate, prevPathName],
+    [navigate],
   );
 };
 
