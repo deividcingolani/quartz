@@ -26,12 +26,13 @@ const featureGroups = createModel()({
       );
 
       // Fetch labels for each feature group
-      data.forEach(({ id }) => {
-        dispatch.featureGroupLabels.fetch({
-          projectId,
-          featureStoreId,
-          featureGroupId: id,
-        });
+      data.forEach((group) => {
+        group.type === 'cachedFeaturegroupDTO' &&
+          dispatch.featureGroupLabels.fetch({
+            projectId,
+            featureStoreId,
+            featureGroupId: group.id,
+          });
       });
 
       dispatch.featureGroups.setFeatureGroups(data);

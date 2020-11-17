@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from 'react';
+import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Flex } from 'rebass';
 import {
   Avatar,
@@ -18,6 +18,12 @@ import {
 // Components
 import CardLabels from '../list/CardLabels';
 import DateValue from '../list/DateValue';
+import { useSelector } from 'react-redux';
+import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import useFeatureGroups from '../hooks/useFeatureGroups';
+import { useParams } from 'react-router-dom';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import routeNames from '../../../../routes/routeNames';
 
 export interface SummaryDataProps {
   data: FeatureGroup;
@@ -30,11 +36,39 @@ const SummaryData: FC<SummaryDataProps> = ({
   isLabelsLoading,
   labels,
 }) => {
+  const { id: projectId } = useParams();
+
   const labelsFormatted = useMemo(() => {
     return labels.map(({ name }) => name);
   }, [labels]);
 
   const featureCount = data.features.length;
+
+  const navigate = useNavigateRelative();
+
+  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+
+  const { data: featureGroups } = useFeatureGroups(
+    +projectId,
+    featureStoreData?.featurestoreId,
+  );
+
+  const versions = featureGroups
+    .filter((fg) => fg.name === data?.name)
+    .map((fg) => fg.version.toString());
+
+  const handleVersionChange = useCallback(
+    (version: string[]) => {
+      const id = featureGroups.find((fg) => fg.version === +[version])?.id;
+      if (id) {
+        navigate(
+          '/fg/:fgId'.replace(':fgId', id.toString()),
+          routeNames.project.view,
+        );
+      }
+    },
+    [featureGroups, navigate],
+  );
 
   return (
     <>
@@ -54,11 +88,11 @@ const SummaryData: FC<SummaryDataProps> = ({
           width="143px"
           listWidth="100%"
           ml="43px"
-          value={['1.3']}
+          value={[data.version.toString()]}
           variant="white"
-          options={['1', '1.3']}
+          options={versions || []}
           placeholder="current version"
-          onChange={() => ({})}
+          onChange={handleVersionChange}
         />
       </Flex>
       <Flex mt="17px">

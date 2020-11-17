@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC, useRef } from 'react';
+import React, { FC, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   List,
@@ -25,10 +25,15 @@ const ProjectsDropdown: FC = () => {
   const [isOpen, handleToggle, handleClickOutside] = useDropdown();
   useOnClickOutside(buttonRef, handleClickOutside);
 
+  const project = useMemo(() => projects.find((p) => p.id === +projectId), [
+    projectId,
+    projects,
+  ]);
+
   return (
     <Button onClick={() => handleToggle()} ref={buttonRef}>
       <FolderIcon />
-      <Subtitle ml="16px">PROJECT ACME</Subtitle>
+      <Subtitle ml="16px">{project?.name}</Subtitle>
 
       {isOpen && (
         <List>
@@ -37,7 +42,7 @@ const ProjectsDropdown: FC = () => {
               key={id}
               variant={+projectId === id ? 'active' : 'primary'}
               hasDivider={index === projects.length - 1}
-              onClick={(): void => navigate(`p/${id}/fg`)}
+              onClick={() => navigate(`/p/${id}`)}
             >
               {name}
             </ListItem>

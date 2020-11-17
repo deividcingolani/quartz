@@ -39,7 +39,14 @@ const ErrorProjectsContent: FC<ErrorProjectsContentProps> = ({ actions }) => {
     );
   }
 
-  return <Button onClick={() => navigate(`/p/new`)}>Create a project</Button>;
+  return (
+    <>
+      <Button mr="14px" onClick={() => navigate(`/p/new`)}>
+        Create a project
+      </Button>
+      {actions}
+    </>
+  );
 };
 
 export default memo(ErrorProjectsContent);

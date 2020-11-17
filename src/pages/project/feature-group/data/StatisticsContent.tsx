@@ -46,6 +46,7 @@ type PageLimitsType = typeof pageLimits;
 const StatisticsContent: FC<StatisticsContentProps> = ({
   featureGroupData,
   statistics,
+  view,
 }) => {
   const [[pageLimit], setPageLimit] = useState<[keyof PageLimitsType]>([
     '20 features',
@@ -66,7 +67,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
     onSearchChange,
     onToggleKey,
     onReset,
-  } = useFeatureFilter(featureGroupData.features);
+  } = useFeatureFilter(featureGroupData.features, view);
 
   // Computed data
   const { data: paginatedData, totalPages } = useMemo((): Paginate<Feature> => {

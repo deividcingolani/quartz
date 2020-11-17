@@ -3,16 +3,16 @@ import {
   Value,
   Button,
   Avatar,
-  Subtitle,
   Labeling,
   IconButton,
   FreshnessBar,
   Microlabeling,
+  HoverableText,
   Card as QuartzCard,
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback } from 'react';
 import formatDistance from 'date-fns/formatDistance';
-import { Flex, CardProps as RebassCardProps } from 'rebass';
+import { Flex, CardProps as RebassCardProps, Box } from 'rebass';
 // eslint-disable-next-line import/no-unresolved
 import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
 
@@ -49,12 +49,20 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
     <QuartzCard mb="20px" key={data.id} contentProps={contentStyles}>
       <Flex my="6px" flexDirection="column">
         <Flex alignItems="center">
-          <Dot
-            ml="12px"
-            mainText={data.onlineEnabled ? 'Online' : 'Offline'}
-            variant={data.onlineEnabled ? 'green' : 'black'}
-          />
-          <Subtitle ml="30px">{data.name}</Subtitle>
+          <Box ml="12px">
+            <Dot
+              mainText={data.onlineEnabled ? 'Online' : 'Offline'}
+              variant={data.onlineEnabled ? 'green' : 'black'}
+            />
+          </Box>
+          <HoverableText
+            fontFamily="Inter"
+            onClick={handleNavigate(data.id, '/fg/:fgId')}
+            ml="30px"
+            fontSize="20px"
+          >
+            {data.name}
+          </HoverableText>
 
           <Value mt="auto" ml="5px" mr="15px" sx={{ color: 'labels.orange' }}>
             #{data.id}
@@ -91,7 +99,7 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
             </Microlabeling>
             <Flex alignItems="center">
               <FreshnessBar time={data.created.replace('T', ' ')} />
-              <Value ml="5px" primary>
+              <Value fontFamily="Inter" ml="5px" primary>
                 {formatDistance(new Date(data.created), new Date())} ago
               </Value>
             </Flex>
@@ -99,7 +107,7 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
 
           {/* Feature group actions */}
           <Flex ml="auto">
-            <IconButton tooltip="tooltip" icon="eye" />
+            <IconButton tooltip="Preview" icon="eye" />
             <IconButton
               tooltip="Overview"
               tooltipProps={{ ml: '40px' } as TooltipProps}
@@ -107,12 +115,13 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
               onClick={handleNavigate(data.id, '/fg/:fgId')}
             />
             <IconButton
-              tooltip="tooltip"
+              tooltip="Data"
               tooltipProps={{ ml: '6px' } as TooltipProps}
               icon="search"
+              onClick={handleNavigate(data.id, '/fg/:fgId/statistics')}
             />
             <IconButton
-              tooltip="tooltip"
+              tooltip="Activity"
               tooltipProps={{ ml: '6px' } as TooltipProps}
               icon="history"
             />

@@ -5,16 +5,16 @@ import { Value } from '@logicalclocks/quartz';
 import ErrorProjectsContent from './ErrorProjectsContent';
 
 export interface ErrorProps {
-  errorCode: number;
+  errorTitle: string;
   errorMessage: ReactNode;
   actions?: ReactNode;
 }
 
-const Error: FC<ErrorProps> = ({ errorCode, errorMessage, actions }) => {
+const Error: FC<ErrorProps> = ({ errorTitle, errorMessage, actions }) => {
   return (
     <Flex flexDirection="column" alignItems="center" my="auto">
       <Value fontSize="22px" mb="11px">
-        {errorCode}
+        {errorTitle}
       </Value>
       {errorMessage}
       <Flex>

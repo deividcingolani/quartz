@@ -34,11 +34,11 @@ const Routes: FC = () => {
         </ProjectManagementLayout>
       </Route>
 
-      <Route>
+      <Route path={routeNames.project.view}>
         {/* App Routes */}
         <AppLayout>
           <RouterRoutes>
-            <Route path={routeNames.project.view} element={<Project />} />
+            <Route path="/*" element={<Project />} />
             <Route path="*" element={<Error404 />} />
           </RouterRoutes>
         </AppLayout>

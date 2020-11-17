@@ -7,6 +7,8 @@ import {
   ExtractRematchDispatchersFromEffects,
 } from '@rematch/core';
 
+const NETWORK_ERROR = 'Network Error';
+
 export class EffectError<T = string> {
   // eslint-disable-next-line no-useless-constructor
   constructor(public readonly data: T, public readonly status: number) {}
@@ -177,9 +179,10 @@ export default <
           if (effectResult?.then) {
             effectResult.catch((err: any) => {
               if (err.isAxiosError) {
-                const isGlobal = options?.globalErrors.includes(
-                  err.status || err.response?.status,
-                );
+                const isGlobal =
+                  options?.globalErrors.includes(
+                    err.status || err.response?.status,
+                  ) || err.message === NETWORK_ERROR;
                 rematch.dispatch.error.set({
                   name,
                   action,

@@ -44,16 +44,32 @@ const FeatureGroupList: FC = () => {
     featureStoreData?.featurestoreId,
   );
 
+  const maxVersionsData = useMemo(
+    () =>
+      data.reduce((acc: FeatureGroup[], fg) => {
+        if (!acc.find((g) => g.name === fg.name)) {
+          return [...acc, fg];
+        }
+        const ind = acc.findIndex((g) => g.name === fg.name);
+        if (acc[ind].version < fg.version) {
+          acc[ind] = fg;
+          return acc;
+        }
+        return acc;
+      }, []),
+    [data],
+  );
+
   const labels = useMemo(
     () =>
-      data.reduce(
+      maxVersionsData.reduce(
         (acc: string[], { labels: fgLabels = [] }: FeatureGroup) => [
           ...acc,
           ...fgLabels,
         ],
         [],
       ),
-    [data],
+    [maxVersionsData],
   );
 
   const isFilterDisabled = isLoading || isLabelsLoading || !labels?.length;
@@ -72,9 +88,9 @@ const FeatureGroupList: FC = () => {
 
   const handleRouteChange = useCallback(
     (url: string) => () => {
-      console.log('Navigate to', url);
+      navigate(url, routeNames.project.view);
     },
-    [],
+    [navigate],
   );
 
   const handleResetFilters = useCallback(() => {
@@ -95,15 +111,18 @@ const FeatureGroupList: FC = () => {
   const dataResult = useMemo(() => {
     const [sortKey] = sort;
 
-    return sortFG(filterFG(searchFGText(data, search), filter), sortKey);
-  }, [data, sort, filter, search]);
+    return sortFG(
+      filterFG(searchFGText(maxVersionsData, search), filter),
+      sortKey,
+    );
+  }, [maxVersionsData, sort, filter, search]);
 
   return (
     <Flex flexGrow={1} flexDirection="column">
       <Flex alignItems="center">
         <Input
           variant="white"
-          disabled={!data.length}
+          disabled={!maxVersionsData.length}
           value={search}
           width="180px"
           placeholder="Find a feature group..."
@@ -122,6 +141,7 @@ const FeatureGroupList: FC = () => {
             variant="white"
             isMulti
             options={labels}
+            noDataMessage="labels"
             placeholder="label filter"
             onChange={setFilter}
           />
@@ -144,10 +164,14 @@ const FeatureGroupList: FC = () => {
         </Flex>
       </Flex>
       <Flex mt="20px" mb="20px">
-        <Value primary mr="5px">
-          {data.length}
+        <Value primary px="5px">
+          {dataResult.length}
         </Value>
-        <Value>feature groups</Value>
+        <Value>feature group displayed out of</Value>
+        <Value primary px="5px">
+          {maxVersionsData.length}
+        </Value>
+        <Value>features</Value>
         <Box ml="auto">
           <Button onClick={handleCreate}>New Feature Group</Button>
         </Box>
@@ -156,17 +180,21 @@ const FeatureGroupList: FC = () => {
       {!isLoading && (
         <FeatureGroupListContent
           data={dataResult}
-          isFiltered={data.length !== dataResult.length}
+          isFiltered={maxVersionsData.length !== dataResult.length}
           onResetFilters={handleResetFilters}
           isLabelsLoading={isLabelsLoading}
         />
       )}
-      {!isLoading && !data.length && (
+      {!isLoading && !maxVersionsData.length && (
         <NoData
           mainText="No Feature Group"
           secondaryText="Create or import feature groups from sources"
         >
-          <Button intent="secondary" onClick={handleRouteChange('')} mr="14px">
+          <Button
+            intent="secondary"
+            onClick={handleRouteChange(routeNames.source.list)}
+            mr="14px"
+          >
             All Sources
           </Button>
           <Button intent="secondary" onClick={handleRouteChange('')} mr="14px">

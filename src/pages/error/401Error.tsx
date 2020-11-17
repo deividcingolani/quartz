@@ -1,18 +1,16 @@
 import React, { FC, memo } from 'react';
 import { Button, Value } from '@logicalclocks/quartz';
 // Hooks
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // Components
 import Error from '../../components/error/Error';
 
 const Error401: FC = () => {
   const navigate = useNavigate();
-  const history = useLocation();
-  console.log(history);
 
   return (
     <Error
-      errorCode={401}
+      errorTitle="401"
       errorMessage={
         <Value mb="40px">Yot are not authorized to access to this data</Value>
       }

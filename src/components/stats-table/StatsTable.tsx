@@ -25,7 +25,9 @@ const StatsTable: FC<StatsTableProps> = ({ data, ...props }) => {
         >
           <Value>{title}</Value>
           <Value ml="auto" primary>
-            {value || '-'}
+            {value
+              ? value.toString().slice(0, value.toString().indexOf('.') + 6)
+              : '-'}
           </Value>
         </Flex>
       ))}

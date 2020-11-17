@@ -10,7 +10,7 @@ const Error404: FC = () => {
 
   return (
     <Error
-      errorCode={404}
+      errorTitle="404"
       errorMessage={
         <Value mb="40px">
           No page exists for&nbsp;

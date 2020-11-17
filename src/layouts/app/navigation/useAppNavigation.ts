@@ -8,6 +8,14 @@ import useAnchor from '../../../components/anchor/useAnchor';
 import routeNames from '../../../routes/routeNames';
 // Hooks
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
+// Svg
+import sources from '../../../sources/source_02rev.json';
+import query from '../../../sources/query-04.json';
+import jobs from '../../../sources/runjobs.json';
+import td from '../../../sources/TD_01 (1).json';
+import fg from '../../../sources/FG_06.json';
+import home from '../../../sources/home.json';
+import meta from '../../../sources/meta-03.json';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
@@ -60,14 +68,14 @@ const useAppNavigation = (): TreeNode[] => {
     return [
       {
         title: 'Home',
-        icon: ['far', 'copy'],
+        icon: home,
         hasDivider: true,
-
-        onClick: handleNavigateRelative(routeNames.home),
+        isActive: isActive('/'),
+        onClick: handleNavigateRelative('/fg', routeNames.project.view),
       },
       {
         title: 'Feature Groups',
-        icon: ['far', 'copy'],
+        icon: fg,
         onClick: handleNavigateRelative(
           routeNames.featureGroup.list,
           routeNames.project.view,
@@ -89,16 +97,16 @@ const useAppNavigation = (): TreeNode[] => {
           {
             title: 'Data',
             onClick: handleNavigateRelative(
-              '/data/preview',
+              '/data-preview',
               '/p/:id/fg/:fgId/*',
             ),
             isActive: isActive('/p/:id/fg/:fgId/activity'),
             children: [
               {
                 title: 'Data Preview',
-                isActive: isActive('p/:id/fg/:fgId/data/preview/*'),
+                isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
                 onClick: handleNavigateRelative(
-                  '/data/preview',
+                  '/data-preview',
                   '/p/:id/fg/:fgId/*',
                 ),
               },
@@ -125,7 +133,7 @@ const useAppNavigation = (): TreeNode[] => {
       },
       {
         title: 'Training Datasets',
-        icon: ['far', 'copy'],
+        icon: td,
         hasDivider: true,
 
         isActive: location.pathname.includes(routeNames.trainingDatasetList),
@@ -136,7 +144,7 @@ const useAppNavigation = (): TreeNode[] => {
       },
       {
         title: 'Sources',
-        icon: ['far', 'copy'],
+        icon: sources,
 
         isActive: location.pathname.includes(routeNames.source.list),
         onClick: handleNavigateRelative(routeNames.source.list, 'p/:id/*'),

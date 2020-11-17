@@ -29,11 +29,12 @@ const featureGroupView = createModel()({
         featureGroupId,
       );
 
-      dispatch.featureGroupLabels.fetch({
-        projectId,
-        featureStoreId,
-        featureGroupId,
-      });
+      data.type === 'cachedFeaturegroupDTO' &&
+        dispatch.featureGroupLabels.fetch({
+          projectId,
+          featureStoreId,
+          featureGroupId,
+        });
 
       dispatch.featureGroupView.setData(data);
     },

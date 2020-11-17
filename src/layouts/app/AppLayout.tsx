@@ -43,6 +43,7 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
           sx={styles}
           p="30px"
           pr="50px"
+          pb="0"
         >
           <Flex
             width="100%"

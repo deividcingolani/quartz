@@ -16,11 +16,13 @@ const NoData: FC<NoDataProps> = ({
   return (
     <Flex flexDirection="column" alignItems="center" my="auto">
       {!!mainText && (
-        <Value fontSize="22px" mb="11px">
+        <Value fontFamily="Inter" fontSize="22px" mb="11px">
           {mainText}
         </Value>
       )}
-      <Value mb="58px">{secondaryText}</Value>
+      <Value fontFamily="Inter" mb="58px">
+        {secondaryText}
+      </Value>
       <Flex>{children}</Flex>
     </Flex>
   );

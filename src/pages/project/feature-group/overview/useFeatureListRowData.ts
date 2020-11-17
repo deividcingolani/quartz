@@ -9,8 +9,8 @@ const useFeatureListRowData = (features: Feature[]) => {
   const navigate = useNavigateRelative();
 
   const handleNavigate = useCallback(
-    (id: number, route: string) => (): void => {
-      navigate(route.replace(':featureId', String(id)), 'p/:id/fg/:fgId');
+    (route: string) => (): void => {
+      navigate(route, 'p/:id/fg/:fgId');
     },
     [navigate],
   );
@@ -59,14 +59,14 @@ const useFeatureListRowData = (features: Feature[]) => {
       {
         intent: 'ghost',
         icon: 'table',
-        tooltip: 'Tooltip',
-        onClick: handleNavigate(1, '/data/preview/:featureId'),
+        tooltip: 'Data preview',
+        onClick: handleNavigate(`/data-preview/${name}`),
       },
       {
         intent: 'ghost',
         icon: 'poll',
         tooltip: 'Statistics',
-        onClick: handleNavigate(1, `/statistics/f/${name}`),
+        onClick: handleNavigate(`/statistics/f/${name}`),
       },
     ]);
   }, [features, handleNavigate]);

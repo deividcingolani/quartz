@@ -2,6 +2,7 @@ import BaseApiService, { RequestType } from '../BaseApiService';
 
 // Types
 import { FeatureGroup, FeatureGroupRowItem } from '../../types/feature-group';
+import { StorageConnectorType } from '../../types/feature-group-data-preview';
 
 class FeatureGroupsService extends BaseApiService {
   getList = async (
@@ -44,9 +45,10 @@ class FeatureGroupsService extends BaseApiService {
     featureStoreId: number,
     featureGroupId: number,
     limit = 100,
+    storage = StorageConnectorType.offline,
   ) =>
     this.request<GetRowsData>({
-      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/preview?storage=offline&limit=${limit}`,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/preview?storage=${storage}&limit=${limit}`,
       type: RequestType.get,
     });
 }

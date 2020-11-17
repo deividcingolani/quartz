@@ -10,6 +10,7 @@ import Error401 from '../../pages/error/401Error';
 import Error404 from '../../pages/error/404Error';
 import NotificationBadge from '../../utils/notifications/notificationBadge';
 import NotificationContent from '../../utils/notifications/notificationValue';
+import ConnectionError from '../../pages/error/ConnectionError';
 
 const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   const globalError = useSelector(
@@ -38,7 +39,7 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
       case 404:
         return <Error404 />;
       default:
-        return <Error404 />;
+        return <ConnectionError />;
     }
   }
 

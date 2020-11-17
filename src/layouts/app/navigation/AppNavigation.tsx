@@ -10,6 +10,7 @@ import useNavigateRelative from '../../../hooks/useNavigateRelative';
 
 const map: { [key: string]: string } = {
   'p/:id/fg/:id/statistics/*': '/fg',
+  'p/:id/fg/:id/data-preview': '/fg',
 };
 
 const AppNavigation: FC = () => {

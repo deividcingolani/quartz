@@ -76,7 +76,11 @@ const Project: FC = () => {
         element={<FeatureGroupActivity />}
       />
       <Route
-        path={routeNames.featureGroup.dataPreview}
+        path={routeNames.featureGroup.preview}
+        element={<FeatureGroupDataPreview />}
+      />
+      <Route
+        path={routeNames.featureGroup.previewOne}
         element={<FeatureGroupDataPreview />}
       />
       <Route
@@ -106,10 +110,6 @@ const Project: FC = () => {
       <Route
         path={routeNames.featureGroup.activity}
         element={<FeatureGroupActivity />}
-      />
-      <Route
-        path={routeNames.featureGroup.dataPreview}
-        element={<FeatureGroupDataPreview />}
       />
       <Route
         path={routeNames.featureGroup.statistics}
