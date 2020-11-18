@@ -23,9 +23,13 @@ import sort from '../../../../../utils/sort';
 import createDataPreviewRows from './utils/createDataPreviewRows';
 import filterDataPreviewRows from './utils/filterDataPreviewRows';
 import FilterResult from '../../../../../components/filter-result/FilterResult';
+// Selectors
+import { selectFeatureStoreData } from '../../../../../store/models/feature/selectors';
 
 const FeatureGroupDataPreview: FC = () => {
   const { id, fgId } = useParams();
+  
+  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   const [storageConnectorType, setType] = useState<StorageConnectorType>(
     StorageConnectorType.offline,
@@ -44,12 +48,14 @@ const FeatureGroupDataPreview: FC = () => {
   const navigate = useNavigateRelative();
 
   useEffect(() => {
-    dispatch.featureGroupDataPreview.fetch({
-      projectId: +id,
-      featureStoreId: 67,
-      featureGroupId: +fgId,
-      storage: StorageConnectorType.offline,
-    });
+    if (featureStoreData?.featurestoreId) {
+      dispatch.featureGroupDataPreview.fetch({
+        projectId: +id,
+        featureStoreId: featureStoreData.featurestoreId,
+        featureGroupId: +fgId,
+        storage: StorageConnectorType.offline,
+      });
+    }
 
     return () => {
       dispatch.featureGroupRows.clear();
@@ -58,12 +64,14 @@ const FeatureGroupDataPreview: FC = () => {
   }, [id, fgId, dispatch, storageConnectorType]);
 
   const handleRefreshData = useCallback(() => {
-    dispatch.featureGroupDataPreview.fetch({
-      projectId: +id,
-      featureStoreId: 67,
-      featureGroupId: +fgId,
-      storage: StorageConnectorType.offline,
-    });
+    if (featureStoreData?.featurestoreId) {
+      dispatch.featureGroupDataPreview.fetch({
+        projectId: +id,
+        featureStoreId: featureStoreData.featurestoreId,
+        featureGroupId: +fgId,
+        storage: StorageConnectorType.offline,
+      });
+    }
   }, [id, fgId, dispatch]);
 
   const view = useSelector<RootState, FeatureGroupViewState>(
