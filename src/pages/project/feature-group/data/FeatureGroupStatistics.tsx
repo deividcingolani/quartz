@@ -15,9 +15,14 @@ import useFeatureGroupView from '../hooks/useFeatureGroupView';
 import StatisticsContent from './StatisticsContent';
 import Panel from '../../../../components/panel/Panel';
 import Loader from '../../../../components/loader/Loader';
+// Selectors
+import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 
 const FeatureGroupStatistics: FC = () => {
   const { id, fgId, featureName } = useParams();
+
+  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+
   const statistics = useSelector(
     (state: RootState) => state.featureGroupStatistics?.entities.statistics,
   );
@@ -32,19 +37,23 @@ const FeatureGroupStatistics: FC = () => {
   const navigate = useNavigateRelative();
 
   const handleRefreshData = useCallback(() => {
-    dispatch.featureGroupStatistics.fetch({
-      projectId: +id,
-      featureStoreId: 67,
-      featureGroupId: +fgId,
-    });
+    if (featureStoreData?.featurestoreId) {
+      dispatch.featureGroupStatistics.fetch({
+        projectId: +id,
+        featureStoreId: featureStoreData.featurestoreId,
+        featureGroupId: +fgId,
+      });
+    }
   }, [id, fgId, dispatch]);
 
   useEffect(() => {
-    dispatch.featureGroupStatistics.fetch({
-      projectId: +id,
-      featureStoreId: 67,
-      featureGroupId: +fgId,
-    });
+    if (featureStoreData?.featurestoreId) {
+      dispatch.featureGroupStatistics.fetch({
+        projectId: +id,
+        featureStoreId:  featureStoreData.featurestoreId,
+        featureGroupId: +fgId,
+      });
+    }
 
     return () => {
       dispatch.featureGroupStatistics.clear();
