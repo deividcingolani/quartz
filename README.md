@@ -42,3 +42,22 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Run locally
+
+First thing first, make sure you ran `npm install` and `npm run build-dev` on quartz repo
+
+After that, run `yarn install` and then `npm link @logicalclocks/quartz` on this repo
+
+Run `yarn start`
+
+## Troubleshooting
+
+if you have troubles like **Hooks can only be called inside of the body of a function component etc** make sure you 
+build a quartz by `npm run build-dev` command and then restart the front by `yarn start`
+
+If that didn't help - delete `node_modules` and `build` folders and then follow **Run locally** instruction
+
+## On repo update
+
+Usually you don't need to reinstall project but in case of errors follow **Troubleshooting** instruction
