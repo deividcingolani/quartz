@@ -37,7 +37,10 @@ const useAppNavigation = (): TreeNode[] => {
   );
 
   const isActive = useCallback(
-    (pattern: string | string[]): boolean => {
+    (pattern: string | string[], notContains: string[] = []): boolean => {
+      if (notContains.some((word) => location.pathname.includes(word))) {
+        return false;
+      }
       if (Array.isArray(pattern)) {
         return pattern.some((p) => !!matchPath(p, location.pathname));
       }
@@ -84,7 +87,7 @@ const useAppNavigation = (): TreeNode[] => {
         children: [
           {
             title: 'Overview',
-            isActive: isActive('/p/:id/fg/:fgId') && !location.hash,
+            isActive: isActive('/p/:id/fg/:fgId', ['new']) && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
               createAnchorLink('Feature List', featureList),

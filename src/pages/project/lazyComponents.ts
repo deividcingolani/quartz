@@ -4,7 +4,7 @@ export const FeatureGroupList = React.lazy(
   () => import('./feature-group/list/FeatureGroupList'),
 );
 export const FeatureGroupEdit = React.lazy(
-  () => import('./feature-group/FeatureGroupEdit'),
+  () => import('./feature-group/edit/FeatureGroupEdit'),
 );
 export const FeatureGroupCreate = React.lazy(
   () => import('./feature-group/create/FeatureGroupCreate'),

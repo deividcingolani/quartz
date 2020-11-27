@@ -4,11 +4,11 @@ import { StorageConnectorType } from '../../../../types/feature-store';
 import labelValueMap from '../../../../utils/labelValueBind';
 
 // Types
-import { SourceFormProps, SourcesFormDataArgument } from './forms/types';
 import { SourceProtocol } from './types';
 // Forms
-import AwsForm, { schema as awsSchema } from './forms/AwsForm';
-import JdbcForm, { schema as jdbcSchema } from './forms/JdbcForm';
+import AwsForm, { schema as awsSchema } from './../forms/AwsForm';
+import JdbcForm, { schema as jdbcSchema } from './../forms/JdbcForm';
+import { SourceFormProps, SourcesFormDataArgument } from '../forms/types';
 
 export const protocolOptions = labelValueMap<
   { [key in keyof typeof SourceProtocol]: string }

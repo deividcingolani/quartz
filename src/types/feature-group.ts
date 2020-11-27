@@ -13,6 +13,7 @@ export interface Feature {
   partition: boolean;
   primary: boolean;
   type: FeatureType;
+  onlineType?: FeatureType;
 }
 
 export interface Job {
@@ -36,12 +37,13 @@ export interface FeatureGroup {
   featurestoreId: number;
   featurestoreName: string;
   hudiEnabled: boolean;
+  timeTravelFormat?: string;
   id: number;
   jobs: Job[]; // Todo: Update
   location: string;
   name: string;
   onlineEnabled: boolean;
-  statisticColumns: any;
+  statisticColumns: string[];
   type: string;
   version: number;
   labels?: string[];

@@ -28,7 +28,7 @@ import { selectFeatureStoreData } from '../../../../../store/models/feature/sele
 
 const FeatureGroupDataPreview: FC = () => {
   const { id, fgId } = useParams();
-  
+
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   const [storageConnectorType, setType] = useState<StorageConnectorType>(
@@ -192,7 +192,7 @@ const FeatureGroupDataPreview: FC = () => {
         <Value>features</Value>
       </Flex>
       <Box mb="10px" maxWidth="100vw">
-        {!!filteredFeatures.length && filteredData.length && (
+        {!!filteredFeatures.length && !!filteredData.length && (
           <ReadOnlyTable
             staticColumn={staticColumn}
             onFreeze={handleChangeStaticColumn}

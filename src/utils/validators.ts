@@ -10,3 +10,4 @@ export const name = yup
     excludeEmptyString: false,
   });
 export const shortText = yup.string().max(200);
+export const longText = yup.string().max(500);

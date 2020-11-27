@@ -18,13 +18,16 @@ import {
   getEnabledStatistics,
   mapStatisticConfiguration,
 } from '../utils';
+import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 
-const FeatureGroupCreate: FC = () => {
-  const { id: projectId } = useParams();
+const FeatureGroupEdit: FC = () => {
+  const { id: projectId, fgId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
 
   const navigate = useNavigateRelative();
+
+  const [isPopupOpen, handleToggle] = usePopup();
 
   const featureStoreData = useSelector((state: RootState) =>
     state.featureStores?.length ? state.featureStores[0] : null,
@@ -41,30 +44,47 @@ const FeatureGroupCreate: FC = () => {
         featureStoreId: featureStoreData?.featurestoreId,
       });
     }
+    return () => {
+      dispatch.featureGroups.clear();
+    };
   }, [dispatch, projectId, featureStoreData]);
 
   const isSubmit = useSelector(
-    (state: RootState) => state.loading.effects.featureGroups.create,
+    (state: RootState) => state.loading.effects.featureGroups.edit,
+  );
+
+  const isDeleting = useSelector(
+    (state: RootState) => state.loading.effects.featureGroups.delete,
+  );
+
+  const featureGroup = useSelector((state: RootState) =>
+    state.featureGroups.find((f) => f.id === +fgId),
   );
 
   const handleSubmit = useCallback(
     async (data: FeatureGroupFormData) => {
-      const { features, statisticConfiguration, ...restData } = data;
+      const {
+        features,
+        description,
+        statisticConfiguration,
+        onlineEnabled,
+        labels,
+      } = data;
 
       if (featureStoreData?.featurestoreId) {
-        await dispatch.featureGroups.create({
+        await dispatch.featureGroups.edit({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
+          featureGroupId: +fgId,
           data: {
-            ...restData,
+            description,
+            labels,
+            type: 'cachedFeaturegroupDTO',
             features: mapFeatures(features),
             ...mapStatisticConfiguration(statisticConfiguration),
             statisticColumns: getEnabledStatistics(features),
-            type: 'cachedFeaturegroupDTO',
-            timeTravelFormat: restData.timeTravelFormat[0].toUpperCase(),
             descStatsEnabled: !!getEnabledStatistics(features).length,
-            jobs: [],
-            version: 1,
+            onlineEnabled,
           },
         });
       }
@@ -73,8 +93,23 @@ const FeatureGroupCreate: FC = () => {
 
       navigate('/fg', 'p/:id/*');
     },
-    [dispatch, featureStoreData, navigate, projectId],
+    [dispatch, featureStoreData, navigate, projectId, fgId],
   );
+
+  const handleDelete = useCallback(async () => {
+    if (featureStoreData?.featurestoreId) {
+      handleToggle();
+      await dispatch.featureGroups.delete({
+        projectId: +projectId,
+        featureStoreId: featureStoreData?.featurestoreId,
+        featureGroupId: +fgId,
+      });
+
+      dispatch.featureGroups.clear();
+
+      navigate('/fg', 'p/:id/*');
+    }
+  }, [dispatch, featureStoreData, projectId, navigate, fgId, handleToggle]);
 
   const isFeatureStoreLoading = useSelector(
     (state: RootState) => state.loading.effects.featureStores.fetch,
@@ -86,17 +121,30 @@ const FeatureGroupCreate: FC = () => {
 
   const isSourcesLoading = useSelector(selectFeatureStoreSourcesLoading);
 
-  if (isLabelsLoading || isSourcesLoading) {
+  if (isLabelsLoading || isSourcesLoading || !featureGroup) {
     return <Loader />;
   }
 
   return (
-    <FeatureGroupForm
-      isLoading={isLabelsLoading || isFeatureStoreLoading}
-      isDisabled={isSubmit}
-      submitHandler={handleSubmit}
-    />
+    <>
+      <FeatureGroupForm
+        isEdit={true}
+        isLoading={isLabelsLoading || isFeatureStoreLoading || isDeleting}
+        isDisabled={isSubmit}
+        submitHandler={handleSubmit}
+        onDelete={handleToggle}
+        initialData={featureGroup}
+      />
+      <TinyPopup
+        title={`Delete ${featureGroup.name}`}
+        secondaryText="Once you delete a feature group, there is no going back. Please be certain."
+        isOpen={isPopupOpen}
+        mainButton={['Delete feature group', handleDelete]}
+        secondaryButton={['Back', handleToggle]}
+        onClose={handleToggle}
+      />
+    </>
   );
 };
 
-export default memo(FeatureGroupCreate);
+export default memo(FeatureGroupEdit);
