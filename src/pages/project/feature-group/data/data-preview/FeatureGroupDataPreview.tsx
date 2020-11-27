@@ -61,7 +61,7 @@ const FeatureGroupDataPreview: FC = () => {
       dispatch.featureGroupRows.clear();
       dispatch.featureGroupView.clear();
     };
-  }, [id, fgId, dispatch, storageConnectorType]);
+  }, [id, fgId, dispatch, storageConnectorType, featureStoreData]);
 
   const handleRefreshData = useCallback(() => {
     if (featureStoreData?.featurestoreId) {
@@ -72,7 +72,7 @@ const FeatureGroupDataPreview: FC = () => {
         storage: StorageConnectorType.offline,
       });
     }
-  }, [id, fgId, dispatch]);
+  }, [id, fgId, dispatch, featureStoreData]);
 
   const view = useSelector<RootState, FeatureGroupViewState>(
     (state) => state.featureGroupView,

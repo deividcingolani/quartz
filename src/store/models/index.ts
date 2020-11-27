@@ -13,12 +13,14 @@ import { trainingDatasetModel } from './training-dataset';
 import { trainingDatasetLabelModel } from './training-dataset-label';
 import featureStoreSources from './feature/sources/featureStoreSources.model';
 import featureGroupDataPreview from './feature/data/featureGroupsDataPreview.model';
+import project from './projects/project.model';
 
 export interface RootModel extends Models<RootModel> {
   profile: typeof profile;
 
   // Projects
   projectsList: typeof projectsList;
+  project: typeof project;
   // Feature
   featureGroups: typeof featureGroups;
   featureStores: typeof featureStores;
@@ -35,6 +37,7 @@ export interface RootModel extends Models<RootModel> {
 const models: RootModel = {
   profile,
   projectsList,
+  project,
   featureGroups,
   featureStores,
   featureGroupLabels,

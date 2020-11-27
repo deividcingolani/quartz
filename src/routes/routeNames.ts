@@ -1,8 +1,9 @@
 const routeNames = {
-  home: '/',
+  home: '/view',
 
   project: {
     view: 'p/:id/*',
+    viewHome: 'p/:id/view',
     list: '/',
     edit: 'p/:id/edit',
     create: 'p/new',

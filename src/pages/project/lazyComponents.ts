@@ -1,5 +1,7 @@
 import React from 'react';
 
+export const ProjectView = React.lazy(() => import('./view/ProjectView'));
+export const ProjectEdit = React.lazy(() => import('./edit/ProjectEdit'));
 export const FeatureGroupList = React.lazy(
   () => import('./feature-group/list/FeatureGroupList'),
 );
@@ -14,6 +16,9 @@ export const FeatureGroupActivity = React.lazy(
 );
 export const FeatureGroupDataPreview = React.lazy(
   () => import('./feature-group/data/data-preview/FeatureGroupDataPreview'),
+);
+export const FeatureGroupData = React.lazy(
+  () => import('./feature-group/data/FeatureGroupData'),
 );
 export const FeatureGroupDataCorrelation = React.lazy(
   () => import('./feature-group/FeatureGroupDataCorrelation'),

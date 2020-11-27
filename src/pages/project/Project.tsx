@@ -9,13 +9,13 @@ import Redirect from '../../components/redirect/Redirect';
 import Error404 from '../error/404Error';
 // Types
 import { Dispatch, RootState } from '../../store';
-import FeatureGroupData from './feature-group/data/FeatureGroupData';
 
 import {
   FeatureGroupList,
   FeatureGroupEdit,
   FeatureGroupCreate,
   FeatureGroupActivity,
+  FeatureGroupData,
   FeatureGroupDataPreview,
   FeatureGroupDataCorrelation,
   FeatureGroupStatistics,
@@ -25,6 +25,8 @@ import {
   SourcesImportSample,
   FeatureGroupOverview,
   TrainingDatasetList,
+  ProjectView,
+  ProjectEdit,
 } from './lazyComponents';
 
 const Project: FC = () => {
@@ -59,6 +61,8 @@ const Project: FC = () => {
 
   return (
     <Routes>
+      <Route path={routeNames.home} element={<ProjectView />} />
+      <Route path={'/edit'} element={<ProjectEdit />} />
       <Route
         path={routeNames.featureGroup.edit}
         element={<FeatureGroupEdit />}

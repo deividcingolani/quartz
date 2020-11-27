@@ -21,6 +21,26 @@ class ProjectsService extends BaseApiService {
 
     return data;
   };
+  create = async (data: any): Promise<any> => {
+    await this.request<any>({
+      url: ``,
+      type: RequestType.post,
+      data,
+    });
+  };
+  edit = async (id: number, data: any): Promise<any> => {
+    await this.request<any>({
+      url: `/${id}`,
+      type: RequestType.put,
+      data,
+    });
+  };
+  delete = async (id: number): Promise<any> => {
+    await this.request<any>({
+      url: `/${id}/delete`,
+      type: RequestType.post,
+    });
+  };
 }
 
 interface GetListResponse {

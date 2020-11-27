@@ -44,13 +44,13 @@ const FeatureGroupStatistics: FC = () => {
         featureGroupId: +fgId,
       });
     }
-  }, [id, fgId, dispatch]);
+  }, [id, fgId, dispatch, featureStoreData]);
 
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
       dispatch.featureGroupStatistics.fetch({
         projectId: +id,
-        featureStoreId:  featureStoreData.featurestoreId,
+        featureStoreId: featureStoreData.featurestoreId,
         featureGroupId: +fgId,
       });
     }
@@ -59,7 +59,7 @@ const FeatureGroupStatistics: FC = () => {
       dispatch.featureGroupStatistics.clear();
       dispatch.featureGroupRows.clear();
     };
-  }, [id, fgId, dispatch]);
+  }, [id, fgId, dispatch, featureStoreData]);
 
   if (isLoading || isStatisticsLoading) {
     return <Loader />;

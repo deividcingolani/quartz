@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -13,6 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 // Styled
 import Button from './project-button.styles';
+// Types
 import { RootState } from '../../../store';
 
 const ProjectsDropdown: FC = () => {
@@ -42,15 +42,12 @@ const ProjectsDropdown: FC = () => {
               key={id}
               variant={+projectId === id ? 'active' : 'primary'}
               hasDivider={index === projects.length - 1}
-              onClick={() => navigate(`/p/${id}`)}
+              onClick={() => navigate(`/p/${id}/view`)}
             >
               {name}
             </ListItem>
           ))}
-          <ListItem>
-            <FontAwesomeIcon icon="plus" />
-            Create New Project
-          </ListItem>
+          <ListItem onClick={() => navigate('/')}>All Projects</ListItem>
         </List>
       )}
     </Button>

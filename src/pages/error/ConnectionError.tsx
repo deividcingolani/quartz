@@ -3,7 +3,7 @@ import { Button, Value } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
 
 const Error404: FC = () => {
-  const reloadHandler = useCallback(() => window.location.reload(), [window]);
+  const reloadHandler = useCallback(() => window.location.reload(), []);
 
   return (
     <Flex flexDirection="column" alignItems="center" my="auto">

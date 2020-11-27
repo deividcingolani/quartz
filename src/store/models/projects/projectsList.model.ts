@@ -9,10 +9,13 @@ const projectsList = createModel()({
   reducers: {
     setProjects: (_: ProjectsState, payload: Project[]): ProjectsState =>
       payload,
+    clear: () => [],
   },
   effects: (dispatch) => ({
-    getProjects: async (): Promise<void> => {
-      dispatch.projectsList.setProjects(await ProjectsService.getList());
+    getProjects: async (): Promise<Project[]> => {
+      const projects = await ProjectsService.getList();
+      dispatch.projectsList.setProjects(projects);
+      return projects;
     },
   }),
 });

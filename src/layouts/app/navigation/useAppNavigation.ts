@@ -10,12 +10,12 @@ import routeNames from '../../../routes/routeNames';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Svg
 import sources from '../../../sources/source_02rev.json';
-import query from '../../../sources/query-04.json';
-import jobs from '../../../sources/runjobs.json';
 import td from '../../../sources/TD_01 (1).json';
 import fg from '../../../sources/FG_06.json';
 import home from '../../../sources/home.json';
+import jobs from '../../../sources/runjobs.json';
 import meta from '../../../sources/meta-03.json';
+import query from '../../../sources/query-04.json';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
@@ -73,8 +73,8 @@ const useAppNavigation = (): TreeNode[] => {
         title: 'Home',
         icon: home,
         hasDivider: true,
-        isActive: isActive('/'),
-        onClick: handleNavigateRelative('/fg', routeNames.project.view),
+        isActive: isActive('/p/:id/view'),
+        onClick: handleNavigateRelative('/view', routeNames.project.view),
       },
       {
         title: 'Feature Groups',

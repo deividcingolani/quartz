@@ -4,12 +4,12 @@ import { Header } from '@logicalclocks/quartz';
 // Components
 import ProjectsDropdown from './ProjectsDropdown';
 
-const AppHeader: FC = () => {
-  return (
-    <Header>
-      <ProjectsDropdown />
-    </Header>
-  );
+export interface AppHeaderProps {
+  showList?: boolean;
+}
+
+const AppHeader: FC<AppHeaderProps> = ({ showList = true }) => {
+  return <Header>{showList && <ProjectsDropdown />}</Header>;
 };
 
 export default AppHeader;

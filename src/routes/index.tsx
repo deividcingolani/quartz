@@ -9,12 +9,11 @@ import ProjectManagementLayout from '../layouts/project-management/ProjectManage
 import Error404 from '../pages/error/404Error';
 // Pages
 const Project = React.lazy(() => import('../pages/project/Project'));
-const ProjectEdit = React.lazy(() => import('../pages/project/ProjectEdit'));
 const ProjectCreate = React.lazy(
-  () => import('../pages/project/ProjectCreate'),
+  () => import('../pages/project/create/ProjectCreate'),
 );
-const AllProjects = React.lazy(
-  () => import('../pages/all-projects/AllProjects'),
+const ProjectList = React.lazy(
+  () => import('../pages/project/list/ProjectList'),
 );
 
 const Routes: FC = () => {
@@ -24,8 +23,7 @@ const Routes: FC = () => {
         {/* Project Management Routes */}
         <ProjectManagementLayout>
           <RouterRoutes>
-            <Route path={routeNames.project.list} element={<AllProjects />} />
-            <Route path={routeNames.project.edit} element={<ProjectEdit />} />
+            <Route path={routeNames.project.list} element={<ProjectList />} />
             <Route
               path={routeNames.project.create}
               element={<ProjectCreate />}
