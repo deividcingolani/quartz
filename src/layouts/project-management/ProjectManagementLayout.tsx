@@ -5,8 +5,8 @@ import { Flex } from 'rebass';
 // Components
 import AppHeader from '../app/header/AppHeader';
 import Suspense from '../../components/suspense/Suspense';
-import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
 import GlobalErrors from '../../components/error/GlobalErrors';
+import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
 // Types
 import { Dispatch } from '../../store';
 // Styles
@@ -25,6 +25,7 @@ const ProjectManagementLayout: FC<ProjectManagementLayoutProps> = ({
 
   useEffect(() => {
     dispatch.projectsList.getProjects();
+    dispatch.profile.getUser();
   }, [dispatch]);
 
   useErrorCleaner();

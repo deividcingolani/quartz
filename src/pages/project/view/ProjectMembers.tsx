@@ -5,9 +5,9 @@ import {
   Labeling,
   Tooltip,
   Value,
-  Avatar,
   Button,
   TooltipPositions,
+  User,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import React, { ComponentType, FC, useMemo } from 'react';
@@ -45,7 +45,9 @@ const ProjectMembers: FC<SourceListContentProps> = ({ data }) => {
         mainText: user.email,
         ml: '10px',
         position: TooltipPositions.right,
-        children: <Avatar src={ProfileService.avatar(user.email)} />,
+        children: (
+          <User name={user.email} photo={ProfileService.avatar(user.email)} />
+        ),
       },
       {
         variant: 'bold',

@@ -31,4 +31,4 @@ class SourceService extends BaseApiService {
     });
 }
 
-export default new SourceService('project');
+export default new SourceService('/project');

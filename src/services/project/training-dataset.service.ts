@@ -3,7 +3,7 @@ import BaseApiService, { RequestType } from '../BaseApiService';
 import { ITrainingDataset } from '../../types/training-dataset';
 
 export class TrainingDatasetService extends BaseApiService {
-  protected baseUrl = 'project';
+  protected baseUrl = '/project';
 
   public getList = (
     projectId: number,

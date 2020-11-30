@@ -1,48 +1,32 @@
-import React, { FC, memo, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { FC, memo } from 'react';
 import { Flex } from 'rebass';
-import { Dispatch } from '../../store';
 
 // Components
-import AppHeader from './header/AppHeader';
-import AppNavigation from './navigation/AppNavigation';
 import Suspense from '../../components/suspense/Suspense';
 import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
 import GlobalErrors from '../../components/error/GlobalErrors';
-
-// Styles
-import styles from './app-layout-styles';
+// Hooks
 import useErrorCleaner from '../../hooks/useErrorCleaner';
+// Styles
+import styles from '../project-management/pm-layout-styles';
 
-export interface AppLayoutProps {
+export interface AuthLayoutProps {
   children: React.ReactElement;
 }
 
-const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
-  const dispatch = useDispatch<Dispatch>();
-
+const AuthLayout: FC<AuthLayoutProps> = ({ children }: AuthLayoutProps) => {
   useErrorCleaner();
-
-  useEffect(() => {
-    dispatch.projectsList.getProjects();
-    dispatch.profile.getUser();
-  }, [dispatch]);
 
   return (
     <Flex width="100%" height="100%" overflow="auto" flexDirection="column">
-      <AppHeader />
-
-      <Flex width="100%" height="calc(100% - 70px)">
-        <AppNavigation />
-
-        {/* Content */}
+      <Flex width="100%" height="100%">
         <Flex
           flexGrow={1}
           justifyContent="center"
           minWidth="939px"
           id="content"
-          sx={styles}
           p="30px"
+          sx={styles}
           pr="50px"
           pb="0"
         >
@@ -65,4 +49,4 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
   );
 };
 
-export default memo(AppLayout);
+export default memo(AuthLayout);

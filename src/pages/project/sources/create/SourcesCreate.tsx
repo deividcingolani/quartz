@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { FC, useCallback } from 'react';
 
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
@@ -49,6 +49,10 @@ const SourcesCreate: FC = () => {
       const formattedArgs = formatArguments(args);
 
       if (featureStoreData?.featurestoreId) {
+        dispatch.error.clear({
+          name: 'featureStoreSources',
+          action: 'create',
+        });
         await dispatch.featureStoreSources.create({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
@@ -68,21 +72,6 @@ const SourcesCreate: FC = () => {
       }
     },
     [protocol, dispatch, navigate, projectId, featureStoreData],
-  );
-
-  const handleResetError = useCallback(() => {
-    dispatch.error.clear({
-      name: 'featureStoreSources',
-      action: 'create',
-    });
-  }, [dispatch]);
-
-  // Effects
-  useEffect(
-    () => () => {
-      handleResetError();
-    },
-    [handleResetError],
   );
 
   if (isFeatureStoreLoading) {

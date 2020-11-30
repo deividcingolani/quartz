@@ -2,13 +2,13 @@ import {
   Dot,
   Value,
   Button,
-  Avatar,
   Labeling,
   IconButton,
   FreshnessBar,
   Microlabeling,
   HoverableText,
   Card as QuartzCard,
+  User,
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback } from 'react';
 import formatDistance from 'date-fns/formatDistance';
@@ -85,7 +85,10 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
         )}
 
         <Flex mt="15px" alignItems="center">
-          <Avatar src={ProfileService.avatar(data.creator)} />
+          <User
+            name={data.creator}
+            photo={ProfileService.avatar(data.creator)}
+          />
           <Flex flexDirection="column" ml="20px">
             <Microlabeling mb="3px" gray>
               Latest version

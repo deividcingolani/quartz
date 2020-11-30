@@ -1,6 +1,12 @@
 const routeNames = {
   home: '/view',
 
+  auth: {
+    login: '/login',
+    register: '/register',
+    profile: '/account',
+  },
+
   project: {
     view: 'p/:id/*',
     viewHome: 'p/:id/view',

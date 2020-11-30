@@ -1,7 +1,6 @@
 import {
   Value,
   Button,
-  Avatar,
   Labeling,
   FreshnessBar,
   Microlabeling,
@@ -10,6 +9,7 @@ import {
   Tooltip,
   TinyPopup,
   usePopup,
+  User,
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback } from 'react';
 import formatDistance from 'date-fns/formatDistance';
@@ -137,7 +137,7 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               mainText={data.user.email}
               secondaryText="author"
             >
-              <Avatar src={ProfileService.avatar(data.user.email)} />
+              <User name={''} photo={ProfileService.avatar(data.user.email)} />
             </Tooltip>
           </Flex>
         </Flex>

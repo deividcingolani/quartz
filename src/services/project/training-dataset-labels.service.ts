@@ -10,7 +10,7 @@ export interface IRTrainingDatasetLabels {
 }
 
 export class TrainingDatasetLabelService extends BaseApiService {
-  protected baseUrl = 'project';
+  protected baseUrl = '/project';
 
   public getList = (
     projectId: number,

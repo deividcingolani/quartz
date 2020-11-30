@@ -67,4 +67,4 @@ class FeatureStoresService extends BaseApiService {
     });
 }
 
-export default new FeatureStoresService('project');
+export default new FeatureStoresService('/project');

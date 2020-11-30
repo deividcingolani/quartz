@@ -48,4 +48,4 @@ interface GetListResponse {
   user: User;
 }
 
-export default new ProjectsService('project');
+export default new ProjectsService('/project');

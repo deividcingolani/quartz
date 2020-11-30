@@ -1,6 +1,10 @@
 import * as yup from 'yup';
 
 export const alphanum = yup.string().required().max(50);
+export const shortText = yup.string().max(200);
+export const shortRequiredText = yup.string().required().max(200);
+export const longText = yup.string().max(500);
+
 export const name = yup
   .string()
   .required()
@@ -9,5 +13,18 @@ export const name = yup
     message: 'Only alphanumeric characters, dash or underscore',
     excludeEmptyString: false,
   });
-export const shortText = yup.string().max(200);
-export const longText = yup.string().max(500);
+
+export const password = yup
+  .string()
+  .min(6)
+  .test(
+    'password',
+    'Password must contains at least 1 digit, 1 uppercase and 1 lowercase',
+    (value) => {
+      if (!value) {
+        return false;
+      }
+      const patters = [/[a-z]/, /[A-Z]/, /[0-9]/];
+      return patters.every((p) => p.test(value));
+    },
+  );

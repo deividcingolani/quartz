@@ -1,11 +1,11 @@
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Flex } from 'rebass';
 import {
-  Avatar,
   Select,
   Text,
   TextValueBadge,
   Badge,
+  User,
 } from '@logicalclocks/quartz';
 
 // Services
@@ -73,7 +73,10 @@ const SummaryData: FC<SummaryDataProps> = ({
   return (
     <>
       <Flex>
-        <Avatar src={ProfileService.avatar(String(data?.creator))} />
+        <User
+          photo={ProfileService.avatar(String(data.creator))}
+          name={data.creator}
+        />
         <DateValue
           ml="23px"
           label="Creation"

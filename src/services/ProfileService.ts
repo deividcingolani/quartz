@@ -16,4 +16,4 @@ class ProfileService extends BaseApiService {
     )}/?d=retro&s=50`;
 }
 
-export default new ProfileService('users/profile');
+export default new ProfileService('/users/profile');

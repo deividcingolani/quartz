@@ -10,7 +10,8 @@ export type ProfileState = User;
 const profile = createModel()({
   state: {} as User,
   reducers: {
-    setUser: (payload: User): ProfileState => payload,
+    setUser: (_: ProfileState, payload: ProfileState): ProfileState => payload,
+    clear: () => ({} as User),
   },
   effects: (dispatch) => ({
     getUser: async (): Promise<void> => {

@@ -3,12 +3,12 @@ import {
   Dot,
   Value,
   Button,
-  Avatar,
   Subtitle,
   Labeling,
   FreshnessBar,
   Microlabeling,
   Card as QuartzCard,
+  User,
 } from '@logicalclocks/quartz';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, CardProps as RebassCardProps } from 'rebass';
@@ -69,7 +69,7 @@ const Card: FC<CardProps> = ({ data, isLabelsLoading }: CardProps) => {
         )}
 
         <Flex mt="15px" alignItems="center">
-          <Avatar src={ProfileService.avatar('')} />
+          <User name={''} photo={ProfileService.avatar('')} />
           <Flex flexDirection="column" ml="20px">
             <Microlabeling mb="3px" gray>
               Latest version

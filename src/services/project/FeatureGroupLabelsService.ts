@@ -16,4 +16,4 @@ class FeatureGroupLabelsService extends BaseApiService {
   };
 }
 
-export default new FeatureGroupLabelsService('project');
+export default new FeatureGroupLabelsService('/project');

@@ -71,6 +71,10 @@ const SourcesEdit: FC = () => {
       const formattedArgs = formatArguments(args);
 
       if (featureStoreData?.featurestoreId) {
+        dispatch.error.clear({
+          name: 'featureStoreSources',
+          action: 'edit',
+        });
         await dispatch.featureStoreSources.edit({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
@@ -95,6 +99,10 @@ const SourcesEdit: FC = () => {
 
   const handleDelete = useCallback(async () => {
     if (featureStoreData?.featurestoreId) {
+      dispatch.error.clear({
+        name: 'featureStoreSources',
+        action: 'delete',
+      });
       await dispatch.featureStoreSources.delete({
         projectId: +projectId,
         featureStoreId: featureStoreData?.featurestoreId,
@@ -107,21 +115,6 @@ const SourcesEdit: FC = () => {
       navigate('/sources', 'p/:id/*');
     }
   }, [dispatch, source, featureStoreData, projectId, navigate, sourceId]);
-
-  const handleResetError = useCallback(() => {
-    dispatch.error.clear({
-      name: 'featureStoreSources',
-      action: 'edit',
-    });
-  }, [dispatch]);
-
-  // Effects
-  useEffect(
-    () => () => {
-      handleResetError();
-    },
-    [handleResetError],
-  );
 
   if (isFeatureStoreLoading || rest.length || !source) {
     return <Loader />;

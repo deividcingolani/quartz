@@ -112,7 +112,7 @@ class FeatureGroupsService extends BaseApiService {
     });
 }
 
-export default new FeatureGroupsService('project');
+export default new FeatureGroupsService('/project');
 
 export interface GetStatisticsData {
   items?: {

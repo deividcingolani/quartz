@@ -8,6 +8,7 @@ import {
 } from '@rematch/core';
 
 const NETWORK_ERROR = 'Network Error';
+const INVALID_TOKEN = 'Invalidated token.';
 
 export class EffectError<T = string> {
   // eslint-disable-next-line no-useless-constructor
@@ -172,17 +173,15 @@ export default <
         errorInitialState.effects[name][action] = initialErrorValue;
 
         const effectWrapper = (...props: any): any => {
-          rematch.dispatch.error.clear();
+          rematch.dispatch.error.clearError();
 
           const effectResult = origEffect(...props);
-
           if (effectResult?.then) {
             effectResult.catch((err: any) => {
               if (err.isAxiosError) {
-                const isGlobal =
-                  options?.globalErrors.includes(
-                    err.status || err.response?.status,
-                  ) || err.message === NETWORK_ERROR;
+                const isGlobal = options?.globalErrors.includes(
+                  err.status || err.response?.status,
+                );
                 rematch.dispatch.error.set({
                   name,
                   action,

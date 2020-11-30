@@ -1,15 +1,12 @@
-import axios, { AxiosPromise } from 'axios';
-
-// import TokenService from './TokenService';
-
-axios.defaults.baseURL = `${process.env.REACT_APP_API_HOST}/hopsworks-api/api`;
+import axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
+import TokenService from './TokenService';
 
 interface ParamsInterface {
   [key: string]: string;
 }
 
 interface HeadersInterface {
-  [key: string]: string;
+  [key: string]: string | boolean;
 }
 
 export enum RequestType {
@@ -28,7 +25,7 @@ interface RequestParamsInterface {
   url?: string;
   type?: RequestType;
   params?: ParamsInterface;
-  data?: DataType;
+  data?: DataType | string;
   headers?: HeadersInterface;
 }
 
@@ -36,21 +33,28 @@ export default class BaseApiService {
   // eslint-disable-next-line no-useless-constructor
   constructor(protected readonly baseUrl: string = '') {}
 
+  static setInterceptor(
+    success: (response: AxiosResponse) => AxiosResponse<any>,
+    error: (error: AxiosError) => any,
+  ) {
+    axios.interceptors.response.use(success, error);
+  }
+
   static getHeaders(headers: HeadersInterface = {}): HeadersInterface {
-    // const token = TokenService.get();
+    const token = TokenService.get();
 
     return {
       ...headers,
       Accept: 'application/json, text/plain, */*',
-      Authorization: `ApiKey ${process.env.REACT_APP_API_KEY}`,
-      // ...(token && { Authorization: `Bearer ${token}` }),
+      ...(token && {
+        Authorization: `Bearer ${token}`,
+      }),
     };
   }
 
   getUrl(uri = ''): string {
     const divider = '?/'.includes(uri[0]) || !uri ? '' : '/';
-
-    return `${this.baseUrl}${divider}${uri}`;
+    return `${process.env.REACT_APP_API_HOST}${this.baseUrl}${divider}${uri}`;
   }
 
   request<R = undefined>(params: RequestParamsInterface): AxiosPromise<R> {
