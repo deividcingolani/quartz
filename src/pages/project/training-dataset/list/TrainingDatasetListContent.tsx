@@ -5,6 +5,12 @@ import { ITrainingDataset } from '../../../../types/training-dataset';
 // Components
 import FilterResult from '../../../../components/filter-result/FilterResult';
 import Card from './Card';
+import useDrawer from '../../../../hooks/useDrawer';
+import ItemDrawer, {
+  ItemDrawerTypes,
+} from '../../../../components/drawer/ItemDrawer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store';
 
 export interface TrainingDatasetListContentProps {
   data: ITrainingDataset[];
@@ -19,10 +25,32 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
   isFiltered,
   isLabelsLoading,
 }) => {
+  const { isOpen, selectedId, handleSelectItem, handleClose } = useDrawer();
+
+  const allTrainingDatasets = useSelector(
+    (state: RootState) => state.trainingDatasets,
+  );
+
   return (
     <>
+      {!!selectedId && (
+        <ItemDrawer<ITrainingDataset>
+          data={allTrainingDatasets}
+          id={selectedId}
+          isOpen={isOpen}
+          handleToggle={handleClose}
+          navigateTo={(id: number) => `/fg/${id}`}
+          type={ItemDrawerTypes.td}
+        />
+      )}
       {data.map((item) => (
-        <Card key={item.id} data={item} isLabelsLoading={isLabelsLoading} />
+        <Card
+          key={item.id}
+          handleToggle={handleSelectItem(item.id)}
+          isSelected={selectedId === item.id}
+          data={item}
+          isLabelsLoading={isLabelsLoading}
+        />
       ))}
       {isFiltered && (
         <FilterResult

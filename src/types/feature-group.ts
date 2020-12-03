@@ -1,3 +1,5 @@
+import { DataEntity } from './index';
+
 export enum FeatureType {
   float = 'float',
   int = 'int',
@@ -25,28 +27,20 @@ export interface Job {
   featuregroupId: number;
 }
 
-export interface FeatureGroup {
-  created: string;
-  creator: string;
+export interface SchematisedTag {
+  value: string;
+  name: string;
+  type: string;
+}
+
+export interface FeatureGroup extends DataEntity {
   defaultStorage: string;
   descStatsEnabled: boolean;
-  description: string;
   featCorrEnabled: boolean;
   featHistEnabled: boolean;
-  features: Feature[];
-  featurestoreId: number;
-  featurestoreName: string;
   hudiEnabled: boolean;
-  timeTravelFormat?: string;
-  id: number;
-  jobs: Job[]; // Todo: Update
-  location: string;
-  name: string;
-  onlineEnabled: boolean;
-  statisticColumns: string[];
-  type: string;
-  version: number;
-  labels?: string[];
+  statisticColumns: any;
+  timeTravelFormat: string;
 }
 
 export interface FeatureGroupLabel {

@@ -51,10 +51,11 @@ const useAppNavigation = (): TreeNode[] => {
   );
 
   const createAnchorLink = useCallback(
-    (title: string, to: string) => ({
+    (title: string, to: string, id: string) => ({
       title,
       isActive: overviewAnchors.active === to,
       onClick: handleJumpToAnchor(to),
+      id,
     }),
     [overviewAnchors.active, handleJumpToAnchor],
   );
@@ -70,6 +71,7 @@ const useAppNavigation = (): TreeNode[] => {
 
     return [
       {
+        id: '1',
         title: 'Home',
         icon: home,
         hasDivider: true,
@@ -77,6 +79,7 @@ const useAppNavigation = (): TreeNode[] => {
         onClick: handleNavigateRelative('/view', routeNames.project.view),
       },
       {
+        id: '2',
         title: 'Feature Groups',
         icon: fg,
         onClick: handleNavigateRelative(
@@ -86,18 +89,20 @@ const useAppNavigation = (): TreeNode[] => {
         isActive: isActive('/p/:id/fg'),
         children: [
           {
+            id: '3',
             title: 'Overview',
             isActive: isActive('/p/:id/fg/:fgId', ['new']) && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
-              createAnchorLink('Feature List', featureList),
-              createAnchorLink('Schematised Tags', schematisedTags),
-              createAnchorLink('Pipeline History', pipelineHistory),
-              createAnchorLink('Running Code', runningCode),
-              createAnchorLink('API', api),
+              createAnchorLink('Feature List', featureList, '11'),
+              createAnchorLink('Schematised Tags', schematisedTags, '12'),
+              createAnchorLink('Pipeline History', pipelineHistory, '13'),
+              createAnchorLink('Running Code', runningCode, '14'),
+              createAnchorLink('API', api, '15'),
             ],
           },
           {
+            id: '4',
             title: 'Data',
             onClick: handleNavigateRelative(
               '/data-preview',
@@ -106,6 +111,7 @@ const useAppNavigation = (): TreeNode[] => {
             isActive: isActive('/p/:id/fg/:fgId/activity'),
             children: [
               {
+                id: '5',
                 title: 'Data Preview',
                 isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
                 onClick: handleNavigateRelative(
@@ -114,6 +120,7 @@ const useAppNavigation = (): TreeNode[] => {
                 ),
               },
               {
+                id: '6',
                 title: 'Feature Statistics',
                 isActive: isActive('/p/:id/fg/:fgId/statistics/*'),
                 onClick: handleNavigateRelative(
@@ -122,12 +129,14 @@ const useAppNavigation = (): TreeNode[] => {
                 ),
               },
               {
+                id: '7',
                 title: 'Correlation',
                 isActive: isActive(routeNames.featureGroup.dataCorrelation),
               },
             ],
           },
           {
+            id: '8',
             title: 'Activity',
             onClick: handleNavigateRelative('/activity', '/p/:id/fg/:fgId/*'),
             isActive: isActive('/p/:id/fg/:fgId/activity'),
@@ -135,6 +144,7 @@ const useAppNavigation = (): TreeNode[] => {
         ],
       },
       {
+        id: '9',
         title: 'Training Datasets',
         icon: td,
         hasDivider: true,
@@ -146,6 +156,7 @@ const useAppNavigation = (): TreeNode[] => {
         ),
       },
       {
+        id: '10',
         title: 'Sources',
         icon: sources,
 

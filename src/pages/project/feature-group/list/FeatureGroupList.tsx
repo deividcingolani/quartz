@@ -46,13 +46,13 @@ const FeatureGroupList: FC = () => {
 
   const maxVersionsData = useMemo(
     () =>
-      data.reduce((acc: FeatureGroup[], fg) => {
-        if (!acc.find((g) => g.name === fg.name)) {
-          return [...acc, fg];
+      data.reduce((acc: FeatureGroup[], featureGroup) => {
+        if (!acc.find(({ name }) => name === featureGroup.name)) {
+          return [...acc, featureGroup];
         }
-        const ind = acc.findIndex((g) => g.name === fg.name);
-        if (acc[ind].version < fg.version) {
-          acc[ind] = fg;
+        const index = acc.findIndex(({ name }) => name === featureGroup.name);
+        if (acc[index].version < featureGroup.version) {
+          acc[index] = featureGroup;
           return acc;
         }
         return acc;

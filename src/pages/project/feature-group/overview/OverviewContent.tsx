@@ -77,8 +77,10 @@ Hops.getFeaturegroup("${data.name}").read()`,
   return (
     <>
       <Panel
+        data={data}
         title={String(data?.name)}
         id={data.id}
+        hasDropdown={true}
         onClickEdit={onClickEdit}
         onClickRefresh={onClickRefresh}
       />
