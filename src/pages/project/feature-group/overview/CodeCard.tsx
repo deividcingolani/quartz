@@ -17,7 +17,7 @@ export interface PipelineHistoryProps
 const CodeCard: FC<PipelineHistoryProps> = ({ content, ...props }) => {
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
-    <Card mt="60px" {...props}>
+    <Card mt="20px" {...props}>
       {content.map(({ title, code }, index) => (
         <Flex
           key={title}

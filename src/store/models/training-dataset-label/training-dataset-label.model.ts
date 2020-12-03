@@ -1,8 +1,8 @@
 import { createModel, RematchDispatch } from '@rematch/core';
-import { TrainingDatasetLabelService } from '../../../services/project';
 import { ITrainingDatasetLabel } from '../../../types/training-dataset-label';
 import { RootModel } from '../index';
 import * as types from './types';
+import { TrainingDatasetLabelService } from '../../../services/project/training-dataset-labels.service';
 
 const initialState: types.ITrainingDatasetLabelsState = {};
 

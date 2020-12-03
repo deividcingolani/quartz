@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core';
 import ProjectsService from '../../../services/project/ProjectsService';
 import { Project } from '../../../types/project';
+import FeatureStoresService from '../../../services/project/FeatureStoresService';
 
 export type ProjectState = Project;
 
@@ -11,7 +12,17 @@ const project = createModel()({
   },
   effects: (dispatch) => ({
     getProject: async (id: number): Promise<void> => {
-      dispatch.project.setProject(await ProjectsService.get(id));
+      const project = await ProjectsService.get(id);
+
+      const [featureStore] = await FeatureStoresService.getList(id);
+
+      const mappedProject = {
+        ...project,
+        featureGroupsCount: featureStore.numFeatureGroups,
+        trainingDatasetsCount: featureStore.numTrainingDatasets,
+      };
+
+      dispatch.project.setProject(mappedProject);
     },
     create: async ({ data }: { data: any }): Promise<any> => {
       return await ProjectsService.create(data);

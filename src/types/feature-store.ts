@@ -13,6 +13,8 @@ export interface FeatureStore {
   onlineFeaturestoreSize: number;
   projectId: number;
   projectName: string;
+  numFeatureGroups: number;
+  numTrainingDatasets: number;
 }
 
 export enum StorageConnectorType {

@@ -7,7 +7,7 @@ export interface SchematisedTagsProps {}
 const SchematisedTags: FC<SchematisedTagsProps> = () => {
   return (
     <Card
-      mt="30px"
+      mt="20px"
       title={
         <>
           Schematised Tags{' '}

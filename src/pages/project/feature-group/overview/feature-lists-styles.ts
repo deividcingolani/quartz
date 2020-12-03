@@ -1,17 +1,13 @@
 const featureListStyles = {
   table: {
-    'td:nth-of-type(3)': {
-      p: 0,
+    td: {
+      px: '10px',
     },
-    'td:nth-of-type(4)': {
-      pr: 0,
+    'td:nth-of-type(1)': {
+      pl: '20px',
     },
-    'td:nth-of-type(5)': {},
     'td:nth-of-type(6)': {
-      px: 0,
-    },
-    'td:nth-of-type(7)': {
-      px: 0,
+      pr: '20px',
     },
   },
 };

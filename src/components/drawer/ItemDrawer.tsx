@@ -14,6 +14,7 @@ import useJobRowData from '../../hooks/useJobRowData';
 import useSchematisedTagsRowData from '../../hooks/useSchematisedTagsRowData';
 import Loader from '../loader/Loader';
 import { DataEntity } from '../../types';
+import { useLatestVersion } from '../../hooks/useLatestVersion';
 
 export enum ItemDrawerTypes {
   fg = 'fg',
@@ -73,12 +74,7 @@ const ItemDrawer = <T extends DataEntity>({
     [data, item],
   );
 
-  const latestVersion = useMemo(() => {
-    const versions = data
-      .filter(({ name }) => name === item?.name)
-      .map(({ version }) => version.toString());
-    return versions.sort((v1, v2) => -v1.localeCompare(v2))[0];
-  }, [data, item]);
+  const { latestVersion } = useLatestVersion<T>(item, data);
 
   const versions = useMemo(() => {
     const versions = data.filter(({ name }) => name === item?.name);

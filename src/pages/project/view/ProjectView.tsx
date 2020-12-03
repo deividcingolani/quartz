@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect } from 'react';
+import React, { FC, memo, useEffect } from 'react';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -9,8 +9,6 @@ import Loader from '../../../components/loader/Loader';
 import { Dispatch, RootState } from '../../../store';
 // Components
 import OverviewContent from './OverviewContent';
-
-import routeNames from '../../../routes/routeNames';
 
 const ProjectView: FC = () => {
   const { id: projectId } = useParams();
@@ -29,13 +27,6 @@ const ProjectView: FC = () => {
     (state: RootState) => state.loading.effects.project.getProject,
   );
 
-  const handleNavigate = useCallback(
-    (id: number, route: string) => (): void => {
-      navigate(route.replace(':id', id.toString()));
-    },
-    [navigate],
-  );
-
   if (isLoading || !project) {
     return <Loader />;
   }
@@ -43,7 +34,7 @@ const ProjectView: FC = () => {
   return (
     <OverviewContent
       data={project}
-      onClickEdit={handleNavigate(project.id, routeNames.project.edit)}
+      onClickEdit={() => navigate(`/p/${projectId}/edit`)}
     />
   );
 };

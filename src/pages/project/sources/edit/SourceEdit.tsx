@@ -137,6 +137,7 @@ const SourcesEdit: FC = () => {
         onDelete={handleToggle}
       />
       <TinyPopup
+        width="440px"
         title={`Delete ${source.name}`}
         secondaryText="The source will be definitely deleted"
         isOpen={isPopupOpen}

@@ -117,6 +117,7 @@ const TrainingDatasetList: FC = () => {
             value={filter}
             variant="white"
             isMulti
+            noDataMessage="labels"
             options={labels}
             placeholder="label filter"
             onChange={setFilter}

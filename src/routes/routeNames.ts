@@ -20,6 +20,7 @@ const routeNames = {
     overview: '/fg/:fgId/*',
     overviewAnchors: {
       featureList: 'feature-list',
+      provenance: 'provenance',
       schematisedTags: 'schematised-tags',
       pipelineHistory: 'pipeline-history',
       runningCode: 'running-code',

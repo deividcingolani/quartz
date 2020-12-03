@@ -42,8 +42,7 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
           minWidth="939px"
           id="content"
           sx={styles}
-          p="30px"
-          pr="50px"
+          p="20px"
           pb="0"
         >
           <Flex

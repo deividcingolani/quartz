@@ -1,7 +1,11 @@
 import BaseApiService, { RequestType } from '../BaseApiService';
 
 // Types
-import { FeatureGroup, FeatureGroupRowItem } from '../../types/feature-group';
+import {
+  FeatureGroup,
+  FeatureGroupRowItem,
+  Provenance,
+} from '../../types/feature-group';
 import { StorageConnectorType } from '../../types/feature-group-data-preview';
 
 const getQueryParams = (onlineEnabled: boolean) => {
@@ -54,6 +58,18 @@ class FeatureGroupsService extends BaseApiService {
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/statistics?sort_by=commit_time:desc&fields=content`,
       type: RequestType.get,
     });
+
+  getProvenance = (
+    projectId: number,
+    featureStoreId: number,
+    featureGroup: FeatureGroup,
+  ) => {
+    const { name, version } = featureGroup;
+    return this.request<Provenance>({
+      url: `${projectId}/provenance/links?filter_by=IN_ARTIFACT:${name}_${version}&filter_by=IN_TYPE:FEATURE&filter_by=OUT_TYPE:TRAINING_DATASET`,
+      type: RequestType.get,
+    });
+  };
 
   getRows = (
     projectId: number,

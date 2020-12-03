@@ -1,8 +1,8 @@
 import { createModel, RematchDispatch } from '@rematch/core';
-import { TrainingDatasetService } from '../../../services/project';
 import { RootModel } from '../index';
 import { ITrainingDataset } from '../../../types/training-dataset';
 import * as types from './types';
+import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 
 const initialState: types.TrainingDatasetState = [];
 
@@ -26,10 +26,7 @@ const fetch = (dispatch: RematchDispatch<RootModel>) => async ({
 }): Promise<void> => {
   dispatch.trainingDatasetLabels.clear();
 
-  const { data } = await new TrainingDatasetService().getList(
-    projectId,
-    featureStoreId,
-  );
+  const data = await TrainingDatasetService.getList(projectId, featureStoreId);
 
   await Promise.all(
     data.map(({ id }) => {

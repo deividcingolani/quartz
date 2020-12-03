@@ -1,6 +1,6 @@
 import { Box } from 'rebass';
-import React, { FC, memo, useMemo } from 'react';
-import { Button } from '@logicalclocks/quartz';
+import React, { FC, memo, useCallback, useMemo } from 'react';
+import { Button, Select } from '@logicalclocks/quartz';
 
 // Components
 import Anchor from '../../../../components/anchor/Anchor';
@@ -14,10 +14,15 @@ import {
   FeatureGroupLabel,
 } from '../../../../types/feature-group';
 // Features
-import FeatureList from './FeatureList';
 import SummaryData from './SummaryData';
 import PipelineHistory from './PipelineHistory';
 import SchematisedTags from './SchematisedTags';
+import Provenance from './Provenance';
+import FeatureList from './FeatureList';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store';
+import { useLatestVersion } from '../../../../hooks/useLatestVersion';
 
 export interface ContentProps {
   data: FeatureGroup;
@@ -35,6 +40,7 @@ const action = (
 
 const {
   featureList,
+  provenance,
   schematisedTags,
   pipelineHistory,
   runningCode,
@@ -74,13 +80,55 @@ Hops.getFeaturegroup("${data.name}").read()`,
     ];
   }, [data]);
 
+  const navigate = useNavigateRelative();
+
+  const featureGroups = useSelector((state: RootState) => state.featureGroups);
+
+  const { latestVersion } = useLatestVersion(data, featureGroups);
+
+  const versions = useMemo(() => {
+    const versions = featureGroups.filter(({ name }) => name === data?.name);
+    return versions.map(
+      ({ version }) =>
+        `${version.toString()} ${
+          version.toString() === latestVersion ? '(latest)' : ''
+        }`,
+    );
+  }, [data, latestVersion, featureGroups]);
+
+  const handleVersionChange = useCallback(
+    (values) => {
+      const newId = featureGroups.find(
+        ({ version, name }) =>
+          version === +values[0].split(' ')[0] && name === data?.name,
+      )?.id;
+
+      navigate(`/fg/${newId}`, routeNames.project.view);
+    },
+    [data, featureGroups, navigate],
+  );
+
   return (
     <>
       <Panel
-        data={data}
         title={String(data?.name)}
         id={data.id}
-        hasDropdown={true}
+        hasVersionDropdown={true}
+        versionDropdown={
+          <Select
+            mb="-5px"
+            width="143px"
+            listWidth="100%"
+            value={[
+              `${data?.version.toString()} ${
+                data?.version.toString() === latestVersion ? '(latest)' : ''
+              }`,
+            ]}
+            options={versions}
+            placeholder="version"
+            onChange={handleVersionChange}
+          />
+        }
         onClickEdit={onClickEdit}
         onClickRefresh={onClickRefresh}
       />
@@ -92,6 +140,10 @@ Hops.getFeaturegroup("${data.name}").read()`,
         />
         <Anchor groupName="overview" anchor={featureList}>
           <FeatureList data={data.features} />
+        </Anchor>
+
+        <Anchor groupName="overview" anchor={provenance}>
+          <Provenance data={data.provenance} />
         </Anchor>
 
         <Anchor groupName="overview" anchor={schematisedTags}>
@@ -111,7 +163,7 @@ Hops.getFeaturegroup("${data.name}").read()`,
         </Anchor>
 
         <Anchor anchor={api} groupName="overview">
-          <CodeCard mt="30px" title="API" actions={action} content={apiCode} />
+          <CodeCard mt="20px" title="API" actions={action} content={apiCode} />
         </Anchor>
       </Box>
     </>

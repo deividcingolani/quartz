@@ -48,7 +48,7 @@ const PipelineHistory: FC<PipelineHistoryProps> = ({ data }) => {
 
   return (
     <Card
-      mt="30px"
+      mt="20px"
       title="Pipeline History"
       actions={
         <Button p={0} intent="inline">

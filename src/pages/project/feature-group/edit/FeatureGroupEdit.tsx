@@ -136,6 +136,7 @@ const FeatureGroupEdit: FC = () => {
         initialData={featureGroup}
       />
       <TinyPopup
+        width="440px"
         title={`Delete ${featureGroup.name}`}
         secondaryText="Once you delete a feature group, there is no going back. Please be certain."
         isOpen={isPopupOpen}

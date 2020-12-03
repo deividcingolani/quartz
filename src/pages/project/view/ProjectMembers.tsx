@@ -93,7 +93,7 @@ const ProjectMembers: FC<SourceListContentProps> = ({ data }) => {
       <Flex alignItems="center" pb="15px">
         <Value primary>{data.projectTeam.length}</Value>
         <Labeling bold ml="5px">
-          members
+          {data.projectTeam.length > 1 ? 'members' : 'member'}
         </Labeling>
       </Flex>
       <Box sx={styles} mx="-20px">

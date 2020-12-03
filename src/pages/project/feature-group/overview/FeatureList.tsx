@@ -39,7 +39,7 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
 
   return (
     <Card
-      mt="30px"
+      mt="20px"
       title="Feature list"
       actions={
         <Button p={0} intent="inline">
@@ -82,7 +82,15 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
       </Flex>
 
       {/* Data Rows */}
-      <Box mt="30px" mx="-20px" sx={featureListStyles}>
+      <Box
+        mt="30px"
+        mx="-20px"
+        pb="18px"
+        maxHeight="418px"
+        overflowY="auto"
+        overflowX="hidden"
+        sx={featureListStyles}
+      >
         <Row
           middleColumn={1}
           groupComponents={groupComponents as ComponentType<any>[][]}

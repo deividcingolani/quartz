@@ -32,7 +32,7 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
     <>
       <Card
         actions={
-          <Button intent="inline" onClick={handleNavigate}>
+          <Button intent="inline" onClick={onClickEdit}>
             edit
           </Button>
         }
@@ -80,13 +80,13 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
               <Microlabeling mb="3px" gray>
                 Feature Groups
               </Microlabeling>
-              <Value primary>{data.projectId}</Value>
+              <Value primary>{data.featureGroupsCount}</Value>
             </Flex>
             <Flex flexDirection="column" ml="30px">
               <Microlabeling mb="3px" gray>
                 Training Datasets
               </Microlabeling>
-              <Value primary>{data.projectId}</Value>
+              <Value primary>{data.trainingDatasetsCount}</Value>
             </Flex>
           </Flex>
         </Flex>

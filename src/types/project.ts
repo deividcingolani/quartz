@@ -33,4 +33,6 @@ export interface Project {
   projectName?: string;
   projectId?: number;
   projectTeam: TeamMember[];
+  featureGroupsCount?: number;
+  trainingDatasetsCount?: number;
 }

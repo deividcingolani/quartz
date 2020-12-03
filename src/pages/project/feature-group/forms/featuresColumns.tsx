@@ -22,7 +22,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
       // @ts-ignore
       render: ({ value, onChange }) => (
         <Select
-          width="auto"
+          width="110px"
           value={value}
           onChange={onChange}
           options={[
@@ -43,7 +43,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
       // @ts-ignore
       render: ({ value, onChange }) => (
         <Select
-          width="auto"
+          width="110px"
           value={value}
           onChange={onChange}
           options={['INT', 'FLOAT', 'TEXT', 'DOUBLE', 'VARCHAR(1000)']}
@@ -62,7 +62,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
         return (
           <Checkbox
             ml="8px"
-            width="auto"
+            width="80px"
             checked={value}
             onChange={handleChange}
             variant="gray"
@@ -81,7 +81,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
         return (
           <Checkbox
             ml="8px"
-            width="auto"
+            width="85px"
             checked={value}
             onChange={handleChange}
             variant="gray"

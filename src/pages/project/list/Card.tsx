@@ -10,8 +10,9 @@ import {
   TinyPopup,
   usePopup,
   User,
+  Badge,
 } from '@logicalclocks/quartz';
-import React, { FC, memo, useCallback } from 'react';
+import React, { FC, memo, useCallback, useMemo } from 'react';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, CardProps as RebassCardProps } from 'rebass';
 
@@ -53,6 +54,8 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
     dispatch.projectsList.getProjects();
   }, [data, dispatch]);
 
+  const isDemo = useMemo(() => data.name.includes('demo_'), [data]);
+
   return (
     <>
       <QuartzCard
@@ -64,6 +67,7 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
         <Flex my="6px" flexDirection="column">
           <Flex justifyContent="space-between" alignItems="center">
             <Flex>
+              {isDemo && <Badge mr="20px" value="demo" variant="bold" />}
               <HoverableText
                 fontFamily="Inter"
                 onClick={handleNavigate(routeNames.project.viewHome)}
@@ -82,7 +86,7 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               </Value>
             </Flex>
             <Flex>
-              {data.name.includes('demo_') && (
+              {isDemo && (
                 <Button mr="20px" intent="ghost" onClick={handleToggle}>
                   Delete Demo
                 </Button>
@@ -112,13 +116,13 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               <Microlabeling mb="3px" gray>
                 Feature Groups
               </Microlabeling>
-              <Value primary>{data.id}</Value>
+              <Value primary>{data.featureGroupsCount}</Value>
             </Flex>
             <Flex flexDirection="column" ml="30px">
               <Microlabeling mb="3px" gray>
                 Training Datasets
               </Microlabeling>
-              <Value primary>{data.id}</Value>
+              <Value primary>{data.trainingDatasetsCount}</Value>
             </Flex>
             <Flex width="max-content" flexDirection="column" ml="30px">
               <Microlabeling gray mb="3px" width="100%">

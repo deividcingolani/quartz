@@ -1,9 +1,16 @@
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
-import { Value, Badge, Labeling, IconButton } from '@logicalclocks/quartz';
+import {
+  Value,
+  Badge,
+  Labeling,
+  IconButton,
+  Tooltip,
+} from '@logicalclocks/quartz';
 
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { Feature } from '../../../../types/feature-group';
+import { Flex } from 'rebass';
 
 const useFeatureListRowData = (features: Feature[]) => {
   const navigate = useNavigateRelative();
@@ -22,8 +29,7 @@ const useFeatureListRowData = (features: Feature[]) => {
       ...(partition ? [Badge] : [() => null]),
       ...(primary ? [Badge] : [() => null]),
       Badge,
-      IconButton,
-      IconButton,
+      Tooltip,
     ]);
   }, [features]);
 
@@ -57,16 +63,23 @@ const useFeatureListRowData = (features: Feature[]) => {
         width: 'max-content',
       },
       {
-        intent: 'ghost',
-        icon: 'table',
-        tooltip: 'Data preview',
-        onClick: handleNavigate(`/data-preview/${name}`),
-      },
-      {
-        intent: 'ghost',
-        icon: 'poll',
-        tooltip: 'Statistics',
-        onClick: handleNavigate(`/statistics/f/${name}`),
+        disabled: true,
+        children: React.createElement(
+          Flex,
+          {},
+          React.createElement(IconButton, {
+            intent: 'ghost',
+            icon: 'table',
+            tooltip: 'Data preview',
+            onClick: handleNavigate(`/data-preview/${name}`),
+          }),
+          React.createElement(IconButton, {
+            intent: 'ghost',
+            icon: 'poll',
+            tooltip: 'Statistics',
+            onClick: handleNavigate(`/statistics/f/${name}`),
+          }),
+        ),
       },
     ]);
   }, [features, handleNavigate]);

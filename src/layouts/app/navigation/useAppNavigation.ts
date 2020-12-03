@@ -63,6 +63,7 @@ const useAppNavigation = (): TreeNode[] => {
   return useMemo<TreeNode[]>(() => {
     const {
       featureList,
+      provenance,
       schematisedTags,
       pipelineHistory,
       runningCode,
@@ -75,12 +76,14 @@ const useAppNavigation = (): TreeNode[] => {
         title: 'Home',
         icon: home,
         hasDivider: true,
+        tooltipText: 'Home',
         isActive: isActive('/p/:id/view'),
         onClick: handleNavigateRelative('/view', routeNames.project.view),
       },
       {
         id: '2',
         title: 'Feature Groups',
+        tooltipText: 'Feature Groups',
         icon: fg,
         onClick: handleNavigateRelative(
           routeNames.featureGroup.list,
@@ -95,6 +98,12 @@ const useAppNavigation = (): TreeNode[] => {
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
               createAnchorLink('Feature List', featureList, '11'),
+              createAnchorLink('Schematised Tags', schematisedTags, '12'),
+              createAnchorLink('Pipeline History', pipelineHistory, '13'),
+              createAnchorLink('Running Code', runningCode, '14'),
+              createAnchorLink('API', api, '15'),
+              createAnchorLink('Feature List', featureList, '11'),
+              createAnchorLink('Provenance', provenance, '16'),
               createAnchorLink('Schematised Tags', schematisedTags, '12'),
               createAnchorLink('Pipeline History', pipelineHistory, '13'),
               createAnchorLink('Running Code', runningCode, '14'),
@@ -146,6 +155,7 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: '9',
         title: 'Training Datasets',
+        tooltipText: 'Training Datasets',
         icon: td,
         hasDivider: true,
 
@@ -159,7 +169,7 @@ const useAppNavigation = (): TreeNode[] => {
         id: '10',
         title: 'Sources',
         icon: sources,
-
+        tooltipText: 'Sources',
         isActive: location.pathname.includes(routeNames.source.list),
         onClick: handleNavigateRelative(routeNames.source.list, 'p/:id/*'),
       },

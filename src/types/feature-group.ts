@@ -1,4 +1,5 @@
 import { DataEntity } from './index';
+import { ITrainingDataset } from './training-dataset';
 
 export enum FeatureType {
   float = 'float',
@@ -27,6 +28,33 @@ export interface Job {
   featuregroupId: number;
 }
 
+export interface Entry {
+  key: string;
+  value: any;
+}
+
+export interface EntryType {
+  entry: Entry[];
+}
+
+export interface Provenance {
+  count: number;
+  in: EntryType;
+  out: EntryType;
+  items?: Provenance[];
+}
+
+export interface SchematisedTag {
+  value: string;
+  name: string;
+  type: string;
+}
+
+export interface FeatureGroupProvenance {
+  td: ITrainingDataset;
+  info: Entry;
+}
+
 export interface SchematisedTag {
   value: string;
   name: string;
@@ -41,6 +69,7 @@ export interface FeatureGroup extends DataEntity {
   hudiEnabled: boolean;
   statisticColumns: any;
   timeTravelFormat: string;
+  provenance: FeatureGroupProvenance[];
 }
 
 export interface FeatureGroupLabel {
