@@ -7,9 +7,6 @@ import {
   ExtractRematchDispatchersFromEffects,
 } from '@rematch/core';
 
-const NETWORK_ERROR = 'Network Error';
-const INVALID_TOKEN = 'Invalidated token.';
-
 export class EffectError<T = string> {
   // eslint-disable-next-line no-useless-constructor
   constructor(public readonly data: T, public readonly status: number) {}

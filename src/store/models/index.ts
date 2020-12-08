@@ -15,6 +15,7 @@ import featureGroupRows from './feature/statistics/featureGroupRows.model';
 import featureStoreSources from './feature/sources/featureStoreSources.model';
 import featureGroupDataPreview from './feature/data/featureGroupsDataPreview.model';
 import featureGroupStatistics from './feature/statistics/featureGroupStatistics.model';
+import featureGroupStatisticsCommits from './feature/statistics/featureGroupStatisticsCommits.model';
 
 export interface RootModel extends Models<RootModel> {
   auth: typeof auth;
@@ -31,6 +32,7 @@ export interface RootModel extends Models<RootModel> {
   featureGroupStatistics: typeof featureGroupStatistics;
   trainingDatasetLabels: typeof trainingDatasetLabelModel;
   featureGroupDataPreview: typeof featureGroupDataPreview;
+  featureGroupStatisticsCommits: typeof featureGroupStatisticsCommits;
 }
 
 const models: RootModel = {
@@ -46,6 +48,7 @@ const models: RootModel = {
   featureStoreSources,
   featureGroupStatistics,
   featureGroupDataPreview,
+  featureGroupStatisticsCommits,
   trainingDatasets: trainingDatasetModel,
   trainingDatasetLabels: trainingDatasetLabelModel,
 };

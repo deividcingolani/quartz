@@ -32,15 +32,18 @@ const featureGroupStatistics = createModel()({
       projectId,
       featureStoreId,
       featureGroupId,
+      timeCommit,
     }: {
       projectId: number;
       featureStoreId: number;
       featureGroupId: number;
+      timeCommit?: string;
     }): Promise<void> => {
       const { data } = await FeatureGroupsService.getStatistics(
         projectId,
         featureStoreId,
         featureGroupId,
+        timeCommit,
       );
 
       if (data.items) {

@@ -9,6 +9,8 @@ export interface PanelProps {
   onClickRefresh: () => void;
   title: string;
   id: number;
+  hasCommitDropdown?: boolean;
+  commitDropdown?: React.ReactElement;
   hasVersionDropdown?: boolean;
   versionDropdown?: React.ReactElement;
 }
@@ -35,6 +37,8 @@ const Panel: FC<PanelProps> = ({
   onClickRefresh,
   title,
   id,
+  hasCommitDropdown,
+  commitDropdown,
   hasVersionDropdown = false,
   versionDropdown,
 }) => (
@@ -45,7 +49,9 @@ const Panel: FC<PanelProps> = ({
       <Value mt="auto" ml="5px" mr="15px" sx={{ color: 'labels.orange' }}>
         #{id}
       </Value>
+
       {hasVersionDropdown && versionDropdown}
+      {hasCommitDropdown && commitDropdown}
     </Flex>
     <Flex ml="auto">
       <Button intent="ghost" onClick={onClickEdit}>

@@ -1,5 +1,5 @@
 import { Box, Flex } from 'rebass';
-import React, { ComponentType, FC, memo, useEffect } from 'react';
+import React, { ComponentType, FC, memo } from 'react';
 import { Row as QRow, Card, Value, Labeling } from '@logicalclocks/quartz';
 
 // Types

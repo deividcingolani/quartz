@@ -13,9 +13,6 @@ import sources from '../../../sources/source_02rev.json';
 import td from '../../../sources/TD_01 (1).json';
 import fg from '../../../sources/FG_06.json';
 import home from '../../../sources/home.json';
-import jobs from '../../../sources/runjobs.json';
-import meta from '../../../sources/meta-03.json';
-import query from '../../../sources/query-04.json';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
@@ -97,11 +94,6 @@ const useAppNavigation = (): TreeNode[] => {
             isActive: isActive('/p/:id/fg/:fgId', ['new']) && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
-              createAnchorLink('Feature List', featureList, '11'),
-              createAnchorLink('Schematised Tags', schematisedTags, '12'),
-              createAnchorLink('Pipeline History', pipelineHistory, '13'),
-              createAnchorLink('Running Code', runningCode, '14'),
-              createAnchorLink('API', api, '15'),
               createAnchorLink('Feature List', featureList, '11'),
               createAnchorLink('Provenance', provenance, '16'),
               createAnchorLink('Schematised Tags', schematisedTags, '12'),

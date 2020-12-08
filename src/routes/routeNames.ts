@@ -33,6 +33,9 @@ const routeNames = {
     previewOne: '/fg/:fgId/data-preview/:featureName',
     statistics: '/fg/:fgId/statistics',
     statisticsViewOne: '/fg/:fgId/statistics/f/:featureName',
+    statisticsViewCommit: '/fg/:fgId/statistics/commit/:commitTime',
+    statisticsViewCommitAndOne:
+      '/fg/:fgId/statistics/commit/:commitTime/f/:featureName',
     dataCorrelation: '/fg/:fgId/data/correlation',
   },
 

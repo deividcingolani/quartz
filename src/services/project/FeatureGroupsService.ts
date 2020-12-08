@@ -53,9 +53,24 @@ class FeatureGroupsService extends BaseApiService {
     projectId: number,
     featureStoreId: number,
     featureGroupId: number,
+    timeCommit?: string,
   ) =>
     this.request<GetStatisticsData>({
-      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/statistics?sort_by=commit_time:desc&fields=content`,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/statistics?${
+        timeCommit
+          ? `filter_by=commit_time_eq:${timeCommit}`
+          : 'sort_by=commit_time:desc&offset=0&limit=1'
+      }&fields=content`,
+      type: RequestType.get,
+    });
+
+  getCommits = (
+    projectId: number,
+    featureStoreId: number,
+    featureGroupId: number,
+  ) =>
+    this.request<GetStatisticsData>({
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/statistics`,
       type: RequestType.get,
     });
 
@@ -133,6 +148,7 @@ export default new FeatureGroupsService('/project');
 export interface GetStatisticsData {
   items?: {
     content: string;
+    commitTime: number;
   }[];
 }
 

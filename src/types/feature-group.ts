@@ -55,12 +55,6 @@ export interface FeatureGroupProvenance {
   info: Entry;
 }
 
-export interface SchematisedTag {
-  value: string;
-  name: string;
-  type: string;
-}
-
 export interface FeatureGroup extends DataEntity {
   defaultStorage: string;
   descStatsEnabled: boolean;
