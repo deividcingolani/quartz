@@ -8,8 +8,6 @@ import { FeatureGroupFormData } from '../types';
 // Components
 import Loader from '../../../../components/loader/Loader';
 import FeatureGroupForm from '../forms/FeatureGroupForm';
-// Selectors
-import { selectFeatureStoreSourcesLoading } from '../../../../store/models/feature/sources/selectors';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Utils
@@ -32,20 +30,9 @@ const FeatureGroupCreate: FC = () => {
 
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroups.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
-      dispatch.featureStoreSources.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-      });
+      dispatch.schematisedTags.fetch();
     }
   }, [dispatch, projectId, featureStoreData]);
-
-  const isSubmit = useSelector(
-    (state: RootState) => state.loading.effects.featureGroups.create,
-  );
 
   const handleSubmit = useCallback(
     async (data: FeatureGroupFormData) => {
@@ -80,19 +67,25 @@ const FeatureGroupCreate: FC = () => {
     (state: RootState) => state.loading.effects.featureStores.fetch,
   );
 
-  const isLabelsLoading = useSelector(
+  const isKeywordsLoading = useSelector(
     (state: RootState) => state.loading.effects.featureGroups.fetch,
   );
 
-  const isSourcesLoading = useSelector(selectFeatureStoreSourcesLoading);
+  const isTagsLoading = useSelector(
+    (state: RootState) => state.loading.effects.schematisedTags.fetch,
+  );
 
-  if (isLabelsLoading || isSourcesLoading) {
+  const isSubmit = useSelector(
+    (state: RootState) => state.loading.effects.featureGroups.create,
+  );
+
+  if (isKeywordsLoading || isTagsLoading) {
     return <Loader />;
   }
 
   return (
     <FeatureGroupForm
-      isLoading={isLabelsLoading || isFeatureStoreLoading}
+      isLoading={isFeatureStoreLoading}
       isDisabled={isSubmit}
       submitHandler={handleSubmit}
     />

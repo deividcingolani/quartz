@@ -1,18 +1,16 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
-import { Button, EditableTable, Label } from '@logicalclocks/quartz';
 import { Box } from 'rebass';
+import { useFormContext } from 'react-hook-form';
+import { Button, EditableTable, Label } from '@logicalclocks/quartz';
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 
 // Types
 import { FeatureFormProps } from '../types';
-import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
 import { featuresColumns } from './featuresColumns';
+import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
 
-const FeaturesForm: FC<FeatureFormProps> = ({
-  setValue,
-  isEdit,
-  getValues,
-  isDisabled,
-}) => {
+const FeaturesForm: FC<FeatureFormProps> = ({ isEdit, isDisabled }) => {
+  const { getValues, setValue } = useFormContext();
+
   const [features, setFeatures] = useState<FGRow[]>(
     isEdit ? getValues().features : [],
   );

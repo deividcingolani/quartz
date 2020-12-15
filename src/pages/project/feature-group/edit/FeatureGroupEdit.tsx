@@ -8,8 +8,6 @@ import { FeatureGroupFormData } from '../types';
 // Components
 import Loader from '../../../../components/loader/Loader';
 import FeatureGroupForm from '../forms/FeatureGroupForm';
-// Selectors
-import { selectFeatureStoreSourcesLoading } from '../../../../store/models/feature/sources/selectors';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Utils
@@ -19,6 +17,7 @@ import {
   mapStatisticConfiguration,
 } from '../utils';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
+import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 
 const FeatureGroupEdit: FC = () => {
   const { id: projectId, fgId } = useParams();
@@ -35,30 +34,17 @@ const FeatureGroupEdit: FC = () => {
 
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroups.fetch({
+      dispatch.featureGroupView.fetch({
         projectId: +projectId,
         featureStoreId: featureStoreData.featurestoreId,
+        featureGroupId: +fgId,
       });
-      dispatch.featureStoreSources.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-      });
+      dispatch.schematisedTags.fetch();
     }
-    return () => {
-      dispatch.featureGroups.clear();
-    };
-  }, [dispatch, projectId, featureStoreData]);
+  }, [dispatch, projectId, featureStoreData, fgId]);
 
-  const isSubmit = useSelector(
-    (state: RootState) => state.loading.effects.featureGroups.edit,
-  );
-
-  const isDeleting = useSelector(
-    (state: RootState) => state.loading.effects.featureGroups.delete,
-  );
-
-  const featureGroup = useSelector((state: RootState) =>
-    state.featureGroups.find((f) => f.id === +fgId),
+  const featureGroup = useSelector<RootState, FeatureGroupViewState>(
+    (state) => state.featureGroupView,
   );
 
   const handleSubmit = useCallback(
@@ -68,7 +54,8 @@ const FeatureGroupEdit: FC = () => {
         description,
         statisticConfiguration,
         onlineEnabled,
-        labels,
+        keywords,
+        tags,
       } = data;
 
       if (featureStoreData?.featurestoreId) {
@@ -78,22 +65,25 @@ const FeatureGroupEdit: FC = () => {
           featureGroupId: +fgId,
           data: {
             description,
-            labels,
+            keywords,
             type: 'cachedFeaturegroupDTO',
             features: mapFeatures(features),
             ...mapStatisticConfiguration(statisticConfiguration),
             statisticColumns: getEnabledStatistics(features),
             descStatsEnabled: !!getEnabledStatistics(features).length,
             onlineEnabled,
+            tags,
+            prevTags: featureGroup?.tags.map(({ name }) => name),
           },
         });
       }
 
+      dispatch.featureGroupView.clear();
       dispatch.featureGroups.clear();
 
       navigate('/fg', 'p/:id/*');
     },
-    [dispatch, featureStoreData, navigate, projectId, fgId],
+    [dispatch, featureStoreData, navigate, projectId, fgId, featureGroup],
   );
 
   const handleDelete = useCallback(async () => {
@@ -115,13 +105,23 @@ const FeatureGroupEdit: FC = () => {
     (state: RootState) => state.loading.effects.featureStores.fetch,
   );
 
-  const isLabelsLoading = useSelector(
+  const isKeywordsLoading = useSelector(
     (state: RootState) => state.loading.effects.featureGroups.fetch,
   );
 
-  const isSourcesLoading = useSelector(selectFeatureStoreSourcesLoading);
+  const isTagsLoading = useSelector(
+    (state: RootState) => state.loading.effects.schematisedTags.fetch,
+  );
 
-  if (isLabelsLoading || isSourcesLoading || !featureGroup) {
+  const isDeleting = useSelector(
+    (state: RootState) => state.loading.effects.featureGroups.delete,
+  );
+
+  const isSubmit = useSelector(
+    (state: RootState) => state.loading.effects.featureGroups.create,
+  );
+
+  if (isKeywordsLoading || isTagsLoading || !featureGroup) {
     return <Loader />;
   }
 
@@ -129,7 +129,7 @@ const FeatureGroupEdit: FC = () => {
     <>
       <FeatureGroupForm
         isEdit={true}
-        isLoading={isLabelsLoading || isFeatureStoreLoading || isDeleting}
+        isLoading={isSubmit || isDeleting || isFeatureStoreLoading}
         isDisabled={isSubmit}
         submitHandler={handleSubmit}
         onDelete={handleToggle}

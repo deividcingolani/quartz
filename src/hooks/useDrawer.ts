@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { usePopup } from '@logicalclocks/quartz';
+import { ContentContext } from '../layouts/app/AppLayout';
 
 const useDrawer = () => {
   const [isOpen, handleToggle] = usePopup(false);
 
   const [selectedId, setSelected] = useState<number | null>(null);
 
-  const content = useMemo(() => document.getElementById('content'), []);
+  const { current: content } = useContext(ContentContext);
 
   const handleDisableScroll = useCallback(() => {
     if (content) {

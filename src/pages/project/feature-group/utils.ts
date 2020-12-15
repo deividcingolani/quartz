@@ -1,9 +1,22 @@
-import { FeatureGroup } from '../../../types/feature-group';
+import {
+  FeatureGroup,
+  SchematisedTagEntity,
+} from '../../../types/feature-group';
 import labelValueMap from '../../../utils/labelValueBind';
 import {
   FGItem,
   FGRow,
 } from '@logicalclocks/quartz/dist/components/table/type';
+import {
+  anyType,
+  float,
+  floatRequired,
+  integer,
+  integerRequired,
+  string,
+  stringRequired,
+} from '../../../utils/validators';
+import { uppercaseFirst } from '../../../utils/uppercaseFirst';
 
 // Filter
 export const filterFG = (
@@ -184,4 +197,138 @@ export const mapFeaturesToTable = (featureGroup?: FeatureGroup): FGRow[] => {
     }) as FGRow[];
   }
   return [];
+};
+
+export const mapTags = (featureGroup?: FeatureGroup) => {
+  if (featureGroup) {
+    const { tags } = featureGroup;
+
+    return tags.reduce(
+      (acc, { name, tags: nestedTags }) => ({
+        ...acc,
+        ...{
+          [name]: Object.entries(nestedTags).reduce(
+            (calculated, [key, value]) => ({
+              ...calculated,
+              [key]: Array.isArray(value)
+                ? value.map((value) => ({ value }))
+                : value,
+            }),
+            {},
+          ),
+        },
+      }),
+      {},
+    );
+  }
+  return {};
+};
+
+export const isServerBooleanType = (type?: string) => type === 'boolean';
+
+export const getNormalizedValue = (value: any) => {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  if (typeof value === 'undefined') {
+    return false;
+  }
+  if (value === '') {
+    return null;
+  }
+  if (!isNaN(value)) {
+    return +value;
+  }
+  return value;
+};
+
+const getType = (name: string, type?: string, required?: boolean) => {
+  switch (type) {
+    case 'integer':
+      return (required ? integerRequired : integer).label(uppercaseFirst(name));
+    case 'number':
+      return (required ? floatRequired : float).label(uppercaseFirst(name));
+    case 'string':
+      return (required ? stringRequired : string).label(uppercaseFirst(name));
+    default:
+      return anyType;
+  }
+};
+
+export const validateSchema = async (
+  tags: { [key: string]: any },
+  types: SchematisedTagEntity[],
+  setError: any,
+) => {
+  let next = true;
+
+  if (tags) {
+    await Promise.resolve(
+      await Promise.allSettled(
+        Object.entries(tags).map(([key, tagValue]) => {
+          const globalType = types.find(
+            ({ name }: { name: string }) => name === key,
+          );
+
+          return Promise.allSettled(
+            Object.entries(globalType?.properties || {}).map(
+              async ([nestedKey, { type }]) => {
+                const required = globalType?.required.includes(nestedKey);
+
+                if (type === 'array') {
+                  const nestedType =
+                    globalType?.properties[nestedKey].items?.type;
+
+                  const schema = getType(nestedKey, nestedType, required);
+
+                  const values = tagValue[nestedKey] && tagValue[nestedKey];
+
+                  for (let index = 0; index < values.length; index++) {
+                    const value =
+                      typeof values[index].value === 'undefined'
+                        ? false
+                        : values[index].value;
+
+                    if (!value && !required && nestedType !== 'boolean') {
+                      continue;
+                    }
+
+                    if (!(await schema.isValid(value))) {
+                      next = false;
+
+                      setError(`tags.${key}.${nestedKey}[${index}].value`, {
+                        message: `${nestedKey} is invalid`,
+                      });
+                    }
+                  }
+                } else {
+                  const schema = getType(nestedKey, type, required);
+
+                  const value = tagValue.hasOwnProperty(nestedKey)
+                    ? typeof tagValue[nestedKey] === 'undefined'
+                      ? false
+                      : tagValue[nestedKey]
+                    : '';
+
+                  if (
+                    (value && required && !(await schema.isValid(value))) ||
+                    (required && !value && !(await schema.isValid(value))) ||
+                    (value && !required && !(await schema.isValid(value)))
+                  ) {
+                    next = false;
+
+                    setError(`tags.${key}.${nestedKey}`, {
+                      message: `${nestedKey} is invalid`,
+                    });
+                  }
+                }
+              },
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  return next;
 };

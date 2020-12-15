@@ -2,42 +2,42 @@ import { createModel } from '@rematch/core';
 
 // Services
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
-// Types
-import { FeatureGroupLabel } from '../../../types/feature-group';
 
-export interface FeatureGroupLabelsState {
-  [key: number]: FeatureGroupLabel[] | undefined;
-}
+export type FeatureGroupLabelsState = string[];
 
 const featureGroupLabels = createModel()({
-  state: {} as FeatureGroupLabelsState,
+  state: [] as FeatureGroupLabelsState,
   reducers: {
     addFeatureGroupLabels: (
       state: FeatureGroupLabelsState,
-      payload: { id: number; data: FeatureGroupLabel[] | undefined },
-    ): FeatureGroupLabelsState => ({ ...state, [payload.id]: payload.data }),
-    clear: () => ({}),
+      payload: string[],
+    ): FeatureGroupLabelsState => payload,
+    clear: () => [],
   },
   effects: (dispatch) => ({
-    fetch: async ({
+    fetch: async ({ projectId }: { projectId: number }): Promise<void> => {
+      const data = await FeatureGroupLabelsService.getAllKeywords(projectId);
+
+      dispatch.featureGroupLabels.addFeatureGroupLabels(data);
+    },
+    attachLabels: async ({
       projectId,
       featureStoreId,
       featureGroupId,
+      data,
     }: {
       projectId: number;
       featureStoreId: number;
       featureGroupId: number;
+      data: string[];
     }): Promise<void> => {
-      const data = await FeatureGroupLabelsService.getList(
+      await FeatureGroupLabelsService.attachKeyword(
         projectId,
         featureStoreId,
         featureGroupId,
-      );
-
-      dispatch.featureGroupLabels.addFeatureGroupLabels({
-        id: featureGroupId,
         data,
-      });
+      );
+      dispatch.featureGroupView.updateLabels({ labels: data });
     },
   }),
 });

@@ -1,4 +1,3 @@
-import { FeatureGroupLabel } from '../../types/feature-group';
 import BaseApiService, { RequestType } from '../BaseApiService';
 
 class FeatureGroupLabelsService extends BaseApiService {
@@ -6,13 +5,36 @@ class FeatureGroupLabelsService extends BaseApiService {
     projectId: number,
     featureStoreId: number,
     featureGroupId: number,
-  ): Promise<FeatureGroupLabel[] | undefined> => {
+  ): Promise<string[]> => {
     const { data } = await this.request<any>({
-      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/tags`,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/keywords`,
       type: RequestType.get,
     });
 
-    return data?.items;
+    return data.keywords || [];
+  };
+
+  attachKeyword = (
+    projectId: number,
+    featureStoreId: number,
+    fgId: number,
+    data: string[],
+  ) =>
+    this.request<any>({
+      type: RequestType.post,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/keywords`,
+      data: {
+        keywords: data,
+      },
+    });
+
+  getAllKeywords = async (projectId: number): Promise<string[] | undefined> => {
+    const { data } = await this.request<any>({
+      url: `${projectId}/featurestores/keywords`,
+      type: RequestType.get,
+    });
+
+    return data.keywords;
   };
 }
 

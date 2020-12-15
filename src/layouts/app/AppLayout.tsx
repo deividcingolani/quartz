@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect } from 'react';
+import React, { FC, memo, MutableRefObject, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Flex } from 'rebass';
 import { Dispatch } from '../../store';
@@ -12,21 +12,28 @@ import GlobalErrors from '../../components/error/GlobalErrors';
 
 // Styles
 import styles from './app-layout-styles';
-import useErrorCleaner from '../../hooks/useErrorCleaner';
+import useLastProject from '../../hooks/useLastProject';
 
 export interface AppLayoutProps {
   children: React.ReactElement;
 }
 
+export const ContentContext = React.createContext<
+  MutableRefObject<undefined | HTMLDivElement>
+>({
+  current: undefined,
+});
+
 const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
   const dispatch = useDispatch<Dispatch>();
 
-  useErrorCleaner();
+  useLastProject();
 
   useEffect(() => {
     dispatch.projectsList.getProjects();
-    dispatch.profile.getUser();
   }, [dispatch]);
+
+  const contentRef = useRef();
 
   return (
     <Flex width="100%" height="100%" overflow="auto" flexDirection="column">
@@ -38,6 +45,7 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
         {/* Content */}
         <Flex
           flexGrow={1}
+          ref={contentRef}
           justifyContent="center"
           minWidth="939px"
           id="content"
@@ -54,7 +62,11 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
           >
             <ErrorBoundary>
               <Suspense>
-                <GlobalErrors>{children}</GlobalErrors>
+                <GlobalErrors>
+                  <ContentContext.Provider value={contentRef}>
+                    {children}
+                  </ContentContext.Provider>
+                </GlobalErrors>
               </Suspense>
             </ErrorBoundary>
           </Flex>

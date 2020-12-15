@@ -38,6 +38,7 @@ const routeNames = {
     statisticsViewCommit: '/fg/:fgId/statistics/commit/:commitTime',
     statisticsViewCommitAndOne:
       '/fg/:fgId/statistics/commit/:commitTime/f/:featureName',
+    dataCorrelation: '/fg/:fgId/data/correlation',
     correlation: '/fg/:fgId/data/correlation',
   },
 
@@ -61,6 +62,14 @@ const routeNames = {
     edit: '/sources/:sourceId/:connectorType/edit',
     importSample: '/sources/import-sample',
     createWithProtocol: '/sources/new/:protocol',
+  },
+
+  settings: {
+    view: 'settings/*',
+    schematisedTags: {
+      list: 'settings/schematised-tags',
+      create: 'settings/schematised-tags/new',
+    },
   },
 };
 

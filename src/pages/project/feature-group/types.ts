@@ -1,9 +1,7 @@
-import { ReactElement } from 'react';
-// eslint-disable-next-line import/no-unresolved
-import { Ref } from 'react-hook-form/dist/types/fields';
-// eslint-disable-next-line import/no-unresolved
-import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { FeatureGroup } from '../../../types/feature-group';
+import {
+  FeatureGroup,
+  SchematisedTagEntity,
+} from '../../../types/feature-group';
 
 export enum TimeTravelType {
   'hudi' = 'Hudi',
@@ -15,19 +13,14 @@ export interface FeatureGroupFormData {
   description: string;
   onlineEnabled: boolean;
   features: any[];
-  labels: string[];
+  keywords: string[];
   timeTravelFormat: string[];
   statisticConfiguration: string[];
+  tags: any;
 }
 
 export interface FeatureFormProps {
-  register?: (ref: (ReactElement & Ref) | null) => void;
   isDisabled: boolean;
-  errors?: FieldErrors<FeatureGroupFormData>;
-  control?: any;
-  watch?: any;
-  setValue?: any;
-  getValues?: any;
   isEdit?: boolean;
 }
 
@@ -38,4 +31,11 @@ export interface FeatureGroupFormProps {
   onDelete?: () => void;
   isEdit?: boolean;
   initialData?: FeatureGroup;
+}
+
+export interface TypeFormProps {
+  type?: string;
+  tag: SchematisedTagEntity;
+  name: string;
+  isDisabled: boolean;
 }

@@ -131,15 +131,34 @@ class FeatureGroupsService extends BaseApiService {
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}`,
     });
 
-  attachLabel = (
+  attachTag = (
     projectId: number,
     featureStoreId: number,
     fgId: number,
-    label: string,
+    name: string,
+    data: any,
   ) =>
     this.request<any>({
       type: RequestType.put,
-      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/tags/${label}?value=`,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/tags/${name}`,
+      data,
+    });
+
+  getTags = (projectId: number, featureStoreId: number, fgId: number) =>
+    this.request<any>({
+      type: RequestType.get,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/tags?expand=tag_schemas`,
+    });
+
+  deleteTag = (
+    projectId: number,
+    featureStoreId: number,
+    fgId: number,
+    name: string,
+  ) =>
+    this.request<any>({
+      type: RequestType.delete,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/tags/${name}`,
     });
 }
 

@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Route, Routes as RouterRoutes } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import routeNames from './routeNames';
 // Layouts
 import AppLayout from '../layouts/app/AppLayout';
@@ -10,8 +10,10 @@ import AuthLayout from '../layouts/auth/AuthLayout';
 import Error404 from '../pages/error/404Error';
 import Redirect from '../components/redirect/Redirect';
 // Types
-import { RootState } from '../store';
+import { Dispatch, RootState } from '../store';
 import useTokenApiInterceptor from '../hooks/useTokenApiInterceptor';
+import SettingsLayout from '../layouts/settings/SettingsLayout';
+import useErrorCleaner from '../hooks/useErrorCleaner';
 // Pages
 const Project = React.lazy(() => import('../pages/project/Project'));
 const ProjectCreate = React.lazy(
@@ -24,10 +26,26 @@ const ProjectList = React.lazy(
 const Login = React.lazy(() => import('../pages/user/login/Login'));
 const Profile = React.lazy(() => import('../pages/user/profile/Profile'));
 
+const SchematisedTagsList = React.lazy(
+  () => import('../pages/settings/schematised-tags/list/SchematisedTagsList'),
+);
+const SchematisedTagCreate = React.lazy(
+  () =>
+    import('../pages/settings/schematised-tags/create/SchematisedTagsCreate'),
+);
+
 const Routes: FC = () => {
   useTokenApiInterceptor();
 
   const token = useSelector((state: RootState) => state.auth.token);
+
+  const dispatch = useDispatch<Dispatch>();
+
+  useEffect(() => {
+    dispatch.profile.getUser();
+  }, [dispatch]);
+
+  useErrorCleaner();
 
   if (token) {
     return (
@@ -55,6 +73,31 @@ const Routes: FC = () => {
             </RouterRoutes>
           </AppLayout>
         </Route>
+
+        <Route>
+          {/* Settings Routes */}
+          <SettingsLayout>
+            <RouterRoutes>
+              <Route
+                path={routeNames.settings.schematisedTags.list}
+                element={<SchematisedTagsList />}
+              />
+              <Route
+                path={routeNames.settings.schematisedTags.create}
+                element={<SchematisedTagCreate />}
+              />
+              <Route
+                path={routeNames.settings.view}
+                element={
+                  <Redirect
+                    to={`/${routeNames.settings.schematisedTags.list}`}
+                  />
+                }
+              />
+            </RouterRoutes>
+          </SettingsLayout>
+        </Route>
+
         <Route path="*" element={<Redirect to="/" />} />
       </RouterRoutes>
     );

@@ -28,3 +28,29 @@ export const password = yup
       return patters.every((p) => p.test(value));
     },
   );
+
+export const float = yup.string().matches(/^\d*\.{1}\d*$/, {
+  message: 'Only float number',
+  excludeEmptyString: false,
+});
+
+export const integer = yup.string().matches(/[0-9]/, {
+  message: 'Only integer number',
+  excludeEmptyString: false,
+});
+
+export const string = yup.string().max(50);
+
+export const floatRequired = yup.string().required().matches(/[0-9]/, {
+  message: 'Only float number',
+  excludeEmptyString: false,
+});
+
+export const integerRequired = yup.string().required().matches(/[0-9]/, {
+  message: 'Only integer number',
+  excludeEmptyString: false,
+});
+
+export const stringRequired = yup.string().required().max(50);
+
+export const anyType = yup.mixed();

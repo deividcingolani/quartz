@@ -11,8 +11,7 @@ import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
 import { Dispatch } from '../../store';
 // Styles
 import styles from './pm-layout-styles';
-// Hooks
-import useErrorCleaner from '../../hooks/useErrorCleaner';
+import useLastProject from '../../hooks/useLastProject';
 
 export interface ProjectManagementLayoutProps {
   children: React.ReactElement;
@@ -23,12 +22,11 @@ const ProjectManagementLayout: FC<ProjectManagementLayoutProps> = ({
 }: ProjectManagementLayoutProps) => {
   const dispatch = useDispatch<Dispatch>();
 
+  useLastProject();
+
   useEffect(() => {
     dispatch.projectsList.getProjects();
-    dispatch.profile.getUser();
   }, [dispatch]);
-
-  useErrorCleaner();
 
   return (
     <Flex width="100%" height="100%" overflow="auto" flexDirection="column">

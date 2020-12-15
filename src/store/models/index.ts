@@ -18,17 +18,23 @@ import featureGroupDataPreview from './feature/data/featureGroupsDataPreview.mod
 import featureGroupStatistics from './feature/statistics/featureGroupStatistics.model';
 import featureGroupStatisticsCommits from './feature/statistics/featureGroupStatisticsCommits.model';
 import trainingDatasetQuery from './training-dataset/trainingDatasetQuery.model';
+import schematisedTags from './schematised-tags/schematised-tags.model';
+import schematisedTagView from './schematised-tags/schematised-tag-view.model';
+import store from './localManagement/store.model';
 
 export interface RootModel extends Models<RootModel> {
   auth: typeof auth;
+  store: typeof store;
   profile: typeof profile;
   project: typeof project;
   projectsList: typeof projectsList;
   featureGroups: typeof featureGroups;
   featureStores: typeof featureStores;
+  schematisedTags: typeof schematisedTags;
   featureGroupView: typeof featureGroupView;
   featureGroupRows: typeof featureGroupRows;
   featureGroupLabels: typeof featureGroupLabels;
+  schematisedTagView: typeof schematisedTagView;
   trainingDatasets: typeof trainingDatasetModel;
   featureGroupStatistics: typeof featureGroupStatistics;
   trainingDatasetView: typeof trainingDatasetView;
@@ -41,14 +47,17 @@ export interface RootModel extends Models<RootModel> {
 
 const models: RootModel = {
   auth,
+  store,
   profile,
   project,
   projectsList,
   featureGroups,
   featureStores,
+  schematisedTags,
   featureGroupView,
   featureGroupRows,
   featureGroupLabels,
+  schematisedTagView,
   featureStoreSources,
   featureGroupStatistics,
   featureGroupDataPreview,

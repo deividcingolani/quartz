@@ -12,7 +12,6 @@ import { RootState } from '../../../../store';
 
 export interface FeatureGroupListContentProps {
   data: FeatureGroup[];
-  isLabelsLoading: boolean;
   isFiltered: boolean;
   onResetFilters: () => void;
 }
@@ -21,7 +20,6 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
   data,
   onResetFilters,
   isFiltered,
-  isLabelsLoading,
 }) => {
   const { isOpen, selectedId, handleSelectItem, handleClose } = useDrawer();
 
@@ -46,7 +44,6 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
           handleToggle={handleSelectItem(item.id)}
           key={item.id}
           data={item}
-          isLabelsLoading={isLabelsLoading}
         />
       ))}
       {isFiltered && (

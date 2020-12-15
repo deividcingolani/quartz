@@ -1,6 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Label, User } from '@logicalclocks/quartz';
+import { useNavigate } from 'react-router-dom';
+import { Header, Label, User, Value } from '@logicalclocks/quartz';
 
 // Components
 import ProjectsDropdown from './ProjectsDropdown';
@@ -10,18 +11,37 @@ import UserDropdown from './UserDropdown';
 import { RootState } from '../../../store';
 // Services
 import ProfileService from '../../../services/ProfileService';
-import { useNavigate } from 'react-router-dom';
+// Selectors
+import { selectProjectId } from '../../../store/models/localManagement/store.selectors';
 
 export interface AppHeaderProps {
   showList?: boolean;
+  hasBackButton?: boolean;
 }
 
-const AppHeader: FC<AppHeaderProps> = ({ showList = true }) => {
+const AppHeader: FC<AppHeaderProps> = ({
+  showList = true,
+  hasBackButton = false,
+}) => {
   const user = useSelector((state: RootState) => state.profile);
 
   const navigate = useNavigate();
 
+  const lastProjectId = useSelector(selectProjectId);
+
+  const projects = useSelector((state: RootState) => state.projectsList);
+
+  const name = projects.find(({ id }) => lastProjectId === id)?.name;
+
   const { firstname, lastname, email } = user;
+
+  const handleNavigate = useCallback(() => {
+    if (lastProjectId) {
+      navigate(`p/${lastProjectId}`);
+    } else {
+      navigate(`/`);
+    }
+  }, [lastProjectId, navigate]);
 
   return (
     <Header
@@ -39,7 +59,18 @@ const AppHeader: FC<AppHeaderProps> = ({ showList = true }) => {
       }
       actions={[<HelpDropdown />]}
     >
-      {showList && <ProjectsDropdown />}
+      {showList && !hasBackButton && <ProjectsDropdown />}
+      {hasBackButton && (
+        <Value
+          sx={{ cursor: 'pointer' }}
+          fontSize="18px"
+          primary
+          onClick={handleNavigate}
+        >
+          {' '}
+          &#8701; back to {!!name ? name : 'project list'}
+        </Value>
+      )}
     </Header>
   );
 };

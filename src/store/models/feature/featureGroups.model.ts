@@ -1,9 +1,49 @@
 import { createModel } from '@rematch/core';
 
-import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
+import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
 import { FeatureGroup } from '../../../types/feature-group';
+// Services
+import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
+import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
 
 export type FeatureGroupState = FeatureGroup[];
+
+const attachTags = async (
+  projectId: number,
+  featureStoreId: number,
+  id: number,
+  tags = {},
+) => {
+  const mapped = Object.entries(tags).map(([key, property]) => {
+    // @ts-ignore
+    const data = Object.entries(property)
+      .map(([key, nestProperty]) => ({
+        [key]: Array.isArray(nestProperty)
+          ? nestProperty.map(({ value }) => getNormalizedValue(value))
+          : getNormalizedValue(nestProperty),
+      }))
+      .reduce((acc, next) => {
+        const value = Object.values(next)[0];
+
+        return value !== null && value[0] !== null ? { ...acc, ...next } : acc;
+      }, {});
+
+    return {
+      key,
+      data,
+    };
+  });
+
+  for (const { key, data } of mapped) {
+    await FeatureGroupsService.attachTag(
+      projectId,
+      featureStoreId,
+      id,
+      key,
+      data,
+    );
+  }
+};
 
 const featureGroups = createModel()({
   state: [] as FeatureGroupState,
@@ -28,18 +68,31 @@ const featureGroups = createModel()({
       );
 
       // Fetch labels for each feature group
-      await Promise.allSettled(
+      const fgsPromises = await Promise.allSettled(
         data.map(async (group) => {
-          group.type === 'cachedFeaturegroupDTO' &&
-            (await dispatch.featureGroupLabels.fetch({
+          let keywords: string[] = [];
+          if (group.type === 'cachedFeaturegroupDTO') {
+            keywords = await FeatureGroupLabelsService.getList(
               projectId,
               featureStoreId,
-              featureGroupId: group.id,
-            }));
+              group.id,
+            );
+          }
+          return {
+            ...group,
+            labels: keywords,
+          };
         }),
       );
 
-      dispatch.featureGroups.setFeatureGroups(data);
+      const featureGroups = fgsPromises.reduce((acc: FeatureGroup[], next) => {
+        if (next.status === 'fulfilled') {
+          return [...acc, next.value];
+        }
+        return acc;
+      }, []);
+
+      dispatch.featureGroups.setFeatureGroups(featureGroups);
     },
     create: async ({
       projectId,
@@ -50,23 +103,18 @@ const featureGroups = createModel()({
       featureStoreId: number;
       data: any;
     }): Promise<any> => {
-      const createdGroup = await FeatureGroupsService.create(
+      const {
+        data: { id },
+      } = await FeatureGroupsService.create(projectId, featureStoreId, data);
+
+      await FeatureGroupLabelsService.attachKeyword(
         projectId,
         featureStoreId,
-        data,
+        id,
+        data.keywords,
       );
 
-      return Promise.allSettled(
-        data.labels.map(
-          async (label: string) =>
-            await FeatureGroupsService.attachLabel(
-              projectId,
-              featureStoreId,
-              createdGroup.data.id,
-              label,
-            ),
-        ),
-      );
+      await attachTags(projectId, featureStoreId, id, data.tags);
     },
     edit: async ({
       projectId,
@@ -85,17 +133,33 @@ const featureGroups = createModel()({
         featureGroupId,
         data,
       );
-      return Promise.allSettled(
-        data.labels.map(
-          async (label: string) =>
-            await FeatureGroupsService.attachLabel(
-              projectId,
-              featureStoreId,
-              featureGroupId,
-              label,
-            ),
-        ),
+
+      await FeatureGroupLabelsService.attachKeyword(
+        projectId,
+        featureStoreId,
+        featureGroupId,
+        data.keywords,
       );
+
+      const { prevTags } = data;
+      const newTags = Object.keys(data.tags || {});
+
+      const deletedTags = prevTags.filter(
+        (name: string) => !newTags.includes(name),
+      );
+
+      await Promise.allSettled(
+        deletedTags.map(async (name: string) => {
+          await FeatureGroupsService.deleteTag(
+            projectId,
+            featureStoreId,
+            featureGroupId,
+            name,
+          );
+        }),
+      );
+
+      await attachTags(projectId, featureStoreId, featureGroupId, data.tags);
     },
     delete: async ({
       projectId,

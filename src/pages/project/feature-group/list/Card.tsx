@@ -34,7 +34,6 @@ const contentStyles: RebassCardProps = { overflowY: 'unset' };
 
 const Card: FC<HoverableCardProps<FeatureGroup>> = ({
   data,
-  isLabelsLoading,
   handleToggle,
   isSelected,
 }) => {
@@ -74,7 +73,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
             <Value mt="auto" ml="5px" mr="15px" sx={{ color: 'labels.orange' }}>
               #{data.id}
             </Value>
-            <CardLabels labels={data.labels} isLoading={isLabelsLoading} />
+            <CardLabels labels={data.labels} />
           </Flex>
           {data.description ? (
             <Labeling mt="15px" gray>
@@ -91,29 +90,33 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
             </Button>
           )}
 
-        <Flex mt="15px" alignItems="center">
-          <User
-            name={data.creator}
-            photo={ProfileService.avatar(data.creator)}
-          />
-          <Flex flexDirection="column" ml="20px">
-            <Microlabeling mb="3px" gray>
-              Latest version
-            </Microlabeling>
-            <Value primary>{data.version}</Value>
-          </Flex>
-          <DateValue ml="20px" label="Creation" date={new Date(data.created)} />
-          <Flex width="max-content" flexDirection="column" ml="20px">
-            <Microlabeling gray mb="3px" width="100%">
-              Last update
-            </Microlabeling>
-            <Flex alignItems="center">
-              <FreshnessBar time={data.created.replace('T', ' ')} />
-              <Value fontFamily="Inter" ml="5px" primary>
-                {formatDistance(new Date(data.created), new Date())} ago
-              </Value>
+          <Flex mt="15px" alignItems="center">
+            <User
+              name={data.creator}
+              photo={ProfileService.avatar(data.creator)}
+            />
+            <Flex flexDirection="column" ml="20px">
+              <Microlabeling mb="3px" gray>
+                Latest version
+              </Microlabeling>
+              <Value primary>{data.version}</Value>
             </Flex>
-          </Flex>
+            <DateValue
+              ml="20px"
+              label="Creation"
+              date={new Date(data.created)}
+            />
+            <Flex width="max-content" flexDirection="column" ml="20px">
+              <Microlabeling gray mb="3px" width="100%">
+                Last update
+              </Microlabeling>
+              <Flex alignItems="center">
+                <FreshnessBar time={data.created.replace('T', ' ')} />
+                <Value fontFamily="Inter" ml="5px" primary>
+                  {formatDistance(new Date(data.created), new Date())} ago
+                </Value>
+              </Flex>
+            </Flex>
 
             {/* Feature group actions */}
             <Flex ml="auto">

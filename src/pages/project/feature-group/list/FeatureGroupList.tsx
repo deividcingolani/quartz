@@ -19,10 +19,7 @@ import useFeatureGroups from '../hooks/useFeatureGroups';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { sortOptions, filterFG, sortFG, searchFGText } from '../utils';
 // Selectors
-import {
-  selectFeatureStoreData,
-  selectLabelsLoading,
-} from '../../../../store/models/feature/selectors';
+import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import NoData from '../../../../components/no-data/NoData';
 import FeatureGroupListContent from './FeatureGroupListContent';
 import Loader from '../../../../components/loader/Loader';
@@ -34,8 +31,6 @@ const FeatureGroupList: FC = () => {
   const [sort, setSort] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
   const navigate = useNavigateRelative();
-
-  const isLabelsLoading = useSelector(selectLabelsLoading);
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
@@ -63,16 +58,13 @@ const FeatureGroupList: FC = () => {
   const labels = useMemo(
     () =>
       maxVersionsData.reduce(
-        (acc: string[], { labels: fgLabels = [] }: FeatureGroup) => [
-          ...acc,
-          ...fgLabels,
-        ],
+        (acc: string[], { labels }: FeatureGroup) => [...acc, ...labels],
         [],
       ),
     [maxVersionsData],
   );
 
-  const isFilterDisabled = isLoading || isLabelsLoading || !labels?.length;
+  const isFilterDisabled = isLoading || !labels?.length;
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -131,7 +123,7 @@ const FeatureGroupList: FC = () => {
         <Tooltip
           ml="8px"
           disabled={!isFilterDisabled}
-          mainText="No label defined. Add them from edit page of feature groups"
+          mainText="No keywords defined. Add them from edit page of feature groups"
         >
           <Select
             disabled={isFilterDisabled}
@@ -141,8 +133,8 @@ const FeatureGroupList: FC = () => {
             variant="white"
             isMulti
             options={labels}
-            noDataMessage="labels"
-            placeholder="label filter"
+            noDataMessage="keywords"
+            placeholder="keywords filter"
             onChange={setFilter}
           />
         </Tooltip>
@@ -182,7 +174,6 @@ const FeatureGroupList: FC = () => {
           data={dataResult}
           isFiltered={maxVersionsData.length !== dataResult.length}
           onResetFilters={handleResetFilters}
-          isLabelsLoading={isLabelsLoading}
         />
       )}
       {!isLoading && !maxVersionsData.length && (

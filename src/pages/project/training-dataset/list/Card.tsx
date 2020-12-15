@@ -28,7 +28,6 @@ const contentStyles: RebassCardProps = { overflowY: 'unset' };
 
 const Card: FC<HoverableCardProps<TrainingDataset>> = ({
   data,
-  isLabelsLoading,
   handleToggle,
   isSelected,
 }) => {
@@ -60,7 +59,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
             <Value mt="auto" ml="5px" mr="15px" sx={{ color: 'labels.purple' }}>
               #{data.id}
             </Value>
-            <CardLabels labels={data.labels} isLoading={isLabelsLoading} />
+            <CardLabels labels={data.labels} />
           </Flex>
           {data.description ? (
             <Labeling mt="15px" gray>

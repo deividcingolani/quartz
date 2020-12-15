@@ -47,6 +47,27 @@ export interface Provenance {
   items?: Provenance[];
 }
 
+export interface PropertyValue {
+  description: string;
+  type: string;
+  items?: {
+    type: string;
+  };
+}
+
+export interface Property {
+  [key: string]: PropertyValue;
+}
+
+export interface SchematisedTagEntity {
+  id: number;
+  name: string;
+  description: string;
+  properties: Property;
+  required: string[];
+  tags: any;
+}
+
 export interface SchematisedTag {
   value: string;
   name: string;
@@ -68,12 +89,6 @@ export interface FeatureGroup extends DataEntity {
   timeTravelFormat: string;
   provenance: FeatureGroupProvenance[];
   features: Feature[];
-}
-
-export interface FeatureGroupLabel {
-  href: string;
-  name: string;
-  value?: string;
 }
 
 export interface HistogramItem {

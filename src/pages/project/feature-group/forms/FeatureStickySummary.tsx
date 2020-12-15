@@ -1,10 +1,10 @@
 import React, { FC, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useFormContext } from 'react-hook-form';
 import { Button, StickySummary } from '@logicalclocks/quartz';
 
 export interface StickySummaryProps {
   onSubmit: () => void;
-  watch: any;
   isEdit?: boolean;
   isUpdatedFeatures?: boolean;
   disabled: boolean;
@@ -12,11 +12,12 @@ export interface StickySummaryProps {
 
 const FeatureStickySummary: FC<StickySummaryProps> = ({
   onSubmit,
-  watch,
   isUpdatedFeatures,
   isEdit,
   disabled,
 }) => {
+  const { watch } = useFormContext();
+
   const navigate = useNavigate();
 
   const { name } = watch(['name']);

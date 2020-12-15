@@ -1,6 +1,5 @@
 import { Subtitle } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import React, { FC, memo, useCallback } from 'react';
 
 import routeNames from '../../../../routes/routeNames';
@@ -12,26 +11,12 @@ import Loader from '../../../../components/loader/Loader';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
-import {
-  FeatureGroup,
-  FeatureGroupLabel,
-} from '../../../../types/feature-group';
-import { RootState } from '../../../../store';
-// Selectors
-import {
-  selectLabels,
-  selectLabelsLoading,
-} from '../../../../store/models/feature/selectors';
+import { FeatureGroup } from '../../../../types/feature-group';
 
 const FeatureGroupOverview: FC = () => {
   const { fgId, id: projectId } = useParams();
 
   const { data, isLoading, fetchData } = useFeatureGroupView(+projectId, +fgId);
-
-  const isLabelsLoading = useSelector(selectLabelsLoading);
-  const labels = useSelector<RootState, FeatureGroupLabel[]>(
-    selectLabels(data?.id),
-  );
 
   const navigate = useNavigateRelative();
 
@@ -53,8 +38,6 @@ const FeatureGroupOverview: FC = () => {
   return (
     <OverviewContent
       data={data as FeatureGroup}
-      isLabelsLoading={isLabelsLoading}
-      labels={labels}
       onClickEdit={handleNavigate(+fgId, routeNames.featureGroup.edit)}
       onClickRefresh={fetchData}
     />

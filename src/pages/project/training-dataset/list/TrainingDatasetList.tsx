@@ -10,7 +10,7 @@ import {
   Value,
   IconButton,
 } from '@logicalclocks/quartz';
-import { Dispatch, RootState } from '../../../../store';
+import { Dispatch } from '../../../../store';
 import Loader from '../../../../components/loader/Loader';
 import useTrainingDatasets from '../useTrainingDatasets';
 import {
@@ -34,18 +34,19 @@ export const sortOptions: { [key: string]: keyof TrainingDataset } = {
 
 const TrainingDatasetList: FC = () => {
   const { id: projectId } = useParams();
+
   const dispatch = useDispatch<Dispatch>();
+
   const [filter, setFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
-  const isLabelsLoading = useSelector(
-    ({ loading }: RootState) => loading.models.trainingDatasetLabels,
-  );
+
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
   const { data, isLoading } = useTrainingDatasets(
     +projectId,
     featureStoreData?.featurestoreId,
   );
+
   const labels = useMemo(
     () =>
       data.reduce(
@@ -58,7 +59,7 @@ const TrainingDatasetList: FC = () => {
     [data],
   );
 
-  const isFilterDisabled = isLoading || isLabelsLoading || !labels?.length;
+  const isFilterDisabled = isLoading || !labels?.length;
 
   function handleRefresh(): void {
     dispatch.trainingDatasets.set([]);
@@ -108,7 +109,7 @@ const TrainingDatasetList: FC = () => {
         <Tooltip
           ml="8px"
           disabled={!isFilterDisabled}
-          mainText="No label defined. Add them from edit page of feature groups"
+          mainText="No keywords defined. Add them from edit page of feature groups"
         >
           <Select
             disabled={isFilterDisabled}
@@ -117,9 +118,9 @@ const TrainingDatasetList: FC = () => {
             value={filter}
             variant="white"
             isMulti
-            noDataMessage="labels"
+            noDataMessage="keywords"
             options={labels}
-            placeholder="label filter"
+            placeholder="keywords filter"
             onChange={setFilter}
           />
         </Tooltip>
@@ -155,7 +156,6 @@ const TrainingDatasetList: FC = () => {
           data={dataResult}
           isFiltered={data.length !== dataResult.length}
           onResetFilters={handleResetFilters}
-          isLabelsLoading={isLabelsLoading}
         />
       )}
       {!isLoading && !data.length && (

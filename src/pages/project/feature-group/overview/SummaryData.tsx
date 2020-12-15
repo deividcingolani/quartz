@@ -1,34 +1,46 @@
-import React, { FC, memo, useMemo } from 'react';
+import React, { FC, memo, useCallback } from 'react';
 import { Flex } from 'rebass';
-import { Text, TextValueBadge, Badge, User } from '@logicalclocks/quartz';
+import { Text, TextValueBadge, User } from '@logicalclocks/quartz';
 
 // Services
 import ProfileService from '../../../../services/ProfileService';
 // Types
-import {
-  FeatureGroup,
-  FeatureGroupLabel,
-} from '../../../../types/feature-group';
+import { FeatureGroup } from '../../../../types/feature-group';
 // Components
-import CardLabels from '../list/CardLabels';
 import DateValue from '../list/DateValue';
+import KeywordsEditor from '../../../../components/keywords-editor/KeywordsEditor';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch, RootState } from '../../../../store';
 
 export interface SummaryDataProps {
   data: FeatureGroup;
-  isLabelsLoading: boolean;
-  labels: FeatureGroupLabel[];
 }
 
-const SummaryData: FC<SummaryDataProps> = ({
-  data,
-  isLabelsLoading,
-  labels,
-}) => {
-  const labelsFormatted = useMemo(() => {
-    return labels.map(({ name }) => name);
-  }, [labels]);
+const SummaryData: FC<SummaryDataProps> = ({ data }) => {
+  const { id: projectId, fgId: id } = useParams();
+
+  const featureStoreData = useSelector((state: RootState) =>
+    state.featureStores?.length ? state.featureStores[0] : null,
+  );
+
+  const dispatch = useDispatch<Dispatch>();
 
   const featureCount = data.features.length;
+
+  const keywordsSaveHandler = useCallback(
+    async (keywords) => {
+      if (featureStoreData?.featurestoreId) {
+        await dispatch.featureGroupLabels.attachLabels({
+          projectId: +projectId,
+          featureGroupId: +id,
+          featureStoreId: featureStoreData.featurestoreId,
+          data: keywords,
+        });
+      }
+    },
+    [featureStoreData, dispatch, id, projectId],
+  );
 
   return (
     <>
@@ -60,13 +72,8 @@ const SummaryData: FC<SummaryDataProps> = ({
         />
       </Flex>
       <Text my="20px">{data?.description || 'No Description'}</Text>
-      <Flex>
-        {labelsFormatted.length ? (
-          <CardLabels labels={labelsFormatted} isLoading={isLabelsLoading} />
-        ) : (
-          <Badge variant="bold" value="No Labels" />
-        )}
-      </Flex>
+
+      <KeywordsEditor onSave={keywordsSaveHandler} value={data.labels} />
     </>
   );
 };

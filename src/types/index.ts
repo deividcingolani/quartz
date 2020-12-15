@@ -1,5 +1,15 @@
 import { Feature, Job } from './feature-group';
 
+export interface Tag {
+  name: string;
+  types: {
+    [key: string]: string;
+  };
+  tags: {
+    [key: string]: any;
+  };
+}
+
 export interface DataEntity {
   type: string;
   created: string;
@@ -7,7 +17,7 @@ export interface DataEntity {
   creator: string;
   description: string;
   features: Feature[];
-  labels: any[];
+  labels: string[];
   featurestoreId: number;
   featurestoreName: string;
   id: number;
@@ -15,11 +25,11 @@ export interface DataEntity {
   location: string;
   name: string;
   version: number;
+  tags: Tag[];
 }
 
 export interface HoverableCardProps<T> {
   isSelected: boolean;
   data: T;
-  isLabelsLoading: boolean;
   handleToggle: () => void;
 }

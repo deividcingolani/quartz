@@ -9,10 +9,7 @@ import CodeCard from './CodeCard';
 import Panel from '../../../../components/panel/Panel';
 
 // Types
-import {
-  FeatureGroup,
-  FeatureGroupLabel,
-} from '../../../../types/feature-group';
+import { FeatureGroup } from '../../../../types/feature-group';
 // Features
 import SummaryData from './SummaryData';
 import PipelineHistory from './PipelineHistory';
@@ -26,8 +23,6 @@ import { useLatestVersion } from '../../../../hooks/useLatestVersion';
 
 export interface ContentProps {
   data: FeatureGroup;
-  isLabelsLoading: boolean;
-  labels: FeatureGroupLabel[];
   onClickRefresh: () => void;
   onClickEdit: () => void;
 }
@@ -49,10 +44,8 @@ const {
 
 const OverviewContent: FC<ContentProps> = ({
   data,
-  isLabelsLoading,
   onClickRefresh,
   onClickEdit,
-  labels,
 }) => {
   const runningCodes = useMemo(() => {
     return [
@@ -134,11 +127,7 @@ Hops.getFeaturegroup("${data.name}").read()`,
         onClickRefresh={onClickRefresh}
       />
       <Box mt="40px" width="100%">
-        <SummaryData
-          isLabelsLoading={isLabelsLoading}
-          labels={labels}
-          data={data}
-        />
+        <SummaryData data={data} />
         <Anchor groupName="overview" anchor={featureList}>
           <FeatureList data={data.features} />
         </Anchor>
@@ -148,7 +137,7 @@ Hops.getFeaturegroup("${data.name}").read()`,
         </Anchor>
 
         <Anchor groupName="overview" anchor={schematisedTags}>
-          <SchematisedTags />
+          <SchematisedTags data={data.tags} />
         </Anchor>
 
         <Anchor groupName="overview" anchor={pipelineHistory}>

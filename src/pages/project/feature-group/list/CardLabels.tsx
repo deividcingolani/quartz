@@ -3,17 +3,9 @@ import React, { FC, memo } from 'react';
 
 export interface CardLabelsProps {
   labels?: string[];
-  isLoading: boolean;
 }
 
-const CardLabels: FC<CardLabelsProps> = ({
-  labels,
-  isLoading,
-}: CardLabelsProps) => {
-  if (isLoading) {
-    return <Badge value="loading..." />;
-  }
-
+const CardLabels: FC<CardLabelsProps> = ({ labels }: CardLabelsProps) => {
   return (
     <>
       {labels?.map((name) => (

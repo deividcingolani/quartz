@@ -172,7 +172,7 @@ val td = fs.getTrainingDataset(${data.name}, ${data.version})`,
         </Anchor>
 
         <Anchor groupName="overview" anchor={schematisedTags}>
-          <SchematisedTags />
+          <SchematisedTags data={data.tags} />
         </Anchor>
 
         <Anchor groupName="overview" anchor={pipelineHistory}>

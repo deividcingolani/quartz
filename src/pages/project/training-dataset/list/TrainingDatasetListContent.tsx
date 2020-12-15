@@ -14,7 +14,6 @@ import { RootState } from '../../../../store';
 
 export interface TrainingDatasetListContentProps {
   data: TrainingDataset[];
-  isLabelsLoading: boolean;
   isFiltered: boolean;
   onResetFilters: () => void;
 }
@@ -23,7 +22,6 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
   data,
   onResetFilters,
   isFiltered,
-  isLabelsLoading,
 }) => {
   const { isOpen, selectedId, handleSelectItem, handleClose } = useDrawer();
 
@@ -49,7 +47,6 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
           handleToggle={handleSelectItem(item.id)}
           isSelected={selectedId === item.id}
           data={item}
-          isLabelsLoading={isLabelsLoading}
         />
       ))}
       {isFiltered && (
