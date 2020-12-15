@@ -43,9 +43,7 @@ const FeatureGroupDataPreview: FC = () => {
     featureName,
   );
 
-  const dispatch = useDispatch<Dispatch>();
-
-  const navigate = useNavigateRelative();
+  const dispatch = useDispatch<Dispatch>(); const navigate = useNavigateRelative();
 
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
@@ -165,6 +163,7 @@ const FeatureGroupDataPreview: FC = () => {
       <Panel
         title={view?.name}
         id={view?.id}
+        idColor="labels.orange"
         onClickEdit={handleNavigate(routeNames.featureGroup.edit)}
         onClickRefresh={handleRefreshData}
       />

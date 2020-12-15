@@ -35,6 +35,7 @@ const AppNavigation: FC = () => {
 
   return (
     <Navigation
+      trackBy="id"
       tree={treeNavigation}
       onBackCLick={handleBack}
       footer={<Footer />}

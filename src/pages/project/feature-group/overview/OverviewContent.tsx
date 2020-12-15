@@ -45,7 +45,7 @@ const {
   pipelineHistory,
   runningCode,
   api,
-} = routeNames.featureGroup.overviewAnchors;
+} = routeNames.overviewAnchors;
 
 const OverviewContent: FC<ContentProps> = ({
   data,
@@ -129,6 +129,7 @@ Hops.getFeaturegroup("${data.name}").read()`,
             onChange={handleVersionChange}
           />
         }
+        idColor="label.orange"
         onClickEdit={onClickEdit}
         onClickRefresh={onClickRefresh}
       />
@@ -163,7 +164,13 @@ Hops.getFeaturegroup("${data.name}").read()`,
         </Anchor>
 
         <Anchor anchor={api} groupName="overview">
-          <CodeCard mt="20px" title="API" actions={action} content={apiCode} />
+          <CodeCard
+            mt="20px"
+            mb="20px"
+            title="API"
+            actions={action}
+            content={apiCode}
+          />
         </Anchor>
       </Box>
     </>

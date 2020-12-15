@@ -15,7 +15,6 @@ import {
   FeatureGroupEdit,
   FeatureGroupCreate,
   FeatureGroupActivity,
-  FeatureGroupData,
   FeatureGroupDataPreview,
   FeatureGroupDataCorrelation,
   FeatureGroupStatistics,
@@ -27,6 +26,7 @@ import {
   TrainingDatasetList,
   ProjectView,
   ProjectEdit,
+  TrainingDatasetOverview,
 } from './lazyComponents';
 
 const Project: FC = () => {
@@ -44,7 +44,7 @@ const Project: FC = () => {
 
   const clearData = useCallback((): void => {
     dispatch.featureGroups.setFeatureGroups([]);
-    dispatch.trainingDatasets.clear();
+    dispatch.trainingDatasets.set([]);
     dispatch.featureStoreSources.clear();
     dispatch.featureStores.setFeatureStores(null);
   }, [dispatch]);
@@ -61,7 +61,7 @@ const Project: FC = () => {
 
   return (
     <Routes>
-      <Route path={routeNames.home} element={<ProjectView />} />
+      <Route path={'/view'} element={<ProjectView />} />
       <Route path={'/edit'} element={<ProjectEdit />} />
       <Route
         path={routeNames.featureGroup.edit}
@@ -88,32 +88,8 @@ const Project: FC = () => {
         element={<FeatureGroupDataPreview />}
       />
       <Route
-        path={routeNames.featureGroup.statistics}
-        element={<FeatureGroupData />}
-      />
-      <Route
-        path={routeNames.featureGroup.dataCorrelation}
-        element={<FeatureGroupDataCorrelation />}
-      />
-      <Route
         path={routeNames.featureGroup.overview}
         element={<FeatureGroupOverview />}
-      />
-      <Route
-        path={routeNames.featureGroup.edit}
-        element={<FeatureGroupEdit />}
-      />
-      <Route
-        path={routeNames.featureGroup.list}
-        element={<FeatureGroupList />}
-      />
-      <Route
-        path={routeNames.featureGroup.create}
-        element={<FeatureGroupCreate />}
-      />
-      <Route
-        path={routeNames.featureGroup.activity}
-        element={<FeatureGroupActivity />}
       />
       <Route
         path={routeNames.featureGroup.statistics}
@@ -132,29 +108,31 @@ const Project: FC = () => {
         element={<FeatureGroupStatistics />}
       />
       <Route
-        path={routeNames.featureGroup.dataCorrelation}
+        path={routeNames.featureGroup.correlation}
         element={<FeatureGroupDataCorrelation />}
       />
+
       <Route
-        path={routeNames.featureGroup.overview}
-        element={<FeatureGroupOverview />}
-      />
-      <Route
-        path={routeNames.trainingDatasetList}
+        path={routeNames.trainingDataset.list}
         element={<TrainingDatasetList />}
       />
       <Route
-        path={routeNames.source.importSample}
-        element={<SourcesImportSample />}
+        path={routeNames.trainingDataset.overview}
+        element={<TrainingDatasetOverview />}
       />
+
       <Route path={routeNames.source.list} element={<SourcesList />} />
       <Route path={routeNames.source.create} element={<SourcesCreate />} />
       <Route path={routeNames.source.edit} element={<SourcesEdit />} />
       <Route
+        path={routeNames.source.importSample}
+        element={<SourcesImportSample />}
+      />
+      <Route
         path={routeNames.source.createWithProtocol}
         element={<SourcesCreate />}
       />
-      <Route path="/" element={<Redirect to={`${location.pathname}/fg`} />} />
+      <Route path="/" element={<Redirect to={`${location.pathname}/view`} />} />
       <Route path="*" element={<Error404 />} />
     </Routes>
   );

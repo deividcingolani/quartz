@@ -65,11 +65,12 @@ const useAppNavigation = (): TreeNode[] => {
       pipelineHistory,
       runningCode,
       api,
-    } = routeNames.featureGroup.overviewAnchors;
+      splitGraph,
+    } = routeNames.overviewAnchors;
 
     return [
       {
-        id: '1',
+        id: 'home',
         title: 'Home',
         icon: home,
         hasDivider: true,
@@ -78,7 +79,7 @@ const useAppNavigation = (): TreeNode[] => {
         onClick: handleNavigateRelative('/view', routeNames.project.view),
       },
       {
-        id: '2',
+        id: 'fg',
         title: 'Feature Groups',
         tooltipText: 'Feature Groups',
         icon: fg,
@@ -89,21 +90,25 @@ const useAppNavigation = (): TreeNode[] => {
         isActive: isActive('/p/:id/fg'),
         children: [
           {
-            id: '3',
+            id: 'fgOverview',
             title: 'Overview',
             isActive: isActive('/p/:id/fg/:fgId', ['new']) && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
-              createAnchorLink('Feature List', featureList, '11'),
-              createAnchorLink('Provenance', provenance, '16'),
-              createAnchorLink('Schematised Tags', schematisedTags, '12'),
-              createAnchorLink('Pipeline History', pipelineHistory, '13'),
-              createAnchorLink('Running Code', runningCode, '14'),
-              createAnchorLink('API', api, '15'),
+              createAnchorLink('Feature List', featureList, 'fgFeatures'),
+              createAnchorLink('Provenance', provenance, 'fgProvenance'),
+              createAnchorLink('Schematised Tags', schematisedTags, 'fgTags'),
+              createAnchorLink(
+                'Pipeline History',
+                pipelineHistory,
+                'fgPipeline',
+              ),
+              createAnchorLink('Running Code', runningCode, 'fgCode'),
+              createAnchorLink('API', api, 'fgApi'),
             ],
           },
           {
-            id: '4',
+            id: 'fgData',
             title: 'Data',
             onClick: handleNavigateRelative(
               '/data-preview',
@@ -112,7 +117,7 @@ const useAppNavigation = (): TreeNode[] => {
             isActive: isActive('/p/:id/fg/:fgId/activity'),
             children: [
               {
-                id: '5',
+                id: 'fgDataPreview',
                 title: 'Data Preview',
                 isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
                 onClick: handleNavigateRelative(
@@ -121,7 +126,7 @@ const useAppNavigation = (): TreeNode[] => {
                 ),
               },
               {
-                id: '6',
+                id: 'fgStats',
                 title: 'Feature Statistics',
                 isActive: isActive('/p/:id/fg/:fgId/statistics/*'),
                 onClick: handleNavigateRelative(
@@ -130,14 +135,18 @@ const useAppNavigation = (): TreeNode[] => {
                 ),
               },
               {
-                id: '7',
+                id: 'fgCorrelation',
                 title: 'Correlation',
-                isActive: isActive(routeNames.featureGroup.dataCorrelation),
+                isActive: isActive(routeNames.featureGroup.correlation),
+                onClick: handleNavigateRelative(
+                  '/correlation',
+                  '/p/:id/fg/:fgId/*',
+                ),
               },
             ],
           },
           {
-            id: '8',
+            id: 'fgActivity',
             title: 'Activity',
             onClick: handleNavigateRelative('/activity', '/p/:id/fg/:fgId/*'),
             isActive: isActive('/p/:id/fg/:fgId/activity'),
@@ -145,25 +154,79 @@ const useAppNavigation = (): TreeNode[] => {
         ],
       },
       {
-        id: '9',
+        id: 'td',
         title: 'Training Datasets',
         tooltipText: 'Training Datasets',
         icon: td,
-        hasDivider: true,
-
-        isActive: location.pathname.includes(routeNames.trainingDatasetList),
+        isActive: isActive('/p/:id/td'),
         onClick: handleNavigateRelative(
-          routeNames.trainingDatasetList,
-          'p/:id/*',
+          routeNames.trainingDataset.list,
+          routeNames.project.view,
         ),
+        children: [
+          {
+            id: 'tdOverview',
+            title: 'Overview',
+            isActive: isActive('/p/:id/td/:tdId') && !location.hash,
+            onClick: handleNavigateRelative('/', '/p/:id/td/:tdId/*'),
+            children: [
+              createAnchorLink('Feature List', featureList, 'tdFeatures'),
+              createAnchorLink('Provenance', provenance, 'tdProvenance'),
+              createAnchorLink('Schematised Tags', schematisedTags, 'tdTags'),
+              createAnchorLink(
+                'Pipeline History',
+                pipelineHistory,
+                'tdPipeline',
+              ),
+              createAnchorLink('Query', runningCode, 'tdCode'),
+              createAnchorLink('API', api, 'tdApi'),
+              createAnchorLink('Splits', splitGraph, 'tdSplitGraph'),
+            ],
+          },
+          {
+            id: 'tdData',
+            title: 'Data',
+            onClick: handleNavigateRelative('/statistics', '/p/:id/td/:tdId/*'),
+            isActive: isActive('/p/:id/td/:tdId/activity'),
+            children: [
+              {
+                id: 'tdStats',
+                title: 'Feature Statistics',
+                isActive: isActive('/p/:id/td/:tdId/statistics/*'),
+                onClick: handleNavigateRelative(
+                  '/statistics',
+                  '/p/:id/td/:tdId/*',
+                ),
+              },
+              {
+                id: 'tdCorrelation',
+                title: 'Correlation',
+                isActive: isActive(routeNames.featureGroup.correlation),
+                onClick: handleNavigateRelative(
+                  '/correlation',
+                  '/p/:id/td/:tdId/*',
+                ),
+              },
+            ],
+          },
+          {
+            id: 'tdActivity',
+            title: 'Activity',
+            onClick: handleNavigateRelative('/activity', '/p/:id/td/:tdId/*'),
+            isActive: isActive('/p/:id/td/:tdId/activity'),
+          },
+        ],
       },
       {
-        id: '10',
+        id: 'sc',
         title: 'Sources',
         icon: sources,
         tooltipText: 'Sources',
         isActive: location.pathname.includes(routeNames.source.list),
-        onClick: handleNavigateRelative(routeNames.source.list, 'p/:id/*'),
+        onClick: handleNavigateRelative(
+          routeNames.source.list,
+          routeNames.project.view,
+        ),
       },
     ];
   }, [createAnchorLink, location, isActive, handleNavigateRelative]);

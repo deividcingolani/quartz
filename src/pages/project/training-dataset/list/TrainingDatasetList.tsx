@@ -20,13 +20,13 @@ import {
   pipe,
 } from '../../../../utils';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
-import { ITrainingDataset } from '../../../../types/training-dataset';
+import { TrainingDataset } from '../../../../types/training-dataset';
 import TrainingDatasetListContent from './TrainingDatasetListContent';
 import NoData from '../../../../components/no-data/NoData';
 import routeNames from '../../../../routes/routeNames';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 
-export const sortOptions: { [key: string]: keyof ITrainingDataset } = {
+export const sortOptions: { [key: string]: keyof TrainingDataset } = {
   'creation date': 'created',
   'last updated': 'created',
   name: 'name',
@@ -61,7 +61,7 @@ const TrainingDatasetList: FC = () => {
   const isFilterDisabled = isLoading || isLabelsLoading || !labels?.length;
 
   function handleRefresh(): void {
-    dispatch.trainingDatasets.clear();
+    dispatch.trainingDatasets.set([]);
   }
 
   function handleCreate(): void {
@@ -87,8 +87,8 @@ const TrainingDatasetList: FC = () => {
     const [sortKey] = sort;
     const key = sortOptions[sortKey];
 
-    return pipe<ITrainingDataset[]>(
-      sortFn<ITrainingDataset>(key as keyof ITrainingDataset, sortFn.string),
+    return pipe<TrainingDataset[]>(
+      sortFn<TrainingDataset>(key as keyof TrainingDataset, sortFn.string),
       filterFn(filter, 'labels'),
       searchText(search),
     )(data);
@@ -144,7 +144,7 @@ const TrainingDatasetList: FC = () => {
         <Value primary mr="5px">
           {dataResult.length}
         </Value>
-        <Value>training sets</Value>
+        <Value>training datasets</Value>
         <Box ml="auto">
           <Button onClick={handleCreate}>New Training Dataset</Button>
         </Box>

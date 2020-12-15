@@ -1,4 +1,4 @@
-export interface ITrainingDatasetLabel {
+export interface TrainingDatasetLabel {
   href: string;
   name: string;
   type: string;

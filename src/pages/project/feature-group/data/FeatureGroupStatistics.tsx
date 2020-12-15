@@ -211,6 +211,7 @@ const FeatureGroupStatistics: FC = () => {
       <Panel
         title={data.name}
         id={data.id}
+        idColor="label.orange"
         onClickEdit={() => ({})}
         onClickRefresh={handleRefreshData}
         hasCommitDropdown={true}

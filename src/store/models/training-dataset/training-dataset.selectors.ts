@@ -1,12 +1,12 @@
 import { RootState } from '../../index';
-import { ITrainingDataset } from '../../../types/training-dataset';
+import { TrainingDataset } from '../../../types/training-dataset';
 import { ISelectData } from '../../types';
 
 export const selectTrainingDatasetsData = ({
   trainingDatasets,
   trainingDatasetLabels,
   loading,
-}: RootState): ISelectData<ITrainingDataset[]> => {
+}: RootState): ISelectData<TrainingDataset[]> => {
   return {
     data: trainingDatasets.map((ds) => {
       const labels = trainingDatasetLabels[ds.id];

@@ -13,6 +13,7 @@ export interface PanelProps {
   commitDropdown?: React.ReactElement;
   hasVersionDropdown?: boolean;
   versionDropdown?: React.ReactElement;
+  idColor: string;
 }
 
 const panelStyles = {
@@ -37,6 +38,7 @@ const Panel: FC<PanelProps> = ({
   onClickRefresh,
   title,
   id,
+                                 idColor,
   hasCommitDropdown,
   commitDropdown,
   hasVersionDropdown = false,
@@ -46,7 +48,7 @@ const Panel: FC<PanelProps> = ({
     <Flex alignItems="flex-end">
       <Subtitle ml="30px">{title}</Subtitle>
 
-      <Value mt="auto" ml="5px" mr="15px" sx={{ color: 'labels.orange' }}>
+      <Value mt="auto" ml="5px" mr="15px" sx={{ color: idColor }}>
         #{id}
       </Value>
 

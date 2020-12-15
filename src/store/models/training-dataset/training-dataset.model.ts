@@ -1,42 +1,39 @@
-import { createModel, RematchDispatch } from '@rematch/core';
-import { RootModel } from '../index';
-import { ITrainingDataset } from '../../../types/training-dataset';
-import * as types from './types';
+import { createModel } from '@rematch/core';
+import { TrainingDataset } from '../../../types/training-dataset';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 
-const initialState: types.TrainingDatasetState = [];
+export type TrainingDatasetState = TrainingDataset[];
 
-export const trainingDatasetModel = createModel<RootModel>()({
-  state: initialState,
+export const trainingDatasetModel = createModel()({
+  state: [] as TrainingDatasetState,
   reducers: {
-    set: (s, p: ITrainingDataset[]): types.TrainingDatasetState => p,
-    clear: () => initialState,
+    set: (
+      _: TrainingDatasetState,
+      payload: TrainingDataset[],
+    ): TrainingDatasetState => payload,
   },
   effects: (dispatch) => ({
-    fetch: fetch(dispatch),
+    fetch: async ({
+      projectId,
+      featureStoreId,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+    }): Promise<void> => {
+      const data = await TrainingDatasetService.getList(
+        +projectId,
+        +featureStoreId,
+      );
+
+      data.forEach(({ id }) => {
+        dispatch.trainingDatasetLabels.fetch({
+          projectId,
+          featureStoreId,
+          trainingDatasetId: id,
+        });
+      });
+
+      dispatch.trainingDatasets.set(data);
+    },
   }),
 });
-
-const fetch = (dispatch: RematchDispatch<RootModel>) => async ({
-  projectId,
-  featureStoreId,
-}: {
-  projectId: number;
-  featureStoreId: number;
-}): Promise<void> => {
-  dispatch.trainingDatasetLabels.clear();
-
-  const data = await TrainingDatasetService.getList(projectId, featureStoreId);
-
-  await Promise.all(
-    data.map(({ id }) => {
-      return dispatch.trainingDatasetLabels.fetch({
-        projectId,
-        featureStoreId,
-        trainingDatasetId: id,
-      });
-    }),
-  );
-
-  dispatch.trainingDatasets.set(data);
-};

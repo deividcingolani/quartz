@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 // Types
-import { ITrainingDataset } from '../../../../types/training-dataset';
+import { TrainingDataset } from '../../../../types/training-dataset';
 // Components
 import FilterResult from '../../../../components/filter-result/FilterResult';
 import Card from './Card';
@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 
 export interface TrainingDatasetListContentProps {
-  data: ITrainingDataset[];
+  data: TrainingDataset[];
   isLabelsLoading: boolean;
   isFiltered: boolean;
   onResetFilters: () => void;
@@ -34,12 +34,12 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
   return (
     <>
       {!!selectedId && (
-        <ItemDrawer<ITrainingDataset>
+        <ItemDrawer<TrainingDataset>
           data={allTrainingDatasets}
           id={selectedId}
           isOpen={isOpen}
           handleToggle={handleClose}
-          navigateTo={(id: number) => `/fg/${id}`}
+          navigateTo={(id: number) => `/td/${id}`}
           type={ItemDrawerTypes.td}
         />
       )}

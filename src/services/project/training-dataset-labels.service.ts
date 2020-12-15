@@ -1,11 +1,11 @@
 import { AxiosPromise } from 'axios';
 import BaseApiService, { RequestType } from '../BaseApiService';
-import { ITrainingDatasetLabel } from '../../types/training-dataset-label';
+import { TrainingDatasetLabel } from '../../types/training-dataset-label';
 
 export interface IRTrainingDatasetLabels {
   count: number;
   href: string;
-  items: ITrainingDatasetLabel[];
+  items: TrainingDatasetLabel[];
   type: string;
 }
 

@@ -6,12 +6,12 @@ import * as selector from '../../../store/models/training-dataset/training-datas
 // Types
 import { Dispatch } from '../../../store';
 import { ISelectData } from '../../../store/types';
-import { ITrainingDataset } from '../../../types/training-dataset';
+import { TrainingDataset } from '../../../types/training-dataset';
 
 const useTrainingDatasets = (
   projectId: number,
   featureStoreId?: number,
-): ISelectData<ITrainingDataset[]> => {
+): ISelectData<TrainingDataset[]> => {
   const dispatch = useDispatch<Dispatch>();
 
   const { data, isLoading } = useSelector(selector.selectTrainingDatasetsData);

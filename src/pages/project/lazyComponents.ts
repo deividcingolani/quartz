@@ -17,9 +17,6 @@ export const FeatureGroupActivity = React.lazy(
 export const FeatureGroupDataPreview = React.lazy(
   () => import('./feature-group/data/data-preview/FeatureGroupDataPreview'),
 );
-export const FeatureGroupData = React.lazy(
-  () => import('./feature-group/data/FeatureGroupData'),
-);
 export const FeatureGroupDataCorrelation = React.lazy(
   () => import('./feature-group/FeatureGroupDataCorrelation'),
 );
@@ -43,4 +40,7 @@ export const FeatureGroupOverview = React.lazy(
 );
 export const TrainingDatasetList = React.lazy(
   () => import('./training-dataset/list/TrainingDatasetList'),
+);
+export const TrainingDatasetOverview = React.lazy(
+  () => import('./training-dataset/overview/TrainingDatasetOverview'),
 );

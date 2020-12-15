@@ -59,7 +59,7 @@ const PipelineHistory: FC<PipelineHistoryProps> = ({ data }) => {
       <Flex>
         <Text>last job success {lastSuccessJob}</Text>
       </Flex>
-      <Box mt="30px" mx="-20px">
+      <Box mt="20px" mx="-20px">
         <Row
           middleColumn={2}
           groupComponents={groupComponents as ComponentType<any>[][]}

@@ -1,0 +1,47 @@
+import { Subtitle } from '@logicalclocks/quartz';
+import { useParams } from 'react-router-dom';
+
+import React, { FC, memo, useCallback } from 'react';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import routeNames from '../../../../routes/routeNames';
+import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
+
+import Loader from '../../../../components/loader/Loader';
+import { TrainingDataset } from '../../../../types/training-dataset';
+import TrainingDatasetOverviewContent from './TrainingDatasetOverviewContent';
+
+const TrainingDatasetOverview: FC = () => {
+  const { tdId, id: projectId } = useParams();
+
+  const { data, isLoading, fetchData } = useTrainingDatasetView(
+    +projectId,
+    +tdId,
+  );
+
+  const navigate = useNavigateRelative();
+
+  const handleNavigate = useCallback(
+    (id: number, route: string) => (): void => {
+      navigate(route.replace(':tdId', String(id)), routeNames.project.view);
+    },
+    [navigate],
+  );
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (!data) {
+    return <Subtitle>No data</Subtitle>;
+  }
+
+  return (
+    <TrainingDatasetOverviewContent
+      data={data as TrainingDataset}
+      onClickEdit={handleNavigate(+tdId, routeNames.trainingDataset.edit)}
+      onClickRefresh={fetchData}
+    />
+  );
+};
+
+export default memo(TrainingDatasetOverview);

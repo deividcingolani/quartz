@@ -24,12 +24,12 @@ const useProvenanceListRowData = (
 
   const needProjectColumn = useMemo(
     () =>
-      !!provenance.find(({ info }) => info.value.projectName !== currentName),
+      !!provenance?.find(({ info }) => info.value.projectName !== currentName),
     [currentName, provenance],
   );
 
   const groupComponents = useMemo(() => {
-    return provenance.map(() => [
+    return provenance?.map(() => [
       Value,
       ...(needProjectColumn ? [Value] : [() => null]),
       Value,
@@ -39,7 +39,7 @@ const useProvenanceListRowData = (
   }, [provenance, needProjectColumn]);
 
   const groupProps = useMemo(() => {
-    return provenance.map(
+    return provenance?.map(
       ({
         td: { name, features },
         info: {
