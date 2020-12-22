@@ -1,5 +1,6 @@
 const featureListStyles = {
   table: {
+    whiteSpace: 'nowrap',
     td: {
       px: '10px',
     },

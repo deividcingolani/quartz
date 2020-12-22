@@ -11,6 +11,7 @@ import randomArrayString from '../../../../../utils/randomArrayString';
 // Styles
 import styles from './styles';
 import { ChartProps } from './types';
+import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
 
 export interface ChartTooltipProps {
   payload?: {
@@ -48,7 +49,7 @@ const ChartTooltip: FC<ChartTooltipProps> = ({ payload = [] }) => {
   );
 };
 
-const VerticalBarChart: FC<ChartProps> = ({ data }) => {
+const VerticalBarChart: FC<ChartProps> = ({ data, dataType }) => {
   const theme = useTheme<ITheme>();
 
   const mappedData = useMemo(
@@ -89,7 +90,7 @@ const VerticalBarChart: FC<ChartProps> = ({ data }) => {
 
   return (
     <Flex
-      ml="auto"
+      ml={dataType === ItemDrawerTypes.fg ? 'auto' : 'initial'}
       alignItems="center"
       flexDirection="column"
       sx={styles.container}

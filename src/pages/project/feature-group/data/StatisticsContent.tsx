@@ -19,11 +19,14 @@ import paginate, { Paginate } from '../../../../utils/paginate';
 import sort, { SortFunc } from '../../../../utils/sort';
 import useFeatureFilter, { KeyFilters } from '../hooks/useFeatureFilters';
 import StatisticsCard from './StatisticsCard';
+import { TrainingDataset } from '../../../../types/training-dataset';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 export interface StatisticsContentProps {
-  featureGroupData: FeatureGroup;
+  data: FeatureGroup | TrainingDataset;
   statistics: { [key: string]: FeatureGroupStatistics };
   view?: string;
+  type?: ItemDrawerTypes;
 }
 
 const pageLimits = {
@@ -44,9 +47,10 @@ const sortKeys: {
 type PageLimitsType = typeof pageLimits;
 
 const StatisticsContent: FC<StatisticsContentProps> = ({
-  featureGroupData,
+  data,
   statistics,
   view,
+  type = ItemDrawerTypes.fg,
 }) => {
   const [[pageLimit], setPageLimit] = useState<[keyof PageLimitsType]>([
     '20 features',
@@ -67,7 +71,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
     onSearchChange,
     onToggleKey,
     onReset,
-  } = useFeatureFilter(featureGroupData.features, view);
+  } = useFeatureFilter(data.features, view);
 
   // Computed data
   const { data: paginatedData, totalPages } = useMemo((): Paginate<Feature> => {
@@ -86,7 +90,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
     return paginatedData;
   }, [paginatedData, sortKey]);
 
-  const featuresLength = featureGroupData.features.length;
+  const featuresLength = data.features.length;
   const displayFeaturesLength = dataFiltered.length;
   const isFiltered = featuresLength !== displayFeaturesLength;
 
@@ -190,7 +194,11 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
         <Box height="100%" width="100%">
           {sortedData.map((data, index) => (
             <Box mt={index ? '20px' : '40px'} key={data.name}>
-              <StatisticsCard data={data} statistics={statistics[data.name]} />
+              <StatisticsCard
+                type={type}
+                data={data}
+                statistics={statistics[data.name]}
+              />
             </Box>
           ))}
         </Box>

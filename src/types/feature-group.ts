@@ -91,6 +91,12 @@ export interface FeatureGroup extends DataEntity {
   features: Feature[];
 }
 
+export interface FeatureGroupLabel {
+  href: string;
+  name: string;
+  value?: string;
+}
+
 export interface HistogramItem {
   value: number | string;
   count: number;

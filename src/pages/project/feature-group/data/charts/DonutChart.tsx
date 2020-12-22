@@ -11,8 +11,9 @@ import randomArrayString from '../../../../../utils/randomArrayString';
 import { ChartProps } from './types';
 // Styles
 import styles from './styles';
+import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
 
-const DonutChart: FC<ChartProps> = ({ data }) => {
+const DonutChart: FC<ChartProps> = ({ data, dataType }) => {
   const theme = useTheme<ITheme>();
 
   const colors = useMemo(() => Object.values(theme.colors.labels), [theme]);
@@ -35,7 +36,7 @@ const DonutChart: FC<ChartProps> = ({ data }) => {
 
   return (
     <Flex
-      ml="auto"
+      ml={dataType === ItemDrawerTypes.fg ? 'auto' : 'initial'}
       flexDirection="column"
       width="max-content"
       height="max-content"

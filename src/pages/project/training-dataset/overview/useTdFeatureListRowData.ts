@@ -16,9 +16,9 @@ const useTdFeatureListRowData = (features: Feature[]) => {
   );
 
   const groupComponents = useMemo(() => {
-    return features.map(({ featuregroup, label }) => [
+    return features.map(({ label }) => [
       Value,
-      ...(featuregroup ? [TdFeatureGroupHandle] : [() => null]),
+      TdFeatureGroupHandle,
       Labeling,
       ...(label ? [Badge] : [() => null]),
       Badge,
@@ -31,11 +31,9 @@ const useTdFeatureListRowData = (features: Feature[]) => {
       {
         children: name,
       },
-      featuregroup
-        ? {
-            featureGroup: featuregroup,
-          }
-        : {},
+      {
+        featureGroup: featuregroup,
+      },
       {
         children: description || 'No description ',
         gray: true,

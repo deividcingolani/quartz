@@ -8,29 +8,30 @@ import React, { FC, useCallback, useEffect, useMemo } from 'react';
 
 // Types
 import { Dispatch, RootState } from '../../../../store';
-import { FeatureGroup } from '../../../../types/feature-group';
 // Hooks
-import useFeatureGroupView from '../hooks/useFeatureGroupView';
 import { useLatestVersion } from '../../../../hooks/useLatestVersion';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Components
-import StatisticsContent from './StatisticsContent';
 import Panel from '../../../../components/panel/Panel';
 import Loader from '../../../../components/loader/Loader';
 // Selectors
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
+import { TrainingDataset } from '../../../../types/training-dataset';
+import StatisticsContent from '../../feature-group/data/StatisticsContent';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
-const FeatureGroupStatistics: FC = () => {
-  const { id, fgId, featureName, commitTime } = useParams();
+const TrainingDatasetStatistics: FC = () => {
+  const { id, tdId, featureName, commitTime } = useParams();
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   const statistics = useSelector(
-    (state: RootState) => state.featureGroupStatistics?.entities.statistics,
+    (state: RootState) => state.trainingDatasetStatistics?.entities.statistics,
   );
 
   const commits = useSelector(
-    (state: RootState) => state.featureGroupStatisticsCommits,
+    (state: RootState) => state.trainingDatasetStatisticsCommits,
   );
 
   const lastCommit = useMemo(() => {
@@ -61,32 +62,36 @@ const FeatureGroupStatistics: FC = () => {
   }, [commitTime, lastCommit]);
 
   const isStatisticsLoading = useSelector(
-    (state: RootState) => state.loading.effects.featureGroupStatistics.fetch,
+    (state: RootState) => state.loading.effects.trainingDatasetStatistics.fetch,
   );
 
-  const { data, isLoading } = useFeatureGroupView(+id, +fgId);
+  const { data, isLoading } = useTrainingDatasetView(+id, +tdId);
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();
 
   const handleRefreshData = useCallback(() => {
     if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupStatisticsCommits.fetch({
+      dispatch.trainingDatasets.fetch({
         projectId: +id,
         featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
       });
-      dispatch.featureGroupStatistics.fetch({
+      dispatch.trainingDatasetStatisticsCommits.fetch({
         projectId: +id,
         featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
+        trainingDatasetId: +tdId,
+      });
+      dispatch.trainingDatasetStatistics.fetch({
+        projectId: +id,
+        featureStoreId: featureStoreData.featurestoreId,
+        trainingDatasetId: +tdId,
         timeCommit: commitTime,
       });
     }
-  }, [id, fgId, dispatch, featureStoreData, commitTime]);
+  }, [id, tdId, dispatch, featureStoreData, commitTime]);
 
   const navigateToStatistics = useCallback(
-    (timeString, id = fgId) => {
+    (timeString, id = +tdId) => {
       let normalizedTime = timeString;
 
       if (timeString.includes('(latest)')) {
@@ -107,14 +112,16 @@ const FeatureGroupStatistics: FC = () => {
         if (featureName) {
           navigate(
             `/${id}/statistics/commit/${time}/f/${featureName}`,
-            'p/:id/fg/*',
+            'p/:id/td/*',
           );
         } else {
-          navigate(`/${id}/statistics/commit/${time}`, 'p/:id/fg/*');
+          navigate(`/${id}/statistics/commit/${time}`, 'p/:id/td/*');
         }
+      } else if (id !== tdId) {
+        navigate(`/${id}/statistics`, 'p/:id/td/*');
       }
     },
-    [featureName, commits, navigate, fgId, commit],
+    [featureName, commits, navigate, tdId, commit],
   );
 
   const handleCommitChange = useCallback(
@@ -128,52 +135,56 @@ const FeatureGroupStatistics: FC = () => {
 
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupStatisticsCommits.fetch({
+      dispatch.trainingDatasets.fetch({
         projectId: +id,
         featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
       });
-      dispatch.featureGroupStatistics.fetch({
+      dispatch.trainingDatasetStatisticsCommits.fetch({
         projectId: +id,
         featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
+        trainingDatasetId: +tdId,
+      });
+      dispatch.trainingDatasetStatistics.fetch({
+        projectId: +id,
+        featureStoreId: featureStoreData.featurestoreId,
+        trainingDatasetId: +tdId,
         timeCommit: commitTime,
       });
     }
 
     return () => {
-      dispatch.featureGroupStatistics.clear();
-      dispatch.featureGroupRows.clear();
+      dispatch.trainingDatasetStatistics.clear();
     };
-  }, [id, fgId, dispatch, featureStoreData, commitTime]);
+  }, [id, tdId, dispatch, featureStoreData, commitTime]);
 
-  const featureGroups = useSelector((state: RootState) => state.featureGroups);
+  const trainingDatasets = useSelector(
+    (state: RootState) => state.trainingDatasets,
+  );
 
   const { latestVersion } = useLatestVersion(
-    data as FeatureGroup,
-    featureGroups,
+    data as TrainingDataset,
+    trainingDatasets,
   );
 
   const versions = useMemo(() => {
-    const versions = featureGroups.filter(({ name }) => name === data?.name);
+    const versions = trainingDatasets.filter(({ name }) => name === data?.name);
     return versions.map(
       ({ version }) =>
         `${version.toString()} ${
           version.toString() === latestVersion ? '(latest)' : ''
         }`,
     );
-  }, [data, latestVersion, featureGroups]);
+  }, [data, latestVersion, trainingDatasets]);
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = featureGroups.find(
+      const newId = trainingDatasets.find(
         ({ version, name }) =>
           version === +values[0].split(' ')[0] && name === data?.name,
       )?.id;
-
       navigateToStatistics(commit, newId);
     },
-    [data, featureGroups, commit, navigateToStatistics],
+    [data, trainingDatasets, commit, navigateToStatistics],
   );
 
   if (isLoading || isStatisticsLoading) {
@@ -185,9 +196,9 @@ const FeatureGroupStatistics: FC = () => {
       <NoData mainText="No Features" secondaryText="">
         <Button
           intent="secondary"
-          onClick={() => navigate(routeNames.featureGroup.list, 'p/:id/*')}
+          onClick={() => navigate(routeNames.trainingDataset.list, 'p/:id/*')}
         >
-          Feature Groups
+          Training Datasets
         </Button>
       </NoData>
     );
@@ -198,9 +209,9 @@ const FeatureGroupStatistics: FC = () => {
       <NoData mainText="No Feature Statistics" secondaryText="">
         <Button
           intent="secondary"
-          onClick={() => navigate(routeNames.featureGroup.list, 'p/:id/*')}
+          onClick={() => navigate(routeNames.trainingDataset.list, 'p/:id/*')}
         >
-          Feature Groups
+          Training Datasets
         </Button>
       </NoData>
     );
@@ -211,7 +222,7 @@ const FeatureGroupStatistics: FC = () => {
       <Panel
         title={data.name}
         id={data.id}
-        idColor="label.orange"
+        idColor="labels.orange"
         onClickEdit={() => ({})}
         onClickRefresh={handleRefreshData}
         hasCommitDropdown={true}
@@ -249,6 +260,7 @@ const FeatureGroupStatistics: FC = () => {
       ) : (
         <StatisticsContent
           data={data}
+          type={ItemDrawerTypes.td}
           statistics={statistics}
           view={featureName}
         />
@@ -257,4 +269,4 @@ const FeatureGroupStatistics: FC = () => {
   );
 };
 
-export default FeatureGroupStatistics;
+export default TrainingDatasetStatistics;

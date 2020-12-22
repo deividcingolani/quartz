@@ -38,9 +38,9 @@ const Panel: FC<PanelProps> = ({
   onClickRefresh,
   title,
   id,
+  idColor,
   hasCommitDropdown,
   commitDropdown,
-                                 idColor,
   hasVersionDropdown = false,
   versionDropdown,
 }) => (

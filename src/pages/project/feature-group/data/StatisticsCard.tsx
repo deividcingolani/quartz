@@ -1,6 +1,6 @@
 import { Flex } from 'rebass';
 import React, { FC } from 'react';
-import { Card, Subtitle, Badge } from '@logicalclocks/quartz';
+import { Badge, Card, Labeling, Subtitle, Value } from '@logicalclocks/quartz';
 
 // Types
 import {
@@ -11,29 +11,77 @@ import {
 import StatisticsCharts from './StatisticsCharts';
 import StatisticsRows from './StatisticsRows';
 import StatisticsTables from './StatisticsTables';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 export interface StatisticsCardProps {
   data: Feature;
   statistics?: FeatureGroupStatistics;
+  type: ItemDrawerTypes;
 }
 
-const StatisticsCard: FC<StatisticsCardProps> = ({ data, statistics }) => {
+const StatisticsCard: FC<StatisticsCardProps> = ({
+  data,
+  statistics,
+  type: dataType,
+}) => {
   const { name, type } = data;
 
   return (
     <Card>
-      <Flex alignItems="flex-end">
-        <Subtitle>{name}</Subtitle>
-        <Badge ml="20px" value={data.type} variant="bold" />
-      </Flex>
+      {dataType === ItemDrawerTypes.fg && (
+        <Flex alignItems="flex-end">
+          <Subtitle>{name}</Subtitle>
+          <Badge ml="20px" value={data.type} variant="bold" />
+        </Flex>
+      )}
+
+      {dataType === ItemDrawerTypes.td && (
+        <Flex alignItems="flex-end">
+          <Flex flexDirection="column">
+            <Flex>
+              <Subtitle>{name}</Subtitle>
+              <Badge ml="20px" value={data.type} variant="bold" />
+            </Flex>
+            <Flex mt="5px">
+              {!!data.featuregroup ? (
+                <>
+                  <Labeling gray>from</Labeling>
+                  <Value ml="5px">{data?.featuregroup?.name}</Value>
+                  <Value ml="5px" sx={{ color: 'labels.orange' }}>
+                    #{data?.featuregroup?.id}
+                  </Value>
+                  <Value ml="5px">(v{data?.featuregroup?.version})</Value>
+                </>
+              ) : (
+                <Labeling bold gray>
+                  unavailable origin feature group
+                </Labeling>
+              )}
+            </Flex>
+          </Flex>
+        </Flex>
+      )}
+
       {statistics && (
         <Flex alignItems="flex-start" mt="20px" flexWrap="wrap">
           <StatisticsTables data={statistics} />
-          <Flex ml="auto">
+          <Flex
+            sx={
+              dataType === ItemDrawerTypes.td
+                ? { flexGrow: 1, justifyContent: 'center' }
+                : {}
+            }
+          >
             {statistics.histogram && (
-              <StatisticsCharts data={statistics.histogram} type={type} />
+              <StatisticsCharts
+                dataType={dataType}
+                data={statistics.histogram}
+                type={type}
+              />
             )}
-            <StatisticsRows featureName={name} />
+            {dataType === ItemDrawerTypes.fg && (
+              <StatisticsRows featureName={name} />
+            )}
           </Flex>
         </Flex>
       )}

@@ -23,7 +23,7 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
     currentProject,
   );
 
-  if (!data.length) {
+  if (!data?.length) {
     return (
       <Card mt="30px" title="Provenance">
         <Box mt="20px" mx="-20px">

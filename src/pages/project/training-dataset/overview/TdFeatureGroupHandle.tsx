@@ -4,12 +4,20 @@ import { Flex } from 'rebass';
 import { FeatureGroup } from '../../../../types/feature-group';
 
 export interface TdFeatureGroupHandleProps {
-  featureGroup: FeatureGroup;
+  featureGroup?: FeatureGroup;
 }
 
 const TdFeatureGroupHandle: FC<TdFeatureGroupHandleProps> = ({
   featureGroup,
 }) => {
+  if (!featureGroup) {
+    return (
+      <Labeling bold gray>
+        unavailable origin feature group
+      </Labeling>
+    );
+  }
+
   return (
     <Flex>
       <Labeling>{featureGroup.name}</Labeling>

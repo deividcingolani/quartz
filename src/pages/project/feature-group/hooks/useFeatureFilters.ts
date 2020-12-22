@@ -5,6 +5,7 @@ import filterByAttribute from '../overview/utils';
 export enum KeyFilters {
   'primary',
   'partition',
+  'label',
   null,
 }
 
@@ -67,6 +68,10 @@ const useFeatureFilter = (
 
     if (keyFilter === KeyFilters.primary) {
       result = filterByAttribute<Feature>(result, true, 'primary');
+    }
+
+    if (keyFilter === KeyFilters.label) {
+      result = filterByAttribute<Feature>(result, true, 'label');
     }
 
     result = filterByAttribute<Feature>(

@@ -21,6 +21,8 @@ import trainingDatasetQuery from './training-dataset/trainingDatasetQuery.model'
 import schematisedTags from './schematised-tags/schematised-tags.model';
 import schematisedTagView from './schematised-tags/schematised-tag-view.model';
 import store from './localManagement/store.model';
+import trainingDatasetStatistics from './training-dataset/statistics/trainingDatasetStatistics.model';
+import trainingDatasetStatisticsCommits from './training-dataset/statistics/trainingDatasetStatisticsCommits.model';
 
 export interface RootModel extends Models<RootModel> {
   auth: typeof auth;
@@ -43,6 +45,8 @@ export interface RootModel extends Models<RootModel> {
   featureStoreSources: typeof featureStoreSources;
   featureGroupDataPreview: typeof featureGroupDataPreview;
   featureGroupStatisticsCommits: typeof featureGroupStatisticsCommits;
+  trainingDatasetStatistics: typeof trainingDatasetStatistics;
+  trainingDatasetStatisticsCommits: typeof trainingDatasetStatisticsCommits;
 }
 
 const models: RootModel = {
@@ -64,6 +68,8 @@ const models: RootModel = {
   featureGroupStatisticsCommits,
   trainingDatasets: trainingDatasetModel,
   trainingDatasetView,
+  trainingDatasetStatistics,
+  trainingDatasetStatisticsCommits,
   trainingDatasetLabels: trainingDatasetLabelModel,
   trainingDatasetQuery,
 };

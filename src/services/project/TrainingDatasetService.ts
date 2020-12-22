@@ -3,6 +3,7 @@ import {
   TrainingDataset,
   TrainingDatasetQuery,
 } from '../../types/training-dataset';
+import { GetStatisticsData } from './FeatureGroupsService';
 
 class TrainingDatasetService extends BaseApiService {
   getList = async (
@@ -51,9 +52,33 @@ class TrainingDatasetService extends BaseApiService {
       url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/query`,
       type: RequestType.get,
     });
-
     return data;
   };
+
+  getStatistics = (
+    projectId: number,
+    featureStoreId: number,
+    trainingDatasetId: number,
+    timeCommit?: string,
+  ) =>
+    this.request<GetStatisticsData>({
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/statistics?${
+        timeCommit
+          ? `filter_by=commit_time_eq:${timeCommit}`
+          : 'sort_by=commit_time:desc&offset=0&limit=1'
+      }&fields=content`,
+      type: RequestType.get,
+    });
+
+  getCommits = (
+    projectId: number,
+    featureStoreId: number,
+    trainingDatasetId: number,
+  ) =>
+    this.request<GetStatisticsData>({
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/statistics`,
+      type: RequestType.get,
+    });
 }
 
 export default new TrainingDatasetService('/project');
