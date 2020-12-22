@@ -28,6 +28,20 @@ class FeatureGroupLabelsService extends BaseApiService {
       },
     });
 
+  attachLabel = (
+    projectId: number,
+    featureStoreId: number,
+    fgId: number,
+    data: string[],
+  ) =>
+    this.request<any>({
+      type: RequestType.post,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/keywords`,
+      data: {
+        keywords: data,
+      },
+    });
+
   getAllKeywords = async (projectId: number): Promise<string[] | undefined> => {
     const { data } = await this.request<any>({
       url: `${projectId}/featurestores/keywords`,

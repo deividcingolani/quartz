@@ -22,10 +22,11 @@ export interface KeywordsEditorProps {
   value: string[];
   onSave: (keywords: string[]) => void;
   isDisabled?: boolean;
+  shouldClear?: boolean;
   selectVariant?: 'primary' | 'white';
 }
 
-const schema = yup.object().shape({
+export const keywordSchema = yup.object().shape({
   keyword: name.label('Keyword name'),
 });
 
@@ -34,12 +35,13 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
   onSave,
   isDisabled = false,
   selectVariant = 'white',
+  shouldClear = true,
 }) => {
   const { id: projectId } = useParams();
 
   const { errors, register, handleSubmit, clearErrors, setError } = useForm({
     shouldUnregister: false,
-    resolver: yupResolver(schema),
+    resolver: yupResolver(keywordSchema),
   });
 
   const baseOptions = useSelector(
@@ -61,8 +63,12 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
 
   const saveHandler = useCallback(async () => {
     await onSave(values);
+    setEdit(true);
+    if (shouldClear) {
+      dispatch.featureGroups.clear();
+    }
     setEdit(false);
-  }, [values, onSave]);
+  }, [values, onSave, dispatch, shouldClear]);
 
   const cancelHandler = useCallback(() => {
     setValues(value);

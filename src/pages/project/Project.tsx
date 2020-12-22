@@ -108,6 +108,14 @@ const Project: FC = () => {
         element={<FeatureGroupStatistics />}
       />
       <Route
+        path={routeNames.featureGroup.statisticsViewCommit}
+        element={<FeatureGroupStatistics />}
+      />
+      <Route
+        path={routeNames.featureGroup.statisticsViewCommitAndOne}
+        element={<FeatureGroupStatistics />}
+      />
+      <Route
         path={routeNames.featureGroup.correlation}
         element={<FeatureGroupDataCorrelation />}
       />

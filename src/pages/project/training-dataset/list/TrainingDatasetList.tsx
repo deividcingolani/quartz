@@ -51,8 +51,8 @@ const TrainingDatasetList: FC = () => {
     () =>
       data.reduce(
         (acc: string[], { labels: fgLabels = [] }: any) => [
-          ...acc,
-          ...fgLabels,
+          // @ts-ignore
+          ...new Set([...acc, ...fgLabels]),
         ],
         [],
       ),

@@ -58,7 +58,10 @@ const FeatureGroupList: FC = () => {
   const labels = useMemo(
     () =>
       maxVersionsData.reduce(
-        (acc: string[], { labels }: FeatureGroup) => [...acc, ...labels],
+        (acc: string[], { labels }: FeatureGroup) => [
+          // @ts-ignore
+          ...new Set([...acc, ...labels]),
+        ],
         [],
       ),
     [maxVersionsData],

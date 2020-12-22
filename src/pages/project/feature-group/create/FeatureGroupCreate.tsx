@@ -31,6 +31,17 @@ const FeatureGroupCreate: FC = () => {
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
       dispatch.schematisedTags.fetch();
+      dispatch.featureGroups.fetch({
+        projectId: +projectId,
+        featureStoreId: featureStoreData.featurestoreId,
+      });
+      dispatch.featureStoreSources.fetch({
+        projectId: +projectId,
+        featureStoreId: featureStoreData?.featurestoreId,
+      });
+      dispatch.featureGroupLabels.fetch({
+        projectId: +projectId,
+      });
     }
   }, [dispatch, projectId, featureStoreData]);
 

@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core';
 
 import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
+// Types
 import { FeatureGroup } from '../../../types/feature-group';
 // Services
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
@@ -107,10 +108,9 @@ const featureGroups = createModel()({
         data: { id },
       } = await FeatureGroupsService.create(projectId, featureStoreId, data);
 
-      await FeatureGroupLabelsService.attachKeyword(
+      await FeatureGroupLabelsService.attachLabel(
         projectId,
-        featureStoreId,
-        id,
+        featureStoreId, id,
         data.keywords,
       );
 
@@ -145,8 +145,7 @@ const featureGroups = createModel()({
       const newTags = Object.keys(data.tags || {});
 
       const deletedTags = prevTags.filter(
-        (name: string) => !newTags.includes(name),
-      );
+        (name: string) => !newTags.includes(name))
 
       await Promise.allSettled(
         deletedTags.map(async (name: string) => {

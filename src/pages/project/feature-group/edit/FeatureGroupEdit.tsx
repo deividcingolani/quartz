@@ -40,6 +40,9 @@ const FeatureGroupEdit: FC = () => {
         featureGroupId: +fgId,
       });
       dispatch.schematisedTags.fetch();
+      dispatch.featureGroupLabels.fetch({
+        projectId: +projectId,
+      });
     }
   }, [dispatch, projectId, featureStoreData, fgId]);
 
@@ -54,8 +57,8 @@ const FeatureGroupEdit: FC = () => {
         description,
         statisticConfiguration,
         onlineEnabled,
-        keywords,
         tags,
+        keywords,
       } = data;
 
       if (featureStoreData?.featurestoreId) {
