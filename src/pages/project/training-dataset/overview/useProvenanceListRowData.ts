@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
-import { Value, IconButton } from '@logicalclocks/quartz';
+import { Value, IconButton, Labeling } from '@logicalclocks/quartz';
 
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
-import { FeatureGroupProvenance } from '../../../../types/feature-group';
 import { Project } from '../../../../types/project';
 // Utils
 import { cropText } from '../../sources/utils';
+import { TrainingDatasetProvenance } from '../../../../types/training-dataset';
 
 const useProvenanceListRowData = (
-  provenance: FeatureGroupProvenance[],
+  provenance: TrainingDatasetProvenance[],
   { projectName: currentName }: Project,
 ) => {
   const navigate = useNavigateRelative();
@@ -24,6 +24,7 @@ const useProvenanceListRowData = (
   const groupComponents = useMemo(() => {
     return provenance?.map(() => [
       Value,
+      Labeling,
       ...(needProjectColumn ? [Value] : [() => null]),
       Value,
       Value,
@@ -34,13 +35,18 @@ const useProvenanceListRowData = (
   const groupProps = useMemo(() => {
     return provenance?.map(
       ({
-        td: { name, features, id },
+        fg: { name, features, version, id },
         info: {
           value: { projectName },
         },
       }) => [
         {
           children: name,
+        },
+        {
+          children: `v${version}`,
+          bold: true,
+          gray: true,
         },
         needProjectColumn && projectName !== currentName
           ? {
@@ -56,15 +62,15 @@ const useProvenanceListRowData = (
             features
               .reduce((acc: string[], { name }) => [...acc, name], [])
               .join(', '),
-            145,
+            120,
           ),
           fontFamily: 'Inter',
         },
         {
           intent: 'ghost',
           icon: 'search',
-          tooltip: 'Open training dataset',
-          onClick: () => navigate(`/td/${id}`, 'p/:id/*'),
+          tooltip: 'Open feature group',
+          onClick: () => navigate(`/fg/${id}`, 'p/:id/*'),
         },
       ],
     );

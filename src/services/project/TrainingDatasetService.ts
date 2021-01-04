@@ -3,7 +3,10 @@ import {
   TrainingDataset,
   TrainingDatasetQuery,
 } from '../../types/training-dataset';
+
+import { Provenance } from '../../types/feature-group';
 import { GetStatisticsData } from './FeatureGroupsService';
+
 
 class TrainingDatasetService extends BaseApiService {
   getList = async (
@@ -16,6 +19,18 @@ class TrainingDatasetService extends BaseApiService {
     });
 
     return data;
+  };
+
+  getProvenance = (
+    projectId: number,
+    featureStoreId: number,
+    trainingDataset: TrainingDataset,
+  ) => {
+    const { name, version } = trainingDataset;
+    return this.request<Provenance>({
+      url: `${projectId}/provenance/links?only_apps=true&full_link=true&filter_by=OUT_ARTIFACT:${name}_${version}&filter_by=IN_TYPE:FEATURE&filter_by=OUT_TYPE:TRAINING_DATASET`,
+      type: RequestType.get,
+    });
   };
 
   getOneByName = async (

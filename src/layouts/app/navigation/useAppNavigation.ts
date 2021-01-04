@@ -16,7 +16,8 @@ import home from '../../../sources/home.json';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
-  const overviewAnchors = useAnchor('overview');
+  const fgOverviewAnchors = useAnchor('fgOverview');
+  const tdOverviewAnchors = useAnchor('tdOverview');
   const navigateRelative = useNavigateRelative();
 
   const handleNavigateRelative = useCallback(
@@ -47,14 +48,24 @@ const useAppNavigation = (): TreeNode[] => {
     [location],
   );
 
-  const createAnchorLink = useCallback(
+  const createFgAnchorLink = useCallback(
     (title: string, to: string, id: string) => ({
       title,
-      isActive: overviewAnchors.active === to,
+      isActive: fgOverviewAnchors.active === to,
       onClick: handleJumpToAnchor(to),
       id,
     }),
-    [overviewAnchors.active, handleJumpToAnchor],
+    [fgOverviewAnchors.active, handleJumpToAnchor],
+  );
+
+  const createTdAnchorLink = useCallback(
+    (title: string, to: string, id: string) => ({
+      title,
+      isActive: tdOverviewAnchors.active === to,
+      onClick: handleJumpToAnchor(to),
+      id,
+    }),
+    [tdOverviewAnchors.active, handleJumpToAnchor],
   );
 
   return useMemo<TreeNode[]>(() => {
@@ -95,16 +106,16 @@ const useAppNavigation = (): TreeNode[] => {
             isActive: isActive('/p/:id/fg/:fgId', ['new']) && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
-              createAnchorLink('Feature List', featureList, 'fgFeatures'),
-              createAnchorLink('Provenance', provenance, 'fgProvenance'),
-              createAnchorLink('Schematised Tags', schematisedTags, 'fgTags'),
-              createAnchorLink(
+              createFgAnchorLink('Feature List', featureList, 'fgFeatures'),
+              createFgAnchorLink('Provenance', provenance, 'fgProvenance'),
+              createFgAnchorLink('Schematised Tags', schematisedTags, 'fgTags'),
+              createFgAnchorLink(
                 'Pipeline History',
                 pipelineHistory,
                 'fgPipeline',
               ),
-              createAnchorLink('Running Code', runningCode, 'fgCode'),
-              createAnchorLink('API', api, 'fgApi'),
+              createFgAnchorLink('Running Code', runningCode, 'fgCode'),
+              createFgAnchorLink('API', api, 'fgApi'),
             ],
           },
           {
@@ -170,17 +181,17 @@ const useAppNavigation = (): TreeNode[] => {
             isActive: isActive('/p/:id/td/:tdId') && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/td/:tdId/*'),
             children: [
-              createAnchorLink('Feature List', featureList, 'tdFeatures'),
-              createAnchorLink('Provenance', provenance, 'tdProvenance'),
-              createAnchorLink('Schematised Tags', schematisedTags, 'tdTags'),
-              createAnchorLink(
+              createTdAnchorLink('Feature List', featureList, 'tdFeatures'),
+              createTdAnchorLink('Provenance', provenance, 'tdProvenance'),
+              createTdAnchorLink('Schematised Tags', schematisedTags, 'tdTags'),
+              createTdAnchorLink(
                 'Pipeline History',
                 pipelineHistory,
                 'tdPipeline',
               ),
-              createAnchorLink('Query', runningCode, 'tdCode'),
-              createAnchorLink('API', api, 'tdApi'),
-              createAnchorLink('Splits', splitGraph, 'tdSplitGraph'),
+              createTdAnchorLink('Query', runningCode, 'tdCode'),
+              createTdAnchorLink('API', api, 'tdApi'),
+              createTdAnchorLink('Splits', splitGraph, 'tdSplitGraph'),
             ],
           },
           {
@@ -229,7 +240,13 @@ const useAppNavigation = (): TreeNode[] => {
         ),
       },
     ];
-  }, [createAnchorLink, location, isActive, handleNavigateRelative]);
+  }, [
+    createFgAnchorLink,
+    createTdAnchorLink,
+    location,
+    isActive,
+    handleNavigateRelative,
+  ]);
 };
 
 export default useAppNavigation;

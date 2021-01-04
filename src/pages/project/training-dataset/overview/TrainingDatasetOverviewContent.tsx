@@ -163,31 +163,31 @@ val td = fs.getTrainingDataset(${data.name}, ${data.version})`,
       />
       <Box mt="40px" width="100%">
         <TrainingDatasetOverviewSummary data={data} />
-        <Anchor groupName="overview" anchor={featureList}>
+        <Anchor groupName="tdOverview" anchor={featureList}>
           <TrainingDatasetFeatureList data={data.features} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={provenance}>
+        <Anchor groupName="tdOverview" anchor={provenance}>
           <Provenance data={data.provenance} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={schematisedTags}>
+        <Anchor groupName="tdOverview" anchor={schematisedTags}>
           <SchematisedTags data={data.tags} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={pipelineHistory}>
+        <Anchor groupName="tdOverview" anchor={pipelineHistory}>
           <PipelineHistory data={data.jobs} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={runningCode}>
+        <Anchor groupName="tdOverview" anchor={runningCode}>
           <CodeCard mt="20px" title="Query" content={queryCode} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={api}>
+        <Anchor groupName="tdOverview" anchor={api}>
           <CodeCard mb="20px" mt="20px" title="API" content={apiCode} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={splitGraph}>
+        <Anchor groupName="tdOverview" anchor={splitGraph}>
           <SplitGraph graph={data.splits} />
         </Anchor>
       </Box>

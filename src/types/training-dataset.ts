@@ -1,4 +1,4 @@
-import { FeatureGroup } from './feature-group';
+import { Entry, FeatureGroup } from './feature-group';
 import { DataEntity } from './index';
 
 export interface TrainingDatasetFeature {
@@ -20,6 +20,11 @@ export interface Split {
   percentage: number;
 }
 
+export interface TrainingDatasetProvenance {
+  fg: FeatureGroup;
+  info: Entry;
+}
+
 export interface TrainingDataset extends DataEntity {
   type: string;
   created: string;
@@ -37,7 +42,7 @@ export interface TrainingDataset extends DataEntity {
   storageConnectorType: string;
   trainingDatasetType: TrainingDatasetType;
   version: number;
-  provenance: any[];
+  provenance: TrainingDatasetProvenance[];
 }
 
 export interface TrainingDatasetQuery {

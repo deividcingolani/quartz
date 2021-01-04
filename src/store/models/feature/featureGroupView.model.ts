@@ -53,7 +53,8 @@ const featureGroupView = createModel()({
         );
       }
 
-      const entries = provenance.items && provenance.items[0].out.entry;
+      const entries =
+        provenance.items && provenance.items.map(({ out }) => out.entry[0]);
 
       let fgProvenances = [];
 

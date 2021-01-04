@@ -45,7 +45,7 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
         </Value>
         <Value primary>{data.length}</Value>
         <Value fontFamily="Inter" ml="5px">
-          training datasets
+          {data.length > 1 ? ' training datasets' : ' training dataset'}
         </Value>
       </Flex>
       <Box mt="20px" mx="-20px" sx={provenanceListStyles}>

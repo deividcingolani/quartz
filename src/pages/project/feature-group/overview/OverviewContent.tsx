@@ -128,23 +128,23 @@ Hops.getFeaturegroup("${data.name}").read()`,
       />
       <Box mt="40px" width="100%">
         <SummaryData data={data} />
-        <Anchor groupName="overview" anchor={featureList}>
+        <Anchor groupName="fgOverview" anchor={featureList}>
           <FeatureList data={data.features} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={provenance}>
+        <Anchor groupName="fgOverview" anchor={provenance}>
           <Provenance data={data.provenance} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={schematisedTags}>
+        <Anchor groupName="fgOverview" anchor={schematisedTags}>
           <SchematisedTags data={data.tags} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={pipelineHistory}>
+        <Anchor groupName="fgOverview" anchor={pipelineHistory}>
           <PipelineHistory data={data.jobs} />
         </Anchor>
 
-        <Anchor groupName="overview" anchor={runningCode}>
+        <Anchor groupName="fgOverview" anchor={runningCode}>
           <CodeCard
             title="Running Code"
             actions={action}
@@ -152,7 +152,7 @@ Hops.getFeaturegroup("${data.name}").read()`,
           />
         </Anchor>
 
-        <Anchor anchor={api} groupName="overview">
+        <Anchor anchor={api} groupName="fgOverview">
           <CodeCard
             mt="20px"
             mb="20px"

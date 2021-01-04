@@ -150,6 +150,18 @@ class FeatureGroupsService extends BaseApiService {
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/tags?expand=tag_schemas`,
     });
 
+  getOneByName = async (
+    projectId: number,
+    featureStoreId: number,
+    name: string,
+  ): Promise<FeatureGroup[]> => {
+    const { data } = await this.request<FeatureGroup[]>({
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${name}`,
+      type: RequestType.get,
+    });
+    return data;
+  };
+
   deleteTag = (
     projectId: number,
     featureStoreId: number,

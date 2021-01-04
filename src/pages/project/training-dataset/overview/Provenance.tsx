@@ -3,14 +3,14 @@ import React, { ComponentType, FC, memo } from 'react';
 import { Row as QRow, Card, Value, Labeling } from '@logicalclocks/quartz';
 
 // Types
-import { FeatureGroupProvenance } from '../../../../types/feature-group';
 import provenanceListStyles from './provenance-list-styles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
-import useProvenanceListRowData from '../../feature-group/overview/useProvenanceListRowData';
+import useProvenanceListRowData from './useProvenanceListRowData';
+import { TrainingDatasetProvenance } from '../../../../types/training-dataset';
 
 export interface FeatureListProps {
-  data: FeatureGroupProvenance[];
+  data: TrainingDatasetProvenance[];
 }
 
 const Row = memo(QRow);
@@ -29,7 +29,7 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
         <Box mt="20px" mx="-20px">
           <Flex height="50px" mt="30px" justifyContent="center">
             <Labeling fontSize="18px" gray>
-              This training dataset is not used in any feature group
+              This training dataset has no origin feature group
             </Labeling>
           </Flex>
         </Box>
@@ -45,7 +45,7 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
         </Value>
         <Value primary>{data.length}</Value>
         <Value fontFamily="Inter" ml="5px">
-          feature groups
+          {data.length > 1 ? '  feature groups' : '  feature group'}
         </Value>
       </Flex>
       <Box mt="20px" mx="-20px" sx={provenanceListStyles}>
