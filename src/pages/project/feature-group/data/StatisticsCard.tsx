@@ -43,14 +43,14 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
               <Badge ml="20px" value={data.type} variant="bold" />
             </Flex>
             <Flex mt="5px">
-              {!!data.featuregroup ? (
+              {!!data.basefeaturegroup ? (
                 <>
                   <Labeling gray>from</Labeling>
-                  <Value ml="5px">{data?.featuregroup?.name}</Value>
+                  <Value ml="5px">{data?.basefeaturegroup?.name}</Value>
                   <Value ml="5px" sx={{ color: 'labels.orange' }}>
-                    #{data?.featuregroup?.id}
+                    #{data?.basefeaturegroup?.id}
                   </Value>
-                  <Value ml="5px">(v{data?.featuregroup?.version})</Value>
+                  <Value ml="5px">(v{data?.basefeaturegroup?.version})</Value>
                 </>
               ) : (
                 <Labeling bold gray>

@@ -13,6 +13,7 @@ import { RootState } from '../../../store';
 import ProfileService from '../../../services/ProfileService';
 // Selectors
 import { selectProjectId } from '../../../store/models/localManagement/store.selectors';
+import Search from '../../../components/search/Search';
 
 export interface AppHeaderProps {
   showList?: boolean;
@@ -59,7 +60,12 @@ const AppHeader: FC<AppHeaderProps> = ({
       }
       actions={[<HelpDropdown />]}
     >
-      {showList && !hasBackButton && <ProjectsDropdown />}
+      {showList && !hasBackButton && (
+        <>
+          <ProjectsDropdown />
+          <Search />
+        </>
+      )}
       {hasBackButton && (
         <Value
           sx={{ cursor: 'pointer' }}

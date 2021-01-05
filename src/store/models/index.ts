@@ -2,8 +2,10 @@ import { Models } from '@rematch/core';
 
 // Models
 import auth from './auth/auth.model';
+import search from './search/search.model';
 import profile from './profile/profile.model';
 import project from './projects/project.model';
+import deepSearch from './search/deep-search.model';
 import projectsList from './projects/projectsList.model';
 import featureGroups from './feature/featureGroups.model';
 import { trainingDatasetModel } from './training-dataset';
@@ -27,8 +29,10 @@ import trainingDatasetStatisticsCommits from './training-dataset/statistics/trai
 export interface RootModel extends Models<RootModel> {
   auth: typeof auth;
   store: typeof store;
-  profile: typeof profile;
+  search: typeof search;
   project: typeof project;
+  profile: typeof profile;
+  deepSearch: typeof deepSearch;
   projectsList: typeof projectsList;
   featureGroups: typeof featureGroups;
   featureStores: typeof featureStores;
@@ -52,8 +56,10 @@ export interface RootModel extends Models<RootModel> {
 const models: RootModel = {
   auth,
   store,
+  search,
   profile,
   project,
+  deepSearch,
   projectsList,
   featureGroups,
   featureStores,

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
 // Types
 import { TrainingDataset } from '../../../../types/training-dataset';
@@ -9,21 +9,42 @@ import useDrawer from '../../../../hooks/useDrawer';
 import ItemDrawer, {
   ItemDrawerTypes,
 } from '../../../../components/drawer/ItemDrawer';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch, RootState } from '../../../../store';
 
 export interface TrainingDatasetListContentProps {
   data: TrainingDataset[];
   isFiltered: boolean;
   onResetFilters: () => void;
+  hasMatchText?: boolean;
 }
 
 const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
   data,
   onResetFilters,
   isFiltered,
+  hasMatchText,
 }) => {
   const { isOpen, selectedId, handleSelectItem, handleClose } = useDrawer();
+
+  const dispatch = useDispatch<Dispatch>();
+
+  useEffect(() => {
+    const td = data.find(({ id }) => id === selectedId);
+    if (td && selectedId && hasMatchText) {
+      dispatch.trainingDatasets.fetch({
+        projectId: td.parentProjectId,
+        featureStoreId: td.featurestoreId,
+      });
+    }
+  }, [selectedId, data, hasMatchText, dispatch]);
+
+  const projectId = useMemo(() => {
+    const fg = data.find(({ id }) => id === selectedId);
+    if (fg) {
+      return fg.parentProjectId;
+    }
+  }, [selectedId, data]);
 
   const allTrainingDatasets = useSelector(
     (state: RootState) => state.trainingDatasets,
@@ -34,6 +55,8 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
       {!!selectedId && (
         <ItemDrawer<TrainingDataset>
           data={allTrainingDatasets}
+          isSearch={hasMatchText}
+          projectId={projectId}
           id={selectedId}
           isOpen={isOpen}
           handleToggle={handleClose}
@@ -43,6 +66,7 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
       )}
       {data.map((item) => (
         <Card
+          hasMatchText={hasMatchText}
           key={item.id}
           handleToggle={handleSelectItem(item.id)}
           isSelected={selectedId === item.id}

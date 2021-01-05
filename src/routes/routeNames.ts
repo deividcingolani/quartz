@@ -71,6 +71,24 @@ const routeNames = {
       create: 'settings/schematised-tags/new',
     },
   },
+
+  search: {
+    view: 'search/*',
+    searchAllProjectsFeatures: 'features/:searchText',
+    searchOneProjectFeatures: 'p/:id/features/:searchText',
+    searchAllProjectsFeaturesWithoutSearch: 'features',
+    searchOneProjectFeaturesWithoutSearch: 'p/:id/features/',
+
+    searchAllProjectsFeatureGroups: 'fg/:searchText',
+    searchOneProjectFeatureGroups: 'p/:id/fg/:searchText',
+    searchAllProjectsFeatureGroupsWithoutSearch: 'fg',
+    searchOneProjectFeatureGroupsWithoutSearch: 'p/:id/fg/',
+
+    searchAllProjectsTrainingDatasets: 'td/:searchText',
+    searchOneProjectTrainingDatasets: 'p/:id/td/:searchText',
+    searchAllProjectsTrainingDatasetsWithoutSearch: 'td',
+    searchOneProjectTrainingDatasetsWithoutSearch: 'p/:id/td/',
+  },
 };
 
 export default routeNames;

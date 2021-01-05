@@ -9,6 +9,8 @@ import {
   HoverableText,
   Card as QuartzCard,
   User,
+  Badge,
+  ProjectBadge,
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback } from 'react';
 import formatDistance from 'date-fns/formatDistance';
@@ -29,6 +31,9 @@ import CardLabels from './CardLabels';
 import DateValue from './DateValue';
 import { HoverableCardProps } from '../../../../types';
 import styles from '../../styles/hoverable-card';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store';
+import { useParams } from 'react-router-dom';
 
 const contentStyles: RebassCardProps = { overflowY: 'unset' };
 
@@ -36,7 +41,10 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
   data,
   handleToggle,
   isSelected,
+  hasMatchText,
 }) => {
+  const { id: projectId } = useParams();
+
   const navigate = useNavigateRelative();
 
   const handleNavigate = useCallback(
@@ -44,6 +52,10 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
       navigate(route.replace(':fgId', String(id)), routeNames.project.view);
     },
     [navigate],
+  );
+
+  const projectsIds = useSelector((state: RootState) => state.projectsList).map(
+    ({ id }) => id,
   );
 
   return (
@@ -54,26 +66,49 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
         contentProps={contentStyles}
       >
         <Flex my="6px" flexDirection="column">
-          <Flex alignItems="center">
-            <Box ml="12px">
-              <Dot
-                mainText={data.onlineEnabled ? 'Online' : 'Offline'}
-                variant={data.onlineEnabled ? 'green' : 'black'}
-              />
-            </Box>
-            <HoverableText
-              fontFamily="Inter"
-              onClick={handleNavigate(data.id, '/fg/:fgId')}
-              ml="30px"
-              fontSize="20px"
-            >
-              {data.name}
-            </HoverableText>
+          <Flex alignItems="center" justifyContent="space-between">
+            <Flex>
+              <Box ml="12px">
+                <Dot
+                  mainText={data.onlineEnabled ? 'Online' : 'Offline'}
+                  variant={data.onlineEnabled ? 'green' : 'black'}
+                />
+              </Box>
+              <HoverableText
+                fontFamily="Inter"
+                onClick={handleNavigate(data.id, '/fg/:fgId')}
+                ml="30px"
+                fontSize="20px"
+                color={
+                  !projectsIds.includes(data.parentProjectId) && hasMatchText
+                    ? 'gray'
+                    : 'initial'
+                }
+              >
+                {data.name}
+              </HoverableText>
 
-            <Value mt="auto" ml="5px" mr="15px" sx={{ color: 'labels.orange' }}>
-              #{data.id}
-            </Value>
-            <CardLabels labels={data.labels} />
+              <Value
+                mt="auto"
+                ml="5px"
+                mr="15px"
+                sx={{ color: 'labels.orange' }}
+              >
+                #{data.id}
+              </Value>
+
+              {!projectId && hasMatchText && (
+                <ProjectBadge
+                  mr="5px"
+                  value={data.parentProjectName}
+                  isLock={!projectsIds.includes(data.parentProjectId)}
+                />
+              )}
+
+              <CardLabels labels={data.labels} />
+            </Flex>
+
+            {hasMatchText && <Badge value={data.matchText} />}
           </Flex>
           {data.description ? (
             <Labeling mt="15px" gray>
@@ -125,13 +160,27 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 tooltip="Overview"
                 tooltipProps={{ ml: '40px' } as TooltipProps}
                 icon="ellipsis-v"
-                onClick={handleNavigate(data.id, '/fg/:fgId')}
+                onClick={() => {
+                  if (hasMatchText) {
+                    navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
+                  } else {
+                    handleNavigate(data.id, '/fg/:fgId')();
+                  }
+                }}
               />
               <IconButton
                 tooltip="Data"
                 tooltipProps={{ ml: '6px' } as TooltipProps}
                 icon="search"
-                onClick={handleNavigate(data.id, '/fg/:fgId/statistics')}
+                onClick={() => {
+                  if (hasMatchText) {
+                    navigate(
+                      `/p/${data.parentProjectId}/fg/${data.id}/statistics`,
+                    );
+                  } else {
+                    handleNavigate(data.id, '/fg/:fgId/statistics')();
+                  }
+                }}
               />
               <IconButton
                 tooltip="Activity"

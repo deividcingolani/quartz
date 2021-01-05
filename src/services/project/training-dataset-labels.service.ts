@@ -22,4 +22,15 @@ export class TrainingDatasetLabelService extends BaseApiService {
       type: RequestType.get,
     });
   };
+
+  public getKeywords = (
+    projectId: number,
+    featureStoreId: number,
+    trainingDatasetId: number,
+  ): AxiosPromise<any> => {
+    return this.request<any>({
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/keywords`,
+      type: RequestType.get,
+    });
+  };
 }

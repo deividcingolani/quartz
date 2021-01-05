@@ -10,6 +10,8 @@ import {
   Card as QuartzCard,
   User,
   Dot,
+  Badge,
+  ProjectBadge,
 } from '@logicalclocks/quartz';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, CardProps as RebassCardProps, Box } from 'rebass';
@@ -23,6 +25,9 @@ import CardLabels from './CardLabels';
 import { HoverableCardProps } from '../../../../types';
 import styles from '../../styles/hoverable-card';
 import { TrainingDataset } from '../../../../types/training-dataset';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store';
+import { useParams } from 'react-router-dom';
 
 const contentStyles: RebassCardProps = { overflowY: 'unset' };
 
@@ -30,7 +35,10 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
   data,
   handleToggle,
   isSelected,
+  hasMatchText,
 }) => {
+  const { id: projectId } = useParams();
+
   const navigate = useNavigateRelative();
 
   const handleNavigate = useCallback(
@@ -38,6 +46,10 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
       navigate(route.replace(':tdId', String(id)), 'p/:id/*');
     },
     [navigate],
+  );
+
+  const projectsIds = useSelector((state: RootState) => state.projectsList).map(
+    ({ id }) => id,
   );
 
   return (
@@ -48,18 +60,45 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
         contentProps={contentStyles}
       >
         <Flex my="6px" flexDirection="column">
-          <Flex alignItems="center">
-            <Dot
-              ml="12px"
-              mainText={data.onlineEnabled ? 'Online' : 'Offline'}
-              variant={data.onlineEnabled ? 'green' : 'black'}
-            />
-            <Subtitle ml="30px">{data.name}</Subtitle>
+          <Flex alignItems="center" justifyContent="space-between">
+            <Flex>
+              <Dot
+                ml="12px"
+                mainText={data.onlineEnabled ? 'Online' : 'Offline'}
+                variant={data.onlineEnabled ? 'green' : 'black'}
+              />
+              <Subtitle
+                color={
+                  !projectsIds.includes(data.parentProjectId) && hasMatchText
+                    ? 'gray'
+                    : 'initial'
+                }
+                ml="30px"
+              >
+                {data.name}
+              </Subtitle>
 
-            <Value mt="auto" ml="5px" mr="15px" sx={{ color: 'labels.purple' }}>
-              #{data.id}
-            </Value>
-            <CardLabels labels={data.labels} />
+              <Value
+                mt="auto"
+                ml="5px"
+                mr="15px"
+                sx={{ color: 'labels.purple' }}
+              >
+                #{data.id}
+              </Value>
+
+              {!projectId && hasMatchText && (
+                <ProjectBadge
+                  mr="5px"
+                  value={data.parentProjectName}
+                  isLock={!projectsIds.includes(data.parentProjectId)}
+                />
+              )}
+
+              <CardLabels labels={data.labels} />
+            </Flex>
+
+            {hasMatchText && <Badge value={data.matchText} />}
           </Flex>
           {data.description ? (
             <Labeling mt="15px" gray>

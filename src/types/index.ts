@@ -26,10 +26,13 @@ export interface DataEntity {
   name: string;
   version: number;
   tags: Tag[];
+  highlights: any;
+  matchText: string;
 }
 
 export interface HoverableCardProps<T> {
   isSelected: boolean;
   data: T;
   handleToggle: () => void;
+  hasMatchText?: boolean;
 }

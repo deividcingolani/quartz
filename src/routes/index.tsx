@@ -6,15 +6,20 @@ import routeNames from './routeNames';
 import AppLayout from '../layouts/app/AppLayout';
 import ProjectManagementLayout from '../layouts/project-management/ProjectManagementLayout';
 import AuthLayout from '../layouts/auth/AuthLayout';
+import SettingsLayout from '../layouts/settings/SettingsLayout';
+import SearchLayout from '../layouts/search/SearchLayout';
 // Components
 import Error404 from '../pages/error/404Error';
 import Redirect from '../components/redirect/Redirect';
 // Types
 import { Dispatch, RootState } from '../store';
-import useTokenApiInterceptor from '../hooks/useTokenApiInterceptor';
-import SettingsLayout from '../layouts/settings/SettingsLayout';
+// Hooks
 import useErrorCleaner from '../hooks/useErrorCleaner';
+import useTokenApiInterceptor from '../hooks/useTokenApiInterceptor';
+
 // Pages
+const DeepSearch = React.lazy(() => import('../pages/search/DeepSearch'));
+
 const Project = React.lazy(() => import('../pages/project/Project'));
 const ProjectCreate = React.lazy(
   () => import('../pages/project/create/ProjectCreate'),
@@ -96,6 +101,19 @@ const Routes: FC = () => {
               />
             </RouterRoutes>
           </SettingsLayout>
+        </Route>
+
+        <Route>
+          {/* Search Routes */}
+          <SearchLayout>
+            <RouterRoutes>
+              <Route path={routeNames.search.view} element={<DeepSearch />} />
+              <Route
+                path="search"
+                element={<Redirect to="/search/features" />}
+              />
+            </RouterRoutes>
+          </SearchLayout>
         </Route>
 
         <Route path="*" element={<Redirect to="/" />} />

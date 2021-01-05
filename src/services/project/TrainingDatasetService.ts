@@ -67,6 +67,21 @@ class TrainingDatasetService extends BaseApiService {
       url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/query`,
       type: RequestType.get,
     });
+
+    return data;
+  };
+
+  getByName = async (
+    projectId: number,
+    featureStoreId: number,
+    name: string,
+    version: number,
+  ): Promise<TrainingDataset[]> => {
+    const { data } = await this.request<TrainingDataset[]>({
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${name}?version=${version}`,
+      type: RequestType.get,
+    });
+
     return data;
   };
 

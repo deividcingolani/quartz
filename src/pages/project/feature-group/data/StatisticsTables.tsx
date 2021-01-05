@@ -5,9 +5,11 @@ import StatsTable, {
   StatsTableItem,
 } from '../../../../components/stats-table/StatsTable';
 import { FeatureGroupStatistics } from '../../../../types/feature-group';
+import { Flex } from 'rebass';
 
 export interface StatisticsTablesProps {
   data: FeatureGroupStatistics;
+  isDrawer?: boolean;
 }
 
 type ColumnDef = [keyof FeatureGroupStatistics, string];
@@ -31,7 +33,7 @@ const pickData = (
   return result;
 };
 
-const StatisticsTables: FC<StatisticsTablesProps> = ({ data }) => {
+const StatisticsTables: FC<StatisticsTablesProps> = ({ data, isDrawer }) => {
   const summaryData: StatsTableItem[] | null = useMemo(() => {
     return pickData(data || {}, [
       ['minimum', 'min'],
@@ -51,6 +53,15 @@ const StatisticsTables: FC<StatisticsTablesProps> = ({ data }) => {
       ['entropy', 'entropy'],
     ]);
   }, [data]);
+
+  if (isDrawer) {
+    return (
+      <Flex width="100%" flexDirection="column">
+        {summaryData && <StatsTable data={summaryData} />}
+        {detailsData && <StatsTable data={detailsData} />}
+      </Flex>
+    );
+  }
 
   return (
     <>

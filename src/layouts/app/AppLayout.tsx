@@ -9,10 +9,11 @@ import AppNavigation from './navigation/AppNavigation';
 import Suspense from '../../components/suspense/Suspense';
 import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
 import GlobalErrors from '../../components/error/GlobalErrors';
-
 // Styles
 import styles from './app-layout-styles';
+// Hooks
 import useLastProject from '../../hooks/useLastProject';
+import useHistory from '../../hooks/useHistory';
 
 export interface AppLayoutProps {
   children: React.ReactElement;
@@ -28,6 +29,7 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
   const dispatch = useDispatch<Dispatch>();
 
   useLastProject();
+  useHistory();
 
   useEffect(() => {
     dispatch.projectsList.getProjects();

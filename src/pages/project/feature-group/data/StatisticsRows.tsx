@@ -11,6 +11,7 @@ import randomArrayString from '../../../../utils/randomArrayString';
 
 export interface StatisticsRowsProps {
   featureName: string;
+  isDrawer?: boolean;
 }
 
 const styles = {
@@ -38,7 +39,7 @@ const styles = {
   },
 };
 
-const StatisticsRows: FC<StatisticsRowsProps> = ({ featureName }) => {
+const StatisticsRows: FC<StatisticsRowsProps> = ({ featureName, isDrawer }) => {
   const data = useSelector(
     (state: RootState) => state.featureGroupRows[featureName],
   );
@@ -54,10 +55,15 @@ const StatisticsRows: FC<StatisticsRowsProps> = ({ featureName }) => {
   }
 
   return (
-    <Flex flexDirection="column" mt="auto" ml="auto">
+    <Flex
+      width={isDrawer ? '100%' : 'initial'}
+      flexDirection="column"
+      mt="auto"
+      ml="auto"
+    >
       <Box
-        ml="11px"
-        width="249px"
+        ml={isDrawer ? 0 : '11px'}
+        width={isDrawer ? '100%' : '249px'}
         height="171px"
         overflow="auto"
         sx={styles.container}

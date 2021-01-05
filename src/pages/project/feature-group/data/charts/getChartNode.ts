@@ -11,7 +11,7 @@ import HorizontalBarChart from './HorizontalBarChart';
 export const chartsMap = new Map<FeatureType, FC<ChartProps>>([
   [FeatureType.int, VerticalBarChart],
   [FeatureType.bigInt, VerticalBarChart],
-  [FeatureType.float, VerticalBarChart],
+  [FeatureType.stringUnknown, HorizontalBarChart],
   [FeatureType.boolean, DonutChart],
   [FeatureType.string, HorizontalBarChart],
 ]);

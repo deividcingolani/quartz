@@ -28,6 +28,8 @@ export interface FeatureGroupDrawerProps<T extends DataEntity> {
   navigateTo: (to: number) => string;
   type?: ItemDrawerTypes;
   isOpen: boolean;
+  isSearch?: boolean;
+  projectId?: number;
 }
 
 const ItemDrawer = <T extends DataEntity>({
@@ -36,15 +38,21 @@ const ItemDrawer = <T extends DataEntity>({
   data,
   isOpen,
   navigateTo,
+  isSearch,
+  projectId,
   type = ItemDrawerTypes.fg,
 }: FeatureGroupDrawerProps<T>) => {
   const navigate = useNavigateRelative();
 
   const handleNavigate = useCallback(
     (route: string) => (): void => {
-      navigate(route, routeNames.project.view);
+      if (isSearch && projectId) {
+        navigate(`/p/${projectId}${route}`);
+      } else {
+        navigate(route, routeNames.project.view);
+      }
     },
-    [navigate],
+    [navigate, isSearch, projectId],
   );
 
   const [jobComponents, jobProps] = useJobRowData([]);
@@ -87,7 +95,25 @@ const ItemDrawer = <T extends DataEntity>({
   }, [item, data, latestVersion]);
 
   if (!item) {
-    return <Loader />;
+    return (
+      <Drawer
+        mt="10px"
+        bottom="20px"
+        closeOnBackdropClick={false}
+        isOpen={isOpen}
+        bottomButton={[
+          `Open ${
+            type === ItemDrawerTypes.fg
+              ? "Feature Group's"
+              : "Training Dataset's"
+          } Page ->`,
+          handleNavigate(navigateTo(itemId)),
+        ]}
+        onClose={handleToggle}
+      >
+        <Loader />
+      </Drawer>
+    );
   }
 
   return (

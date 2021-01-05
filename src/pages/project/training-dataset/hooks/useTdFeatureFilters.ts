@@ -58,12 +58,12 @@ const useTdFeatureFilter = (
   );
 
   const fgFilterOptions = useMemo(() => {
-    if (data[0]?.featuregroup) {
+    if (data[0]?.basefeaturegroup) {
       return Array.from(
         new Set(
           data.map(
-            ({ featuregroup }) =>
-              `${featuregroup.name} v${featuregroup.version}`,
+            ({ basefeaturegroup }) =>
+              `${basefeaturegroup.name} v${basefeaturegroup.version}`,
           ),
         ),
       );
@@ -80,9 +80,11 @@ const useTdFeatureFilter = (
 
     result = filterByAttribute<Feature>(result, typeFilters, 'type');
 
-    result = result.filter(({ featuregroup }) => {
+    result = result.filter(({ basefeaturegroup }) => {
       return fgFilters.length
-        ? fgFilters.includes(`${featuregroup.name} v${featuregroup.version}`)
+        ? fgFilters.includes(
+            `${basefeaturegroup.name} v${basefeaturegroup.version}`,
+          )
         : data;
     });
 

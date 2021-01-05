@@ -49,6 +49,20 @@ class FeatureGroupsService extends BaseApiService {
     return data;
   };
 
+  getByName = async (
+    projectId: number,
+    featureStoreId: number,
+    name: string,
+    version: number,
+  ): Promise<FeatureGroup[]> => {
+    const { data } = await this.request<FeatureGroup[]>({
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${name}?version=${version}`,
+      type: RequestType.get,
+    });
+
+    return data;
+  };
+
   getStatistics = (
     projectId: number,
     featureStoreId: number,

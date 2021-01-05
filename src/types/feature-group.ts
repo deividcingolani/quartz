@@ -2,24 +2,35 @@ import { DataEntity } from './index';
 import { TrainingDataset } from './training-dataset';
 
 export enum FeatureType {
-  float = 'float',
-  int = 'int',
-  bigInt = 'bigint',
-  string = 'string',
-  boolean = 'boolean',
+  stringUnknown = 'Unknown',
+  int = 'Fractional',
+  bigInt = 'Integral',
+  string = 'String',
+  boolean = 'Boolean',
 }
 
 export interface Feature {
   defaultValue: string | number;
   description?: string;
   name: string;
+  id: number;
+  features: Feature[];
   partition: boolean;
   primary: boolean;
   type: FeatureType;
   onlineType?: FeatureType;
-  featuregroup: FeatureGroup;
   label: boolean;
   index: number;
+  featuregroup: string;
+  basefeaturegroup: FeatureGroup;
+  version: number;
+  created?: string;
+  parentProjectName: string;
+  parentProjectId: number;
+  featurestoreId: number;
+  matchText: string;
+  highlights: any;
+  featureId: number;
 }
 
 export interface Job {
@@ -89,6 +100,12 @@ export interface FeatureGroup extends DataEntity {
   timeTravelFormat: string;
   provenance: FeatureGroupProvenance[];
   features: Feature[];
+  parentProjectId: number;
+  parentProjectName: string;
+  featurestoreId: number;
+  version: number;
+  name: string;
+  matchText: string;
 }
 
 export interface FeatureGroupLabel {
@@ -110,7 +127,7 @@ export interface CorrelationItem {
 
 export interface FeatureGroupStatistics {
   column: string;
-  dataType: 'Integral' | 'none';
+  dataType: FeatureType;
   isDataTypeInferred: boolean;
   completeness: number;
   distinctness: number;

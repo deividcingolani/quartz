@@ -43,9 +43,18 @@ export interface TrainingDataset extends DataEntity {
   trainingDatasetType: TrainingDatasetType;
   version: number;
   provenance: TrainingDatasetProvenance[];
+  parentProjectId: number;
+  parentProjectName: string;
 }
 
 export interface TrainingDatasetQuery {
   query: string;
   queryOnline: string;
+  trainingDatasetType: string;
+  parentProjectId: number;
+  parentProjectName: string;
+  featurestoreId: number;
+  version: number;
+  name: string;
+  matchText: string;
 }
