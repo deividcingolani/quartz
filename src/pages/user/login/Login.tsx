@@ -57,6 +57,8 @@ const Login: FC = () => {
       });
       if (error) {
         setError(error);
+      } else {
+        dispatch.profile.getUser();
       }
     },
     [dispatch],
