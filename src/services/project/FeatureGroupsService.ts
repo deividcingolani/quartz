@@ -3,6 +3,7 @@ import BaseApiService, { RequestType } from '../BaseApiService';
 // Types
 import {
   FeatureGroup,
+  FeatureGroupCommitDetail,
   FeatureGroupRowItem,
   Provenance,
 } from '../../types/feature-group';
@@ -85,6 +86,17 @@ class FeatureGroupsService extends BaseApiService {
   ) =>
     this.request<GetStatisticsData>({
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/statistics`,
+      type: RequestType.get,
+    });
+
+  getCommitsDetail = (
+    projectId: number,
+    featureStoreId: number,
+    featureGroupId: number,
+    limit: number,
+  ) =>
+    this.request<GetCommitsData>({
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/commits?offset=0&limit=${limit}&sort_by=committed_on:desc`,
       type: RequestType.get,
     });
 
@@ -202,4 +214,11 @@ export interface GetRowsData {
     type: string;
     row: FeatureGroupRowItem[];
   }[];
+}
+
+export interface GetCommitsData {
+  count: number;
+  href: string;
+  items: FeatureGroupCommitDetail[];
+  type: string;
 }

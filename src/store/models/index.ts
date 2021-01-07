@@ -18,6 +18,7 @@ import featureStoreSources from './feature/sources/featureStoreSources.model';
 import trainingDatasetView from './training-dataset/trainingDatasetView.model';
 import featureGroupDataPreview from './feature/data/featureGroupsDataPreview.model';
 import featureGroupStatistics from './feature/statistics/featureGroupStatistics.model';
+import featureGroupCommitsDetail from './feature/statistics/featureGroupCommitsDetail.model';
 import featureGroupStatisticsCommits from './feature/statistics/featureGroupStatisticsCommits.model';
 import trainingDatasetQuery from './training-dataset/trainingDatasetQuery.model';
 import schematisedTags from './schematised-tags/schematised-tags.model';
@@ -25,6 +26,7 @@ import schematisedTagView from './schematised-tags/schematised-tag-view.model';
 import store from './localManagement/store.model';
 import trainingDatasetStatistics from './training-dataset/statistics/trainingDatasetStatistics.model';
 import trainingDatasetStatisticsCommits from './training-dataset/statistics/trainingDatasetStatisticsCommits.model';
+
 
 export interface RootModel extends Models<RootModel> {
   auth: typeof auth;
@@ -48,6 +50,7 @@ export interface RootModel extends Models<RootModel> {
   trainingDatasetQuery: typeof trainingDatasetQuery;
   featureStoreSources: typeof featureStoreSources;
   featureGroupDataPreview: typeof featureGroupDataPreview;
+  featureGroupCommitsDetail: typeof featureGroupCommitsDetail;
   featureGroupStatisticsCommits: typeof featureGroupStatisticsCommits;
   trainingDatasetStatistics: typeof trainingDatasetStatistics;
   trainingDatasetStatisticsCommits: typeof trainingDatasetStatisticsCommits;
@@ -71,6 +74,7 @@ const models: RootModel = {
   featureStoreSources,
   featureGroupStatistics,
   featureGroupDataPreview,
+  featureGroupCommitsDetail,
   featureGroupStatisticsCommits,
   trainingDatasets: trainingDatasetModel,
   trainingDatasetView,

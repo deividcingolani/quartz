@@ -1,4 +1,10 @@
-import React, { ComponentType, useCallback, useMemo, useState } from 'react';
+import React, {
+  ComponentType,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Drawer,
   Microlabeling,
@@ -6,8 +12,11 @@ import {
   Select,
   TextValueBadge,
   Value,
+  Labeling,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
+import { format } from 'date-fns';
+import { useDispatch, useSelector } from 'react-redux';
 import useNavigateRelative from '../../hooks/useNavigateRelative';
 import routeNames from '../../routes/routeNames';
 import useJobRowData from '../../hooks/useJobRowData';
@@ -15,6 +24,10 @@ import useSchematisedTagsRowData from '../../hooks/useSchematisedTagsRowData';
 import Loader from '../loader/Loader';
 import { DataEntity } from '../../types';
 import { useLatestVersion } from '../../hooks/useLatestVersion';
+import { selectFeatureStoreData } from '../../store/models/feature/selectors';
+import { Dispatch, RootState } from '../../store';
+import CommitGraph from './commit-graph';
+import { FeatureGroup } from '../../types/feature-group';
 
 export enum ItemDrawerTypes {
   fg = 'fg',
@@ -62,12 +75,44 @@ const ItemDrawer = <T extends DataEntity>({
     schematisedTagsProps,
   ] = useSchematisedTagsRowData([]);
 
+  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+
+  const commits = useSelector(
+    (state: RootState) => state.featureGroupCommitsDetail,
+  );
+
+  const isCommitsLoading = useSelector(
+    (state: RootState) => state.loading.effects.featureGroupCommitsDetail.fetch,
+  );
+
+  const dispatch = useDispatch<Dispatch>();
+
   const [itemId, setId] = useState(id);
 
   const item = useMemo(() => data.find(({ id }) => id === itemId), [
     itemId,
     data,
   ]);
+
+  useEffect(() => {
+    const it = (item as unknown) as FeatureGroup;
+    if (
+      it?.timeTravelFormat === 'HUDI' &&
+      featureStoreData?.projectId &&
+      featureStoreData?.featurestoreId &&
+      it?.id
+    ) {
+      dispatch.featureGroupCommitsDetail.fetch({
+        projectId: featureStoreData.projectId,
+        featureStoreId: featureStoreData.featurestoreId,
+        featureGroupId: it.id,
+        limit: 10,
+      });
+    }
+    return () => {
+      dispatch.featureGroupCommitsDetail.clear();
+    };
+  }, [dispatch.featureGroupCommitsDetail, featureStoreData, item]);
 
   const handleVersionChange = useCallback(
     (values) => {
@@ -146,6 +191,30 @@ const ItemDrawer = <T extends DataEntity>({
       ]}
       onClose={handleToggle}
     >
+      <Drawer.Section title="Activity" width="100%">
+        {type === ItemDrawerTypes.fg && isCommitsLoading && (
+          <Box width="100%" height="55px" sx={{ position: 'relative' }}>
+            <Loader />
+          </Box>
+        )}
+        {type === ItemDrawerTypes.fg &&
+          !isCommitsLoading &&
+          commits?.length > 0 && (
+            <CommitGraph
+              values={commits.map((commit) => ({
+                date: format(commit.committime, 'M/d/yyyy-HH:mm'),
+                added: commit.rowsInserted,
+                removed: commit.rowsDeleted,
+                modified: commit.rowsUpdated,
+              }))}
+              groupKey="date"
+              keys={['added', 'removed', 'modified']}
+            />
+          )}
+        {type === ItemDrawerTypes.fg &&
+          !isCommitsLoading &&
+          commits?.length === 0 && <Labeling gray>No recent activity</Labeling>}
+      </Drawer.Section>
       <Drawer.Section title="Versions">
         <Select
           width="143px"

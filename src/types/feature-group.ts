@@ -152,3 +152,15 @@ export interface FeatureGroupRowItem {
   columnName: string;
   columnValue: string;
 }
+
+export interface FeatureGroupCommitDetail {
+  href: string;
+  items: unknown[];
+  count: number;
+  commitID: number;
+  commitDateString: string;
+  committime: number;
+  rowsInserted: number;
+  rowsUpdated: number;
+  rowsDeleted: number;
+}
