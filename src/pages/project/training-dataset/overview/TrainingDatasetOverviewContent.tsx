@@ -2,6 +2,7 @@ import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { Box } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { Button, Select } from '@logicalclocks/quartz';
 import { TrainingDataset } from '../../../../types/training-dataset';
 
 import { Dispatch, RootState } from '../../../../store';
@@ -19,7 +20,6 @@ import PipelineHistory from '../../feature-group/overview/PipelineHistory';
 import Provenance from './Provenance';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { useLatestVersion } from '../../../../hooks/useLatestVersion';
-import { Select } from '@logicalclocks/quartz';
 import SplitGraph from './SplitGraph';
 
 export interface TrainingDatasetContentProps {
@@ -27,6 +27,16 @@ export interface TrainingDatasetContentProps {
   onClickRefresh: () => void;
   onClickEdit: () => void;
 }
+
+const action = (
+  <Button
+    p={0}
+    intent="inline"
+    onClick={() => window.open('https://docs.hopsworks.ai/', '_blank')}
+  >
+    full documentation
+  </Button>
+);
 
 const {
   featureList,
@@ -73,8 +83,8 @@ td = fs.get_training_dataset('${data.name}', version=${data.version})`,
         title: 'Scala',
         code: `import com.logicalclocks.hsfs._ 
 val connection = HopsworksConnection.builder().build();
-val fs = connection.getFeatureStore(${featureStoreData?.featurestoreName});
-val td = fs.getTrainingDataset(${data.name}, ${data.version})`,
+val fs = connection.getFeatureStore("${featureStoreData?.featurestoreName}");
+val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
       },
     ];
   }, [data, featureStoreData]);
@@ -144,7 +154,7 @@ val td = fs.getTrainingDataset(${data.name}, ${data.version})`,
         onClickEdit={onClickEdit}
         onClickRefresh={onClickRefresh}
         idColor="labels.purple"
-        hasVersionDropdown={true}
+        hasVersionDropdown
         versionDropdown={
           <Select
             mb="-5px"
@@ -184,7 +194,13 @@ val td = fs.getTrainingDataset(${data.name}, ${data.version})`,
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={api}>
-          <CodeCard mb="20px" mt="20px" title="API" content={apiCode} />
+          <CodeCard
+            mb="20px"
+            mt="20px"
+            title="API"
+            actions={action}
+            content={apiCode}
+          />
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={splitGraph}>

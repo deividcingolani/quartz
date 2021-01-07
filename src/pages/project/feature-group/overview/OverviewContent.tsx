@@ -3,6 +3,7 @@ import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Button, Select } from '@logicalclocks/quartz';
 
 // Components
+import { useSelector } from 'react-redux';
 import Anchor from '../../../../components/anchor/Anchor';
 import routeNames from '../../../../routes/routeNames';
 import CodeCard from './CodeCard';
@@ -17,8 +18,8 @@ import SchematisedTags from './SchematisedTags';
 import Provenance from './Provenance';
 import FeatureList from './FeatureList';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
+import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { useLatestVersion } from '../../../../hooks/useLatestVersion';
 
 export interface ContentProps {
@@ -28,7 +29,11 @@ export interface ContentProps {
 }
 
 const action = (
-  <Button p={0} intent="inline">
+  <Button
+    p={0}
+    intent="inline"
+    onClick={() => window.open('https://docs.hopsworks.ai/', '_blank')}
+  >
     full documentation
   </Button>
 );
@@ -58,20 +63,26 @@ INNER JOIN ‘demo_featurestore’`,
     ];
   }, [data]);
 
+  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+
   const apiCode = useMemo(() => {
     return [
       {
         title: 'Python',
-        code: `from hops import featurestore
-featurestore.get_featuregroup('${data.name}')`,
+        code: `import hsfs
+connection = hsfs.connection()
+fs = connection.get_feature_store(name='${featureStoreData?.featurestoreName}')
+fg = fs.get_feature_group('${data.name}', version=${data.version})`,
       },
       {
         title: 'Scala',
-        code: `import io.hops.util.Hops
-Hops.getFeaturegroup("${data.name}").read()`,
+        code: `import com.logicalclocks.hsfs._ 
+val connection = HopsworksConnection.builder().build();
+val fs = connection.getFeatureStore("${featureStoreData?.featurestoreName}");
+val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
       },
     ];
-  }, [data]);
+  }, [data, featureStoreData]);
 
   const navigate = useNavigateRelative();
 
@@ -106,7 +117,7 @@ Hops.getFeaturegroup("${data.name}").read()`,
       <Panel
         title={String(data?.name)}
         id={data.id}
-        hasVersionDropdown={true}
+        hasVersionDropdown
         versionDropdown={
           <Select
             mb="-5px"
