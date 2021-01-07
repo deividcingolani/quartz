@@ -2,16 +2,15 @@ import React, { FC, memo, useCallback } from 'react';
 import {
   Value,
   Button,
-  Subtitle,
   Labeling,
   IconButton,
   FreshnessBar,
   Microlabeling,
   Card as QuartzCard,
   User,
-  Dot,
   Badge,
   ProjectBadge,
+  HoverableText,
 } from '@logicalclocks/quartz';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, CardProps as RebassCardProps, Box } from 'rebass';
@@ -19,15 +18,15 @@ import { Flex, CardProps as RebassCardProps, Box } from 'rebass';
 // eslint-disable-next-line import/no-unresolved
 import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
 
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import ProfileService from '../../../../services/ProfileService';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import CardLabels from './CardLabels';
 import { HoverableCardProps } from '../../../../types';
 import styles from '../../styles/hoverable-card';
 import { TrainingDataset } from '../../../../types/training-dataset';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
-import { useParams } from 'react-router-dom';
 
 const contentStyles: RebassCardProps = { overflowY: 'unset' };
 
@@ -62,21 +61,18 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
         <Flex my="6px" flexDirection="column">
           <Flex alignItems="center" justifyContent="space-between">
             <Flex>
-              <Dot
-                ml="12px"
-                mainText={data.onlineEnabled ? 'Online' : 'Offline'}
-                variant={data.onlineEnabled ? 'green' : 'black'}
-              />
-              <Subtitle
+              <HoverableText
+                onClick={handleNavigate(data.id, '/td/:tdId')}
+                fontFamily="Inter"
+                fontSize="20px"
                 color={
                   !projectsIds.includes(data.parentProjectId) && hasMatchText
                     ? 'gray'
                     : 'initial'
                 }
-                ml="30px"
               >
                 {data.name}
-              </Subtitle>
+              </HoverableText>
 
               <Value
                 mt="auto"
@@ -116,7 +112,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
           )}
 
           <Flex mt="15px" alignItems="center">
-            <User name={''} photo={ProfileService.avatar('')} />
+            <User name="" photo={ProfileService.avatar('')} />
             <Flex flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>
                 Latest version
