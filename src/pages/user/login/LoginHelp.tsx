@@ -13,12 +13,7 @@ const LoginHelp: FC = () => (
   >
     <Value fontFamily="Inter">Need help? Check out our</Value>
     <Button
-      onClick={() =>
-        window.open(
-          'https://hopsworks.readthedocs.io/en/stable/admin_guide/user-administration.html',
-          '_blank',
-        )
-      }
+      onClick={() => window.open('https://docs.hopsworks.ai', '_blank')}
       px="4px"
       intent="inline"
     >

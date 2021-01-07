@@ -33,9 +33,7 @@ const HelpDropdown: FC = () => {
             Community
           </ListItem>
           <ListItem
-            onClick={() =>
-              window.open('https://hopsworks.readthedocs.io/', '_blank')
-            }
+            onClick={() => window.open('https://docs.hopsworks.ai/', '_blank')}
           >
             Documentation
           </ListItem>
