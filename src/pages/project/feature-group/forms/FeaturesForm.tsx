@@ -101,6 +101,7 @@ const FeaturesForm: FC<FeatureFormProps> = ({ isEdit, isDisabled }) => {
       </Button>
       {!!features.length && (
         <EditableTable
+          sx={{ table: { whiteSpace: 'nowrap' } }}
           minWidth="100%"
           columns={featuresColumns(isEdit)}
           values={features}

@@ -32,7 +32,7 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
     <>
       <Card
         actions={
-          <Button intent="inline" onClick={onClickEdit}>
+          <Button mr="-10px" intent="inline" onClick={onClickEdit}>
             edit
           </Button>
         }

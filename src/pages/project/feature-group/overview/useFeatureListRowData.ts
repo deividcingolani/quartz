@@ -39,7 +39,7 @@ const useFeatureListRowData = (features: Feature[]) => {
         children: name,
       },
       {
-        children: description || 'No description ',
+        children: description || '-',
         gray: true,
       },
       partition

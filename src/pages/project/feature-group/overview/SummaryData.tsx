@@ -71,7 +71,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           value={32}
         />
       </Flex>
-      <Text my="20px">{data?.description || 'No Description'}</Text>
+      <Text my="20px">{data?.description || '-'}</Text>
 
       <KeywordsEditor onSave={keywordsSaveHandler} value={data.labels} />
     </>

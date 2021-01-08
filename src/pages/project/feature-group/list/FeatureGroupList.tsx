@@ -28,7 +28,7 @@ const FeatureGroupList: FC = () => {
   const { id: projectId } = useParams();
 
   const [filter, setFilter] = useState<string[]>([]);
-  const [sort, setSort] = useState<string[]>([]);
+  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
   const [search, setSearch] = useState<string>('');
   const navigate = useNavigateRelative();
 
@@ -126,7 +126,7 @@ const FeatureGroupList: FC = () => {
         <Tooltip
           ml="8px"
           disabled={!isFilterDisabled}
-          mainText="No keywords defined. Add them from edit page of feature groups"
+          mainText="No keywords defined"
         >
           <Select
             disabled={isFilterDisabled}
@@ -151,6 +151,7 @@ const FeatureGroupList: FC = () => {
             width="150px"
             variant="white"
             value={sort}
+            listWidth="100%"
             ml="10px"
             options={Object.keys(sortOptions)}
             placeholder="sort by"

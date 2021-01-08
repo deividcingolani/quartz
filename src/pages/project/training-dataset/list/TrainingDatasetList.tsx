@@ -38,7 +38,7 @@ const TrainingDatasetList: FC = () => {
   const dispatch = useDispatch<Dispatch>();
 
   const [filter, setFilter] = useState<string[]>([]);
-  const [sort, setSort] = useState<string[]>([]);
+  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[2]]);
   const [search, setSearch] = useState<string>('');
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
@@ -134,6 +134,7 @@ const TrainingDatasetList: FC = () => {
             width="150px"
             variant="white"
             value={sort}
+            listWidth="100%"
             ml="10px"
             options={Object.keys(sortOptions)}
             placeholder="sort by"

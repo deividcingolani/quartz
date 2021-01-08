@@ -171,7 +171,7 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
           />
         }
       />
-      <Box mt="40px" width="100%">
+      <Box mt="55px" width="100%">
         <TrainingDatasetOverviewSummary data={data} />
         <Anchor groupName="tdOverview" anchor={featureList}>
           <TrainingDatasetFeatureList data={data.features} />

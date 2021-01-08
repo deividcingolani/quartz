@@ -43,7 +43,8 @@ const FeatureGroupDataPreview: FC = () => {
     featureName,
   );
 
-  const dispatch = useDispatch<Dispatch>(); const navigate = useNavigateRelative();
+  const dispatch = useDispatch<Dispatch>();
+  const navigate = useNavigateRelative();
 
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
@@ -205,7 +206,7 @@ const FeatureGroupDataPreview: FC = () => {
           />
         )}
       </Box>
-      {isFiltered && (
+      {isFiltered && !filteredFeatures.length && (
         <Box mb="20px">
           <FilterResult
             subject="features"

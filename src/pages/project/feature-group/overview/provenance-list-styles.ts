@@ -20,6 +20,10 @@ const provenanceListStyles = {
       fontSize: '12px',
     },
   },
+
+  'tr:last-of-type': {
+    border: 'none',
+  },
 };
 
 export default provenanceListStyles;

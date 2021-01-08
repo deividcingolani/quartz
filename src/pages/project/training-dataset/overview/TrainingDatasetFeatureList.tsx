@@ -6,6 +6,7 @@ import {
   Input,
   ToggleButton,
   Select,
+  Button,
 } from '@logicalclocks/quartz';
 import useTdFeatureListRowData from './useTdFeatureListRowData';
 import featureListStyles from '../../feature-group/overview/feature-lists-styles';
@@ -38,7 +39,17 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
   const [groupComponents, groupProps] = useTdFeatureListRowData(dataFiltered);
 
   return (
-    <Card mt="20px" title="Feature list">
+    <Card
+      mt="20px"
+      title="Feature list"
+      actions={
+        <Button p={0} intent="inline">
+          inspect data
+        </Button>
+      }
+      contentProps={{ pb: '1px' }}
+      maxHeight="400px"
+    >
       <Flex>
         <Input
           value={search}
@@ -77,7 +88,7 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
         </ToggleButton>
       </Flex>
       {/* Data Rows */}
-      <Box mt="30px" mx="-20px" sx={featureListStyles}>
+      <Box mt="30px" mx="-20px" pb="18px" sx={featureListStyles}>
         <Row
           middleColumn={2}
           groupComponents={groupComponents as ComponentType<any>[][]}

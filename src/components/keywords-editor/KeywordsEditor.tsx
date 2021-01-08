@@ -1,4 +1,4 @@
-import { Flex } from 'rebass';
+import { Box, Flex } from 'rebass';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
   Select,
@@ -155,15 +155,16 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
           secondaryButton={['Cancel', handleToggle]}
           onClose={handleToggle}
         >
-          <Input
-            mb="20px"
-            ref={register}
-            labelProps={{ width: '100%' }}
-            label="Value"
-            name="keyword"
-            placeholder="New keyword value"
-            {...getInputValidation('keyword', errors)}
-          />
+          <Box mb="20px">
+            <Input
+              ref={register}
+              labelProps={{ width: '100%' }}
+              label="Value"
+              name="keyword"
+              placeholder="New keyword value"
+              {...getInputValidation('keyword', errors)}
+            />
+          </Box>
         </TinyPopup>
       </>
     );

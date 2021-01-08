@@ -165,7 +165,6 @@ const ItemDrawer = <T extends DataEntity>({
     <Drawer
       mt="10px"
       bottom="20px"
-      closeOnBackdropClick={false}
       isOpen={isOpen}
       headerSummary={
         <Box height="100%">

@@ -22,7 +22,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
       // @ts-ignore
       render: ({ value, onChange }) => (
         <Select
-          width="110px"
+          width="100%"
           value={value}
           onChange={onChange}
           options={[
@@ -43,7 +43,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
       // @ts-ignore
       render: ({ value, onChange }) => (
         <Select
-          width="110px"
+          width="100%"
           value={value}
           onChange={onChange}
           options={['INT', 'FLOAT', 'TEXT', 'DOUBLE', 'VARCHAR(1000)']}

@@ -76,7 +76,7 @@ const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
           value={data?.splits.length || 0}
         />
       </Flex>
-      <Text my="20px">{data?.description || 'No Description'}</Text>
+      <Text my="20px">{data?.description || '-'}</Text>
     </>
   );
 };

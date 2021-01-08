@@ -10,6 +10,10 @@ const featureListStyles = {
     'td:nth-of-type(6)': {
       pr: '20px',
     },
+
+    'tr:last-of-type': {
+      border: 'none',
+    },
   },
 };
 

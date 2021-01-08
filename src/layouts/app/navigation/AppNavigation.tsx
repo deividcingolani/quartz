@@ -7,6 +7,8 @@ import Footer from './Footer';
 // Hooks
 import useAppNavigation from './useAppNavigation';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 const map: { [key: string]: string } = {
   'p/:id/fg/:id/statistics/*': '/fg',
@@ -21,6 +23,10 @@ const AppNavigation: FC = () => {
 
   const navigateRelative = useNavigateRelative();
 
+  const globalError = useSelector(
+    (state: RootState) => state.error.globalError,
+  );
+
   const handleBack = useCallback(() => {
     const [[, route] = []] = Object.entries(map).filter(([pattern]) =>
       matchPath(pattern, location.pathname),
@@ -32,6 +38,10 @@ const AppNavigation: FC = () => {
       navigate(-1);
     }
   }, [navigate, location.pathname, navigateRelative]);
+
+  if (globalError) {
+    return null;
+  }
 
   return (
     <Navigation

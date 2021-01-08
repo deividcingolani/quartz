@@ -133,11 +133,11 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
             onChange={handleVersionChange}
           />
         }
-        idColor="label.orange"
+        idColor="labels.orange"
         onClickEdit={onClickEdit}
         onClickRefresh={onClickRefresh}
       />
-      <Box mt="40px" width="100%">
+      <Box mt="55px" width="100%">
         <SummaryData data={data} />
         <Anchor groupName="fgOverview" anchor={featureList}>
           <FeatureList data={data.features} />

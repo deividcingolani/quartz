@@ -121,27 +121,24 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgData',
             title: 'Data',
-            onClick: handleNavigateRelative(
-              '/data-preview',
-              '/p/:id/fg/:fgId/*',
-            ),
+            onClick: handleNavigateRelative('/statistics', '/p/:id/fg/:fgId/*'),
             isActive: isActive('/p/:id/fg/:fgId/activity'),
             children: [
-              {
-                id: 'fgDataPreview',
-                title: 'Data Preview',
-                isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
-                onClick: handleNavigateRelative(
-                  '/data-preview',
-                  '/p/:id/fg/:fgId/*',
-                ),
-              },
               {
                 id: 'fgStats',
                 title: 'Feature Statistics',
                 isActive: isActive('/p/:id/fg/:fgId/statistics/*'),
                 onClick: handleNavigateRelative(
                   '/statistics',
+                  '/p/:id/fg/:fgId/*',
+                ),
+              },
+              {
+                id: 'fgDataPreview',
+                title: 'Data Preview',
+                isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
+                onClick: handleNavigateRelative(
+                  '/data-preview',
                   '/p/:id/fg/:fgId/*',
                 ),
               },

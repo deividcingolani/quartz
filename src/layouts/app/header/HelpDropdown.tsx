@@ -20,7 +20,7 @@ const HelpDropdown: FC = () => {
         tooltipProps={{ disabled: true }}
         icon={['far', 'question-circle']}
         intent="ghost-white"
-        tooltip="questions"
+        tooltip="Help"
         onClick={() => handleToggle()}
       />
       {isOpen && (

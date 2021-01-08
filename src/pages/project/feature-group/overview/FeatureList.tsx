@@ -46,6 +46,8 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           inspect data
         </Button>
       }
+      contentProps={{ pb: '1px' }}
+      maxHeight="400px"
     >
       {/* Filters */}
       <Flex>
@@ -82,15 +84,7 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
       </Flex>
 
       {/* Data Rows */}
-      <Box
-        mt="30px"
-        mx="-20px"
-        pb="18px"
-        maxHeight="418px"
-        overflowY="auto"
-        overflowX="hidden"
-        sx={featureListStyles}
-      >
+      <Box mt="30px" mx="-20px" pb="18px" sx={featureListStyles}>
         <Row
           middleColumn={1}
           groupComponents={groupComponents as ComponentType<any>[][]}

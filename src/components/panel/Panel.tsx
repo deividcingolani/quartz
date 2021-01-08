@@ -44,7 +44,7 @@ const Panel: FC<PanelProps> = ({
   hasVersionDropdown = false,
   versionDropdown,
 }) => (
-  <Flex alignItems="center" height="50px" sx={panelStyles} width="100%">
+  <Flex width="100%" height="50px" sx={panelStyles} alignItems="center">
     <Flex alignItems="flex-end">
       <Subtitle ml="30px">{title}</Subtitle>
 

@@ -35,7 +35,7 @@ const useTdFeatureListRowData = (features: Feature[]) => {
         featureGroup: featuregroup,
       },
       {
-        children: description || 'No description ',
+        children: description || '-',
         gray: true,
       },
       label
