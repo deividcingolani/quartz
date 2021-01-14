@@ -42,7 +42,7 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   }, [error]);
 
   useEffect(() => {
-    if (error) {
+    if (error && error.response?.status === 401) {
       logout();
     }
     // eslint-disable-next-line

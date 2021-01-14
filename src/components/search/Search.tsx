@@ -11,7 +11,7 @@ import SearchRightContent from './SearchRightContent';
 
 const backdropStyles = {
   position: 'fixed',
-  zIndex: 'popups',
+  zIndex: 29,
   top: 0,
   left: 0,
   right: 0,
@@ -71,7 +71,7 @@ const Search: FC = () => {
 
   return (
     <>
-      <Box sx={{ zIndex: 31 }} mt="5px" ml="15px">
+      <Box sx={{ zIndex: 30 }} mt="5px" ml="15px">
         <Input
           mt="-5px"
           ref={inputRef}

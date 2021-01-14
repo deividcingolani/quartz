@@ -175,7 +175,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdOverview',
             title: 'Overview',
-            isActive: isActive('/p/:id/td/:tdId') && !location.hash,
+            isActive: isActive('/p/:id/td/:tdId', ['new']) && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/td/:tdId/*'),
             children: [
               createTdAnchorLink('Feature List', featureList, 'tdFeatures'),

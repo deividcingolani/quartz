@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Header, Label, User, Value } from '@logicalclocks/quartz';
 
 // Components
+import BasketMenu from './Basket';
 import ProjectsDropdown from './ProjectsDropdown';
 import HelpDropdown from './HelpDropdown';
 import UserDropdown from './UserDropdown';
@@ -58,7 +59,12 @@ const AppHeader: FC<AppHeaderProps> = ({
           )}
         </>
       }
-      actions={[<HelpDropdown />]}
+      actions={[
+        <>
+          <BasketMenu />
+          <HelpDropdown />
+        </>,
+      ]}
     >
       {showList && !hasBackButton && (
         <>

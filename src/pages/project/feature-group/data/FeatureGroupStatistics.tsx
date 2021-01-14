@@ -19,6 +19,7 @@ import Panel from '../../../../components/panel/Panel';
 import Loader from '../../../../components/loader/Loader';
 // Selectors
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 const FeatureGroupStatistics: FC = () => {
   const { id, fgId, featureName, commitTime } = useParams();
@@ -209,9 +210,11 @@ const FeatureGroupStatistics: FC = () => {
   return (
     <>
       <Panel
+        type={ItemDrawerTypes.fg}
+        data={data}
         title={data.name}
         id={data.id}
-        idColor="label.orange"
+        idColor="labels.orange"
         onClickEdit={() => ({})}
         onClickRefresh={handleRefreshData}
         hasCommitDropdown={true}

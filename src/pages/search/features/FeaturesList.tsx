@@ -57,8 +57,11 @@ const FeaturesList: FC<FeaturesListProps> = ({ data }) => {
       {!!selectedId && !!selectedItem && (
         <FeatureDrawer
           isOpen={isOpen}
-          handleToggle={handleClose}
+          fgId={selectedItem.id}
           feature={selectedItem}
+          handleToggle={handleClose}
+          projectId={selectedItem.parentProjectId}
+          featureStoreId={selectedItem.featurestoreId}
         />
       )}
       <Flex p="5px" flexDirection="column">

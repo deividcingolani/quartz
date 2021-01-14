@@ -1,7 +1,12 @@
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { ReadOnlyTable, Value } from '@logicalclocks/quartz';
+import {
+  ReadOnlyTable,
+  Symbol,
+  SymbolMode,
+  Value,
+} from '@logicalclocks/quartz';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import routeNames from '../../../../../routes/routeNames';
@@ -25,6 +30,8 @@ import filterDataPreviewRows from './utils/filterDataPreviewRows';
 import FilterResult from '../../../../../components/filter-result/FilterResult';
 // Selectors
 import { selectFeatureStoreData } from '../../../../../store/models/feature/selectors';
+import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
+import useBasket from '../../../../../hooks/useBasket';
 
 const FeatureGroupDataPreview: FC = () => {
   const { id, fgId } = useParams();
@@ -140,6 +147,8 @@ const FeatureGroupDataPreview: FC = () => {
     onToggleKey,
   } = useFeatureFilter(sortedFeatures);
 
+  const { isActiveFeatures, handleBasket, isSwitch } = useBasket();
+
   const filteredData = useMemo(
     () => filterDataPreviewRows(filteredFeatures, computedData),
     [filteredFeatures, computedData],
@@ -162,6 +171,8 @@ const FeatureGroupDataPreview: FC = () => {
       }}
     >
       <Panel
+        type={ItemDrawerTypes.fg}
+        data={view}
         title={view?.name}
         id={view?.id}
         idColor="labels.orange"
@@ -190,6 +201,17 @@ const FeatureGroupDataPreview: FC = () => {
           {featuresLength}
         </Value>
         <Value>features</Value>
+        {isSwitch && (
+          <Box ml="5px">
+            <Symbol
+              mode={SymbolMode.bulk}
+              tooltipMainText="Add all features to basket"
+              tooltipSecondaryText={`${filteredFeatures.length} features`}
+              handleClick={handleBasket(filteredFeatures, view)}
+              inBasket={isActiveFeatures(filteredFeatures, view)}
+            />
+          </Box>
+        )}
       </Flex>
       <Box mb="10px" maxWidth="100vw">
         {!!filteredFeatures.length && !!filteredData.length && (

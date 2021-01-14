@@ -109,6 +109,40 @@ class TrainingDatasetService extends BaseApiService {
       url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/statistics`,
       type: RequestType.get,
     });
+
+  attachKeywords = (
+    projectId: number,
+    featureStoreId: number,
+    tdId: number,
+    data: string[],
+  ) =>
+    this.request<any>({
+      type: RequestType.post,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${tdId}/keywords`,
+      data: {
+        keywords: data,
+      },
+    });
+
+  create = (projectId: number, featureStoreId: number, data: any) =>
+    this.request<any>({
+      type: RequestType.post,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets`,
+      data,
+    });
+
+  attachTag = (
+    projectId: number,
+    featureStoreId: number,
+    tdId: number,
+    name: string,
+    data: any,
+  ) =>
+    this.request<any>({
+      type: RequestType.put,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${tdId}/tags/${name}`,
+      data,
+    });
 }
 
 export default new TrainingDatasetService('/project');

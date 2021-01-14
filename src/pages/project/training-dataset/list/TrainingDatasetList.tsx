@@ -25,6 +25,7 @@ import TrainingDatasetListContent from './TrainingDatasetListContent';
 import NoData from '../../../../components/no-data/NoData';
 import routeNames from '../../../../routes/routeNames';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { selectFeatureGroups } from '../../../../store/models/localManagement/basket.selectors';
 
 export const sortOptions: { [key: string]: keyof TrainingDataset } = {
   'creation date': 'created',
@@ -47,6 +48,8 @@ const TrainingDatasetList: FC = () => {
     featureStoreData?.featurestoreId,
   );
 
+  const featureGroups = useSelector(selectFeatureGroups);
+
   const labels = useMemo(
     () =>
       data.reduce(
@@ -66,7 +69,7 @@ const TrainingDatasetList: FC = () => {
   }
 
   function handleCreate(): void {
-    console.log('New Training Dataset');
+    navigate('/new', '/p/:id/td/');
   }
 
   function handleResetFilters(): void {
@@ -148,7 +151,9 @@ const TrainingDatasetList: FC = () => {
         </Value>
         <Value>training datasets</Value>
         <Box ml="auto">
-          <Button onClick={handleCreate}>New Training Dataset</Button>
+          <Button disabled={!featureGroups.length} onClick={handleCreate}>
+            New Training Dataset
+          </Button>
         </Box>
       </Flex>
       {isLoading && <Loader />}
@@ -167,7 +172,12 @@ const TrainingDatasetList: FC = () => {
           <Button intent="secondary" onClick={handleClickFG}>
             Feature Groups
           </Button>
-          <Button intent="primary" ml="20px" onClick={handleCreate}>
+          <Button
+            disabled={!featureGroups.length}
+            intent="primary"
+            ml="20px"
+            onClick={handleCreate}
+          >
             New Training Dataset
           </Button>
         </NoData>

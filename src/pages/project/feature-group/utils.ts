@@ -17,6 +17,7 @@ import {
   stringRequired,
 } from '../../../utils/validators';
 import { uppercaseFirst } from '../../../utils/uppercaseFirst';
+import { DataEntity } from '../../../types';
 
 // Filter
 export const filterFG = (
@@ -138,7 +139,7 @@ export const mapStatisticConfigurationToTable = ({
   descStatsEnabled,
   featCorrEnabled,
   featHistEnabled,
-}: FeatureGroup) => {
+}: DataEntity) => {
   const statistics = [];
   if (descStatsEnabled) {
     statistics.push('descriptive statistics');
@@ -199,9 +200,9 @@ export const mapFeaturesToTable = (featureGroup?: FeatureGroup): FGRow[] => {
   return [];
 };
 
-export const mapTags = (featureGroup?: FeatureGroup) => {
-  if (featureGroup) {
-    const { tags } = featureGroup;
+export const mapTags = (item?: DataEntity) => {
+  if (item) {
+    const { tags } = item;
 
     return tags.reduce(
       (acc, { name, tags: nestedTags }) => ({

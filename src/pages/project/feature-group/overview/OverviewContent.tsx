@@ -21,6 +21,7 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { RootState } from '../../../../store';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { useLatestVersion } from '../../../../hooks/useLatestVersion';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 export interface ContentProps {
   data: FeatureGroup;
@@ -115,6 +116,8 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
   return (
     <>
       <Panel
+        type={ItemDrawerTypes.fg}
+        data={data}
         title={String(data?.name)}
         id={data.id}
         hasVersionDropdown
@@ -140,7 +143,7 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
       <Box mt="55px" width="100%">
         <SummaryData data={data} />
         <Anchor groupName="fgOverview" anchor={featureList}>
-          <FeatureList data={data.features} />
+          <FeatureList data={data} />
         </Anchor>
 
         <Anchor groupName="fgOverview" anchor={provenance}>

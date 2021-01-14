@@ -10,7 +10,7 @@ import {
 } from '@logicalclocks/quartz';
 
 // Types
-import { Feature } from '../../../../types/feature-group';
+import { FeatureGroup } from '../../../../types/feature-group';
 // Hooks
 import useFeatureFilter, { KeyFilters } from '../hooks/useFeatureFilters';
 import useFeatureListRowData from './useFeatureListRowData';
@@ -18,7 +18,7 @@ import useFeatureListRowData from './useFeatureListRowData';
 import featureListStyles from './feature-lists-styles';
 
 export interface FeatureListProps {
-  data: Feature[];
+  data: FeatureGroup;
 }
 
 const Row = memo(QRow);
@@ -33,9 +33,12 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
     onTypeFiltersChange,
     onSearchChange,
     onToggleKey,
-  } = useFeatureFilter(data);
+  } = useFeatureFilter(data.features);
 
-  const [groupComponents, groupProps] = useFeatureListRowData(dataFiltered);
+  const [groupComponents, groupProps] = useFeatureListRowData(
+    dataFiltered,
+    data,
+  );
 
   return (
     <Card

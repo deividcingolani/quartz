@@ -92,9 +92,6 @@ export interface FeatureGroupProvenance {
 
 export interface FeatureGroup extends DataEntity {
   defaultStorage: string;
-  descStatsEnabled: boolean;
-  featCorrEnabled: boolean;
-  featHistEnabled: boolean;
   hudiEnabled: boolean;
   statisticColumns: any;
   timeTravelFormat: string;

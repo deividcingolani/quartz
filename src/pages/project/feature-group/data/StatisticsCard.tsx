@@ -1,10 +1,18 @@
-import { Flex } from 'rebass';
+import { Box, Flex } from 'rebass';
 import React, { FC } from 'react';
-import { Badge, Card, Labeling, Subtitle, Value } from '@logicalclocks/quartz';
+import {
+  Badge,
+  Card,
+  Labeling,
+  Subtitle,
+  Symbol,
+  Value,
+} from '@logicalclocks/quartz';
 
 // Types
 import {
   Feature,
+  FeatureGroup,
   FeatureGroupStatistics,
 } from '../../../../types/feature-group';
 // Components
@@ -12,25 +20,44 @@ import StatisticsCharts from './StatisticsCharts';
 import StatisticsRows from './StatisticsRows';
 import StatisticsTables from './StatisticsTables';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import { TrainingDataset } from '../../../../types/training-dataset';
+import useBasket from '../../../../hooks/useBasket';
 
 export interface StatisticsCardProps {
   data: Feature;
   statistics?: FeatureGroupStatistics;
   type: ItemDrawerTypes;
+  parent: FeatureGroup | TrainingDataset;
 }
 
 const StatisticsCard: FC<StatisticsCardProps> = ({
   data,
+  parent,
   statistics,
   type: dataType,
 }) => {
   const { name, type } = data;
+
+  const { isActiveFeature, handleBasket, isSwitch } = useBasket();
 
   return (
     <Card>
       {dataType === ItemDrawerTypes.fg && (
         <Flex alignItems="flex-end">
           <Subtitle>{name}</Subtitle>
+          {isSwitch && dataType === ItemDrawerTypes.fg && (
+            <Box mb="2px" ml="10px">
+              <Symbol
+                handleClick={handleBasket([data], parent as FeatureGroup)}
+                inBasket={isActiveFeature(data, parent as FeatureGroup)}
+                tooltipMainText={
+                  isActiveFeature(data, parent as FeatureGroup)
+                    ? 'Remove this feature from basket'
+                    : 'Add this feature to basket'
+                }
+              />
+            </Box>
+          )}
           <Badge ml="20px" value={data.type} variant="bold" />
         </Flex>
       )}

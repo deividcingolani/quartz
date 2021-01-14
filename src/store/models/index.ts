@@ -6,6 +6,8 @@ import search from './search/search.model';
 import profile from './profile/profile.model';
 import project from './projects/project.model';
 import deepSearch from './search/deep-search.model';
+import store from './localManagement/store.model';
+import basket from './localManagement/basket.model';
 import projectsList from './projects/projectsList.model';
 import featureGroups from './feature/featureGroups.model';
 import { trainingDatasetModel } from './training-dataset';
@@ -23,7 +25,6 @@ import featureGroupStatisticsCommits from './feature/statistics/featureGroupStat
 import trainingDatasetQuery from './training-dataset/trainingDatasetQuery.model';
 import schematisedTags from './schematised-tags/schematised-tags.model';
 import schematisedTagView from './schematised-tags/schematised-tag-view.model';
-import store from './localManagement/store.model';
 import trainingDatasetStatistics from './training-dataset/statistics/trainingDatasetStatistics.model';
 import trainingDatasetStatisticsCommits from './training-dataset/statistics/trainingDatasetStatisticsCommits.model';
 
@@ -32,6 +33,7 @@ export interface RootModel extends Models<RootModel> {
   auth: typeof auth;
   store: typeof store;
   search: typeof search;
+  basket: typeof basket;
   project: typeof project;
   profile: typeof profile;
   deepSearch: typeof deepSearch;
@@ -60,6 +62,7 @@ const models: RootModel = {
   auth,
   store,
   search,
+  basket,
   profile,
   project,
   deepSearch,

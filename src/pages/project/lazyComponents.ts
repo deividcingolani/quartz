@@ -47,3 +47,6 @@ export const TrainingDatasetOverview = React.lazy(
 export const TrainingDatasetStatistics = React.lazy(
   () => import('./training-dataset/data/TrainingDatasetStatistics'),
 );
+export const TrainingDatasetCreate = React.lazy(
+  () => import('./training-dataset/create/TrainingDatasetCreate'),
+);

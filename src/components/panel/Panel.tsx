@@ -1,8 +1,18 @@
 import React, { FC } from 'react';
-import { Flex } from 'rebass';
-import { Subtitle, Value, Button, IconButton } from '@logicalclocks/quartz';
+import { Box, Flex } from 'rebass';
+import {
+  Subtitle,
+  Value,
+  Button,
+  IconButton,
+  Symbol,
+  SymbolMode,
+} from '@logicalclocks/quartz';
 // eslint-disable-next-line import/no-unresolved
 import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
+import { ItemDrawerTypes } from '../drawer/ItemDrawer';
+import useBasket from '../../hooks/useBasket';
+import { FeatureGroup } from '../../types/feature-group';
 
 export interface PanelProps {
   onClickEdit: () => void;
@@ -14,6 +24,8 @@ export interface PanelProps {
   hasVersionDropdown?: boolean;
   versionDropdown?: React.ReactElement;
   idColor: string;
+  type?: ItemDrawerTypes;
+  data?: FeatureGroup;
 }
 
 const panelStyles = {
@@ -43,30 +55,52 @@ const Panel: FC<PanelProps> = ({
   commitDropdown,
   hasVersionDropdown = false,
   versionDropdown,
-}) => (
-  <Flex width="100%" height="50px" sx={panelStyles} alignItems="center">
-    <Flex alignItems="flex-end">
-      <Subtitle ml="30px">{title}</Subtitle>
+  type = ItemDrawerTypes.td,
+  data,
+}) => {
+  const { isActiveFeatures, handleBasket, isSwitch } = useBasket();
 
-      <Value mt="auto" ml="5px" mr="15px" sx={{ color: idColor }}>
-        #{id}
-      </Value>
+  return (
+    <Flex alignItems="center" height="50px" sx={panelStyles} width="100%">
+      <Flex alignItems="flex-end">
+        <Subtitle ml="30px">{title}</Subtitle>
 
-      {hasVersionDropdown && versionDropdown}
-      {hasCommitDropdown && commitDropdown}
+        <Value mt="auto" ml="5px" mr="15px" sx={{ color: idColor }}>
+          #{id}
+        </Value>
+
+        {isSwitch && !!data && type === ItemDrawerTypes.fg && (
+          <Box onClick={(e) => e.stopPropagation()} ml="-5px" mr="5px">
+            <Symbol
+              handleClick={handleBasket(data.features, data)}
+              mode={SymbolMode.bulk}
+              tooltipMainText={
+                isActiveFeatures(data.features, data)
+                  ? 'Remove all features from basket'
+                  : 'Add all features to basket'
+              }
+              tooltipSecondaryText={`${data.features.length} features`}
+              inBasket={isActiveFeatures(data.features, data)}
+            />
+          </Box>
+        )}
+
+        {hasVersionDropdown && versionDropdown}
+        {hasCommitDropdown && commitDropdown}
+      </Flex>
+      <Flex ml="auto">
+        <Button intent="ghost" onClick={onClickEdit}>
+          edit
+        </Button>
+        <IconButton
+          tooltip="Refresh"
+          icon="sync-alt"
+          tooltipProps={{ ml: '15px', mr: '50px' } as TooltipProps}
+          onClick={onClickRefresh}
+        />
+      </Flex>
     </Flex>
-    <Flex ml="auto">
-      <Button intent="ghost" onClick={onClickEdit}>
-        edit
-      </Button>
-      <IconButton
-        tooltip="Refresh"
-        icon="sync-alt"
-        tooltipProps={{ ml: '15px', mr: '50px' } as TooltipProps}
-        onClick={onClickRefresh}
-      />
-    </Flex>
-  </Flex>
-);
+  );
+};
 
 export default Panel;

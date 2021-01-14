@@ -28,6 +28,7 @@ import {
   ProjectEdit,
   TrainingDatasetOverview,
   TrainingDatasetStatistics,
+  TrainingDatasetCreate,
 } from './lazyComponents';
 
 const Project: FC = () => {
@@ -122,6 +123,10 @@ const Project: FC = () => {
       />
 
       <Route
+        path={routeNames.trainingDataset.create}
+        element={<TrainingDatasetCreate />}
+      />
+      <Route
         path={routeNames.trainingDataset.list}
         element={<TrainingDatasetList />}
       />
@@ -141,7 +146,6 @@ const Project: FC = () => {
         path={routeNames.trainingDataset.statisticsViewCommit}
         element={<TrainingDatasetStatistics />}
       />
-
       <Route
         path={routeNames.trainingDataset.statisticsViewCommitAndOne}
         element={<TrainingDatasetStatistics />}

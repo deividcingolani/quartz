@@ -5,6 +5,8 @@ import {
   Select,
   Pagination,
   ToggleButton,
+  Symbol,
+  SymbolMode,
 } from '@logicalclocks/quartz';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
@@ -21,6 +23,7 @@ import useFeatureFilter, { KeyFilters } from '../hooks/useFeatureFilters';
 import StatisticsCard from './StatisticsCard';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import useBasket from '../../../../hooks/useBasket';
 
 export interface StatisticsContentProps {
   data: FeatureGroup | TrainingDataset;
@@ -58,6 +61,8 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
   const [[sortKey], setSortKey] = useState<string[]>(['default order']);
   const limit = pageLimits[pageLimit] || 1;
   const [page, setPage] = useState(1);
+
+  const { isActiveFeatures, handleBasket, isSwitch } = useBasket();
 
   const {
     dataFiltered,
@@ -162,11 +167,18 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
           <Value primary px="5px">
             {featuresLength}
           </Value>
-          <Value>features x</Value>
-          <Value primary px="5px">
-            N
-          </Value>
-          <Value>rows</Value>
+          <Value>features</Value>
+          {isSwitch && type === ItemDrawerTypes.fg && (
+            <Box ml="5px">
+              <Symbol
+                mode={SymbolMode.bulk}
+                tooltipMainText="Add all features to basket"
+                tooltipSecondaryText={`${sortedData.length} features`}
+                handleClick={handleBasket(sortedData, data as FeatureGroup)}
+                inBasket={isActiveFeatures(sortedData, data as FeatureGroup)}
+              />
+            </Box>
+          )}
 
           <Select
             width="max-content"
@@ -192,12 +204,13 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
           </Label>
         </Flex>
         <Box height="100%" width="100%">
-          {sortedData.map((data, index) => (
-            <Box mt={index ? '20px' : '40px'} key={data.name}>
+          {sortedData.map((feature, index) => (
+            <Box mt={index ? '20px' : '40px'} key={feature.name}>
               <StatisticsCard
                 type={type}
-                data={data}
-                statistics={statistics[data.name]}
+                parent={data}
+                data={feature}
+                statistics={statistics[feature.name]}
               />
             </Box>
           ))}

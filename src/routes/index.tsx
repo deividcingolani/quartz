@@ -48,6 +48,12 @@ const Routes: FC = () => {
 
   useEffect(() => {
     dispatch.profile.getUser();
+    dispatch.basket.getFromLocalStorage();
+    window.addEventListener('storage', dispatch.basket.onUpdateStorage);
+
+    return () => {
+      window.removeEventListener('storage', dispatch.basket.onUpdateStorage);
+    };
   }, [dispatch]);
 
   useErrorCleaner();

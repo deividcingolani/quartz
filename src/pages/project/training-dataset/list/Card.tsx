@@ -13,7 +13,7 @@ import {
   HoverableText,
 } from '@logicalclocks/quartz';
 import formatDistance from 'date-fns/formatDistance';
-import { Flex, CardProps as RebassCardProps, Box } from 'rebass';
+import { Flex, Box } from 'rebass';
 
 // eslint-disable-next-line import/no-unresolved
 import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
@@ -27,8 +27,6 @@ import { HoverableCardProps } from '../../../../types';
 import styles from '../../styles/hoverable-card';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import { RootState } from '../../../../store';
-
-const contentStyles: RebassCardProps = { overflowY: 'unset' };
 
 const Card: FC<HoverableCardProps<TrainingDataset>> = ({
   data,
@@ -53,11 +51,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
 
   return (
     <Box sx={styles(isSelected)}>
-      <QuartzCard
-        onClick={handleToggle}
-        key={data.id}
-        contentProps={contentStyles}
-      >
+      <QuartzCard onClick={handleToggle} key={data.id}>
         <Flex my="6px" flexDirection="column">
           <Flex alignItems="center" justifyContent="space-between">
             <Flex>

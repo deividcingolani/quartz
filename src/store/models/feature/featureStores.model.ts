@@ -11,9 +11,11 @@ const featureStores = createModel()({
       _: FeatureStoresState,
       payload: FeatureStore[] | null,
     ): FeatureStoresState => payload,
+    clear: () => [],
   },
   effects: (dispatch) => ({
     fetch: async ({ projectId }: { projectId: number }): Promise<void> => {
+      dispatch.featureStores.clear();
       dispatch.featureStores.setFeatureStores(
         await FeatureStoresService.getList(projectId),
       );

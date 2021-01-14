@@ -11,10 +11,12 @@ import {
   User,
   Badge,
   ProjectBadge,
+  Symbol,
+  SymbolMode,
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback } from 'react';
 import formatDistance from 'date-fns/formatDistance';
-import { Flex, CardProps as RebassCardProps, Box } from 'rebass';
+import { Flex, Box } from 'rebass';
 // eslint-disable-next-line import/no-unresolved
 import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
 
@@ -34,8 +36,7 @@ import styles from '../../styles/hoverable-card';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useParams } from 'react-router-dom';
-
-const contentStyles: RebassCardProps = { overflowY: 'unset' };
+import useBasket from '../../../../hooks/useBasket';
 
 const Card: FC<HoverableCardProps<FeatureGroup>> = ({
   data,
@@ -46,6 +47,8 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
   const { id: projectId } = useParams();
 
   const navigate = useNavigateRelative();
+
+  const { isActiveFeatures, handleBasket, isSwitch } = useBasket();
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
@@ -60,11 +63,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
 
   return (
     <Box sx={styles(isSelected)}>
-      <QuartzCard
-        onClick={handleToggle}
-        key={data.id}
-        contentProps={contentStyles}
-      >
+      <QuartzCard onClick={handleToggle} key={data.id}>
         <Flex my="6px" flexDirection="column">
           <Flex alignItems="center" justifyContent="space-between">
             <Flex>
@@ -96,6 +95,21 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               >
                 #{data.id}
               </Value>
+              {isSwitch && (
+                <Box onClick={(e) => e.stopPropagation()} ml="-5px" mr="5px">
+                  <Symbol
+                    handleClick={handleBasket(data.features, data)}
+                    mode={SymbolMode.bulk}
+                    tooltipMainText={
+                      isActiveFeatures(data.features, data)
+                        ? 'Remove all features from basket'
+                        : 'Add all features to basket'
+                    }
+                    tooltipSecondaryText={`${data.features.length} features`}
+                    inBasket={isActiveFeatures(data.features, data)}
+                  />
+                </Box>
+              )}
 
               {!projectId && hasMatchText && (
                 <ProjectBadge

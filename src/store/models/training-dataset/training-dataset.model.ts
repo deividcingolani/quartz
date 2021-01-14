@@ -1,8 +1,46 @@
 import { createModel } from '@rematch/core';
 import { TrainingDataset } from '../../../types/training-dataset';
+import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 
 export type TrainingDatasetState = TrainingDataset[];
+
+const attachTags = async (
+  projectId: number,
+  featureStoreId: number,
+  id: number,
+  tags = {},
+) => {
+  const mapped = Object.entries(tags).map(([key, property]) => {
+    // @ts-ignore
+    const data = Object.entries(property)
+      .map(([key, nestProperty]) => ({
+        [key]: Array.isArray(nestProperty)
+          ? nestProperty.map(({ value }) => getNormalizedValue(value))
+          : getNormalizedValue(nestProperty),
+      }))
+      .reduce((acc, next) => {
+        const value = Object.values(next)[0];
+
+        return value !== null && value[0] !== null ? { ...acc, ...next } : acc;
+      }, {});
+
+    return {
+      key,
+      data,
+    };
+  });
+
+  for (const { key, data } of mapped) {
+    await TrainingDatasetService.attachTag(
+      projectId,
+      featureStoreId,
+      id,
+      key,
+      data,
+    );
+  }
+};
 
 export const trainingDatasetModel = createModel()({
   state: [] as TrainingDatasetState,
@@ -11,6 +49,7 @@ export const trainingDatasetModel = createModel()({
       _: TrainingDatasetState,
       payload: TrainingDataset[],
     ): TrainingDatasetState => payload,
+    clear: (): TrainingDatasetState => [],
   },
   effects: (dispatch) => ({
     fetch: async ({
@@ -34,6 +73,30 @@ export const trainingDatasetModel = createModel()({
       });
 
       dispatch.trainingDatasets.set(data);
+    },
+    create: async ({
+      projectId,
+      featureStoreId,
+      data,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      data: any;
+    }): Promise<any> => {
+      const {
+        data: { id },
+      } = await TrainingDatasetService.create(projectId, featureStoreId, data);
+
+      await TrainingDatasetService.attachKeywords(
+        projectId,
+        featureStoreId,
+        id,
+        data.keywords,
+      );
+
+      await attachTags(projectId, featureStoreId, id, data.tags);
+
+      return id;
     },
   }),
 });

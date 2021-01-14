@@ -14,7 +14,7 @@ import {
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import formatDistance from 'date-fns/formatDistance';
-import { Flex, CardProps as RebassCardProps } from 'rebass';
+import { Flex } from 'rebass';
 
 // Types
 import { Project } from '../../../types/project';
@@ -25,10 +25,6 @@ import routeNames from '../../../routes/routeNames';
 import ProfileService from '../../../services/ProfileService';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from '../../../store';
-
-const contentStyles: RebassCardProps = {
-  overflowY: 'unset',
-};
 
 export interface CardProps {
   data: Project;
@@ -62,7 +58,6 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
         mb="20px"
         key={data.id}
         style={{ boxShadow: '1px 1px 28px 1px rgba(0, 0, 0, 0.07)' }}
-        contentProps={contentStyles}
       >
         <Flex my="6px" flexDirection="column">
           <Flex justifyContent="space-between" alignItems="center">

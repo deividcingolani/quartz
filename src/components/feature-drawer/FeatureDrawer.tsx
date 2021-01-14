@@ -18,26 +18,32 @@ export interface FeatureDrawerProps {
   isOpen: boolean;
   handleToggle: () => void;
   feature: Feature;
+  fgId: number;
+  projectId: number;
+  featureStoreId: number;
 }
 
 const FeatureDrawer: FC<FeatureDrawerProps> = ({
   isOpen,
   handleToggle,
   feature,
+  fgId,
+  projectId,
+  featureStoreId,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
-  const fgPageUrl = `/p/${feature.parentProjectId}/fg/${feature.id}`;
-  const dataPreviewUrl = `/p/${feature.parentProjectId}/fg/${feature.id}/data-preview/${feature.name}`;
+  const fgPageUrl = `/p/${projectId}/fg/${fgId}`;
+  const dataPreviewUrl = `/p/${projectId}/fg/${fgId}/data-preview/${feature.name}`;
 
   useEffect(() => {
     dispatch.featureGroupStatistics.fetch({
-      projectId: feature.parentProjectId,
-      featureStoreId: feature.featurestoreId,
-      featureGroupId: +feature.id,
+      projectId,
+      featureStoreId,
+      featureGroupId: fgId,
     });
-  }, [feature, dispatch]);
+  }, [feature, dispatch, fgId, projectId, featureStoreId]);
 
   const statistics = useSelector(
     (state: RootState) => state.featureGroupStatistics?.entities.statistics,
