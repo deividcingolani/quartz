@@ -14,7 +14,7 @@ import {
 } from '@logicalclocks/quartz';
 
 // Components
-import NotificationBadge from '../../../utils/notifications/notificationBadge';
+import NotificationTitle from '../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../utils/notifications/notificationValue';
 // Utils
 import getInputValidation from '../../../utils/getInputValidation';
@@ -56,9 +56,8 @@ const PasswordForm: FC = () => {
         setError(error);
       } else {
         NotificationsManager.create({
-          type: (
-            <NotificationBadge message="password updated" variant="success" />
-          ),
+          isError: false,
+          type: <NotificationTitle message="password updated" />,
           content: (
             <NotificationContent message="Your password has been successfully updated" />
           ),

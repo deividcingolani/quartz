@@ -1,10 +1,14 @@
-import React, { FC } from 'react';
-import { Label } from '@logicalclocks/quartz';
+import React, { FC, ReactElement } from 'react';
+import { Labeling } from '@logicalclocks/quartz';
 
-const NotificationContent: FC<{ message?: string }> = ({
-  message = 'Try again later or contact the support',
-}) => {
-  return <Label>{message}</Label>;
+const NotificationContent: FC<{
+  message?: string;
+  element?: ReactElement;
+}> = ({ message = 'Try again later or contact the support', element }) => {
+  if (element) {
+    return element;
+  }
+  return <Labeling>{message}</Labeling>;
 };
 
 export default NotificationContent;

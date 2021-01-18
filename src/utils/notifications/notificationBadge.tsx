@@ -1,18 +1,15 @@
 import React, { FC } from 'react';
-import { Badge } from '@logicalclocks/quartz';
+import { Label } from '@logicalclocks/quartz';
 
 export interface NotificationBadgeProps {
   message?: string;
   variant?: 'light' | 'bold' | 'fail' | 'success' | 'label';
 }
 
-const NotificationBadge: FC<NotificationBadgeProps> = ({
-  message = 'server error',
-  variant = 'fail',
+const NotificationTitle: FC<NotificationBadgeProps> = ({
+  message = 'Server Error',
 }) => {
-  return (
-    <Badge width="fit-content" mb="14px" variant={variant} value={message} />
-  );
+  return <Label fontSize="18px">{message}</Label>;
 };
 
-export default NotificationBadge;
+export default NotificationTitle;

@@ -1,3 +1,5 @@
+import { Flex } from 'rebass';
+import { Button, Labeling } from '@logicalclocks/quartz';
 import React, { FC, memo, ReactElement, useCallback, useEffect } from 'react';
 
 // Hooks
@@ -9,10 +11,51 @@ import { Dispatch, RootState } from '../../store';
 import Error404 from '../../pages/error/404Error';
 import ConnectionError from '../../pages/error/ConnectionError';
 // Utils
-import NotificationBadge from '../../utils/notifications/notificationBadge';
 import NotificationContent from '../../utils/notifications/notificationValue';
+import NotificationTitle from '../../utils/notifications/notificationBadge';
 // Services
 import TokenService from '../../services/TokenService';
+
+const getErrorTitle = (error: any) => {
+  if (error.message === 'Network Error') {
+    return 'Network issue';
+  }
+  if (error.response?.status >= 500) {
+    return 'Server Error';
+  }
+  return 'Error';
+};
+
+const ServerErrorContent: ReactElement = (
+  <Flex alignItems="center">
+    <Labeling>Try again or</Labeling>
+    <Button
+      onClick={() => window.open('https://community.hopsworks.ai', '_blank')}
+      ml="-10px"
+      intent="inline"
+    >
+      contact the support
+    </Button>
+  </Flex>
+);
+
+const getErrorContent = (
+  error: any,
+): { message?: string; element?: ReactElement } => {
+  if (error.message === 'Network Error') {
+    return {
+      element: ServerErrorContent,
+    };
+  }
+  if (error.response?.status >= 500) {
+    return {
+      message: 'This page can not reach the server',
+    };
+  }
+  return {
+    message: 'error occurred',
+  };
+};
 
 const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   const globalError = useSelector(
@@ -33,8 +76,8 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   useEffect(() => {
     if (error && error.response?.status !== 401) {
       NotificationsManager.create({
-        type: <NotificationBadge />,
-        content: <NotificationContent />,
+        type: <NotificationTitle message={getErrorTitle(error)} />,
+        content: <NotificationContent {...getErrorContent(error)} />,
       });
       dispatch.error.clearError();
     }
@@ -42,7 +85,11 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   }, [error]);
 
   useEffect(() => {
-    if (error && error.response?.status === 401) {
+    if (
+      error &&
+      ([error.response?.status, error?.status].includes(401) ||
+        error.message === 'Network Error')
+    ) {
       logout();
     }
     // eslint-disable-next-line

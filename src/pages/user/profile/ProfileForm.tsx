@@ -26,7 +26,7 @@ import { shortRequiredText, shortText } from '../../../utils/validators';
 // Services
 import ProfileService from '../../../services/ProfileService';
 // Components
-import NotificationBadge from '../../../utils/notifications/notificationBadge';
+import NotificationTitle from '../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../utils/notifications/notificationValue';
 
 export const schema = yup.object().shape({
@@ -66,7 +66,8 @@ const ProfileForm: FC = () => {
         setError(error);
       } else {
         NotificationsManager.create({
-          type: <NotificationBadge message="info updated" variant="success" />,
+          isError: false,
+          type: <NotificationTitle message="info updated" />,
           content: (
             <NotificationContent message="Your information has been successfully updated" />
           ),
