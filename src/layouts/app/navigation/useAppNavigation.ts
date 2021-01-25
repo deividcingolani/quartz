@@ -227,12 +227,12 @@ const useAppNavigation = (): TreeNode[] => {
       },
       {
         id: 'sc',
-        title: 'Sources',
+        title: 'Storage Connectors',
         icon: sources,
-        tooltipText: 'Sources',
-        isActive: location.pathname.includes(routeNames.source.list),
+        tooltipText: 'Storage Connectors',
+        isActive: location.pathname.includes(routeNames.storageConnector.list),
         onClick: handleNavigateRelative(
-          routeNames.source.list,
+          routeNames.storageConnector.list,
           routeNames.project.view,
         ),
       },

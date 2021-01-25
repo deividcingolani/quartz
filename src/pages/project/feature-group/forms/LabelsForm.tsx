@@ -7,16 +7,14 @@ import {
   Select,
   TinyPopup,
   usePopup,
+  Divider
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-
 // Types
 import { FeatureFormProps } from '../types';
 // Selectors
 import { RootState } from '../../../../store';
-// Components
-import Divider from '../../../../components/divider/Devider';
 // Components
 import getInputValidation from '../../../../utils/getInputValidation';
 // Schemas
@@ -87,7 +85,7 @@ const LabelsForm: FC<FeatureFormProps> = ({ isDisabled }) => {
             </Box>
           )}
         />
-        <Divider mt="20px" ml="-20px" />
+        <Divider />
       </Box>
 
       <TinyPopup

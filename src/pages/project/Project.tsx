@@ -151,15 +151,24 @@ const Project: FC = () => {
         element={<TrainingDatasetStatistics />}
       />
 
-      <Route path={routeNames.source.list} element={<SourcesList />} />
-      <Route path={routeNames.source.create} element={<SourcesCreate />} />
-      <Route path={routeNames.source.edit} element={<SourcesEdit />} />
       <Route
-        path={routeNames.source.importSample}
+        path={routeNames.storageConnector.list}
+        element={<SourcesList />}
+      />
+      <Route
+        path={routeNames.storageConnector.create}
+        element={<SourcesCreate />}
+      />
+      <Route
+        path={routeNames.storageConnector.edit}
+        element={<SourcesEdit />}
+      />
+      <Route
+        path={routeNames.storageConnector.importSample}
         element={<SourcesImportSample />}
       />
       <Route
-        path={routeNames.source.createWithProtocol}
+        path={routeNames.storageConnector.createWithProtocol}
         element={<SourcesCreate />}
       />
       <Route path="/" element={<Redirect to={`${location.pathname}/view`} />} />

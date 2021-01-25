@@ -12,7 +12,12 @@ import { Dispatch, RootState } from '../../../../store';
 import SourcesForm from '../forms/SourcesForm';
 import Loader from '../../../../components/loader/Loader';
 // Utils
-import { formatArguments, getConnectorType, getDtoType } from '../utils';
+import {
+  formatArguments,
+  formatGroups,
+  getDtoType,
+  protocolOptions,
+} from '../utils';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
@@ -60,22 +65,27 @@ const SourcesCreate: FC = () => {
         await dispatch.featureStoreSources.create({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
-          storageConnectorType: getConnectorType(storageConnectorType),
           data: {
-            ...(protocol === SourceProtocol.jdbc && {
+            ...(storageConnectorType === SourceProtocol.jdbc && {
               arguments: formattedArgs,
             }),
+            ...(storageConnectorType === SourceProtocol.redshift && {
+              databaseGroup: formatGroups(args),
+            }),
             type: getDtoType(storageConnectorType),
+            storageConnectorType: protocolOptions.getByKey(
+              storageConnectorType,
+            ),
             ...restData,
           },
         });
 
         dispatch.featureStoreSources.clear();
 
-        navigate('/sources', 'p/:id/*');
+        navigate('/storage-connectors', 'p/:id/*');
       }
     },
-    [protocol, dispatch, navigate, projectId, featureStoreData],
+    [dispatch, navigate, projectId, featureStoreData],
   );
 
   if (isFeatureStoreLoading) {

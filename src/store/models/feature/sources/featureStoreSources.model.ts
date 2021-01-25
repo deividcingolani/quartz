@@ -1,8 +1,5 @@
 import { createModel } from '@rematch/core';
-import {
-  FeatureStoreSource,
-  StorageConnectorType,
-} from '../../../../types/feature-store';
+import { FeatureStoreSource } from '../../../../types/feature-store';
 import FeatureStoresService from '../../../../services/project/FeatureStoresService';
 import { EffectError } from '../../../plugins/errors.plugin';
 
@@ -39,19 +36,16 @@ const featureStoreSourcesModel = createModel()({
     fetchOne: async ({
       projectId,
       featureStoreId,
-      sourceId,
-      connectorType,
+      connectorName,
     }: {
       projectId: number;
       featureStoreId: number;
-      sourceId: number;
-      connectorType: string;
+      connectorName: string;
     }): Promise<void> => {
       const { data } = await FeatureStoresService.getSource(
         projectId,
         featureStoreId,
-        sourceId,
-        connectorType,
+        connectorName,
       );
 
       if (data) {
@@ -61,19 +55,16 @@ const featureStoreSourcesModel = createModel()({
     create: async ({
       projectId,
       featureStoreId,
-      storageConnectorType,
       data,
     }: {
       projectId: number;
       featureStoreId: number;
-      storageConnectorType: StorageConnectorType;
       data: any;
     }): Promise<any> => {
       try {
         return await FeatureStoresService.create(
           projectId,
           featureStoreId,
-          storageConnectorType,
           data,
         );
       } catch (error) {
@@ -83,22 +74,19 @@ const featureStoreSourcesModel = createModel()({
     edit: async ({
       projectId,
       featureStoreId,
-      storageConnectorType,
-      connectorId,
+      connectorName,
       data,
     }: {
       projectId: number;
       featureStoreId: number;
-      storageConnectorType: StorageConnectorType;
-      connectorId: number;
+      connectorName: string;
       data: any;
     }): Promise<any> => {
       try {
         return await FeatureStoresService.edit(
           projectId,
           featureStoreId,
-          storageConnectorType,
-          connectorId,
+          connectorName,
           data,
         );
       } catch (error) {
@@ -108,19 +96,16 @@ const featureStoreSourcesModel = createModel()({
     delete: ({
       projectId,
       featureStoreId,
-      storageConnectorType,
-      connectorId,
+      connectorName,
     }: {
       projectId: number;
       featureStoreId: number;
-      storageConnectorType: StorageConnectorType;
-      connectorId: number;
+      connectorName: string;
     }): Promise<any> => {
       return FeatureStoresService.delete(
         projectId,
         featureStoreId,
-        storageConnectorType,
-        connectorId,
+        connectorName,
       );
     },
   }),

@@ -6,6 +6,7 @@ import {
   Card,
   Checkbox,
   CheckboxGroup,
+  Divider,
   Input,
   Label,
   Select,
@@ -20,7 +21,6 @@ import FeaturesForm from './FeaturesForm';
 import FeatureStickySummary from './FeatureStickySummary';
 import LabelsForm from './LabelsForm';
 import Loader from '../../../../components/loader/Loader';
-import Divider from '../../../../components/divider/Devider';
 import SchematisedTagsForm from './SchematisedTagsForm';
 // Types
 import {
@@ -176,7 +176,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
           )}
         />
 
-        <Divider mb="15px" ml="-20px" mt="-5px" />
+        <Divider mb="15px" mt="-5px" />
 
         <Controller
           control={control}
@@ -197,7 +197,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
           )}
         />
 
-        <Divider mb="15px" ml="-20px" mt="-5px" />
+        <Divider mb="15px" mt="-5px" />
 
         <SchematisedTagsForm isDisabled={isDisabled} />
 

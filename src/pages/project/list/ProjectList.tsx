@@ -73,7 +73,7 @@ const ProjectList: FC = () => {
         <NoData mainText="No Projects" secondaryText="">
           <Button
             intent="secondary"
-            onClick={handleRouteChange(routeNames.source.list)}
+            onClick={handleRouteChange(routeNames.storageConnector.list)}
             mr="14px"
           >
             All Sources

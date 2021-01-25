@@ -191,7 +191,7 @@ const FeatureGroupList: FC = () => {
         >
           <Button
             intent="secondary"
-            onClick={handleRouteChange(routeNames.source.list)}
+            onClick={handleRouteChange(routeNames.storageConnector.list)}
             mr="14px"
           >
             All Sources

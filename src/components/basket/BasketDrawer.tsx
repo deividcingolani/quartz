@@ -3,14 +3,12 @@ import React, { FC } from 'react';
 import { Dispatch } from '../../store';
 import BasketFeatures from './BasketFeatures';
 import { useDispatch, useSelector } from 'react-redux';
-import { Label, Button, Value, Popup, Labeling } from '@logicalclocks/quartz';
+import { Label, Button, Value, Popup, Labeling, Divider } from '@logicalclocks/quartz';
 import {
   selectBasketFeaturesLength,
   selectFeatureGroups,
 } from '../../store/models/localManagement/basket.selectors';
 import { useNavigate, useParams } from 'react-router-dom';
-import Divider from '../divider/Devider';
-
 export interface BasketDrawerProps {
   isOpen: boolean;
   handleToggle: () => void;
@@ -49,7 +47,7 @@ const BasketDrawer: FC<BasketDrawerProps> = ({ isOpen, handleToggle }) => {
           </Button>
         </Flex>
       </Flex>
-      <Divider ml="20px" mr="20px" />
+      <Divider ml="20px" mr="20px" mb="0px" mt="0px" />
       <Flex height="620px" overflow="auto" flexDirection="column">
         {!!featureGroups.length ? (
           featureGroups.map(({ features, fg, projectId }) => (

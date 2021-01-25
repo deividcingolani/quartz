@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 
+export const numInt = yup.number().integer();
 export const alphanum = yup.string().required().max(50);
 export const shortText = yup.string().max(200);
 export const shortRequiredText = yup.string().required().max(200);

@@ -18,7 +18,8 @@ export interface FeatureStore {
 }
 
 export enum StorageConnectorType {
-  hops = 'HopsFS',
+  redshift = 'REDSHIFT',
+  hops = 'HOPSFS',
   jdbc = 'JDBC',
   aws = 'S3',
 }

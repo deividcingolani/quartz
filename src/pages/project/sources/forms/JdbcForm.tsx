@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { Flex } from 'rebass';
 import React, { ChangeEvent, FC, useState } from 'react';
-import { Input, IconButton, Tooltip, Icon } from '@logicalclocks/quartz';
+import { Input, IconButton } from '@logicalclocks/quartz';
 import { useFieldArray } from 'react-hook-form';
 
 // Utils
@@ -41,33 +41,6 @@ const JdbcForm: FC<SourceFormProps> = ({
 
   return (
     <>
-      <Flex>
-        <Input
-          label="Name"
-          name="name"
-          disabled={isDisabled}
-          placeholder="name of the source"
-          ref={register}
-          labelAction={
-            <Tooltip
-              mainText="Only alphanumeric characters, dash or underscore"
-              ml="5px"
-            >
-              <Icon icon="info-circle" />
-            </Tooltip>
-          }
-          {...getInputValidation('name', errors)}
-        />
-        <Input
-          labelProps={{ width: '80%', ml: '20px' }}
-          label="Description"
-          name="description"
-          disabled={isDisabled}
-          placeholder="description"
-          ref={register}
-          {...getInputValidation('description', errors)}
-        />
-      </Flex>
       <Input
         labelProps={{ width: '100%' }}
         label="Connection URL"
@@ -123,25 +96,24 @@ const JdbcForm: FC<SourceFormProps> = ({
       <Flex sx={argumentRowStyles} my="10px" alignItems="flex-end">
         <Input
           label={!fields.length ? 'Key' : undefined}
-          name="key"
+          name={undefined}
           value={key}
           onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
             setKey(target.value)
           }
           disabled={isDisabled}
           placeholder="key"
-          ref={register}
         />
         <Input
           label={!fields.length ? 'Value' : undefined}
           value={value}
+          name={undefined}
           onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
             setValue(target.value);
           }}
           placeholder="value"
           disabled={isDisabled}
           labelProps={{ ml: '15px' }}
-          ref={register}
         />
         <IconButton
           type="button"

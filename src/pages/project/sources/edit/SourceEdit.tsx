@@ -16,7 +16,7 @@ import SourcesForm from '../forms/SourcesForm';
 // Utils
 import {
   formatArguments,
-  getConnectorType,
+  formatGroups,
   getDtoType,
   protocolOptions,
 } from '../utils';
@@ -24,7 +24,7 @@ import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
 const SourcesEdit: FC = () => {
-  const { sourceId, connectorType, id: projectId } = useParams();
+  const { connectorName, id: projectId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();
@@ -41,14 +41,13 @@ const SourcesEdit: FC = () => {
       dispatch.featureStoreSources.fetchOne({
         projectId: +projectId,
         featureStoreId: featureStoreData?.featurestoreId,
-        sourceId: +sourceId,
-        connectorType,
+        connectorName,
       });
       return () => {
         dispatch.featureStoreSources.clear();
       };
     }
-  }, [sourceId, connectorType, dispatch, projectId, featureStoreData]);
+  }, [connectorName, dispatch, projectId, featureStoreData]);
 
   const isSubmit = useSelector(
     (state: RootState) => state.loading.effects.featureStoreSources.edit,
@@ -80,11 +79,13 @@ const SourcesEdit: FC = () => {
         await dispatch.featureStoreSources.edit({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
-          connectorId: +sourceId,
-          storageConnectorType: getConnectorType(storageConnectorType),
+          connectorName,
           data: {
             ...(storageConnectorType === SourceProtocol.jdbc && {
               arguments: formattedArgs,
+            }),
+            ...(storageConnectorType === SourceProtocol.redshift && {
+              databaseGroup: formatGroups(args),
             }),
             type: getDtoType(storageConnectorType),
             ...restData,
@@ -93,10 +94,10 @@ const SourcesEdit: FC = () => {
 
         dispatch.featureStoreSources.clear();
 
-        navigate('/sources', 'p/:id/*');
+        navigate('/storage-connectors', 'p/:id/*');
       }
     },
-    [dispatch, navigate, projectId, featureStoreData, sourceId],
+    [dispatch, navigate, projectId, connectorName, featureStoreData],
   );
 
   const handleDelete = useCallback(async () => {
@@ -108,15 +109,14 @@ const SourcesEdit: FC = () => {
       await dispatch.featureStoreSources.delete({
         projectId: +projectId,
         featureStoreId: featureStoreData?.featurestoreId,
-        connectorId: +sourceId,
-        storageConnectorType: source.storageConnectorType,
+        connectorName,
       });
 
       dispatch.featureStoreSources.clear();
 
-      navigate('/sources', 'p/:id/*');
+      navigate('/storage-connectors', 'p/:id/*');
     }
-  }, [dispatch, source, featureStoreData, projectId, navigate, sourceId]);
+  }, [dispatch, featureStoreData, projectId, navigate, connectorName]);
 
   useTitle(`${titles.editStorageConnector} - ${source.name}`);
 
@@ -143,9 +143,9 @@ const SourcesEdit: FC = () => {
       <TinyPopup
         width="440px"
         title={`Delete ${source.name}`}
-        secondaryText="The source will be definitely deleted"
+        secondaryText="Once you delete a storage connector, there is no going back. Please be certain."
         isOpen={isPopupOpen}
-        mainButton={['Delete the source', handleDelete]}
+        mainButton={['Delete storage connector', handleDelete]}
         secondaryButton={['Back', handleToggle]}
         onClose={handleToggle}
       />

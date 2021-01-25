@@ -5,6 +5,8 @@ import SourceService from '../../../services/project/SourceService';
 import {
   ICreateAWSSource,
   ICreateJDBCSource,
+  ICreateHOPSFSSource,
+  ICreateREDSHIFTSource,
   ISource,
   StorageConnectorType,
 } from '../../../types/source';
@@ -33,7 +35,11 @@ const create = () => async ({
   projectId: number;
   featureStoreId: number;
   type: StorageConnectorType;
-  source?: ICreateAWSSource | ICreateJDBCSource;
+  source?:
+    | ICreateAWSSource
+    | ICreateJDBCSource
+    | ICreateHOPSFSSource
+    | ICreateREDSHIFTSource;
 }): Promise<AxiosResponse> => {
   if (source) {
     return SourceService.createSource(projectId, featureStoreId, type, source);

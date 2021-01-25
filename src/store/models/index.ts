@@ -7,6 +7,7 @@ import scope from './scope/scope.model';
 import search from './search/search.model';
 import profile from './profile/profile.model';
 import project from './projects/project.model';
+import dataset from './dataset/dataset.model';
 import deepSearch from './search/deep-search.model';
 import store from './localManagement/store.model';
 import basket from './localManagement/basket.model';
@@ -14,6 +15,7 @@ import projectsList from './projects/projectsList.model';
 import featureGroups from './feature/featureGroups.model';
 import { trainingDatasetModel } from './training-dataset';
 import featureStores from './feature/featureStores.model';
+import roleMappings from './role-mappings/role-mappings.model';
 import featureGroupView from './feature/featureGroupView.model';
 import featureGroupLabels from './feature/featureGroupLabels.model';
 import { trainingDatasetLabelModel } from './training-dataset-label';
@@ -37,10 +39,12 @@ export interface RootModel extends Models<RootModel> {
   scope: typeof scope;
   search: typeof search;
   basket: typeof basket;
-  project: typeof project;
+  dataset: typeof dataset;
   profile: typeof profile;
+  project: typeof project;
   deepSearch: typeof deepSearch;
   projectsList: typeof projectsList;
+  roleMappings: typeof roleMappings;
   featureGroups: typeof featureGroups;
   featureStores: typeof featureStores;
   schematisedTags: typeof schematisedTags;
@@ -68,9 +72,11 @@ const models: RootModel = {
   store,
   search,
   basket,
+  dataset,
   profile,
   project,
   deepSearch,
+  roleMappings,
   projectsList,
   featureGroups,
   featureStores,

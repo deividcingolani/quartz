@@ -66,12 +66,12 @@ const routeNames = {
     correlation: '/td/:tdId/data/correlation',
   },
 
-  source: {
-    list: '/sources',
-    create: '/sources/new/',
-    edit: '/sources/:sourceId/:connectorType/edit',
-    importSample: '/sources/import-sample',
-    createWithProtocol: '/sources/new/:protocol',
+  storageConnector: {
+    list: '/storage-connectors',
+    create: '/storage-connectors/new/',
+    edit: '/storage-connectors/:connectorName/edit',
+    importSample: '/storage-connectors/import-sample',
+    createWithProtocol: '/storage-connectors/new/:protocol',
   },
 
   settings: {

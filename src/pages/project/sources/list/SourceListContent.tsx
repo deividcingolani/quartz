@@ -29,12 +29,12 @@ const SourceListContent: FC<SourceListContentProps> = ({ data }) => {
   const navigate = useNavigateRelative();
 
   const handleCreate = () => {
-    navigate('/sources/new', 'p/:id*');
+    navigate('/storage-connectors/new', 'p/:id*');
   };
 
-  const cardText = `${data.length} source${
+  const cardText = `${data.length} storage connector${
     data.length > 1 ? 's' : ''
-  } setted up`;
+  } defined`;
 
   const groupComponents = useMemo(() => {
     return new Array(data.length)
@@ -43,7 +43,7 @@ const SourceListContent: FC<SourceListContentProps> = ({ data }) => {
   }, [data]);
 
   const groupProps = useMemo(() => {
-    return data.map(({ id, name, storageConnectorType, description }) => [
+    return data.map(({ name, storageConnectorType, description }) => [
       {
         children: name,
         bold: true,
@@ -64,9 +64,7 @@ const SourceListContent: FC<SourceListContentProps> = ({ data }) => {
         tooltip: 'Edit',
         onClick: () =>
           navigate(
-            routeNames.source.edit
-              .replace(':sourceId', id.toString())
-              .replace(':connectorType', storageConnectorType),
+            routeNames.storageConnector.edit.replace(':connectorName', name),
             routeNames.project.view,
           ),
       },
@@ -74,11 +72,11 @@ const SourceListContent: FC<SourceListContentProps> = ({ data }) => {
   }, [data, navigate]);
 
   return (
-    <Card title="Sources" contentProps={contentProps}>
+    <Card title="Storage connectors" contentProps={contentProps}>
       <Flex alignItems="center" pb="15px">
         <Text>{cardText}</Text>
         <Button ml="auto" onClick={handleCreate}>
-          Setup New Source
+          Set up new storage connector
         </Button>
       </Flex>
       <Box mx="-20px" sx={styles}>

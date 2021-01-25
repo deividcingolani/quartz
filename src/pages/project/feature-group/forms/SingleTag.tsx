@@ -1,12 +1,11 @@
 import { Flex } from 'rebass';
 import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Select, Value } from '@logicalclocks/quartz';
+import { Button, Select, Value, Divider } from '@logicalclocks/quartz';
 
 import routeNames from '../../../../routes/routeNames';
 // Components
 import { ListItem } from './SchematisedTagsForm';
-import Divider from '../../../../components/divider/Devider';
 import PrimitiveTypeForm from './PrimitiveTypeForm';
 import ArrayTypeForm from './ArrayTypeForm';
 
@@ -111,7 +110,7 @@ const SingleTag: FC<SingleTagProps> = ({
         )}
       </Flex>
 
-      <Divider mb="15px" ml="-20px" mt="15px" />
+      <Divider mb="15px" mt="15px" />
     </>
   );
 };

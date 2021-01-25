@@ -13,7 +13,6 @@ import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 // Components
 import FeaturesForm from './FeaturesForm';
 import Loader from '../../../../components/loader/Loader';
-import Divider from '../../../../components/divider/Devider';
 import LabelsForm from '../../feature-group/forms/LabelsForm';
 import SchematisedTagsForm from '../../feature-group/forms/SchematisedTagsForm';
 import FeatureStickySummary from '../../feature-group/forms/FeatureStickySummary';
@@ -34,6 +33,7 @@ import {
   CalloutTypes,
   Card,
   CheckboxGroup,
+  Divider,
   Icon,
   Input,
   Label,
@@ -269,7 +269,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             )}
           />
 
-          <Divider mb="15px" ml="-20px" mt="-5px" />
+          <Divider mb="15px" mt="-5px" />
 
           <Controller
             control={control}

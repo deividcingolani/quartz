@@ -8,15 +8,32 @@ import {
   RadioGroup,
   CalloutTypes,
   StickySummary,
+  Input,
+  Tooltip,
+  Icon,
+  Divider,
+  TooltipPositions,
 } from '@logicalclocks/quartz';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { FC, memo, useEffect, useMemo, useState } from 'react';
-
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+// Default validators
+import * as yup from 'yup';
+import { name, shortText } from '../../../../utils/validators';
+// Routes
 import routeNames from '../../../../routes/routeNames';
 // Types
 import { SourceProtocol } from '../types';
-import { SourcesFormData } from './types';
+import { DescriptionsData, SourcesFormData } from './types';
 import { EffectError } from '../../../../store/plugins/errors.plugin';
 import { FeatureStoreSource } from '../../../../types/feature-store';
 // Components
@@ -27,11 +44,15 @@ import formStyles from './form.styles';
 import {
   cropText,
   formatStringToArguments,
+  getDescription,
   getForm,
   getSchema,
-  protocolOptions,
+  protocolVisualOptions,
 } from '../utils';
+import getInputValidation from '../../../../utils/getInputValidation';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import featureStoreService from '../../../../services/project/FeatureStoresService';
 
 export interface SourcesCreateFormProps {
   error?: EffectError<{ errorMsg: string }>;
@@ -43,6 +64,11 @@ export interface SourcesCreateFormProps {
   isEdit?: boolean;
   initialData?: FeatureStoreSource;
 }
+
+export const commonSchema = yup.object().shape({
+  description: shortText.label('Description'),
+  name: name.label('Name'),
+});
 
 const SourcesForm: FC<SourcesCreateFormProps> = ({
   error,
@@ -56,8 +82,10 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
 }) => {
   const navigate = useNavigateRelative();
 
+  const getSchemaByProtocol = useMemo(() => getSchema(commonSchema), []);
+
   const [schema, setSchema] = useState<Yup.ObjectSchema>(
-    getSchema(initialProtocol),
+    getSchemaByProtocol(initialProtocol),
   );
 
   const {
@@ -65,14 +93,19 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
     control,
     errors,
     register,
+    unregister,
     setValue,
     clearErrors,
     handleSubmit,
+    reset,
+    setError,
   } = useForm({
     defaultValues: {
+      protocol: initialProtocol,
       bucket: '',
       connectionString: '',
-      protocol: initialProtocol,
+      datasetName: '',
+      clusterIdentifier: '',
       ...initialData,
       ...(initialData?.arguments
         ? { arguments: formatStringToArguments(initialData.arguments) }
@@ -82,32 +115,59 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
     resolver: yupResolver(schema),
   });
 
-  const { name, protocol, bucket, connectionString } = watch([
+  const { name: storageName, protocol, ...descriptions } = watch([
     'name',
     'protocol',
-    'bucket',
-    'connectionString',
+    'bucket', // Footer description for AWS
+    'connectionString', // Footer description for JDBC
+    'datasetName', // Footer description for HopsFS
+    'clusterIdentifier', // Footer description for Redshift
   ]);
 
-  const description = useMemo(
-    () => (protocol === SourceProtocol.aws ? bucket : connectionString),
-    [protocol, bucket, connectionString],
-  );
+  const { id: projectId } = useParams();
+
+  const description = useMemo(() => {
+    const desc = descriptions as DescriptionsData;
+    return getDescription(desc, protocol);
+  }, [descriptions, protocol]);
 
   const Form = useMemo(() => getForm(protocol), [protocol]);
+  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   useEffect(() => {
-    if (!isEdit) {
-      setValue('name', '');
-      setValue('connectionString', '');
-    }
-
     clearErrors();
-    setSchema(getSchema(protocol));
-  }, [protocol, setValue, clearErrors, isEdit]);
+    setSchema(getSchemaByProtocol(protocol));
+  }, [protocol, setValue, clearErrors, isEdit, getSchemaByProtocol]);
+
+  useEffect(() => {
+    // Unregister name validation when disabled.
+    if (isEdit) unregister('name');
+  });
+
+  const isValidName = useCallback(async () => {
+    if (featureStoreData?.featurestoreId && projectId) {
+      const { data } = await featureStoreService.getSources(
+        +projectId,
+        featureStoreData?.featurestoreId,
+      );
+      return data.findIndex((x) => x.name === storageName) === -1;
+    }
+  }, [featureStoreData, projectId, storageName]);
+
+  const handleSubmitWithNameValidation = async () => {
+    if (isEdit || (await isValidName())) {
+      handleSubmit(onSubmit)();
+    } else {
+      setError('name', { message: 'This name is already in use' });
+    }
+  };
 
   return (
-    <Card title={isEdit ? 'Edit a source' : 'Create a source'}>
+    <Card
+      title={isEdit ? 'Edit storage connector' : 'Set up storage connector'}
+      mb="100px"
+      contentProps={{ overflow: 'visible' }}
+    >
       <Flex sx={formStyles} flexDirection="column">
         {/* API Error Messages */}
         {error && (
@@ -116,27 +176,66 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
             content="Can’t connect to the server. Check your URL and credentials."
           />
         )}
+        {/* Name and Description */}
+        <Flex mb="20px">
+          <Input
+            label="Name"
+            name="name"
+            disabled={isLoading || isDisabled || isEdit}
+            placeholder="name of the source"
+            ref={register}
+            labelAction={
+              !isEdit && (
+                <Tooltip
+                  position={TooltipPositions.right}
+                  mainText="Only alphanumeric characters, dash or underscore"
+                  ml="5px"
+                >
+                  <Icon icon="info-circle" />
+                </Tooltip>
+              )
+            }
+            {...getInputValidation('name', errors)}
+          />
+          <Input
+            labelProps={{ flexGrow: 1, marginLeft: '20px' }}
+            label="Description"
+            name="description"
+            disabled={isLoading || isDisabled}
+            placeholder="description"
+            ref={register}
+            {...getInputValidation('description', errors)}
+          />
+        </Flex>
 
         {/* Protocol Radio control */}
-        <Label text="Protocol" mt={0} mb="20px">
-          <Controller
-            control={control}
-            name="protocol"
-            render={({ onChange, value }) => (
-              <RadioGroup
-                flexDirection="row"
-                mr="30px"
-                disabled={isEdit || isLoading}
-                value={protocolOptions.getByKey(value)}
-                options={protocolOptions.labels}
-                onChange={(val) => onChange(protocolOptions.getByValue(val))}
-              />
-            )}
-          />
+        <Label mt={0} mb="8px">
+          Protocol
         </Label>
+        <Controller
+          control={control}
+          name="protocol"
+          render={({ onChange, value }) => (
+            <RadioGroup
+              flexDirection="row"
+              mr="30px"
+              disabled={isEdit || isLoading}
+              value={protocolVisualOptions.getByKey(value)}
+              options={protocolVisualOptions.labels}
+              onChange={(val) => {
+                reset(); // reset values from previous protocol
+                onChange(protocolVisualOptions.getByValue(val));
+              }}
+            />
+          )}
+        />
+
+        <Divider mb="0" legend="Parameters" />
 
         {/* Form Section */}
         <Form
+          setValue={setValue}
+          watch={watch}
           errors={errors}
           key="form"
           register={register}
@@ -145,28 +244,29 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
         />
 
         {/* Submit Section */}
-
         {isEdit && onDelete && (
-          <Label text="Danger zone" width="fit-content" mt={0}>
+          <>
+            <Divider legend="Danger zone" />
             <Button
+              width="fit-content"
               intent="alert"
               disabled={isLoading || isDisabled}
               onClick={onDelete}
             >
-              Delete the source
+              Delete the storage connector
             </Button>
-          </Label>
+          </>
         )}
         <StickySummary
-          title={cropText(name, 24)}
+          title={cropText(storageName, 24)}
           firstValue={cropText(description, 50)}
           mainButton={
             <Button
               disabled={isLoading || isDisabled}
               intent="primary"
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmitWithNameValidation}
             >
-              {isEdit ? 'Edit Source' : 'Create New Source'}
+              {isEdit ? 'Save' : 'Setup storage connector'}
             </Button>
           }
           secondaryButton={
@@ -175,10 +275,13 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
               disabled={isLoading}
               intent="secondary"
               onClick={() =>
-                navigate(routeNames.source.list, routeNames.project.view)
+                navigate(
+                  routeNames.storageConnector.list,
+                  routeNames.project.view,
+                )
               }
             >
-              Back to sources
+              Back
             </Button>
           }
         />

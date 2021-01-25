@@ -21,7 +21,7 @@ const SourcesList: FC = () => {
   const { data, isLoading } = useSourcesData(+id);
 
   const handleNavigate = (to: string) => () => {
-    navigate(to, 'p/:id/sources/');
+    navigate(to, 'p/:id/storage-conectors/');
   };
 
   if (isLoading) {
@@ -31,18 +31,11 @@ const SourcesList: FC = () => {
   if (!data.length) {
     return (
       <NoData
-        mainText="No source setted up"
-        secondaryText="Define your sources to let Hopsworks go through it and import feature groups"
+        mainText="No storage connector setted up"
+        secondaryText="Define your storage connector to let Hopsworks go through it and import feature groups"
       >
-        <Button intent="secondary" onClick={handleNavigate('/new/aws')}>
-          Import from AWS S3
-        </Button>
-        <Button
-          ml="20px"
-          intent="secondary"
-          onClick={handleNavigate('/new/jdbc')}
-        >
-          Import from JDBC (Redshift)
+        <Button intent="secondary" onClick={handleNavigate('/new')}>
+          Set up a storage connector
         </Button>
         <Button
           ml="20px"

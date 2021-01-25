@@ -10,6 +10,8 @@ export interface SourceFormProps {
   isDisabled: boolean;
   errors: FieldErrors<SourcesFormData>;
   control: any;
+  watch: any;
+  setValue: any;
 }
 
 export interface SourcesFormDataArgument {
@@ -19,14 +21,43 @@ export interface SourcesFormDataArgument {
 
 export interface SourcesFormData {
   name: string;
-  connectionString: string;
+  description: string;
   protocol: SourceProtocol;
   arguments?: SourcesFormDataArgument[];
+  iamRole?: string;
   // AWS
   accessKey?: string;
   secretKey?: string;
-  bucket?: string;
+  bucket: string;
+  serverEncryptionAlgorithm?: string;
+  serverEncryptionKey?: string;
   // JDBC
-  key?: string;
-  value?: string;
+  connectionString: string;
+  // HOPS
+  datasetName: string;
+  // Redshift
+  clusterIdentifier: string;
+  databaseDriver?: string;
+  databaseEndpoint?: string;
+  databaseName?: string;
+  databasePort?: number;
+  tableName?: string;
+  databaseUserName?: string;
+  autoCreate?: boolean;
+  databaseGroup?: string;
+  databasePassword?: string;
+}
+
+export enum Descriptions {
+  bucket = 'bucket', // AWS
+  connectionString = 'connectionString', // JDBC
+  datasetName = 'datasetName', // HopsFS
+  clusterIdentifier = 'clusterIdentifier', // Redshift
+}
+
+export interface DescriptionsData {
+  [Descriptions.bucket]: string; // AWS
+  [Descriptions.connectionString]: string; // JDBC
+  [Descriptions.datasetName]: string; // HopsFS
+  [Descriptions.clusterIdentifier]: string; // Redshift
 }

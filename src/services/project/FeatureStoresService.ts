@@ -1,9 +1,5 @@
 // Types
-import {
-  FeatureStore,
-  FeatureStoreSource,
-  StorageConnectorType,
-} from '../../types/feature-store';
+import { FeatureStore, FeatureStoreSource } from '../../types/feature-store';
 import BaseApiService, { RequestType } from '../BaseApiService';
 
 class FeatureStoresService extends BaseApiService {
@@ -24,46 +20,35 @@ class FeatureStoresService extends BaseApiService {
   getSource = (
     projectId: number,
     featureStoreId: number,
-    sourceId: number,
-    connectorType: string,
+    connectorName: string,
   ) =>
     this.request<FeatureStoreSource[]>({
-      url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${connectorType}/${sourceId}`,
+      url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${connectorName}`,
     });
 
-  create = (
-    projectId: number,
-    featureStoreId: number,
-    storageConnectorType: StorageConnectorType,
-    data: any,
-  ) =>
+  create = (projectId: number, featureStoreId: number, data: any) =>
     this.request<FeatureStoreSource[]>({
       type: RequestType.post,
-      url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${storageConnectorType}`,
-      data: data,
+      url: `${projectId}/featurestores/${featureStoreId}/storageconnectors`,
+      data,
     });
+
   edit = (
     projectId: number,
     featureStoreId: number,
-    storageConnectorType: StorageConnectorType,
-    connectorId: number,
+    connectorName: string,
     data: any,
   ) =>
     this.request<FeatureStoreSource[]>({
       type: RequestType.put,
-      url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${storageConnectorType}/${connectorId}`,
-      data: data,
+      url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${connectorName}`,
+      data,
     });
 
-  delete = (
-    projectId: number,
-    featureStoreId: number,
-    storageConnectorType: StorageConnectorType,
-    connectorId: number,
-  ) =>
+  delete = (projectId: number, featureStoreId: number, connectorName: string) =>
     this.request<FeatureStoreSource[]>({
       type: RequestType.delete,
-      url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${storageConnectorType}/${connectorId}`,
+      url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${connectorName}`,
     });
 }
 
