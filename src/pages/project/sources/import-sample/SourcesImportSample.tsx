@@ -4,9 +4,13 @@ import { Button, Text } from '@logicalclocks/quartz';
 
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const SourcesImportSample: FC = () => {
   const navigate = useNavigateRelative();
+
+  useTitle(titles.importSample);
 
   const handleSubmitImport = () => {
     console.log('Import sample');

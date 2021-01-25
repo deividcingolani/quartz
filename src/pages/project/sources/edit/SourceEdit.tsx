@@ -20,6 +20,8 @@ import {
   getDtoType,
   protocolOptions,
 } from '../utils';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const SourcesEdit: FC = () => {
   const { sourceId, connectorType, id: projectId } = useParams();
@@ -115,6 +117,8 @@ const SourcesEdit: FC = () => {
       navigate('/sources', 'p/:id/*');
     }
   }, [dispatch, source, featureStoreData, projectId, navigate, sourceId]);
+
+  useTitle(`${titles.editStorageConnector} - ${source.name}`);
 
   if (isFeatureStoreLoading || rest.length || !source) {
     return <Loader />;

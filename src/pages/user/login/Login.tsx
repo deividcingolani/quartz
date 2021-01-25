@@ -23,6 +23,8 @@ import getInputValidation from '../../../utils/getInputValidation';
 import { Dispatch, RootState } from '../../../store';
 // Components
 import LoginHelp from './LoginHelp';
+import useTitle from '../../../hooks/useTitle';
+import titles from '../../../sources/titles';
 
 export const schema = yup.object().shape({
   email: alphanum.label('Email'),
@@ -35,6 +37,8 @@ export interface AuthError {
 }
 
 const Login: FC = () => {
+  useTitle(titles.login);
+
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 

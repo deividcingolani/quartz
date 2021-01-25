@@ -20,6 +20,8 @@ import Loader from '../../../../components/loader/Loader';
 // Selectors
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const FeatureGroupStatistics: FC = () => {
   const { id, fgId, featureName, commitTime } = useParams();
@@ -176,6 +178,8 @@ const FeatureGroupStatistics: FC = () => {
     },
     [data, featureGroups, commit, navigateToStatistics],
   );
+
+  useTitle(`${titles.statistics} - ${data?.name}`);
 
   if (isLoading || isStatisticsLoading) {
     return <Loader />;

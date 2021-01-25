@@ -13,8 +13,12 @@ import routeNames from '../../../routes/routeNames';
 import Loader from '../../../components/loader/Loader';
 import ProjectListContent from './ProjectListContent';
 import NoData from '../../../components/no-data/NoData';
+import useTitle from '../../../hooks/useTitle';
+import titles from '../../../sources/titles';
 
 const ProjectList: FC = () => {
+  useTitle(titles.projectList);
+
   const projects = useSelector((state: RootState) => state.projectsList);
 
   const isGetProjects = useSelector(

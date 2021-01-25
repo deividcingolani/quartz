@@ -9,6 +9,7 @@ import Loader from '../../../components/loader/Loader';
 import { Dispatch, RootState } from '../../../store';
 // Components
 import OverviewContent from './OverviewContent';
+import useTitle from '../../../hooks/useTitle';
 
 const ProjectView: FC = () => {
   const { id: projectId } = useParams();
@@ -26,6 +27,8 @@ const ProjectView: FC = () => {
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.project.getProject,
   );
+
+  useTitle(project.projectName);
 
   if (isLoading || !project) {
     return <Loader />;

@@ -13,8 +13,12 @@ import SourcesForm from '../forms/SourcesForm';
 import Loader from '../../../../components/loader/Loader';
 // Utils
 import { formatArguments, getConnectorType, getDtoType } from '../utils';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const SourcesCreate: FC = () => {
+  useTitle(titles.createStorageConnector);
+
   const { protocol, id: projectId } = useParams();
 
   const isSubmit = useSelector(

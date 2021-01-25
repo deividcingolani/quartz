@@ -9,8 +9,12 @@ import NoData from '../../../../components/no-data/NoData';
 // Hooks
 import useSourcesData from './useSourcesData';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const SourcesList: FC = () => {
+  useTitle(titles.storageConnectors);
+
   const { id } = useParams();
   const navigate = useNavigateRelative();
 

@@ -12,8 +12,12 @@ import {
   selectSchematisedTags,
   selectSchematisedTagListLoading,
 } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const SchematisedTagsList: FC = () => {
+  useTitle(titles.schematisedTagsSettings);
+
   const tags = useSelector(selectSchematisedTags);
 
   const dispatch = useDispatch<Dispatch>();

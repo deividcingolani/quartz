@@ -9,6 +9,7 @@ import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
 import Loader from '../../../../components/loader/Loader';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import TrainingDatasetOverviewContent from './TrainingDatasetOverviewContent';
+import useTitle from '../../../../hooks/useTitle';
 
 const TrainingDatasetOverview: FC = () => {
   const { tdId, id: projectId } = useParams();
@@ -26,6 +27,8 @@ const TrainingDatasetOverview: FC = () => {
     },
     [navigate],
   );
+
+  useTitle(data?.name);
 
   if (isLoading) {
     return <Loader />;

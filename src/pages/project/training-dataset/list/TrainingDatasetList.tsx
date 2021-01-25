@@ -26,6 +26,8 @@ import NoData from '../../../../components/no-data/NoData';
 import routeNames from '../../../../routes/routeNames';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { selectFeatureGroups } from '../../../../store/models/localManagement/basket.selectors';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 export const sortOptions: { [key: string]: keyof TrainingDataset } = {
   'creation date': 'created',
@@ -34,6 +36,8 @@ export const sortOptions: { [key: string]: keyof TrainingDataset } = {
 };
 
 const TrainingDatasetList: FC = () => {
+  useTitle(titles.trainingDatasets);
+
   const { id: projectId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();

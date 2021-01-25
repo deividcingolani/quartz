@@ -13,6 +13,8 @@ import Loader from '../../../components/loader/Loader';
 import { Dispatch, RootState } from '../../../store';
 // Validators
 import { alphanum } from '../../../utils/validators';
+import useTitle from '../../../hooks/useTitle';
+import titles from '../../../sources/titles';
 
 export const schema = yup.object().shape({
   name: alphanum.label('Name'),
@@ -20,6 +22,8 @@ export const schema = yup.object().shape({
 });
 
 const Profile: FC = () => {
+  useTitle(titles.accountAuth);
+
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.profile.getUser,
   );

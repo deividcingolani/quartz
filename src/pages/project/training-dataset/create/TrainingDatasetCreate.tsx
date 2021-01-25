@@ -13,8 +13,12 @@ import Loader from '../../../../components/loader/Loader';
 import TrainingDatasetForm from '../forms/TrainingDatasetForm';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const TrainingDatasetCreate: FC = () => {
+  useTitle(titles.createTrainingDataset);
+
   const { id: projectId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();

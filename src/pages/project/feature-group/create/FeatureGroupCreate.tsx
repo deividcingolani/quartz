@@ -16,8 +16,12 @@ import {
   getEnabledStatistics,
   mapStatisticConfiguration,
 } from '../utils';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const FeatureGroupCreate: FC = () => {
+  useTitle(titles.createFeatureGroup);
+
   const { id: projectId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();

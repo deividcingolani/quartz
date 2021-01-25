@@ -9,8 +9,12 @@ import useNavigateRelative from '../../../hooks/useNavigateRelative';
 import ProjectForm from '../forms/ProjectForm';
 import { Button, Callout, CalloutTypes, Value } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
+import useTitle from '../../../hooks/useTitle';
+import titles from '../../../sources/titles';
 
 const ProjectCreate: FC = () => {
+  useTitle(titles.createProject);
+
   const isSubmit = useSelector(
     (state: RootState) => state.loading.effects.project.create,
   );

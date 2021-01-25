@@ -10,6 +10,8 @@ import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Components
 import ProjectForm from '../forms/ProjectForm';
 import Loader from '../../../components/loader/Loader';
+import useTitle from '../../../hooks/useTitle';
+import titles from '../../../sources/titles';
 
 const ProjectEdit: FC = () => {
   const { id: projectId } = useParams();
@@ -30,6 +32,8 @@ const ProjectEdit: FC = () => {
   );
 
   const project = useSelector((state: RootState) => state.project);
+
+  useTitle(`${titles.editProject} ${project.projectName || ''}`);
 
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.project.getProject,

@@ -20,6 +20,8 @@ import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import StatisticsContent from '../../feature-group/data/StatisticsContent';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const TrainingDatasetStatistics: FC = () => {
   const { id, tdId, featureName, commitTime } = useParams();
@@ -186,6 +188,8 @@ const TrainingDatasetStatistics: FC = () => {
     },
     [data, trainingDatasets, commit, navigateToStatistics],
   );
+
+  useTitle(`${titles.statistics} - ${data?.name}`);
 
   if (isLoading || isStatisticsLoading) {
     return <Loader />;

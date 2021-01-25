@@ -18,6 +18,8 @@ import {
 } from '../utils';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const FeatureGroupEdit: FC = () => {
   const { id: projectId, fgId } = useParams();
@@ -123,6 +125,8 @@ const FeatureGroupEdit: FC = () => {
   const isSubmit = useSelector(
     (state: RootState) => state.loading.effects.featureGroups.create,
   );
+
+  useTitle(`${titles.editFg} - ${featureGroup?.name}`);
 
   if (isKeywordsLoading || isTagsLoading || !featureGroup) {
     return <Loader />;

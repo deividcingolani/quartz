@@ -23,6 +23,8 @@ import { selectFeatureStoreData } from '../../../../store/models/feature/selecto
 import NoData from '../../../../components/no-data/NoData';
 import FeatureGroupListContent from './FeatureGroupListContent';
 import Loader from '../../../../components/loader/Loader';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const FeatureGroupList: FC = () => {
   const { id: projectId } = useParams();
@@ -111,6 +113,8 @@ const FeatureGroupList: FC = () => {
       sortKey,
     );
   }, [maxVersionsData, sort, filter, search]);
+
+  useTitle(titles.featureGroups);
 
   return (
     <Flex flexGrow={1} flexDirection="column">

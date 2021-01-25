@@ -12,6 +12,7 @@ import Loader from '../../../../components/loader/Loader';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
+import useTitle from '../../../../hooks/useTitle';
 
 const FeatureGroupOverview: FC = () => {
   const { fgId, id: projectId } = useParams();
@@ -26,6 +27,8 @@ const FeatureGroupOverview: FC = () => {
     },
     [navigate],
   );
+
+  useTitle(data?.name);
 
   if (isLoading) {
     return <Loader />;

@@ -32,6 +32,8 @@ import FilterResult from '../../../../../components/filter-result/FilterResult';
 import { selectFeatureStoreData } from '../../../../../store/models/feature/selectors';
 import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
 import useBasket from '../../../../../hooks/useBasket';
+import useTitle from '../../../../../hooks/useTitle';
+import titles from '../../../../../sources/titles';
 
 const FeatureGroupDataPreview: FC = () => {
   const { id, fgId } = useParams();
@@ -157,6 +159,8 @@ const FeatureGroupDataPreview: FC = () => {
   const featuresLength = features.length;
   const displayFeaturesLength = filteredFeatures.length;
   const isFiltered = featuresLength !== displayFeaturesLength;
+
+  useTitle(`${titles.dataPreview} - ${view?.name}`);
 
   if (isLoading || !view) {
     return <Loader />;

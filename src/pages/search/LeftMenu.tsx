@@ -2,6 +2,8 @@ import { Box } from 'rebass';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Input, Label, Button } from '@logicalclocks/quartz';
+import useTitle from '../../hooks/useTitle';
+import titles from '../../sources/titles';
 
 export interface LeftMenuProps {
   isLoading: boolean;
@@ -10,6 +12,8 @@ export interface LeftMenuProps {
 const LeftMenu: FC<LeftMenuProps> = ({ isLoading }) => {
   const { searchText = '', id } = useParams();
   const location = useLocation();
+
+  useTitle(id ? titles.searchWithinProject : titles.searchAcrossProject);
 
   const [search, setSearch] = useState(searchText);
 
