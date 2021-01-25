@@ -12,9 +12,14 @@ export interface CodeItem {
 export interface PipelineHistoryProps
   extends Omit<CardProps, 'content' | 'children'> {
   content: CodeItem[];
+  hasTitle?: boolean;
 }
 
-const CodeCard: FC<PipelineHistoryProps> = ({ content, ...props }) => {
+const CodeCard: FC<PipelineHistoryProps> = ({
+  content,
+  hasTitle = true,
+  ...props
+}) => {
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <Card mt="20px" {...props}>
@@ -24,7 +29,7 @@ const CodeCard: FC<PipelineHistoryProps> = ({ content, ...props }) => {
           justifyContent="space-between"
           mt={index ? '20px' : undefined}
         >
-          <Text width="80px">{title}</Text>
+          {hasTitle && <Text width="80px">{title}</Text>}
           <Code width="calc(100% - 80px)" copyButton content={code} />
         </Flex>
       ))}

@@ -1,15 +1,17 @@
 import * as yup from 'yup';
 import { Box, Flex } from 'rebass';
 import { useForm } from 'react-hook-form';
-import React, { FC, useCallback, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, useCallback, useState } from 'react';
 import {
   Button,
   Callout,
   CalloutTypes,
   Card,
   Input,
+  Label,
+  Labeling,
   Microlabeling,
   NotificationsManager,
   User,
@@ -17,17 +19,17 @@ import {
 } from '@logicalclocks/quartz';
 
 // Validators
-import getInputValidation from '../../../utils/getInputValidation';
+import getInputValidation from '../../../../utils/getInputValidation';
 // Types
-import { Dispatch, RootState } from '../../../store';
-import { AuthError } from '../login/Login';
+import { Dispatch, RootState } from '../../../../store';
+import { AuthError } from '../../login/Login';
 // Utils
-import { shortRequiredText, shortText } from '../../../utils/validators';
+import { shortRequiredText, shortText } from '../../../../utils/validators';
 // Services
-import ProfileService from '../../../services/ProfileService';
+import ProfileService from '../../../../services/ProfileService';
 // Components
-import NotificationTitle from '../../../utils/notifications/notificationBadge';
-import NotificationContent from '../../../utils/notifications/notificationValue';
+import NotificationBadge from '../../../../utils/notifications/notificationBadge';
+import NotificationContent from '../../../../utils/notifications/notificationValue';
 
 export const schema = yup.object().shape({
   firstname: shortRequiredText.label('First name'),
@@ -66,8 +68,7 @@ const ProfileForm: FC = () => {
         setError(error);
       } else {
         NotificationsManager.create({
-          isError: false,
-          type: <NotificationTitle message="info updated" />,
+          type: <NotificationBadge message="info updated" variant="success" />,
           content: (
             <NotificationContent message="Your information has been successfully updated" />
           ),
@@ -84,20 +85,20 @@ const ProfileForm: FC = () => {
           <Callout type={CalloutTypes.error} content={error.message} />
         </Box>
       )}
-      <Card width="100%" mt="20px" title="Profile" mb="30px">
+      <Card width="100%" title="Edit profile">
         <Flex flexDirection="column">
           <Flex>
             <User
               name={user.firstname}
               photo={ProfileService.avatar(user.email)}
             />
-            <Flex mt="3px" flexDirection="column" ml="25px">
+            <Flex mt="3px" flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>
                 Username
               </Microlabeling>
               <Value primary>{user.firstname}</Value>
             </Flex>
-            <Flex mt="3px" flexDirection="column" ml="25px">
+            <Flex mt="3px" flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>
                 Email
               </Microlabeling>
@@ -123,14 +124,23 @@ const ProfileForm: FC = () => {
               ref={register}
               {...getInputValidation('lastname', errors)}
             />
-            <Input
-              label="Phone number"
-              name="phoneNumber"
-              disabled={isLoading}
-              placeholder="Phone number"
-              ref={register}
-              {...getInputValidation('phoneNumber', errors)}
-            />
+            <Label>
+              <Flex>
+                Phone number
+                <Labeling ml="5px" gray>
+                  (optional)
+                </Labeling>
+              </Flex>
+              <Input
+                label=""
+                mt="8px"
+                name="phoneNumber"
+                disabled={isLoading}
+                placeholder="+46 12-345 67 89"
+                ref={register}
+                {...getInputValidation('phoneNumber', errors)}
+              />
+            </Label>
           </Flex>
           <Button
             disabled={isLoading}

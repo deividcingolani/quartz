@@ -14,15 +14,15 @@ import {
 } from '@logicalclocks/quartz';
 
 // Components
-import NotificationTitle from '../../../utils/notifications/notificationBadge';
-import NotificationContent from '../../../utils/notifications/notificationValue';
+import NotificationBadge from '../../../../utils/notifications/notificationBadge';
+import NotificationContent from '../../../../utils/notifications/notificationValue';
 // Utils
-import getInputValidation from '../../../utils/getInputValidation';
+import getInputValidation from '../../../../utils/getInputValidation';
 // Types
-import { AuthError } from '../login/Login';
-import { Dispatch, RootState } from '../../../store';
+import { AuthError } from '../../login/Login';
+import { Dispatch, RootState } from '../../../../store';
 // Validators
-import { alphanum, password } from '../../../utils/validators';
+import { alphanum, password } from '../../../../utils/validators';
 
 export const schema = yup.object().shape({
   oldPassword: alphanum.label('Old Password'),
@@ -56,8 +56,9 @@ const PasswordForm: FC = () => {
         setError(error);
       } else {
         NotificationsManager.create({
-          isError: false,
-          type: <NotificationTitle message="password updated" />,
+          type: (
+            <NotificationBadge message="password updated" variant="success" />
+          ),
           content: (
             <NotificationContent message="Your password has been successfully updated" />
           ),
@@ -74,7 +75,7 @@ const PasswordForm: FC = () => {
           <Callout type={CalloutTypes.error} content={error.message} />
         </Box>
       )}
-      <Card width="100%" title="Password">
+      <Card width="100%" title="Update password">
         <Flex flexDirection="column">
           <Input
             label="Current Password"
@@ -82,7 +83,7 @@ const PasswordForm: FC = () => {
             name="oldPassword"
             labelProps={{ mr: '20px' }}
             disabled={isLoading}
-            placeholder="Current Password"
+            placeholder="••••••"
             ref={register}
             {...getInputValidation('oldPassword', errors)}
           />
@@ -93,7 +94,7 @@ const PasswordForm: FC = () => {
               name="newPassword"
               labelProps={{ mr: '20px' }}
               disabled={isLoading}
-              placeholder="New password"
+              placeholder="••••••"
               ref={register}
               {...getInputValidation('newPassword', errors)}
             />
@@ -102,7 +103,7 @@ const PasswordForm: FC = () => {
               name="confirmedPassword"
               type="password"
               disabled={isLoading}
-              placeholder="Confirm new password"
+              placeholder="••••••"
               ref={register}
               {...getInputValidation('confirmedPassword', errors)}
             />

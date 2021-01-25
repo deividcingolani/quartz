@@ -45,7 +45,12 @@ const UserDropdown: FC = () => {
       {isOpen && (
         <Box sx={{ position: 'absolute', right: '10px', top: '60px' }}>
           <List>
-            <ListItem onClick={() => navigate('/account')}>Account</ListItem>
+            <ListItem onClick={() => navigate('/account')}>
+              Account settings
+            </ListItem>
+            <ListItem onClick={() => navigate('/settings')}>
+              Cluster settings
+            </ListItem>
             <ListItem onClick={handleLogOut}>Log Out</ListItem>
           </List>
         </Box>

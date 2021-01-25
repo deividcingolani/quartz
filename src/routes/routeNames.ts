@@ -4,7 +4,17 @@ const routeNames = {
   auth: {
     login: '/login',
     register: '/register',
-    profile: '/account',
+  },
+
+  account: {
+    view: '/account/*',
+    api: {
+      list: '/account/api',
+      create: '/account/api/new',
+      edit: '/account/api/:name/edit',
+    },
+    profile: '/account/profile',
+    auth: '/account/authentication',
   },
 
   project: {

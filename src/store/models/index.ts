@@ -1,7 +1,9 @@
 import { Models } from '@rematch/core';
 
 // Models
+import api from './api/api.model';
 import auth from './auth/auth.model';
+import scope from './scope/scope.model';
 import search from './search/search.model';
 import profile from './profile/profile.model';
 import project from './projects/project.model';
@@ -28,10 +30,11 @@ import schematisedTagView from './schematised-tags/schematised-tag-view.model';
 import trainingDatasetStatistics from './training-dataset/statistics/trainingDatasetStatistics.model';
 import trainingDatasetStatisticsCommits from './training-dataset/statistics/trainingDatasetStatisticsCommits.model';
 
-
 export interface RootModel extends Models<RootModel> {
+  api: typeof api;
   auth: typeof auth;
   store: typeof store;
+  scope: typeof scope;
   search: typeof search;
   basket: typeof basket;
   project: typeof project;
@@ -59,7 +62,9 @@ export interface RootModel extends Models<RootModel> {
 }
 
 const models: RootModel = {
+  api,
   auth,
+  scope,
   store,
   search,
   basket,

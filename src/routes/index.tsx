@@ -1,13 +1,13 @@
 import React, { FC, useEffect } from 'react';
-import { Route, Routes as RouterRoutes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import routeNames from './routeNames';
+import { Route, Routes as RouterRoutes } from 'react-router-dom';
 // Layouts
 import AppLayout from '../layouts/app/AppLayout';
-import ProjectManagementLayout from '../layouts/project-management/ProjectManagementLayout';
 import AuthLayout from '../layouts/auth/AuthLayout';
-import SettingsLayout from '../layouts/settings/SettingsLayout';
 import SearchLayout from '../layouts/search/SearchLayout';
+import AccountLayout from '../layouts/account/AccountLayout';
+import SettingsLayout from '../layouts/settings/SettingsLayout';
+import ProjectManagementLayout from '../layouts/project-management/ProjectManagementLayout';
 // Components
 import Error404 from '../pages/error/404Error';
 import Redirect from '../components/redirect/Redirect';
@@ -17,9 +17,11 @@ import { Dispatch, RootState } from '../store';
 import useErrorCleaner from '../hooks/useErrorCleaner';
 import useTokenApiInterceptor from '../hooks/useTokenApiInterceptor';
 
+import routeNames from './routeNames';
+
 // Pages
 const DeepSearch = React.lazy(() => import('../pages/search/DeepSearch'));
-
+// Project
 const Project = React.lazy(() => import('../pages/project/Project'));
 const ProjectCreate = React.lazy(
   () => import('../pages/project/create/ProjectCreate'),
@@ -27,10 +29,23 @@ const ProjectCreate = React.lazy(
 const ProjectList = React.lazy(
   () => import('../pages/project/list/ProjectList'),
 );
-
+// Auth
 const Login = React.lazy(() => import('../pages/user/login/Login'));
-const Profile = React.lazy(() => import('../pages/user/profile/Profile'));
-
+// Account
+const Profile = React.lazy(
+  () => import('../pages/user/account/profile/Profile'),
+);
+const Authentication = React.lazy(
+  () => import('../pages/user/account/authentication/Authentication'),
+);
+const ApiList = React.lazy(
+  () => import('../pages/user/account/api/list/ApiList'),
+);
+const ApiCreate = React.lazy(
+  () => import('../pages/user/account/api/ApiCreate'),
+);
+const ApiEdit = React.lazy(() => import('../pages/user/account/api/ApiEdit'));
+// Settings
 const SchematisedTagsList = React.lazy(
   () => import('../pages/settings/schematised-tags/list/SchematisedTagsList'),
 );
@@ -70,7 +85,6 @@ const Routes: FC = () => {
                 path={routeNames.project.create}
                 element={<ProjectCreate />}
               />
-              <Route path={routeNames.auth.profile} element={<Profile />} />
             </RouterRoutes>
           </ProjectManagementLayout>
         </Route>
@@ -107,6 +121,29 @@ const Routes: FC = () => {
               />
             </RouterRoutes>
           </SettingsLayout>
+        </Route>
+
+        <Route>
+          {/* Settings Routes */}
+          <AccountLayout>
+            <RouterRoutes>
+              <Route path={routeNames.account.profile} element={<Profile />} />
+              <Route
+                path={routeNames.account.auth}
+                element={<Authentication />}
+              />
+              <Route path={routeNames.account.api.list} element={<ApiList />} />
+              <Route
+                path={routeNames.account.api.create}
+                element={<ApiCreate />}
+              />
+              <Route path={routeNames.account.api.edit} element={<ApiEdit />} />
+              <Route
+                path={routeNames.account.view}
+                element={<Redirect to={`/${routeNames.account.profile}`} />}
+              />
+            </RouterRoutes>
+          </AccountLayout>
         </Route>
 
         <Route>
