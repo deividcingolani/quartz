@@ -1,7 +1,7 @@
 import { Box, Flex } from 'rebass';
 import React, { ComponentType, FC, memo } from 'react';
 import {
-  Row as QRow,
+  Row,
   Card,
   Input,
   Button,
@@ -20,8 +20,6 @@ import featureListStyles from './feature-lists-styles';
 export interface FeatureListProps {
   data: FeatureGroup;
 }
-
-const Row = memo(QRow);
 
 const FeatureList: FC<FeatureListProps> = ({ data }) => {
   const {
@@ -87,7 +85,7 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
       </Flex>
 
       {/* Data Rows */}
-      <Box mt="30px" mx="-20px" pb="18px" sx={featureListStyles}>
+      <Box mt="30px" mx="-19px" pb="18px" sx={featureListStyles}>
         <Row
           middleColumn={1}
           groupComponents={groupComponents as ComponentType<any>[][]}
