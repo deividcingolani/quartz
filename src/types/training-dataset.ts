@@ -28,6 +28,7 @@ export interface TrainingDatasetProvenance {
 export interface TrainingDataset extends DataEntity {
   type: string;
   created: string;
+  updated: string;
   creator: string;
   dataFormat: string;
   description: string;

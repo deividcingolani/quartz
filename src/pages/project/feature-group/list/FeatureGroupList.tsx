@@ -30,7 +30,7 @@ const FeatureGroupList: FC = () => {
   const { id: projectId } = useParams();
 
   const [filter, setFilter] = useState<string[]>([]);
-  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
+  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[0]]);
   const [search, setSearch] = useState<string>('');
   const navigate = useNavigateRelative();
 

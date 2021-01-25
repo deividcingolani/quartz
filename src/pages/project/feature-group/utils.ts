@@ -38,7 +38,17 @@ interface SortParams {
 }
 
 export const sortOptions: SortParams = {
-  'creation date': ({ created: c1 }, { created: c2 }) => {
+  'last updated': ({ updated: c1 }, { updated: c2 }) => {
+    const time1 = new Date(c1).getTime();
+    const time2 = new Date(c2).getTime();
+
+    if (time1 === time2) {
+      return 0;
+    }
+
+    return time1 < time2 ? 1 : -1;
+  },
+  'last created': ({ created: c1 }, { created: c2 }) => {
     const time1 = new Date(c1).getTime();
     const time2 = new Date(c2).getTime();
 

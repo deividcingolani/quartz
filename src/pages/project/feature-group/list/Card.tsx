@@ -160,9 +160,9 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 Last update
               </Microlabeling>
               <Flex alignItems="center">
-                <FreshnessBar time={data.created.replace('T', ' ')} />
+                <FreshnessBar time={data.updated.replace('T', ' ')} />
                 <Value fontFamily="Inter" ml="5px" primary>
-                  {formatDistance(new Date(data.created), new Date())} ago
+                  {formatDistance(new Date(data.updated), new Date())} ago
                 </Value>
               </Flex>
             </Flex>

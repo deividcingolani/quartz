@@ -89,6 +89,22 @@ class FeatureGroupsService extends BaseApiService {
       type: RequestType.get,
     });
 
+  getWriteLast = async (
+    projectId: number,
+    featureStoreId: number,
+    featureGroupId: number,
+  ): Promise<string> => {
+    const { data } = await this.request<any>({
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}/provenance/usage?type=WRITE_LAST`,
+      type: RequestType.get,
+    });
+
+    return (
+      data?.writeLast?.timestamp &&
+      new Date(data.writeLast.timestamp).toISOString()
+    );
+  };
+
   getCommitsDetail = (
     projectId: number,
     featureStoreId: number,

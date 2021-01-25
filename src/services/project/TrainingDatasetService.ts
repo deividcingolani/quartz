@@ -110,6 +110,21 @@ class TrainingDatasetService extends BaseApiService {
       type: RequestType.get,
     });
 
+  getWriteLast = async (
+    projectId: number,
+    featureStoreId: number,
+    trainingDatasetId: number,
+  ): Promise<string> => {
+    const { data } = await this.request<any>({
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/provenance/usage?type=WRITE_LAST`,
+      type: RequestType.get,
+    });
+    return (
+      data?.writeLast?.timestamp &&
+      new Date(data.writeLast.timestamp).toISOString()
+    );
+  };
+
   attachKeywords = (
     projectId: number,
     featureStoreId: number,

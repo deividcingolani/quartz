@@ -25,13 +25,14 @@ import TrainingDatasetListContent from './TrainingDatasetListContent';
 import NoData from '../../../../components/no-data/NoData';
 import routeNames from '../../../../routes/routeNames';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { SortDirection } from '../../../../utils/sort';
 import { selectFeatureGroups } from '../../../../store/models/localManagement/basket.selectors';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
 export const sortOptions: { [key: string]: keyof TrainingDataset } = {
-  'creation date': 'created',
-  'last updated': 'created',
+  'last updated': 'updated',
+  'last created': 'created',
   name: 'name',
 };
 
@@ -43,7 +44,7 @@ const TrainingDatasetList: FC = () => {
   const dispatch = useDispatch<Dispatch>();
 
   const [filter, setFilter] = useState<string[]>([]);
-  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[2]]);
+  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[0]]);
   const [search, setSearch] = useState<string>('');
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
@@ -96,7 +97,11 @@ const TrainingDatasetList: FC = () => {
     const key = sortOptions[sortKey];
 
     return pipe<TrainingDataset[]>(
-      sortFn<TrainingDataset>(key as keyof TrainingDataset, sortFn.string),
+      sortFn<TrainingDataset>(
+        key as keyof TrainingDataset,
+        sortFn.string,
+        SortDirection.desc,
+      ),
       filterFn(filter, 'labels'),
       searchText(search),
     )(data);

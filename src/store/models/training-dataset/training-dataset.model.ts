@@ -64,6 +64,21 @@ export const trainingDatasetModel = createModel()({
         +featureStoreId,
       );
 
+      // Fetch last updated time for each training dataset
+      const dssPromises = await Promise.allSettled(
+        data.map(async (group) => {
+          const readLast = await TrainingDatasetService.getWriteLast(
+            projectId,
+            featureStoreId,
+            group.id,
+          );
+          return {
+            ...group,
+            updated: readLast || group.created,
+          };
+        }),
+      );
+
       data.forEach(({ id }) => {
         dispatch.trainingDatasetLabels.fetch({
           projectId,
@@ -72,7 +87,14 @@ export const trainingDatasetModel = createModel()({
         });
       });
 
-      dispatch.trainingDatasets.set(data);
+      const datasets = dssPromises.reduce((acc: TrainingDataset[], next) => {
+        if (next.status === 'fulfilled') {
+          return [...acc, next.value];
+        }
+        return acc;
+      }, []);
+
+      dispatch.trainingDatasets.set(datasets);
     },
     create: async ({
       projectId,

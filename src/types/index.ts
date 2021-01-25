@@ -13,6 +13,7 @@ export interface Tag {
 export interface DataEntity {
   type: string;
   created: string;
+  updated: string;
   descStatsEnabled: boolean;
   featCorrEnabled: boolean;
   featHistEnabled: boolean;

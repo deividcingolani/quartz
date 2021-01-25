@@ -68,7 +68,7 @@ const featureGroups = createModel()({
         featureStoreId,
       );
 
-      // Fetch labels for each feature group
+      // Fetch labels and last updated time for each feature group
       const fgsPromises = await Promise.allSettled(
         data.map(async (group) => {
           let keywords: string[] = [];
@@ -79,9 +79,15 @@ const featureGroups = createModel()({
               group.id,
             );
           }
+          const readLast = await FeatureGroupsService.getWriteLast(
+            projectId,
+            featureStoreId,
+            group.id,
+          );
           return {
             ...group,
             labels: keywords,
+            updated: readLast || group.created,
           };
         }),
       );
