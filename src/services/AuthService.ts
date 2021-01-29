@@ -12,11 +12,31 @@ class AuthService extends BaseApiService {
     });
   };
 
+  recoverPassword = async (email: string): Promise<any> => {
+    return this.request<any>({
+      url: `auth/recover/password`,
+      type: RequestType.post,
+      data: new URLSearchParams({
+        email,
+      }).toString(),
+    });
+  };
+
   register = async (data: any): Promise<any> => {
+    const { password, ...restData } = data;
+
     return this.request<User>({
       url: `auth/register`,
       type: RequestType.post,
-      data: new URLSearchParams(data).toString(),
+      data: {
+        ...restData,
+        chosenPassword: password,
+        repeatedPassword: password,
+        tos: true,
+        authType: 'Mobile',
+        twoFactor: false,
+        toursEnabled: true,
+      },
     });
   };
 

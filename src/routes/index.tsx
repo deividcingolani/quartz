@@ -11,6 +11,8 @@ import ProjectManagementLayout from '../layouts/project-management/ProjectManage
 // Components
 import Error404 from '../pages/error/404Error';
 import Redirect from '../components/redirect/Redirect';
+import Register from '../pages/user/login/Register';
+import ForgotPassword from '../pages/user/login/ForgotPassword';
 // Types
 import { Dispatch, RootState } from '../store';
 // Hooks
@@ -172,7 +174,11 @@ const Routes: FC = () => {
         <AuthLayout>
           <RouterRoutes>
             <Route path={routeNames.auth.login} element={<Login />} />
-            <Route path={routeNames.auth.register} element={<Login />} />
+            <Route path={routeNames.auth.register} element={<Register />} />
+            <Route
+              path={routeNames.auth.recover}
+              element={<ForgotPassword />}
+            />
             <Route path="*" element={<Redirect to="/login" />} />
           </RouterRoutes>
         </AuthLayout>

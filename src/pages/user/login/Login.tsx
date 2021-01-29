@@ -6,7 +6,9 @@ import {
   Callout,
   CalloutTypes,
   Card,
+  IconButton,
   Input,
+  TooltipPositions,
   Value,
 } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +25,7 @@ import getInputValidation from '../../../utils/getInputValidation';
 import { Dispatch, RootState } from '../../../store';
 // Components
 import LoginHelp from './LoginHelp';
+import styles from './styles';
 import useTitle from '../../../hooks/useTitle';
 import titles from '../../../sources/titles';
 
@@ -42,12 +45,14 @@ const Login: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
-  const { errors, register, handleSubmit } = useForm({
+  const { errors, register, handleSubmit, watch } = useForm({
     shouldUnregister: false,
     resolver: yupResolver(schema),
   });
 
   const [error, setError] = useState<AuthError | null>(null);
+
+  const [isShowPassword, setIsShow] = useState(false);
 
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.auth.login,
@@ -67,6 +72,8 @@ const Login: FC = () => {
     },
     [dispatch],
   );
+
+  const { password } = watch(['password']);
 
   return (
     <Flex
@@ -92,28 +99,50 @@ const Login: FC = () => {
             labelProps={{ width: '100%' }}
             name="email"
             disabled={isLoading}
-            placeholder="email"
+            placeholder="enter your email address"
             ref={register}
             {...getInputValidation('email', errors)}
           />
           <Input
-            type="password"
+            type={isShowPassword ? 'text' : 'password'}
             labelProps={{ width: '100%', mt: '20px' }}
             label="Password"
             name="password"
             disabled={isLoading}
-            placeholder="password"
+            placeholder="••••••"
             ref={register}
+            rightIcon={
+              <Box sx={styles(isShowPassword, !password)}>
+                <IconButton
+                  icon="eye"
+                  type="button"
+                  onMouseDown={() => setIsShow(true)}
+                  onMouseUp={() => setIsShow(false)}
+                  onMouseOut={() => setIsShow(false)}
+                  disabled={!password}
+                  tooltip="show password"
+                  tooltipProps={{
+                    position: TooltipPositions.right,
+                  }}
+                />
+              </Box>
+            }
             {...getInputValidation('password', errors)}
           />
-          <Button
-            type="submit"
-            mt="20px"
-            alignSelf="flex-end"
-            disabled={isLoading}
-          >
-            Login
-          </Button>
+          <Flex mt="20px" justifyContent="space-between">
+            <Button
+              ml="-15px"
+              alignSelf="flex-end"
+              intent="inline"
+              type="button"
+              onClick={() => navigate('/forgot')}
+            >
+              Forgot password?
+            </Button>
+            <Button type="submit" alignSelf="flex-end" disabled={isLoading}>
+              Login
+            </Button>
+          </Flex>
         </Flex>
       </Card>
 
@@ -126,7 +155,7 @@ const Login: FC = () => {
         backgroundColor="white"
         alignItems="center"
       >
-        <Value fontFamily="Inter">The registration is enabled</Value>
+        <Value fontFamily="Inter">Don’t have an account?</Value>
         <Button intent="secondary" onClick={() => navigate('/register')}>
           Register
         </Button>

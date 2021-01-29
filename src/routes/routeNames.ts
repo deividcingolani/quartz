@@ -4,6 +4,7 @@ const routeNames = {
   auth: {
     login: '/login',
     register: '/register',
+    recover: '/forgot',
   },
 
   account: {

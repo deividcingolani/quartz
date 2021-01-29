@@ -40,6 +40,9 @@ const auth = createModel()({
     register: async ({ data }: { data: any }): Promise<any> => {
       return handleAuthError(() => AuthService.register(data));
     },
+    recoverPassword: async ({ data }: { data: string }): Promise<any> => {
+      return handleAuthError(() => AuthService.recoverPassword(data));
+    },
     updatePassword: async ({ data }: { data: any }): Promise<any> => {
       return handleAuthError(() => AuthService.updatePassword(data));
     },
