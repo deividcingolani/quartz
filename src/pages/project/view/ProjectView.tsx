@@ -20,6 +20,7 @@ const ProjectView: FC = () => {
 
   useEffect(() => {
     dispatch.project.getProject(+projectId);
+    dispatch.members.fetch();
   }, [projectId, dispatch]);
 
   const project = useSelector((state: RootState) => state.project);

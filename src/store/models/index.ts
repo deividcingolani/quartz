@@ -31,6 +31,7 @@ import schematisedTags from './schematised-tags/schematised-tags.model';
 import schematisedTagView from './schematised-tags/schematised-tag-view.model';
 import trainingDatasetStatistics from './training-dataset/statistics/trainingDatasetStatistics.model';
 import trainingDatasetStatisticsCommits from './training-dataset/statistics/trainingDatasetStatisticsCommits.model';
+import members from './projects/members.model';
 
 export interface RootModel extends Models<RootModel> {
   api: typeof api;
@@ -40,8 +41,9 @@ export interface RootModel extends Models<RootModel> {
   search: typeof search;
   basket: typeof basket;
   dataset: typeof dataset;
-  profile: typeof profile;
+  members: typeof members;
   project: typeof project;
+  profile: typeof profile;
   deepSearch: typeof deepSearch;
   projectsList: typeof projectsList;
   roleMappings: typeof roleMappings;
@@ -75,6 +77,7 @@ const models: RootModel = {
   dataset,
   profile,
   project,
+  members,
   deepSearch,
   roleMappings,
   projectsList,

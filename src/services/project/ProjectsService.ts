@@ -41,6 +41,33 @@ class ProjectsService extends BaseApiService {
       type: RequestType.post,
     });
   };
+
+  addMembers = async (id: number, data: any): Promise<any> => {
+    await this.request<any>({
+      url: `/${id}/projectMembers`,
+      type: RequestType.post,
+      data,
+    });
+  };
+
+  deleteMember = async (id: number, email: string): Promise<any> => {
+    await this.request<any>({
+      url: `/${id}/projectMembers/${email}`,
+      type: RequestType.delete,
+    });
+  };
+
+  editMemberRole = async (
+    id: number,
+    email: string,
+    role: string,
+  ): Promise<any> => {
+    await this.request<any>({
+      url: `/${id}/projectMembers/${email}`,
+      type: RequestType.post,
+      data: new URLSearchParams({ role }).toString(),
+    });
+  };
 }
 
 interface GetListResponse {

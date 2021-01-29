@@ -56,6 +56,7 @@ const PasswordForm: FC = () => {
         setError(error);
       } else {
         NotificationsManager.create({
+          isError: false,
           type: (
             <NotificationBadge message="password updated" variant="success" />
           ),

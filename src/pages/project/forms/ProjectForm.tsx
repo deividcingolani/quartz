@@ -14,8 +14,8 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import React, { FC, memo } from 'react';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
 
+import { yupResolver } from '@hookform/resolvers/yup';
 // Types
 import { ProjectFormData } from './types';
 import { Project } from '../../../types/project';
@@ -24,6 +24,7 @@ import { cropText } from '../sources/utils';
 import { name, shortText } from '../../../utils/validators';
 import getInputValidation from '../../../utils/getInputValidation';
 // Components
+import MembersForm from './MembersForm';
 import Loader from '../../../components/loader/Loader';
 
 export interface ProjectFormProps {
@@ -46,10 +47,11 @@ const ProjectForm: FC<ProjectFormProps> = ({
   isEdit,
   initialData,
 }) => {
-  const { watch, handleSubmit, errors, register } = useForm({
+  const { watch, handleSubmit, errors, register, control } = useForm({
     defaultValues: {
       projectName: initialData?.projectName,
       description: initialData?.description,
+      membersEmails: [],
     },
     resolver: yupResolver(schema),
     shouldUnregister: false,
@@ -67,7 +69,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
           readOnly={isEdit}
           name="projectName"
           disabled={isLoading}
-          placeholder="name of the project"
+          placeholder="project_acme"
           ref={register}
           labelAction={
             <Tooltip
@@ -84,10 +86,13 @@ const ProjectForm: FC<ProjectFormProps> = ({
           label="Description"
           name="description"
           disabled={isLoading}
-          placeholder="description"
+          placeholder="project about...."
           ref={register}
           {...getInputValidation('description', errors)}
         />
+
+        {!isEdit && <MembersForm control={control} isLoading={isLoading} />}
+
         {isEdit && onDelete && (
           <Label text="Danger zone" width="fit-content" mt={0}>
             <Button intent="alert" disabled={isLoading} onClick={onDelete}>
@@ -95,7 +100,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
             </Button>
           </Label>
         )}
-        <Label mt="20px">
+        <Label mt="10px">
           Invite Collaborators
           <Box mt="5px">
             <Callout
@@ -109,7 +114,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
                     pl="3px"
                     onClick={() =>
                       window.open(
-                        'https://hopsworks.readthedocs.io/en/latest/admin_guide/user-administration.html',
+                        'https://hopsworks.readthedocs.io/en/latest/user_guide/hopsworks/projectMembers.html',
                         '_blank',
                       )
                     }

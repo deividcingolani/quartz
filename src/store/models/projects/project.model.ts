@@ -24,6 +24,19 @@ const project = createModel()({
 
       dispatch.project.setProject(mappedProject);
     },
+    refetchProject: async (id: number): Promise<void> => {
+      const project = await ProjectsService.get(id);
+
+      const [featureStore] = await FeatureStoresService.getList(id);
+
+      const mappedProject = {
+        ...project,
+        featureGroupsCount: featureStore.numFeatureGroups,
+        trainingDatasetsCount: featureStore.numTrainingDatasets,
+      };
+
+      dispatch.project.setProject(mappedProject);
+    },
     create: async ({ data }: { data: any }): Promise<any> => {
       return await ProjectsService.create(data);
     },

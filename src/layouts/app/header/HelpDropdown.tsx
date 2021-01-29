@@ -17,10 +17,10 @@ const HelpDropdown: FC = () => {
   return (
     <Box ref={buttonRef} sx={{ position: 'relative' }}>
       <IconButton
-        tooltipProps={{ disabled: true }}
         icon={['far', 'question-circle']}
         intent="ghost-white"
         tooltip="Help"
+        ml="-6px"
         onClick={() => handleToggle()}
       />
       {isOpen && (

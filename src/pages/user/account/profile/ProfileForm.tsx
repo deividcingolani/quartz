@@ -68,6 +68,7 @@ const ProfileForm: FC = () => {
         setError(error);
       } else {
         NotificationsManager.create({
+          isError: false,
           type: <NotificationBadge message="info updated" variant="success" />,
           content: (
             <NotificationContent message="Your information has been successfully updated" />

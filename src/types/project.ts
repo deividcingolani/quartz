@@ -25,7 +25,7 @@ export interface Project {
   lastQuotaUpdate: string;
   logs: boolean;
   name: string;
-  owner: User; // Todo: need to update
+  owner: string;
   paymentType: string;
   pythonVersion: string;
   retentionPeriod: string;

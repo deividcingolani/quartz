@@ -1,15 +1,19 @@
+import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
+import { Button, Callout, CalloutTypes, Value } from '@logicalclocks/quartz';
 // Types
-import { Dispatch, RootState } from '../../../store';
+import { Roles } from '../forms/AddMembers';
 import { ProjectFormData } from '../forms/types';
+import { Dispatch, RootState } from '../../../store';
 // Hooks
+import useTitle from '../../../hooks/useTitle';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Components
 import ProjectForm from '../forms/ProjectForm';
-import { Button, Callout, CalloutTypes, Value } from '@logicalclocks/quartz';
-import { Box, Flex } from 'rebass';
-import useTitle from '../../../hooks/useTitle';
+
+import { selectIsAddingMember } from '../../../store/models/projects/selectors';
+
 import titles from '../../../sources/titles';
 
 const ProjectCreate: FC = () => {
@@ -18,6 +22,8 @@ const ProjectCreate: FC = () => {
   const isSubmit = useSelector(
     (state: RootState) => state.loading.effects.project.create,
   );
+
+  const isAddingMembers = useSelector(selectIsAddingMember);
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();
@@ -34,6 +40,7 @@ const ProjectCreate: FC = () => {
   );
 
   useEffect(() => {
+    dispatch.members.fetch();
     dispatch.projectsList.getProjects();
     return () => {
       dispatch.projectsList.clear();
@@ -54,7 +61,7 @@ const ProjectCreate: FC = () => {
       await dispatch.project.create({
         data: {
           retentionPeriod: '',
-          services: [],
+          services: ['JOBS', 'JUPYTER', 'HIVE', 'KAFKA', 'FEATURESTORE'],
           type: '',
           ...data,
         },
@@ -63,6 +70,21 @@ const ProjectCreate: FC = () => {
       const id = await getProjectId(data.projectName);
 
       if (id) {
+        const selectedMembers = data.membersEmails.map((email) => ({
+          projectTeamPK: {
+            projectId: id,
+            teamMember: email,
+          },
+          teamRole: Roles['Data scientist'],
+        }));
+
+        await dispatch.members.add({
+          id: +id,
+          data: {
+            projectTeam: selectedMembers,
+          },
+        });
+
         navigate(`/p/${id}/view`);
       } else {
         navigate(`/`);
@@ -111,7 +133,7 @@ const ProjectCreate: FC = () => {
         </Box>
       )}
       <ProjectForm
-        isLoading={isSubmit || isProjectsLoading}
+        isLoading={isSubmit || isProjectsLoading || isAddingMembers}
         onSubmit={handleSubmit}
       />
     </>

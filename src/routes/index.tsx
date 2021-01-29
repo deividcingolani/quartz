@@ -18,6 +18,7 @@ import useErrorCleaner from '../hooks/useErrorCleaner';
 import useTokenApiInterceptor from '../hooks/useTokenApiInterceptor';
 
 import routeNames from './routeNames';
+import useCloseNotifications from '../hooks/useCloseNotifications';
 
 // Pages
 const DeepSearch = React.lazy(() => import('../pages/search/DeepSearch'));
@@ -72,6 +73,7 @@ const Routes: FC = () => {
   }, [dispatch]);
 
   useErrorCleaner();
+  useCloseNotifications();
 
   if (token) {
     return (

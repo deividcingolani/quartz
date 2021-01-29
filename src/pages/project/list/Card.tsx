@@ -136,7 +136,11 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               mainText={data.user.email}
               secondaryText="author"
             >
-              <User name={''} photo={ProfileService.avatar(data.user.email)} />
+              <User
+                name={''}
+                isTooltipActive={false}
+                photo={ProfileService.avatar(data.user.email)}
+              />
             </Tooltip>
           </Flex>
         </Flex>
