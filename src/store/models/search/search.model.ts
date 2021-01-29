@@ -19,6 +19,20 @@ const search = createModel()({
   } as SearchState,
   reducers: {
     setData: (_: SearchState, payload: SearchState): SearchState => payload,
+    setFeatureGroups: (
+      state: SearchState,
+      payload: FeatureGroup[],
+    ): SearchState => ({
+      ...state,
+      featureGroups: payload,
+    }),
+    setTrainingDatasets: (
+      state: SearchState,
+      payload: TrainingDataset[],
+    ): SearchState => ({
+      ...state,
+      trainingDatasets: payload,
+    }),
     clear: () => ({
       featureGroups: [],
       trainingDatasets: [],

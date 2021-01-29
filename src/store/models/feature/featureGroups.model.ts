@@ -68,6 +68,8 @@ const featureGroups = createModel()({
         featureStoreId,
       );
 
+      dispatch.search.setFeatureGroups(data);
+
       // Fetch labels and last updated time for each feature group
       const fgsPromises = await Promise.allSettled(
         data.map(async (group) => {
@@ -116,7 +118,8 @@ const featureGroups = createModel()({
 
       await FeatureGroupLabelsService.attachLabel(
         projectId,
-        featureStoreId, id,
+        featureStoreId,
+        id,
         data.keywords,
       );
 
@@ -151,7 +154,8 @@ const featureGroups = createModel()({
       const newTags = Object.keys(data.tags || {});
 
       const deletedTags = prevTags.filter(
-        (name: string) => !newTags.includes(name))
+        (name: string) => !newTags.includes(name),
+      );
 
       await Promise.allSettled(
         deletedTags.map(async (name: string) => {

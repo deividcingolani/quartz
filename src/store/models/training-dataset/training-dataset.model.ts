@@ -64,6 +64,8 @@ export const trainingDatasetModel = createModel()({
         +featureStoreId,
       );
 
+      dispatch.search.setTrainingDatasets(data);
+
       // Fetch last updated time for each training dataset
       const dssPromises = await Promise.allSettled(
         data.map(async (group) => {

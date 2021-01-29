@@ -1,9 +1,10 @@
-import { selectFeatureStoreData } from '../../store/models/feature/selectors';
-import { useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from '../../store';
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Dispatch } from '../../store';
+import { selectFeatureStoreData } from '../../store/models/feature/selectors';
 import { selectSearchState } from '../../store/models/search/search.selectors';
-import { useLocation, useParams } from 'react-router-dom';
 
 const useSearchData = () => {
   const { id: projectId } = useParams();
@@ -11,7 +12,6 @@ const useSearchData = () => {
   const data = useSelector(selectSearchState);
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
-  const location = useLocation();
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const useSearchData = () => {
         featureStoreId: featureStoreData.featurestoreId,
       });
     }
-  }, [dispatch, location.pathname, featureStoreData, projectId]);
+  }, [dispatch, featureStoreData, projectId]);
 
   return { data };
 };
