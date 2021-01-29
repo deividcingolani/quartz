@@ -15,9 +15,12 @@ const Loader: FC<LoaderProps> = ({
   height = 44,
   ...props
 }: LoaderProps) => {
+  const { sx, ...restProps } = props;
+
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
-    <Box {...props} sx={styles}>
+    // @ts-ignore
+    <Box sx={{ ...styles, ...sx }} {...restProps}>
       <Logo width={width} height={height} />
     </Box>
   );

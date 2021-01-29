@@ -2,12 +2,14 @@ import BaseApiService, { RequestType } from '../BaseApiService';
 
 // Types
 import {
+  ActivityItemData,
   FeatureGroup,
   FeatureGroupCommitDetail,
   FeatureGroupRowItem,
   Provenance,
 } from '../../types/feature-group';
 import { StorageConnectorType } from '../../types/feature-group-data-preview';
+import { ActivityTypeSortOptions } from '../../pages/project/feature-group/activity/types';
 
 const getQueryParams = (onlineEnabled: boolean) => {
   // [param name, is need to include in the query]
@@ -22,6 +24,47 @@ const getQueryParams = (onlineEnabled: boolean) => {
     (acc, [param, isInclude]) => (isInclude ? `${acc}&${param}` : acc),
     '',
   );
+};
+
+const getExpandParam = (): string => {
+  return `expand=commits&expand=jobs&expand=users&expand=statistics&expand=executions`;
+};
+
+const getTimeParam = (timeProps?: { from?: number; to?: number }): string => {
+  if (!timeProps) {
+    return '';
+  }
+
+  const { from, to } = timeProps;
+
+  return `${from ? `filter_by=timestamp_gt:${from}` : ''}&${
+    to ? `filter_by=timestamp_lt:${to}` : ''
+  }`;
+};
+
+const getOffsetParam = (offsetProps?: {
+  offset: number;
+  limit?: number;
+}): string => {
+  if (!offsetProps) {
+    return '';
+  }
+
+  const { offset, limit = 20 } = offsetProps;
+
+  return `limit=${limit}&offset=${offset}`;
+};
+
+const getSortParam = (eventType: ActivityTypeSortOptions): string => {
+  const sortMap = new Map<ActivityTypeSortOptions, string>([
+    [ActivityTypeSortOptions.ALL, ''],
+    [ActivityTypeSortOptions.COMMIT, 'filter_by=type:COMMIT'],
+    [ActivityTypeSortOptions.JOB, 'filter_by=type:JOB'],
+    [ActivityTypeSortOptions.METADATA, 'filter_by=type:METADATA'],
+    [ActivityTypeSortOptions.STATISTICS, 'filter_by=type:STATISTICS'],
+  ]);
+
+  return sortMap.get(eventType) || '';
 };
 
 class FeatureGroupsService extends BaseApiService {
@@ -184,6 +227,32 @@ class FeatureGroupsService extends BaseApiService {
       type: RequestType.put,
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/tags/${name}`,
       data,
+    });
+
+  getActivity = (
+    projectId: number,
+    featureStoreId: number,
+    fgId: number,
+    eventType: ActivityTypeSortOptions,
+    timeOptions?: {
+      from?: number;
+      to?: number;
+    },
+    offsetOptions?: {
+      offset: number;
+      limit?: number;
+    },
+    sortType: 'asc' | 'desc' = 'desc',
+  ) =>
+    this.request<{
+      items: ActivityItemData[];
+    }>({
+      type: RequestType.get,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/activity?${getExpandParam()}&${getSortParam(
+        eventType,
+      )}&${getTimeParam(timeOptions)}&${getOffsetParam(
+        offsetOptions,
+      )}&sort_by=TIMESTAMP:${sortType}`,
     });
 
   getTags = (projectId: number, featureStoreId: number, fgId: number) =>

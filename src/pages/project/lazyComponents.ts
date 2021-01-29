@@ -12,7 +12,7 @@ export const FeatureGroupCreate = React.lazy(
   () => import('./feature-group/create/FeatureGroupCreate'),
 );
 export const FeatureGroupActivity = React.lazy(
-  () => import('./feature-group/FeatureGroupActivity'),
+  () => import('./feature-group/activity/FeatureGroupActivity'),
 );
 export const FeatureGroupDataPreview = React.lazy(
   () => import('./feature-group/data/data-preview/FeatureGroupDataPreview'),

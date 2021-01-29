@@ -9,7 +9,6 @@ import {
   SymbolMode,
 } from '@logicalclocks/quartz';
 // eslint-disable-next-line import/no-unresolved
-import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
 import { ItemDrawerTypes } from '../drawer/ItemDrawer';
 import useBasket from '../../hooks/useBasket';
 import { FeatureGroup } from '../../types/feature-group';
@@ -92,12 +91,13 @@ const Panel: FC<PanelProps> = ({
         <Button intent="ghost" onClick={onClickEdit}>
           edit
         </Button>
-        <IconButton
-          tooltip="Refresh"
-          icon="sync-alt"
-          tooltipProps={{ ml: '15px', mr: '50px' } as TooltipProps}
-          onClick={onClickRefresh}
-        />
+        <Box ml="15px" mr="50px">
+          <IconButton
+            tooltip="Refresh"
+            icon="sync-alt"
+            onClick={onClickRefresh}
+          />
+        </Box>
       </Flex>
     </Flex>
   );

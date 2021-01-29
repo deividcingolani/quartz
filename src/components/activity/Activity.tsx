@@ -1,0 +1,36 @@
+import { Flex } from 'rebass';
+import React, { FC } from 'react';
+import ActivityDataItem from './ActivityItem';
+import ActivityTimeline from './ActivityTimeline';
+import { ActivityItem, ActivityType } from '../../types/feature-group';
+
+export interface ActivityProps {
+  items: ActivityItem;
+  actions?: Map<ActivityType, (data?: any) => void>;
+  hasData: {
+    hasPrevious: boolean;
+    hasFollowing: boolean;
+  };
+}
+
+const Activity: FC<ActivityProps> = ({ items, actions, hasData }) => {
+  return (
+    <Flex>
+      <ActivityTimeline hasData={hasData} items={items} />
+
+      <Flex flex={1} flexDirection="column">
+        {Object.entries(items).map(([key, value]) => {
+          return (
+            <ActivityDataItem
+              actions={actions}
+              activities={value}
+              key={`item-${key}`}
+            />
+          );
+        })}
+      </Flex>
+    </Flex>
+  );
+};
+
+export default Activity;

@@ -1,5 +1,6 @@
 import { DataEntity } from './index';
 import { TrainingDataset } from './training-dataset';
+import { User } from './user';
 
 export enum FeatureType {
   stringUnknown = 'Unknown',
@@ -7,6 +8,52 @@ export enum FeatureType {
   bigInt = 'Integral',
   string = 'String',
   boolean = 'Boolean',
+}
+
+export enum ActivityType {
+  job = 'JOB',
+  commit = 'COMMIT',
+  metadata = 'METADATA',
+  statistics = 'STATISTICS',
+}
+
+export interface ActivityItem {
+  [time: string]: ActivityItemData[];
+}
+
+export interface ActivityItemData {
+  type: ActivityType;
+  timestamp: number;
+  href: string;
+  user: User;
+  metadata: string;
+  statistics: {
+    commitTime: string;
+    href: string;
+  };
+  job: {
+    config: any;
+    creator: {
+      href: string;
+    };
+    executions: {
+      href: string;
+      finalStatus: string;
+    };
+    href: string;
+    name: string;
+    jobType: string;
+    id: number;
+  };
+  commit: {
+    commitDateString: string;
+    commitID: number;
+    commitTime: number;
+    href: string;
+    rowsDeleted: number;
+    rowsInserted: number;
+    rowsUpdated: number;
+  };
 }
 
 export interface Feature {

@@ -56,9 +56,11 @@ const BasketMenu: FC = () => {
               }}
             >
               {featureLength} features selected
-              <Tooltip mainText="Collect feature using this basket" ml="5px">
-                <Icon icon="info-circle" size="sm" />
-              </Tooltip>
+              <Box ml="5px">
+                <Tooltip mainText="Collect feature using this basket">
+                  <Icon icon="info-circle" size="sm" />
+                </Tooltip>
+              </Box>
             </ListItem>
           </List>
         )}

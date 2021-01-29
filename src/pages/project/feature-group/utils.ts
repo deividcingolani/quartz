@@ -1,4 +1,5 @@
 import {
+  ActivityItem,
   FeatureGroup,
   SchematisedTagEntity,
 } from '../../../types/feature-group';
@@ -18,6 +19,7 @@ import {
 } from '../../../utils/validators';
 import { uppercaseFirst } from '../../../utils/uppercaseFirst';
 import { DataEntity } from '../../../types';
+import { format, isToday } from 'date-fns';
 
 // Filter
 export const filterFG = (
@@ -165,7 +167,7 @@ export const mapStatisticConfigurationToTable = ({
 
 export const mapFeaturesToTable = (featureGroup?: FeatureGroup): FGRow[] => {
   if (featureGroup) {
-    const { features, statisticColumns } = featureGroup;
+    const { features, statisticColumns = [] } = featureGroup;
     return features.map((feature) => {
       const base: any[] = [];
       if (
@@ -342,4 +344,30 @@ export const validateSchema = async (
   }
 
   return next;
+};
+
+export const getDatePickerTime = (time: Date): string => {
+  return isToday(time) ? 'today' : format(time, 'dd MMM. y');
+};
+
+export const getMinDate = (activity: ActivityItem) => {
+  return Object.values(activity).reduce((acc, next) => {
+    const minDate = next.reduce(
+      (nestAcc, { timestamp }) => (timestamp < nestAcc ? timestamp : nestAcc),
+      +new Date(),
+    );
+
+    return minDate < acc ? minDate : acc;
+  }, +new Date());
+};
+
+export const getMaxDate = (activity: ActivityItem) => {
+  return Object.values(activity).reduce((acc, next) => {
+    const maxDate = next.reduce(
+      (nestAcc, { timestamp }) => (timestamp > nestAcc ? timestamp : nestAcc),
+      0,
+    );
+
+    return maxDate > acc ? maxDate : acc;
+  }, +new Date());
 };
