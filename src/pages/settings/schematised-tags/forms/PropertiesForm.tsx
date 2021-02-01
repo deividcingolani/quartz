@@ -1,5 +1,11 @@
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
-import { Button, EditableTable, Label } from '@logicalclocks/quartz';
+import {
+  Button,
+  Callout,
+  CalloutTypes,
+  EditableTable,
+  Label,
+} from '@logicalclocks/quartz';
 import { Box } from 'rebass';
 
 // Types
@@ -86,11 +92,19 @@ const PropertiesForm: FC<any> = ({
           minWidth="100%"
           columns={propertiesColumns}
           values={properties}
+          hasFreezeButton={false}
           onChangeData={handleChangeData}
           onDeleteRow={handleRemoveRow}
           actions={[]}
         />
       )}
+
+      <Box mt="20px">
+        <Callout
+          content="Note that schematised tags are immutable"
+          type={CalloutTypes.neutral}
+        />
+      </Box>
     </Box>
   );
 };

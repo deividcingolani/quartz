@@ -31,6 +31,7 @@ import schematisedTags from './schematised-tags/schematised-tags.model';
 import schematisedTagView from './schematised-tags/schematised-tag-view.model';
 import trainingDatasetStatistics from './training-dataset/statistics/trainingDatasetStatistics.model';
 import trainingDatasetStatisticsCommits from './training-dataset/statistics/trainingDatasetStatisticsCommits.model';
+import featureGroupSchematisedTags from './feature/statistics/featureGroupSchematisedTags.model';
 import featureGroupActivity from './feature/activity/featureGroupActivity.model';
 import members from './projects/members.model';
 
@@ -44,6 +45,7 @@ export interface RootModel extends Models<RootModel> {
   dataset: typeof dataset;
   members: typeof members;
   project: typeof project;
+  profile: typeof profile;
   deepSearch: typeof deepSearch;
   projectsList: typeof projectsList;
   roleMappings: typeof roleMappings;
@@ -63,6 +65,7 @@ export interface RootModel extends Models<RootModel> {
   featureStoreSources: typeof featureStoreSources;
   featureGroupDataPreview: typeof featureGroupDataPreview;
   featureGroupCommitsDetail: typeof featureGroupCommitsDetail;
+  featureGroupSchematisedTags: typeof featureGroupSchematisedTags;
   featureGroupStatisticsCommits: typeof featureGroupStatisticsCommits;
   trainingDatasetStatistics: typeof trainingDatasetStatistics;
   trainingDatasetStatisticsCommits: typeof trainingDatasetStatisticsCommits;
@@ -94,6 +97,7 @@ const models: RootModel = {
   featureGroupStatistics,
   featureGroupDataPreview,
   featureGroupCommitsDetail,
+  featureGroupSchematisedTags,
   featureGroupStatisticsCommits,
   trainingDatasets: trainingDatasetModel,
   trainingDatasetView,

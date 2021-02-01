@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import useNavigateRelative from '../../hooks/useNavigateRelative';
 import routeNames from '../../routes/routeNames';
 import useJobRowData from '../../hooks/useJobRowData';
-import useSchematisedTagsRowData from '../../hooks/useSchematisedTagsRowData';
 import Loader from '../loader/Loader';
 import { DataEntity } from '../../types';
 import { useLatestVersion } from '../../hooks/useLatestVersion';
@@ -28,6 +27,7 @@ import { selectFeatureStoreData } from '../../store/models/feature/selectors';
 import { Dispatch, RootState } from '../../store';
 import CommitGraph from './commit-graph';
 import { FeatureGroup } from '../../types/feature-group';
+import SchematisedTagTable from './SchematisedTagTable';
 
 export enum ItemDrawerTypes {
   fg = 'fg',
@@ -70,10 +70,6 @@ const ItemDrawer = <T extends DataEntity>({
 
   const [jobComponents, jobProps] = useJobRowData([]);
   const [lastTrainingJobComponents, lastTrainingJobProps] = useJobRowData([]);
-  const [
-    schematisedTagsComponents,
-    schematisedTagsProps,
-  ] = useSchematisedTagsRowData([]);
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
@@ -81,8 +77,17 @@ const ItemDrawer = <T extends DataEntity>({
     (state: RootState) => state.featureGroupCommitsDetail,
   );
 
+  const tags = useSelector(
+    (state: RootState) => state.featureGroupSchematisedTags,
+  );
+
   const isCommitsLoading = useSelector(
     (state: RootState) => state.loading.effects.featureGroupCommitsDetail.fetch,
+  );
+
+  const isTagsLoading = useSelector(
+    (state: RootState) =>
+      state.loading.effects.featureGroupSchematisedTags.fetch,
   );
 
   const dispatch = useDispatch<Dispatch>();
@@ -112,7 +117,24 @@ const ItemDrawer = <T extends DataEntity>({
     return () => {
       dispatch.featureGroupCommitsDetail.clear();
     };
-  }, [dispatch.featureGroupCommitsDetail, featureStoreData, item]);
+  }, [dispatch, featureStoreData, item]);
+
+  useEffect(() => {
+    if (
+      type === ItemDrawerTypes.fg &&
+      featureStoreData?.featurestoreId &&
+      item
+    ) {
+      dispatch.featureGroupSchematisedTags.fetch({
+        projectId: featureStoreData.projectId,
+        featureStoreId: featureStoreData.featurestoreId,
+        featureGroupId: item.id,
+      });
+    }
+    return () => {
+      dispatch.featureGroupSchematisedTags.clear();
+    };
+  }, [dispatch, featureStoreData, item, type]);
 
   const handleVersionChange = useCallback(
     (values) => {
@@ -190,84 +212,91 @@ const ItemDrawer = <T extends DataEntity>({
       ]}
       onClose={handleToggle}
     >
-      <Drawer.Section title="Activity" width="100%">
-        {type === ItemDrawerTypes.fg && isCommitsLoading && (
-          <Box width="100%" height="55px" sx={{ position: 'relative' }}>
-            <Loader />
-          </Box>
-        )}
-        {type === ItemDrawerTypes.fg &&
-          !isCommitsLoading &&
-          commits?.length > 0 && (
-            <CommitGraph
-              values={commits.map((commit) => ({
-                date: format(commit.committime, 'M/d/yyyy-HH:mm'),
-                added: commit.rowsInserted,
-                removed: commit.rowsDeleted,
-                modified: commit.rowsUpdated,
-              }))}
-              groupKey="date"
-              keys={['added', 'removed', 'modified']}
-            />
+      <Box maxHeight="calc(100vh - 350px)" overflowY="auto">
+        <Drawer.Section title="Activity" width="100%">
+          {type === ItemDrawerTypes.fg && isCommitsLoading && (
+            <Box width="100%" height="55px" sx={{ position: 'relative' }}>
+              <Loader />
+            </Box>
           )}
-        {type === ItemDrawerTypes.fg &&
-          !isCommitsLoading &&
-          commits?.length === 0 && <Labeling gray>No recent activity</Labeling>}
-      </Drawer.Section>
-      <Drawer.Section title="Versions">
-        <Select
-          width="143px"
-          listWidth="100%"
-          value={[
-            `${item.version.toString()} ${
-              item.version.toString() === latestVersion ? '(latest)' : ''
-            }`,
-          ]}
-          options={versions}
-          placeholder="version"
-          onChange={handleVersionChange}
-        />
-      </Drawer.Section>
-      <Drawer.Section
-        title="Last Ingestion Job"
-        action={['view all injection jobs -->', () => ({})]}
-      >
-        <Row
-          middleColumn={1}
-          groupComponents={jobComponents as ComponentType<any>[][]}
-          groupProps={jobProps}
-        />
-      </Drawer.Section>
-
-      {type === ItemDrawerTypes.td ? (
+          {type === ItemDrawerTypes.fg &&
+            !isCommitsLoading &&
+            commits?.length > 0 && (
+              <CommitGraph
+                values={commits.map((commit) => ({
+                  date: format(commit.committime, 'M/d/yyyy-HH:mm'),
+                  added: commit.rowsInserted,
+                  removed: commit.rowsDeleted,
+                  modified: commit.rowsUpdated,
+                }))}
+                groupKey="date"
+                keys={['added', 'removed', 'modified']}
+              />
+            )}
+          {type === ItemDrawerTypes.fg &&
+            !isCommitsLoading &&
+            commits?.length === 0 && (
+              <Labeling gray>No recent activity</Labeling>
+            )}
+        </Drawer.Section>
+        <Drawer.Section title="Versions">
+          <Select
+            width="143px"
+            listWidth="100%"
+            value={[
+              `${item.version.toString()} ${
+                item.version.toString() === latestVersion ? '(latest)' : ''
+              }`,
+            ]}
+            options={versions}
+            placeholder="version"
+            onChange={handleVersionChange}
+          />
+        </Drawer.Section>
         <Drawer.Section
-          title="Last Training Job"
-          action={['view all training jobs -->', () => ({})]}
+          title="Last Ingestion Job"
+          action={['view all injection jobs -->', () => ({})]}
         >
           <Row
             middleColumn={1}
-            groupComponents={
-              lastTrainingJobComponents as ComponentType<any>[][]
-            }
-            groupProps={lastTrainingJobProps}
+            groupComponents={jobComponents as ComponentType<any>[][]}
+            groupProps={jobProps}
           />
         </Drawer.Section>
-      ) : null}
 
-      <Drawer.Section
-        title="Schematised Tags"
-        action={['template_1', () => ({})]}
-      >
-        <Box height="100%">
-          <Row
-            middleColumn={1}
-            groupComponents={
-              schematisedTagsComponents as ComponentType<any>[][]
-            }
-            groupProps={schematisedTagsProps}
-          />
-        </Box>
-      </Drawer.Section>
+        {type === ItemDrawerTypes.td ? (
+          <Drawer.Section
+            title="Last Training Job"
+            action={['view all training jobs -->', () => ({})]}
+          >
+            <Row
+              middleColumn={1}
+              groupComponents={
+                lastTrainingJobComponents as ComponentType<any>[][]
+              }
+              groupProps={lastTrainingJobProps}
+            />
+          </Drawer.Section>
+        ) : null}
+
+        <Drawer.Section title="Schematised Tags">
+          {isTagsLoading && (
+            <Box width="100%" height="55px" sx={{ position: 'relative' }}>
+              <Loader />
+            </Box>
+          )}
+          {!isTagsLoading &&
+            (!!tags.length ? (
+              <Flex width="100%" flexDirection="column">
+                {tags.map((tag) => (
+                  <SchematisedTagTable key={tag.name} tag={tag} />
+                ))}
+              </Flex>
+            ) : (
+              <Labeling gray>No schematised tags attached</Labeling>
+            ))}
+        </Drawer.Section>
+      </Box>
     </Drawer>
   );
 };

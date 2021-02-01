@@ -18,7 +18,9 @@ import titles from '../../../../sources/titles';
 const SchematisedTagsList: FC = () => {
   useTitle(titles.schematisedTagsSettings);
 
-  const tags = useSelector(selectSchematisedTags);
+  const tags = useSelector(selectSchematisedTags).sort((tagA, tagB) =>
+    tagA.name.localeCompare(tagB.name),
+  );
 
   const dispatch = useDispatch<Dispatch>();
 

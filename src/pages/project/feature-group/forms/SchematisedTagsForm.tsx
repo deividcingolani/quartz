@@ -24,7 +24,9 @@ export interface ListItem {
 }
 
 const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
-  const tags = useSelector(selectSchematisedTags);
+  const tags = useSelector(selectSchematisedTags).sort((tagA, tagB) =>
+    tagA.name.localeCompare(tagB.name),
+  );
 
   const { getValues } = useFormContext();
 

@@ -51,7 +51,7 @@ const UserDropdown: FC = () => {
             <ListItem onClick={() => navigate('/settings')}>
               Cluster settings
             </ListItem>
-            <ListItem onClick={handleLogOut}>Log Out</ListItem>
+            <ListItem onClick={handleLogOut}>Log out</ListItem>
           </List>
         </Box>
       )}

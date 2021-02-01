@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { Flex } from 'rebass';
+import { Box, Flex } from 'rebass';
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ import {
 // Components
 import PropertiesForm from './PropertiesForm';
 // Types
-import { SchematisedTagFormProps } from './types';
+import { SchematisedTagFormData, SchematisedTagFormProps } from './types';
 // Utils
 import { name, shortRequiredText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
@@ -33,7 +33,14 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
   initialData,
   error,
 }) => {
-  const { errors, register, handleSubmit, setValue, getValues } = useForm({
+  const {
+    errors,
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    setError,
+  } = useForm({
     defaultValues: {
       properties: [],
       ...(initialData && {
@@ -48,6 +55,26 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
 
   const navigate = useNavigate();
 
+  const submitHandler = handleSubmit((data: SchematisedTagFormData) => {
+    if (!data.properties.length) {
+      setError('properties', { message: 'Add at least one property' });
+      return;
+    }
+
+    const containsEmptyName = !!data.properties.find(
+      ({ row }) => !row[0].columnValue,
+    );
+
+    if (containsEmptyName) {
+      setError('properties', {
+        message: 'Name is required for all properties',
+      });
+      return;
+    }
+
+    onSubmit(data);
+  });
+
   return (
     <Flex mt="10px" flexDirection="column" alignItems="center">
       <Button
@@ -60,27 +87,38 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
       </Button>
 
       {!!error && <Callout content={error} type={CalloutTypes.error} />}
+      {!!errors.properties && (
+        <Box width="100%" mt="10px" mb="10px">
+          <Callout
+            type={CalloutTypes.error}
+            // @ts-ignore
+            content={errors.properties.message}
+          />
+        </Box>
+      )}
 
-      <Card mt="10px" width="100%" title="Create new schematised tag template">
+      <Card mt="10px" width="100%" title="Create new schematised tag">
         <Flex flexDirection="column">
           <Flex flexDirection="column">
-            <Input
-              label="Name"
-              name="name"
-              disabled={isDisabled}
-              placeholder="name of the project"
-              ref={register}
-              {...getInputValidation('name', errors)}
-            />
-            <Input
-              label="Description"
-              name="description"
-              disabled={isDisabled}
-              labelProps={{ mt: '20px', width: '100%' }}
-              placeholder="description of the project"
-              ref={register}
-              {...getInputValidation('description', errors)}
-            />
+            <Flex>
+              <Input
+                label="Name"
+                name="name"
+                disabled={isDisabled}
+                placeholder="name of schema"
+                ref={register}
+                {...getInputValidation('name', errors)}
+              />
+              <Input
+                label="Description"
+                name="description"
+                disabled={isDisabled}
+                labelProps={{ ml: '20px', flex: 1 }}
+                placeholder="description of the schema"
+                ref={register}
+                {...getInputValidation('description', errors)}
+              />
+            </Flex>
 
             <PropertiesForm
               setValue={setValue}
@@ -91,7 +129,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
           </Flex>
           <Button
             disabled={isDisabled}
-            onClick={handleSubmit(onSubmit)}
+            onClick={submitHandler}
             mt="20px"
             alignSelf="flex-end"
           >

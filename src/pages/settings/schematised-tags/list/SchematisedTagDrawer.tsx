@@ -42,6 +42,7 @@ const SchematisedTagDrawer: FC<SchematisedTagDrawerProps> = ({
     <Drawer
       sx={styles}
       mt="10px"
+      singleBottom={false}
       bottom="20px"
       closeOnBackdropClick={true}
       isOpen={isOpen}

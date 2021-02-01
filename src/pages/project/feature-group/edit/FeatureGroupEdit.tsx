@@ -126,7 +126,7 @@ const FeatureGroupEdit: FC = () => {
   );
 
   const isSubmit = useSelector(
-    (state: RootState) => state.loading.effects.featureGroups.create,
+    (state: RootState) => state.loading.effects.featureGroups.edit,
   );
 
   useTitle(`${titles.editFg} - ${featureGroup?.name}`);

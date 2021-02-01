@@ -20,7 +20,9 @@ const schematisedTags = createModel()({
     fetch: async (): Promise<void> => {
       const data = await SchematisedTagsService.getList();
 
-      const mapped = data.items.map((item: SchematisedTagsServer) => {
+      const { items = [] } = data;
+
+      const mapped = items.map((item: SchematisedTagsServer) => {
         const { description, properties, required } = JSON.parse(item.value);
 
         return {

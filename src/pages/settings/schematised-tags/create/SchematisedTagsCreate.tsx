@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { FC } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { NotificationsManager } from '@logicalclocks/quartz';
+import React, { useCallback, useEffect, useState } from 'react';
+
 // Components
 import SchematisedTagsForm from '../forms/SchematisedTagsForm';
 import Loader from '../../../../components/loader/Loader';
@@ -16,6 +17,8 @@ import {
 } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
 // Utils
 import { mapProperties } from '../utils';
+import NotificationTitle from '../../../../utils/notifications/notificationBadge';
+import NotificationContent from '../../../../utils/notifications/notificationValue';
 
 const SchematisedTagsCreate: FC = () => {
   const isLoading = useSelector(selectSchematisedTagCreate);
@@ -48,6 +51,14 @@ const SchematisedTagsCreate: FC = () => {
           ...restData,
           ...mapProperties(properties),
         },
+      });
+
+      NotificationsManager.create({
+        isError: false,
+        type: <NotificationTitle message="New template created" />,
+        content: (
+          <NotificationContent message={`${restData.name} has been added`} />
+        ),
       });
 
       dispatch.schematisedTags.clear();
