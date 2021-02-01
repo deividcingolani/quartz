@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes as RouterRoutes } from 'react-router-dom';
+import { Route, Routes as RouterRoutes, useLocation } from 'react-router-dom';
 // Layouts
 import AppLayout from '../layouts/app/AppLayout';
 import AuthLayout from '../layouts/auth/AuthLayout';
@@ -57,10 +57,21 @@ const SchematisedTagCreate = React.lazy(
     import('../pages/settings/schematised-tags/create/SchematisedTagsCreate'),
 );
 
+export const pageToViewPathStorageName = 'last_page_path';
+
 const Routes: FC = () => {
   useTokenApiInterceptor();
 
   const token = useSelector((state: RootState) => state.auth.token);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!token) {
+      localStorage.setItem(pageToViewPathStorageName, location.pathname);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dispatch = useDispatch<Dispatch>();
 

@@ -28,6 +28,9 @@ import LoginHelp from './LoginHelp';
 import styles from './styles';
 import useTitle from '../../../hooks/useTitle';
 import titles from '../../../sources/titles';
+import useHistory from '../../../hooks/useHistory';
+import routeNames from '../../../routes/routeNames';
+import { pageToViewPathStorageName } from '../../../routes';
 
 export const schema = yup.object().shape({
   email: alphanum.label('Email'),
@@ -50,6 +53,8 @@ const Login: FC = () => {
     resolver: yupResolver(schema),
   });
 
+  const { history } = useHistory();
+
   const [error, setError] = useState<AuthError | null>(null);
 
   const [isShowPassword, setIsShow] = useState(false);
@@ -68,9 +73,19 @@ const Login: FC = () => {
         setError(error);
       } else {
         dispatch.profile.getUser();
+        const lastPath =
+          history.slice().reverse()[1] ||
+          localStorage.getItem(pageToViewPathStorageName);
+        localStorage.removeItem(pageToViewPathStorageName);
+
+        if (lastPath && lastPath !== routeNames.auth.login) {
+          setTimeout(() => {
+            navigate(lastPath);
+          }, 1000);
+        }
       }
     },
-    [dispatch],
+    [dispatch, history, navigate],
   );
 
   const { password } = watch(['password']);
