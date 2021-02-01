@@ -11,11 +11,7 @@ import FeatureGroupForm from '../forms/FeatureGroupForm';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Utils
-import {
-  mapFeatures,
-  getEnabledStatistics,
-  mapStatisticConfiguration,
-} from '../utils';
+import { mapFeatures, getEnabledStatistics } from '../utils';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
@@ -51,7 +47,7 @@ const FeatureGroupCreate: FC = () => {
 
   const handleSubmit = useCallback(
     async (data: FeatureGroupFormData) => {
-      const { features, statisticConfiguration, ...restData } = data;
+      const { features, enabled, histograms, correlations, ...restData } = data;
 
       if (featureStoreData?.featurestoreId) {
         await dispatch.featureGroups.create({
@@ -60,13 +56,18 @@ const FeatureGroupCreate: FC = () => {
           data: {
             ...restData,
             features: mapFeatures(features),
-            ...mapStatisticConfiguration(statisticConfiguration),
             statisticColumns: getEnabledStatistics(features),
             type: 'cachedFeaturegroupDTO',
             timeTravelFormat: restData.timeTravelFormat[0].toUpperCase(),
             descStatsEnabled: !!getEnabledStatistics(features).length,
             jobs: [],
             version: 1,
+            statisticsConfig: {
+              columns: [],
+              correlations,
+              enabled,
+              histograms,
+            },
           },
         });
       }

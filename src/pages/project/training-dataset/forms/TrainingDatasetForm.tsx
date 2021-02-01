@@ -17,11 +17,7 @@ import LabelsForm from '../../feature-group/forms/LabelsForm';
 import SchematisedTagsForm from '../../feature-group/forms/SchematisedTagsForm';
 import FeatureStickySummary from '../../feature-group/forms/FeatureStickySummary';
 // Utils
-import {
-  mapStatisticConfigurationToTable,
-  mapTags,
-  validateSchema,
-} from '../../feature-group/utils';
+import { mapTags, validateSchema } from '../../feature-group/utils';
 import { name, shortText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
 // Selectors
@@ -32,7 +28,6 @@ import {
   Callout,
   CalloutTypes,
   Card,
-  CheckboxGroup,
   Divider,
   Icon,
   Input,
@@ -43,6 +38,8 @@ import {
   Value,
 } from '@logicalclocks/quartz';
 import { ISource } from '../../../../types/source';
+import { RootState } from '../../../../store';
+import StatisticConfigurationForm from '../../feature-group/forms/StatisticsConfigurationForm';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -76,7 +73,9 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
       features: [],
       location: '',
       dataFormat: ['CSV'],
-      statisticConfiguration: [],
+      correlations: false,
+      enabled: true,
+      histograms: false,
       ...(!!initialData && {
         location: '',
         name: initialData.name,
@@ -85,7 +84,9 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         dataFormat: initialData.dataFormat,
         description: initialData.description,
         storage: {} as ISource,
-        statisticConfiguration: mapStatisticConfigurationToTable(initialData),
+        correlations: initialData.statisticsConfig.correlations,
+        enabled: initialData.statisticsConfig.enabled,
+        histograms: initialData.statisticsConfig.histograms,
       }),
     },
     shouldUnregister: false,
@@ -102,7 +103,11 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     handleSubmit,
   } = methods;
 
-  const { storage } = watch(['storage']);
+  const trainingDatasetsNames = useSelector(
+    (state: RootState) => state.trainingDatasets,
+  ).map(({ name }) => name);
+
+  const { storage, name } = watch(['storage', 'name']);
 
   const serverTags = useSelector(selectSchematisedTags);
 
@@ -188,6 +193,15 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             />
           </Flex>
 
+          {trainingDatasetsNames.includes(name) && (
+            <Box mt="-10px">
+              <Callout
+                content="A training dataset already has this name. Creating a new training dataset with the same name will create a new version."
+                type={CalloutTypes.warning}
+              />
+            </Box>
+          )}
+
           <Controller
             control={control}
             name="storage"
@@ -271,24 +285,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
 
           <Divider mb="15px" mt="-5px" />
 
-          <Controller
-            control={control}
-            name="statisticConfiguration"
-            render={({ onChange, value }) => (
-              <Box mb="20px">
-                <CheckboxGroup
-                  label="Statistic configuration"
-                  value={value}
-                  options={[
-                    'descriptive statistics',
-                    'histograms',
-                    'correlations',
-                  ]}
-                  onChange={(val) => onChange(val)}
-                />
-              </Box>
-            )}
-          />
+          <StatisticConfigurationForm isLoading={isLoading} />
 
           <Divider mb="15px" ml="-20px" mt="-5px" />
 

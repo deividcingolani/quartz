@@ -11,11 +11,7 @@ import FeatureGroupForm from '../forms/FeatureGroupForm';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Utils
-import {
-  mapFeatures,
-  getEnabledStatistics,
-  mapStatisticConfiguration,
-} from '../utils';
+import { mapFeatures, getEnabledStatistics } from '../utils';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 import useTitle from '../../../../hooks/useTitle';
@@ -57,7 +53,9 @@ const FeatureGroupEdit: FC = () => {
       const {
         features,
         description,
-        statisticConfiguration,
+        enabled,
+        histograms,
+        correlations,
         onlineEnabled,
         tags,
         keywords,
@@ -73,12 +71,17 @@ const FeatureGroupEdit: FC = () => {
             keywords,
             type: 'cachedFeaturegroupDTO',
             features: mapFeatures(features),
-            ...mapStatisticConfiguration(statisticConfiguration),
             statisticColumns: getEnabledStatistics(features),
             descStatsEnabled: !!getEnabledStatistics(features).length,
             onlineEnabled,
             tags,
             prevTags: featureGroup?.tags.map(({ name }) => name),
+            statisticsConfig: {
+              columns: [],
+              correlations,
+              enabled,
+              histograms,
+            },
           },
         });
       }

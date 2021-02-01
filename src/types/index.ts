@@ -32,6 +32,12 @@ export interface DataEntity {
   tags: Tag[];
   highlights: any;
   matchText: string;
+  statisticsConfig: {
+    enabled: boolean;
+    histograms: boolean;
+    correlations: boolean;
+    columns: string[];
+  };
 }
 
 export interface HoverableCardProps<T> {

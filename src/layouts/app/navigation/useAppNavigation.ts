@@ -13,6 +13,8 @@ import sources from '../../../sources/source_02rev.json';
 import td from '../../../sources/TD_01 (1).json';
 import fg from '../../../sources/FG_06.json';
 import home from '../../../sources/home.json';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
@@ -47,6 +49,33 @@ const useAppNavigation = (): TreeNode[] => {
     },
     [location],
   );
+
+  const featureGroup = useSelector(
+    (state: RootState) => state.featureGroupView,
+  );
+  const trainingDataset = useSelector(
+    (state: RootState) => state.trainingDatasetView,
+  );
+
+  const disabledTabs = useMemo(() => {
+    const fgConfig = featureGroup?.statisticsConfig;
+    const tdConfig = trainingDataset?.statisticsConfig;
+
+    const fgStatisticsDisabled = !fgConfig?.enabled || !fgConfig?.histograms;
+    const fgCorrelationsDisabled =
+      !fgConfig?.enabled || !fgConfig?.correlations;
+
+    const tdStatisticsDisabled = !tdConfig?.enabled || !tdConfig?.histograms;
+    const tdCorrelationsDisabled =
+      !tdConfig?.enabled || !tdConfig?.correlations;
+
+    return {
+      fgStatisticsDisabled,
+      fgCorrelationsDisabled,
+      tdStatisticsDisabled,
+      tdCorrelationsDisabled,
+    };
+  }, [featureGroup, trainingDataset]);
 
   const createFgAnchorLink = useCallback(
     (title: string, to: string, id: string) => ({
@@ -119,39 +148,30 @@ const useAppNavigation = (): TreeNode[] => {
             ],
           },
           {
-            id: 'fgData',
-            title: 'Data',
+            id: 'fgDataPreview',
+            title: 'Data preview',
+            isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
+            onClick: handleNavigateRelative(
+              '/data-preview',
+              '/p/:id/fg/:fgId/*',
+            ),
+          },
+          {
+            id: 'fgStats',
+            title: 'Feature statistics',
+            disabled: disabledTabs.fgStatisticsDisabled,
+            isActive: isActive('/p/:id/fg/:fgId/statistics/*'),
             onClick: handleNavigateRelative('/statistics', '/p/:id/fg/:fgId/*'),
-            isActive: isActive('/p/:id/fg/:fgId/activity'),
-            children: [
-              {
-                id: 'fgStats',
-                title: 'Feature Statistics',
-                isActive: isActive('/p/:id/fg/:fgId/statistics/*'),
-                onClick: handleNavigateRelative(
-                  '/statistics',
-                  '/p/:id/fg/:fgId/*',
-                ),
-              },
-              {
-                id: 'fgDataPreview',
-                title: 'Data Preview',
-                isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
-                onClick: handleNavigateRelative(
-                  '/data-preview',
-                  '/p/:id/fg/:fgId/*',
-                ),
-              },
-              {
-                id: 'fgCorrelation',
-                title: 'Correlation',
-                isActive: isActive(routeNames.featureGroup.correlation),
-                onClick: handleNavigateRelative(
-                  '/correlation',
-                  '/p/:id/fg/:fgId/*',
-                ),
-              },
-            ],
+          },
+          {
+            id: 'fgCorrelation',
+            title: 'Feature correlations',
+            disabled: disabledTabs.fgCorrelationsDisabled,
+            isActive: isActive(routeNames.featureGroup.correlation),
+            onClick: handleNavigateRelative(
+              '/correlation',
+              '/p/:id/fg/:fgId/*',
+            ),
           },
           {
             id: 'fgActivity',
@@ -192,30 +212,21 @@ const useAppNavigation = (): TreeNode[] => {
             ],
           },
           {
-            id: 'tdData',
-            title: 'Data',
+            id: 'tdStats',
+            title: 'Feature statistics',
+            disabled: disabledTabs.tdStatisticsDisabled,
+            isActive: isActive('/p/:id/td/:tdId/statistics/*'),
             onClick: handleNavigateRelative('/statistics', '/p/:id/td/:tdId/*'),
-            isActive: isActive('/p/:id/td/:tdId/activity'),
-            children: [
-              {
-                id: 'tdStats',
-                title: 'Feature Statistics',
-                isActive: isActive('/p/:id/td/:tdId/statistics/*'),
-                onClick: handleNavigateRelative(
-                  '/statistics',
-                  '/p/:id/td/:tdId/*',
-                ),
-              },
-              {
-                id: 'tdCorrelation',
-                title: 'Correlation',
-                isActive: isActive(routeNames.featureGroup.correlation),
-                onClick: handleNavigateRelative(
-                  '/correlation',
-                  '/p/:id/td/:tdId/*',
-                ),
-              },
-            ],
+          },
+          {
+            id: 'tdCorrelation',
+            title: 'Feature correlations',
+            disabled: disabledTabs.tdCorrelationsDisabled,
+            isActive: isActive(routeNames.trainingDataset.correlation),
+            onClick: handleNavigateRelative(
+              '/correlation',
+              '/p/:id/td/:tdId/*',
+            ),
           },
           {
             id: 'tdActivity',
@@ -243,6 +254,7 @@ const useAppNavigation = (): TreeNode[] => {
     location,
     isActive,
     handleNavigateRelative,
+    disabledTabs,
   ]);
 };
 

@@ -5,7 +5,6 @@ import {
   CalloutTypes,
   Card,
   Checkbox,
-  CheckboxGroup,
   Divider,
   Input,
   Label,
@@ -33,7 +32,6 @@ import {
   validateSchema,
   isUpdated,
   mapFeaturesToTable,
-  mapStatisticConfigurationToTable,
   mapTags,
 } from '../utils';
 import { name, shortText } from '../../../../utils/validators';
@@ -41,6 +39,7 @@ import getInputValidation from '../../../../utils/getInputValidation';
 import { uppercaseFirst } from '../../../../utils/uppercaseFirst';
 import { useSelector } from 'react-redux';
 import { selectSchematisedTags } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
+import StatisticConfigurationForm from './StatisticsConfigurationForm';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -63,7 +62,9 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
       keywords: [],
       features: [],
       timeTravelFormat: [TimeTravelType.none],
-      statisticConfiguration: [],
+      enabled: true,
+      correlations: false,
+      histograms: false,
       tags: {},
       ...(!!initialData && {
         name: initialData.name,
@@ -71,9 +72,11 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
         description: initialData.description,
         onlineEnabled: initialData.onlineEnabled,
         features: mapFeaturesToTable(initialData),
-        statisticConfiguration: mapStatisticConfigurationToTable(initialData),
         keywords: initialData.labels,
         tags: mapTags(initialData),
+        correlations: initialData.statisticsConfig.correlations,
+        enabled: initialData.statisticsConfig.enabled,
+        histograms: initialData.statisticsConfig.histograms,
       }),
     },
     shouldUnregister: false,
@@ -178,24 +181,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
 
         <Divider mb="15px" mt="-5px" />
 
-        <Controller
-          control={control}
-          name="statisticConfiguration"
-          render={({ onChange, value }) => (
-            <Box mb="20px">
-              <CheckboxGroup
-                label="Statistic configuration"
-                value={value}
-                options={[
-                  'descriptive statistics',
-                  'histograms',
-                  'correlations',
-                ]}
-                onChange={(val) => onChange(val)}
-              />
-            </Box>
-          )}
-        />
+        <StatisticConfigurationForm isLoading={isLoading} />
 
         <Divider mb="15px" mt="-5px" />
 

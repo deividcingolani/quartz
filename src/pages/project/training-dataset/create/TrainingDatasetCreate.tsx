@@ -7,7 +7,6 @@ import { TrainingDatasetFormData } from '../types';
 import { Dispatch, RootState } from '../../../../store';
 // Utils
 import { dataFormatMap, mapFeatures } from '../utils';
-import { mapStatisticConfiguration } from '../../feature-group/utils';
 // Components
 import Loader from '../../../../components/loader/Loader';
 import TrainingDatasetForm from '../forms/TrainingDatasetForm';
@@ -47,7 +46,9 @@ const TrainingDatasetCreate: FC = () => {
       const {
         dataFormat,
         features,
-        statisticConfiguration,
+        correlations,
+        histograms,
+        enabled,
         storage,
         ...restData
       } = data;
@@ -73,7 +74,12 @@ const TrainingDatasetCreate: FC = () => {
               id: storage.id,
             },
             queryDTO: mapFeatures(features),
-            ...mapStatisticConfiguration(statisticConfiguration),
+            statisticsConfig: {
+              columns: [],
+              correlations,
+              enabled,
+              histograms,
+            },
           },
         });
 

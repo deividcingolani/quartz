@@ -141,30 +141,6 @@ export const getEnabledStatistics = (features: FGRow[]) =>
     [],
   );
 
-export const mapStatisticConfiguration = (statistics: string[]) => ({
-  descStatsEnabled: statistics.includes('descriptive statistics'),
-  featCorrEnabled: statistics.includes('histograms'),
-  featHistEnabled: statistics.includes('correlations'),
-});
-
-export const mapStatisticConfigurationToTable = ({
-  descStatsEnabled,
-  featCorrEnabled,
-  featHistEnabled,
-}: DataEntity) => {
-  const statistics = [];
-  if (descStatsEnabled) {
-    statistics.push('descriptive statistics');
-  }
-  if (featCorrEnabled) {
-    statistics.push('histograms');
-  }
-  if (featHistEnabled) {
-    statistics.push('correlations');
-  }
-  return statistics;
-};
-
 export const mapFeaturesToTable = (featureGroup?: FeatureGroup): FGRow[] => {
   if (featureGroup) {
     const { features, statisticColumns = [] } = featureGroup;

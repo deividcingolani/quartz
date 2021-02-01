@@ -9,5 +9,7 @@ export interface TrainingDatasetFormData {
   keywords: string[];
   description: string;
   features: FeatureGroupBasket[];
-  statisticConfiguration: string[];
+  correlations: boolean;
+  enabled: boolean;
+  histograms: boolean;
 }

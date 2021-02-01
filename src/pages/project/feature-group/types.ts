@@ -15,8 +15,10 @@ export interface FeatureGroupFormData {
   features: any[];
   keywords: string[];
   timeTravelFormat: string[];
-  statisticConfiguration: string[];
   tags: any;
+  correlations: boolean;
+  enabled: boolean;
+  histograms: boolean;
 }
 
 export interface FeatureFormProps {
