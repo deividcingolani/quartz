@@ -10,7 +10,7 @@ import {
   Value,
   IconButton,
 } from '@logicalclocks/quartz';
-import { Dispatch } from '../../../../store';
+import { Dispatch, RootState } from '../../../../store';
 import Loader from '../../../../components/loader/Loader';
 import useTrainingDatasets from '../useTrainingDatasets';
 import {
@@ -44,13 +44,18 @@ const TrainingDatasetList: FC = () => {
   const dispatch = useDispatch<Dispatch>();
 
   const [filter, setFilter] = useState<string[]>([]);
-  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[0]]);
+  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
   const [search, setSearch] = useState<string>('');
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
   const { data, isLoading } = useTrainingDatasets(
     +projectId,
     featureStoreData?.featurestoreId,
+  );
+
+  const isKeywordsAndLastUpdateLoading = useSelector(
+    (state: RootState) =>
+      state.loading.effects.trainingDatasets.fetchKeywordsAndLastUpdate,
   );
 
   const featureGroups = useSelector(selectFeatureGroups);
@@ -67,7 +72,8 @@ const TrainingDatasetList: FC = () => {
     [data],
   );
 
-  const isFilterDisabled = isLoading || !labels?.length;
+  const isFilterDisabled =
+    isLoading || !labels?.length || isKeywordsAndLastUpdateLoading;
 
   function handleRefresh(): void {
     dispatch.trainingDatasets.set([]);
@@ -147,6 +153,7 @@ const TrainingDatasetList: FC = () => {
             variant="white"
             value={sort}
             listWidth="100%"
+            disabled={isKeywordsAndLastUpdateLoading || isLoading}
             ml="10px"
             options={Object.keys(sortOptions)}
             placeholder="sort by"
@@ -169,6 +176,7 @@ const TrainingDatasetList: FC = () => {
       {!isLoading && (
         <TrainingDatasetListContent
           data={dataResult}
+          loading={isKeywordsAndLastUpdateLoading}
           isFiltered={data.length !== dataResult.length}
           onResetFilters={handleResetFilters}
         />

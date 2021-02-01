@@ -118,7 +118,7 @@ const SourcesEdit: FC = () => {
     }
   }, [dispatch, featureStoreData, projectId, navigate, connectorName]);
 
-  useTitle(`${titles.editStorageConnector} - ${source.name}`);
+  useTitle(`${titles.editStorageConnector} - ${source?.name}`);
 
   if (isFeatureStoreLoading || rest.length || !source) {
     return <Loader />;

@@ -33,6 +33,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
   handleToggle,
   isSelected,
   hasMatchText,
+  loading,
 }) => {
   const { id: projectId } = useParams();
 
@@ -85,7 +86,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                 />
               )}
 
-              <CardLabels labels={data.labels} />
+              <CardLabels loading={loading} labels={data.labels} />
             </Flex>
 
             {hasMatchText && <Badge value={data.matchText} />}
@@ -117,12 +118,16 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
               <Microlabeling gray mb="3px" width="100%">
                 Last update
               </Microlabeling>
-              <Flex alignItems="center">
-                <FreshnessBar time={data.updated.replace('T', ' ')} />
-                <Value ml="5px" primary>
-                  {formatDistance(new Date(data.updated), new Date())} ago
-                </Value>
-              </Flex>
+              {loading ? (
+                <Labeling gray>loading</Labeling>
+              ) : (
+                <Flex alignItems="center">
+                  <FreshnessBar time={data.updated.replace('T', ' ')} />
+                  <Value ml="5px" primary>
+                    {formatDistance(new Date(data.updated), new Date())} ago
+                  </Value>
+                </Flex>
+              )}
             </Flex>
 
             <Flex flexDirection="column" ml="20px">

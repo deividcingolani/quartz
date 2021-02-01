@@ -18,9 +18,7 @@ import SchematisedTags from './SchematisedTags';
 import Provenance from './Provenance';
 import FeatureList from './FeatureList';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { RootState } from '../../../../store';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
-import { useLatestVersion } from '../../../../hooks/useLatestVersion';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 export interface ContentProps {
@@ -87,30 +85,26 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
 
   const navigate = useNavigateRelative();
 
-  const featureGroups = useSelector((state: RootState) => state.featureGroups);
-
-  const { latestVersion } = useLatestVersion(data, featureGroups);
+  const latestVersion = useMemo(
+    () => Math.max(...data.versions.map(({ version }) => version)),
+    [data],
+  );
 
   const versions = useMemo(() => {
-    const versions = featureGroups.filter(({ name }) => name === data?.name);
-    return versions.map(
+    return data.versions.map(
       ({ version }) =>
-        `${version.toString()} ${
-          version.toString() === latestVersion ? '(latest)' : ''
-        }`,
+        `${version} ${version === latestVersion ? '(latest)' : ''}`,
     );
-  }, [data, latestVersion, featureGroups]);
+  }, [data, latestVersion]);
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = featureGroups.find(
-        ({ version, name }) =>
-          version === +values[0].split(' ')[0] && name === data?.name,
-      )?.id;
+      const newId = data.versions.find(({ version }) => version === values[0])
+        ?.id;
 
       navigate(`/fg/${newId}`, routeNames.project.view);
     },
-    [data, featureGroups, navigate],
+    [data, navigate],
   );
 
   return (
@@ -128,7 +122,7 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
             listWidth="100%"
             value={[
               `${data?.version.toString()} ${
-                data?.version.toString() === latestVersion ? '(latest)' : ''
+                data?.version === latestVersion ? '(latest)' : ''
               }`,
             ]}
             options={versions}

@@ -17,6 +17,7 @@ export interface TrainingDatasetListContentProps {
   isFiltered: boolean;
   onResetFilters: () => void;
   hasMatchText?: boolean;
+  loading?: boolean;
 }
 
 const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
@@ -24,6 +25,7 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
   onResetFilters,
   isFiltered,
   hasMatchText,
+  loading,
 }) => {
   const { isOpen, selectedId, handleSelectItem, handleClose } = useDrawer();
 
@@ -68,6 +70,7 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
         <Card
           hasMatchText={hasMatchText}
           key={item.id}
+          loading={loading}
           handleToggle={handleSelectItem(item.id)}
           isSelected={selectedId === item.id}
           data={item}

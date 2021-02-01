@@ -9,7 +9,6 @@ import React, { FC, useCallback, useEffect, useMemo } from 'react';
 // Types
 import { Dispatch, RootState } from '../../../../store';
 // Hooks
-import { useLatestVersion } from '../../../../hooks/useLatestVersion';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Components
 import Panel from '../../../../components/panel/Panel';
@@ -17,7 +16,6 @@ import Loader from '../../../../components/loader/Loader';
 // Selectors
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
-import { TrainingDataset } from '../../../../types/training-dataset';
 import StatisticsContent from '../../feature-group/data/StatisticsContent';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useTitle from '../../../../hooks/useTitle';
@@ -137,10 +135,6 @@ const TrainingDatasetStatistics: FC = () => {
 
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasets.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
       dispatch.trainingDatasetStatisticsCommits.fetch({
         projectId: +id,
         featureStoreId: featureStoreData.featurestoreId,
@@ -159,34 +153,28 @@ const TrainingDatasetStatistics: FC = () => {
     };
   }, [id, tdId, dispatch, featureStoreData, commitTime]);
 
-  const trainingDatasets = useSelector(
-    (state: RootState) => state.trainingDatasets,
-  );
-
-  const { latestVersion } = useLatestVersion(
-    data as TrainingDataset,
-    trainingDatasets,
+  const latestVersion = useMemo(
+    () => Math.max(...(data?.versions.map(({ version }) => version) || [])),
+    [data],
   );
 
   const versions = useMemo(() => {
-    const versions = trainingDatasets.filter(({ name }) => name === data?.name);
-    return versions.map(
-      ({ version }) =>
-        `${version.toString()} ${
-          version.toString() === latestVersion ? '(latest)' : ''
-        }`,
+    return (
+      data?.versions.map(
+        ({ version }) =>
+          `${version} ${version === latestVersion ? '(latest)' : ''}`,
+      ) || []
     );
-  }, [data, latestVersion, trainingDatasets]);
+  }, [data, latestVersion]);
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = trainingDatasets.find(
-        ({ version, name }) =>
-          version === +values[0].split(' ')[0] && name === data?.name,
-      )?.id;
+      const newId = data?.versions.find(({ version }) => version === values[0])
+        ?.id;
+
       navigateToStatistics(commit, newId);
     },
-    [data, trainingDatasets, commit, navigateToStatistics],
+    [data, commit, navigateToStatistics],
   );
 
   useTitle(`${titles.statistics} - ${data?.name}`);
@@ -239,7 +227,7 @@ const TrainingDatasetStatistics: FC = () => {
             listWidth="100%"
             value={[
               `${data?.version.toString()} ${
-                data?.version.toString() === latestVersion ? '(latest)' : ''
+                data?.version === latestVersion ? '(latest)' : ''
               }`,
             ]}
             options={versions}

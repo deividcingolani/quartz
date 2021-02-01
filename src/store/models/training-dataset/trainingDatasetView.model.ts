@@ -2,6 +2,7 @@ import { createModel } from '@rematch/core';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import { TrainingDataset } from '../../../types/training-dataset';
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
+import { getValidPromisesValues } from '../search/deep-search.model';
 
 export type TrainingDatasetViewState = TrainingDataset | null;
 
@@ -57,17 +58,19 @@ const trainingDatasetView = createModel()({
             };
           }),
         );
-        tdProvenances = tdProvenancesPromises.reduce((acc: any[], next) => {
-          if (next.status === 'fulfilled') {
-            return [...acc, next.value];
-          }
-          return acc;
-        }, []);
+        tdProvenances = getValidPromisesValues(tdProvenancesPromises);
       }
+
+      const tdsWithSameName = await TrainingDatasetService.getOneByName(
+        projectId,
+        featureStoreId,
+        data.name,
+      );
 
       dispatch.trainingDatasetView.setData({
         ...data,
         provenance: tdProvenances,
+        versions: tdsWithSameName.map(({ id, version }) => ({ id, version })),
       });
     },
   }),

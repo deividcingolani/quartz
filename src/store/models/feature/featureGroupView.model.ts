@@ -116,11 +116,18 @@ const featureGroupView = createModel()({
         };
       });
 
+      const fgsWithSameName = await FeatureGroupsService.getOneByName(
+        projectId,
+        featureStoreId,
+        data.name,
+      );
+
       dispatch.featureGroupView.setData({
         ...data,
         provenance: fgProvenances,
         labels: keywords,
         tags: mappedTags || [],
+        versions: fgsWithSameName.map(({ id, version }) => ({ id, version })),
       });
     },
     updateLabels: ({ labels }: { labels: string[] }) => {

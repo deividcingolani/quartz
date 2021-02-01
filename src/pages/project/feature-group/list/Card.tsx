@@ -43,6 +43,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
   handleToggle,
   isSelected,
   hasMatchText,
+  loading,
 }) => {
   const { id: projectId } = useParams();
 
@@ -119,7 +120,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 />
               )}
 
-              <CardLabels labels={data.labels} />
+              <CardLabels loading={loading} labels={data.labels} />
             </Flex>
 
             {hasMatchText && <Badge value={data.matchText} />}
@@ -159,12 +160,16 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               <Microlabeling gray mb="3px" width="100%">
                 Last update
               </Microlabeling>
-              <Flex alignItems="center">
-                <FreshnessBar time={data.updated.replace('T', ' ')} />
-                <Value fontFamily="Inter" ml="5px" primary>
-                  {formatDistance(new Date(data.updated), new Date())} ago
-                </Value>
-              </Flex>
+              {loading ? (
+                <Labeling gray>loading</Labeling>
+              ) : (
+                <Flex alignItems="center">
+                  <FreshnessBar time={data.updated.replace('T', ' ')} />
+                  <Value fontFamily="Inter" ml="5px" primary>
+                    {formatDistance(new Date(data.updated), new Date())} ago
+                  </Value>
+                </Flex>
+              )}
             </Flex>
 
             {/* Feature group actions */}

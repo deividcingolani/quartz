@@ -19,7 +19,6 @@ import SchematisedTags from '../../feature-group/overview/SchematisedTags';
 import PipelineHistory from '../../feature-group/overview/PipelineHistory';
 import Provenance from './Provenance';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { useLatestVersion } from '../../../../hooks/useLatestVersion';
 import SplitGraph from './SplitGraph';
 
 export interface TrainingDatasetContentProps {
@@ -104,13 +103,6 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
       });
     }
 
-    if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasets.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
-    }
-
     return () => {
       dispatch.trainingDatasetQuery.clear();
     };
@@ -118,32 +110,28 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
 
   const navigate = useNavigateRelative();
 
-  const trainingDatasets = useSelector(
-    (state: RootState) => state.trainingDatasets,
+  const latestVersion = useMemo(
+    () => Math.max(...(data?.versions.map(({ version }) => version) || [])),
+    [data],
   );
 
-  const { latestVersion } = useLatestVersion(data, trainingDatasets);
-
   const versions = useMemo(() => {
-    const versions = trainingDatasets.filter(({ name }) => name === data?.name);
-    return versions.map(
-      ({ version }) =>
-        `${version.toString()} ${
-          version.toString() === latestVersion ? '(latest)' : ''
-        }`,
+    return (
+      data?.versions.map(
+        ({ version }) =>
+          `${version} ${version === latestVersion ? '(latest)' : ''}`,
+      ) || []
     );
-  }, [data, latestVersion, trainingDatasets]);
+  }, [data, latestVersion]);
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = trainingDatasets.find(
-        ({ version, name }) =>
-          version === +values[0].split(' ')[0] && name === data?.name,
-      )?.id;
+      const newId = data?.versions.find(({ version }) => version === values[0])
+        ?.id;
 
       navigate(`/td/${newId}`, routeNames.project.view);
     },
-    [data, trainingDatasets, navigate],
+    [data, navigate],
   );
 
   return (
@@ -162,7 +150,7 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
             listWidth="100%"
             value={[
               `${data?.version.toString()} ${
-                data?.version.toString() === latestVersion ? '(latest)' : ''
+                data?.version === latestVersion ? '(latest)' : ''
               }`,
             ]}
             options={versions}

@@ -10,6 +10,11 @@ export interface Tag {
   };
 }
 
+export interface DataEntityVersion {
+  id: number;
+  version: number;
+}
+
 export interface DataEntity {
   type: string;
   created: string;
@@ -32,6 +37,7 @@ export interface DataEntity {
   tags: Tag[];
   highlights: any;
   matchText: string;
+  versions: DataEntityVersion[];
   statisticsConfig: {
     enabled: boolean;
     histograms: boolean;
@@ -45,4 +51,5 @@ export interface HoverableCardProps<T> {
   data: T;
   handleToggle: () => void;
   hasMatchText?: boolean;
+  loading?: boolean;
 }

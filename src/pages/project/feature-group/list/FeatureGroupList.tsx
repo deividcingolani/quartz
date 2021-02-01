@@ -12,7 +12,7 @@ import {
 } from '@logicalclocks/quartz';
 import routeNames from '../../../../routes/routeNames';
 // Types
-import { Dispatch } from '../../../../store';
+import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroup } from '../../../../types/feature-group';
 // Utils
 import useFeatureGroups from '../hooks/useFeatureGroups';
@@ -30,7 +30,7 @@ const FeatureGroupList: FC = () => {
   const { id: projectId } = useParams();
 
   const [filter, setFilter] = useState<string[]>([]);
-  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[0]]);
+  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
   const [search, setSearch] = useState<string>('');
   const navigate = useNavigateRelative();
 
@@ -39,6 +39,11 @@ const FeatureGroupList: FC = () => {
   const { data, isLoading } = useFeatureGroups(
     +projectId,
     featureStoreData?.featurestoreId,
+  );
+
+  const isKeywordsAndLastUpdateLoading = useSelector(
+    (state: RootState) =>
+      state.loading.effects.featureGroups.fetchKeywordsAndLastUpdate,
   );
 
   const maxVersionsData = useMemo(
@@ -69,7 +74,8 @@ const FeatureGroupList: FC = () => {
     [maxVersionsData],
   );
 
-  const isFilterDisabled = isLoading || !labels?.length;
+  const isFilterDisabled =
+    isLoading || !labels?.length || isKeywordsAndLastUpdateLoading;
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -157,6 +163,7 @@ const FeatureGroupList: FC = () => {
             value={sort}
             listWidth="100%"
             ml="10px"
+            disabled={isKeywordsAndLastUpdateLoading || isLoading}
             options={Object.keys(sortOptions)}
             placeholder="sort by"
             onChange={setSort}
@@ -180,6 +187,7 @@ const FeatureGroupList: FC = () => {
       {!isLoading && (
         <FeatureGroupListContent
           data={dataResult}
+          loading={isKeywordsAndLastUpdateLoading}
           isFiltered={maxVersionsData.length !== dataResult.length}
           onResetFilters={handleResetFilters}
         />

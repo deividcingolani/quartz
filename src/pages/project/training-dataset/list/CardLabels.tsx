@@ -3,9 +3,17 @@ import { Badge } from '@logicalclocks/quartz';
 
 export interface ICardLabelsProps {
   labels?: string[];
+  loading?: boolean;
 }
 
-const CardLabels: FC<ICardLabelsProps> = ({ labels }: ICardLabelsProps) => {
+const CardLabels: FC<ICardLabelsProps> = ({
+  labels,
+  loading,
+}: ICardLabelsProps) => {
+  if (loading) {
+    return <Badge ml="5px" value="loading..." />;
+  }
+
   return (
     <>
       {labels?.map((name) => (

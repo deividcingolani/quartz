@@ -6,6 +6,7 @@ import { FeatureGroup } from '../../../types/feature-group';
 // Services
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
+import { getValidPromisesValues } from '../search/deep-search.model';
 
 export type FeatureGroupState = FeatureGroup[];
 
@@ -70,9 +71,38 @@ const featureGroups = createModel()({
 
       dispatch.search.setFeatureGroups(data);
 
-      // Fetch labels and last updated time for each feature group
-      const fgsPromises = await Promise.allSettled(
+      dispatch.featureGroups.setFeatureGroups(
+        data.map((group) => ({
+          ...group,
+          labels: [],
+          updated: group.created,
+          versions: data.map(({ version, id }) => ({ id, version })),
+        })),
+      );
+
+      dispatch.featureGroups.fetchKeywordsAndLastUpdate({
+        data,
+        projectId,
+        featureStoreId,
+      });
+    },
+    fetchKeywordsAndLastUpdate: async ({
+      data,
+      projectId,
+      featureStoreId,
+    }: {
+      data: FeatureGroup[];
+      projectId: number;
+      featureStoreId: number;
+    }): Promise<void> => {
+      await Promise.allSettled(
         data.map(async (group) => {
+          const readLast = await FeatureGroupsService.getWriteLast(
+            projectId,
+            featureStoreId,
+            group.id,
+          );
+
           let keywords: string[] = [];
           if (group.type === 'cachedFeaturegroupDTO') {
             keywords = await FeatureGroupLabelsService.getList(
@@ -81,27 +111,17 @@ const featureGroups = createModel()({
               group.id,
             );
           }
-          const readLast = await FeatureGroupsService.getWriteLast(
-            projectId,
-            featureStoreId,
-            group.id,
-          );
+
           return {
             ...group,
             labels: keywords,
             updated: readLast || group.created,
+            versions: data.map(({ version, id }) => ({ id, version })),
           };
         }),
-      );
-
-      const featureGroups = fgsPromises.reduce((acc: FeatureGroup[], next) => {
-        if (next.status === 'fulfilled') {
-          return [...acc, next.value];
-        }
-        return acc;
-      }, []);
-
-      dispatch.featureGroups.setFeatureGroups(featureGroups);
+      )
+        .then((values) => getValidPromisesValues(values))
+        .then((data) => dispatch.featureGroups.setFeatureGroups(data));
     },
     create: async ({
       projectId,

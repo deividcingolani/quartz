@@ -35,10 +35,6 @@ const useFeatureGroupView = (
         featureStoreId: featureStoreData.featurestoreId,
         featureGroupId: fgId,
       });
-      dispatch.featureGroups.fetch({
-        projectId,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
     }
   }, [dispatch, fgId, isLoading, featureStoreData, projectId]);
 

@@ -2,6 +2,8 @@ import { createModel } from '@rematch/core';
 import { TrainingDataset } from '../../../types/training-dataset';
 import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
+import { getValidPromisesValues } from '../search/deep-search.model';
+import { TrainingDatasetLabelService } from '../../../services/project';
 
 export type TrainingDatasetState = TrainingDataset[];
 
@@ -66,37 +68,57 @@ export const trainingDatasetModel = createModel()({
 
       dispatch.search.setTrainingDatasets(data);
 
-      // Fetch last updated time for each training dataset
-      const dssPromises = await Promise.allSettled(
-        data.map(async (group) => {
+      dispatch.trainingDatasets.set(
+        data.map((dataset) => ({
+          ...dataset,
+          labels: [],
+          updated: dataset.created,
+          versions: data.map(({ version, id }) => ({ id, version })),
+        })),
+      );
+
+      dispatch.trainingDatasets.fetchKeywordsAndLastUpdate({
+        data,
+        projectId,
+        featureStoreId,
+      });
+    },
+    fetchKeywordsAndLastUpdate: async ({
+      data,
+      projectId,
+      featureStoreId,
+    }: {
+      data: TrainingDataset[];
+      projectId: number;
+      featureStoreId: number;
+    }): Promise<void> => {
+      await Promise.allSettled(
+        data.map(async (td) => {
           const readLast = await TrainingDatasetService.getWriteLast(
             projectId,
             featureStoreId,
-            group.id,
+            td.id,
           );
+          const {
+            data: keywordsData,
+          } = await new TrainingDatasetLabelService().getList(
+            projectId,
+            featureStoreId,
+            td.id,
+          );
+
+          const { items = [] } = keywordsData;
+
           return {
-            ...group,
-            updated: readLast || group.created,
+            ...td,
+            updated: readLast || td.created,
+            labels: items,
+            versions: data.map(({ version, id }) => ({ id, version })),
           };
         }),
-      );
-
-      data.forEach(({ id }) => {
-        dispatch.trainingDatasetLabels.fetch({
-          projectId,
-          featureStoreId,
-          trainingDatasetId: id,
-        });
-      });
-
-      const datasets = dssPromises.reduce((acc: TrainingDataset[], next) => {
-        if (next.status === 'fulfilled') {
-          return [...acc, next.value];
-        }
-        return acc;
-      }, []);
-
-      dispatch.trainingDatasets.set(datasets);
+      )
+        .then((values) => getValidPromisesValues(values))
+        .then((data) => dispatch.trainingDatasets.set(data));
     },
     create: async ({
       projectId,

@@ -8,10 +8,8 @@ import React, { FC, useCallback, useEffect, useMemo } from 'react';
 
 // Types
 import { Dispatch, RootState } from '../../../../store';
-import { FeatureGroup } from '../../../../types/feature-group';
 // Hooks
 import useFeatureGroupView from '../hooks/useFeatureGroupView';
-import { useLatestVersion } from '../../../../hooks/useLatestVersion';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Components
 import StatisticsContent from './StatisticsContent';
@@ -150,33 +148,28 @@ const FeatureGroupStatistics: FC = () => {
     };
   }, [id, fgId, dispatch, featureStoreData, commitTime]);
 
-  const featureGroups = useSelector((state: RootState) => state.featureGroups);
-
-  const { latestVersion } = useLatestVersion(
-    data as FeatureGroup,
-    featureGroups,
+  const latestVersion = useMemo(
+    () => Math.max(...(data?.versions.map(({ version }) => version) || [])),
+    [data],
   );
 
   const versions = useMemo(() => {
-    const versions = featureGroups.filter(({ name }) => name === data?.name);
-    return versions.map(
-      ({ version }) =>
-        `${version.toString()} ${
-          version.toString() === latestVersion ? '(latest)' : ''
-        }`,
+    return (
+      data?.versions.map(
+        ({ version }) =>
+          `${version} ${version === latestVersion ? '(latest)' : ''}`,
+      ) || []
     );
-  }, [data, latestVersion, featureGroups]);
+  }, [data, latestVersion]);
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = featureGroups.find(
-        ({ version, name }) =>
-          version === +values[0].split(' ')[0] && name === data?.name,
-      )?.id;
+      const newId = data?.versions.find(({ version }) => version === values[0])
+        ?.id;
 
       navigateToStatistics(commit, newId);
     },
-    [data, featureGroups, commit, navigateToStatistics],
+    [data, commit, navigateToStatistics],
   );
 
   useTitle(`${titles.statistics} - ${data?.name}`);
@@ -231,7 +224,7 @@ const FeatureGroupStatistics: FC = () => {
             listWidth="100%"
             value={[
               `${data?.version.toString()} ${
-                data?.version.toString() === latestVersion ? '(latest)' : ''
+                data?.version === latestVersion ? '(latest)' : ''
               }`,
             ]}
             options={versions}

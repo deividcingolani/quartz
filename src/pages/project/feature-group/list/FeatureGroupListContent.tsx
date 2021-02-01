@@ -15,6 +15,7 @@ export interface FeatureGroupListContentProps {
   isFiltered: boolean;
   onResetFilters: () => void;
   hasMatchText?: boolean;
+  loading?: boolean;
 }
 
 const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
@@ -22,6 +23,7 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
   onResetFilters,
   isFiltered,
   hasMatchText,
+  loading,
 }) => {
   const { isOpen, selectedId, handleSelectItem, handleClose } = useDrawer();
 
@@ -68,6 +70,7 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
           handleToggle={handleSelectItem(item.id)}
           key={item.id}
           data={item}
+          loading={loading}
         />
       ))}
       {isFiltered && (

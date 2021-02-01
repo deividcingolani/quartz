@@ -11,7 +11,7 @@ import SearchService, {
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
-import { TrainingDatasetLabelService } from '../../../services/project/training-dataset-labels.service';
+import { TrainingDatasetLabelService } from '../../../services/project';
 
 export type DeepSearchState = {
   featureGroups: FeatureGroup[];
@@ -19,7 +19,7 @@ export type DeepSearchState = {
   features: Feature[];
 };
 
-const getValidPromisesValues = (promises: any) =>
+export const getValidPromisesValues = (promises: any) =>
   promises.reduce(
     (acc: any, p: any) => (p.status === 'fulfilled' ? [...acc, p.value] : acc),
     [],
@@ -64,8 +64,18 @@ const getFullData = async (
         );
       }
 
+      const readLast = await FeatureGroupsService.getWriteLast(
+        fg.parentProjectId,
+        fg.featurestoreId,
+        fullFeatureGroup.id,
+      );
+
       return {
-        ...{ ...fg, labels: keywords },
+        ...{
+          ...fg,
+          labels: keywords,
+          updated: readLast || fullFeatureGroup.created,
+        },
         ...fullFeatureGroup,
       };
     }),
@@ -88,8 +98,18 @@ const getFullData = async (
         fullTrainingDataset.id,
       );
 
+      const readLast = await TrainingDatasetService.getWriteLast(
+        td.parentProjectId,
+        td.featurestoreId,
+        fullTrainingDataset.id,
+      );
+
       return {
-        ...{ ...td, labels: keywords },
+        ...{
+          ...td,
+          labels: keywords,
+          updated: readLast || fullTrainingDataset.created,
+        },
         ...fullTrainingDataset,
       };
     }),
