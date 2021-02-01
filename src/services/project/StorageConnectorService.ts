@@ -1,12 +1,15 @@
 import { AxiosResponse } from 'axios';
 import BaseApiService, { RequestType } from '../BaseApiService';
-import { ISource, StorageConnectorType } from '../../types/source';
+import {
+  IStorageConnector,
+  StorageConnectorType,
+} from '../../types/storage-connector';
 
-class SourceService extends BaseApiService {
+class StorageConnectorService extends BaseApiService {
   getList = async (
     projectId: number,
     featureStoreId: number,
-  ): Promise<ISource[]> => {
+  ): Promise<IStorageConnector[]> => {
     const { data } = await this.request<any>({
       url: `${projectId}/featurestores/${featureStoreId}/storageconnectors`,
       type: RequestType.get,
@@ -15,7 +18,7 @@ class SourceService extends BaseApiService {
     return data || [];
   };
 
-  createSource = async (
+  createStorageConnector = async (
     projectId: number,
     featureStoreId: number,
     storageConnectorType: StorageConnectorType,
@@ -31,4 +34,4 @@ class SourceService extends BaseApiService {
     });
 }
 
-export default new SourceService('/project');
+export default new StorageConnectorService('/project');

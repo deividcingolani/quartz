@@ -76,7 +76,7 @@ const ProjectList: FC = () => {
             onClick={handleRouteChange(routeNames.storageConnector.list)}
             mr="14px"
           >
-            All Sources
+            All Storage Connectors
           </Button>
           <Button intent="secondary" onClick={handleRouteChange('')} mr="14px">
             Feature Group Documentation

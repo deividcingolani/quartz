@@ -1,9 +1,11 @@
 export enum StorageConnectorType {
   'aws' = 'S3',
   'jdbc' = 'JDBC',
+  'hopsfs' = 'HOPSFS',
+  'redshift' = 'REDSHIFT',
 }
 
-export interface ISource {
+export interface IStorageConnector {
   id: number;
   name: string;
   storageConnectorType: StorageConnectorType;
@@ -12,7 +14,7 @@ export interface ISource {
   hopsfsPath?: string;
 }
 
-export interface ICreateAWSSource {
+export interface ICreateAWSStorageConnector {
   name: string;
   bucket: string;
   accessKey?: number;
@@ -22,18 +24,18 @@ export interface ICreateAWSSource {
   iamRole?: string;
 }
 
-export interface ICreateJDBCSource {
+export interface ICreateJDBCStorageConnector {
   name: string;
   connectionString: string;
   arguments?: string;
 }
 
-export interface ICreateHOPSFSSource {
+export interface ICreateHOPSFSStorageConnector {
   name: string;
   datasetName: string;
 }
 
-export interface ICreateREDSHIFTSource {
+export interface ICreateREDSHIFTStorageConnector {
   name: string;
   clusterIdentifier: string;
   databaseDriver: string;

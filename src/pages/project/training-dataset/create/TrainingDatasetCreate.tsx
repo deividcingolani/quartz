@@ -31,7 +31,7 @@ const TrainingDatasetCreate: FC = () => {
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
       dispatch.schematisedTags.fetch();
-      dispatch.featureStoreSources.fetch({
+      dispatch.featureStoreStorageConnectors.fetch({
         projectId: +projectId,
         featureStoreId: featureStoreData?.featurestoreId,
       });

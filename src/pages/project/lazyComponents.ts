@@ -23,17 +23,17 @@ export const FeatureGroupDataCorrelation = React.lazy(
 export const FeatureGroupStatistics = React.lazy(
   () => import('./feature-group/data/FeatureGroupStatistics'),
 );
-export const SourcesList = React.lazy(
-  () => import('./sources/list/SourcesList'),
+export const StorageConnectorsList = React.lazy(
+  () => import('./storage-connectors/list/StorageConnectorsList'),
 );
-export const SourcesCreate = React.lazy(
-  () => import('./sources/create/SourcesCreate'),
+export const StorageConnectorsCreate = React.lazy(
+  () => import('./storage-connectors/create/StorageConnectorsCreate'),
 );
-export const SourcesEdit = React.lazy(
-  () => import('./sources/edit/SourceEdit'),
+export const StorageConnectorsEdit = React.lazy(
+  () => import('./storage-connectors/edit/StorageConnectorsEdit'),
 );
-export const SourcesImportSample = React.lazy(
-  () => import('./sources/import-sample/SourcesImportSample'),
+export const StorageConnectorsImportSample = React.lazy(
+  () => import('./storage-connectors/import-sample/StorageConnectorsImportSample'),
 );
 export const FeatureGroupOverview = React.lazy(
   () => import('./feature-group/overview/FeatureGroupOverview'),

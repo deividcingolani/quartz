@@ -7,7 +7,7 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { FeatureGroupProvenance } from '../../../../types/feature-group';
 import { Project } from '../../../../types/project';
 // Utils
-import { cropText } from '../../sources/utils';
+import { cropText } from '../../storage-connectors/utils';
 
 const useProvenanceListRowData = (
   provenance: FeatureGroupProvenance[],

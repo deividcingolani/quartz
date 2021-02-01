@@ -9,7 +9,7 @@ import getInputValidation from '../../../../utils/getInputValidation';
 // Default validators
 import { name, shortText } from '../../../../utils/validators';
 // Types
-import { SourceFormProps } from './types';
+import { StorageConnectorFormProps } from './types';
 // Styles
 import { tooltipProps, argumentRowStyles } from './jdbc-form.styles';
 
@@ -25,7 +25,7 @@ export const schema = yup.object().shape({
   ),
 });
 
-const JdbcForm: FC<SourceFormProps> = ({
+const JdbcForm: FC<StorageConnectorFormProps> = ({
   register,
   isDisabled,
   errors,

@@ -1,5 +1,8 @@
 // Types
-import { FeatureStore, FeatureStoreSource } from '../../types/feature-store';
+import {
+  FeatureStore,
+  FeatureStoreStorageConnector,
+} from '../../types/feature-store';
 import BaseApiService, { RequestType } from '../BaseApiService';
 
 class FeatureStoresService extends BaseApiService {
@@ -12,22 +15,22 @@ class FeatureStoresService extends BaseApiService {
     return data;
   };
 
-  getSources = (projectId: number, featureStoreId: number) =>
-    this.request<FeatureStoreSource[]>({
+  getStorageConnectors = (projectId: number, featureStoreId: number) =>
+    this.request<FeatureStoreStorageConnector[]>({
       url: `${projectId}/featurestores/${featureStoreId}/storageconnectors`,
     });
 
-  getSource = (
+  getStorageConnector = (
     projectId: number,
     featureStoreId: number,
     connectorName: string,
   ) =>
-    this.request<FeatureStoreSource[]>({
+    this.request<FeatureStoreStorageConnector[]>({
       url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${connectorName}`,
     });
 
   create = (projectId: number, featureStoreId: number, data: any) =>
-    this.request<FeatureStoreSource[]>({
+    this.request<FeatureStoreStorageConnector[]>({
       type: RequestType.post,
       url: `${projectId}/featurestores/${featureStoreId}/storageconnectors`,
       data,
@@ -39,14 +42,14 @@ class FeatureStoresService extends BaseApiService {
     connectorName: string,
     data: any,
   ) =>
-    this.request<FeatureStoreSource[]>({
+    this.request<FeatureStoreStorageConnector[]>({
       type: RequestType.put,
       url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${connectorName}`,
       data,
     });
 
   delete = (projectId: number, featureStoreId: number, connectorName: string) =>
-    this.request<FeatureStoreSource[]>({
+    this.request<FeatureStoreStorageConnector[]>({
       type: RequestType.delete,
       url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${connectorName}`,
     });

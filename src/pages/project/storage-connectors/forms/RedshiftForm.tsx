@@ -24,7 +24,7 @@ import { selectFeatureStoreData } from '../../../../store/models/feature/selecto
 // Default validators
 import { shortText, numInt } from '../../../../utils/validators';
 // Types
-import { SourceFormProps } from './types';
+import { StorageConnectorFormProps } from './types';
 import { RoleMapping } from '../../../../types/role-mapping';
 
 export const schema = yup.object().shape({
@@ -53,7 +53,7 @@ export const schema = yup.object().shape({
   }),
 });
 
-const RedshiftForm: FC<SourceFormProps> = ({
+const RedshiftForm: FC<StorageConnectorFormProps> = ({
   register,
   watch,
   control,

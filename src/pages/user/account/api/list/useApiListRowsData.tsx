@@ -4,7 +4,7 @@ import { Value, Labeling, IconButton } from '@logicalclocks/quartz';
 
 import { Api } from '../../../../../types/api';
 import { format } from 'date-fns';
-import { cropText } from '../../../../project/sources/utils';
+import { cropText } from '../../../../project/storage-connectors/utils';
 
 const useApiListRowData = (data: Api[], scope: string[]) => {
   const navigate = useNavigate();

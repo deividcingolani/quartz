@@ -24,7 +24,7 @@ export enum StorageConnectorType {
   aws = 'S3',
 }
 
-export interface FeatureStoreSource {
+export interface FeatureStoreStorageConnector {
   arguments: string;
   connectionString?: string;
   hopsfsPath?: string;

@@ -12,20 +12,22 @@ import React, { ComponentType, FC, useMemo } from 'react';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 
 // Types
-import { FeatureStoreSource } from '../../../../types/feature-store';
+import { FeatureStoreStorageConnector } from '../../../../types/feature-store';
 // Styles
-import styles from './source-list.styles';
+import styles from './storage-connector-list.styles';
 import routeNames from '../../../../routes/routeNames';
 
-export interface SourceListContentProps {
-  data: FeatureStoreSource[];
+export interface StorageConnectorListContentProps {
+  data: FeatureStoreStorageConnector[];
 }
 
 const contentProps = {
   pb: 0,
 };
 
-const SourceListContent: FC<SourceListContentProps> = ({ data }) => {
+const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
+  data,
+}) => {
   const navigate = useNavigateRelative();
 
   const handleCreate = () => {
@@ -90,4 +92,4 @@ const SourceListContent: FC<SourceListContentProps> = ({ data }) => {
   );
 };
 
-export default SourceListContent;
+export default StorageConnectorListContent;

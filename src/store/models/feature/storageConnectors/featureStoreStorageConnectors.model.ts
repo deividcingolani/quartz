@@ -1,20 +1,20 @@
 import { createModel } from '@rematch/core';
-import { FeatureStoreSource } from '../../../../types/feature-store';
+import { FeatureStoreStorageConnector } from '../../../../types/feature-store';
 import FeatureStoresService from '../../../../services/project/FeatureStoresService';
 import { EffectError } from '../../../plugins/errors.plugin';
 
-export type FeatureStoreSourcesState = FeatureStoreSource[];
+export type FeatureStoreStorageConnectorsState = FeatureStoreStorageConnector[];
 
-const initialState: FeatureStoreSourcesState = [];
+const initialState: FeatureStoreStorageConnectorsState = [];
 
-const featureStoreSourcesModel = createModel()({
+const featureStoreStorageConnectorsModel = createModel()({
   state: initialState,
   reducers: {
     setData: (
-      _: FeatureStoreSourcesState,
-      payload: FeatureStoreSourcesState,
-    ): FeatureStoreSourcesState => payload,
-    clear: (): FeatureStoreSourcesState => initialState,
+      _: FeatureStoreStorageConnectorsState,
+      payload: FeatureStoreStorageConnectorsState,
+    ): FeatureStoreStorageConnectorsState => payload,
+    clear: (): FeatureStoreStorageConnectorsState => initialState,
   },
   effects: (dispatch) => ({
     fetch: async ({
@@ -24,13 +24,13 @@ const featureStoreSourcesModel = createModel()({
       projectId: number;
       featureStoreId: number;
     }): Promise<void> => {
-      const { data } = await FeatureStoresService.getSources(
+      const { data } = await FeatureStoresService.getStorageConnectors(
         projectId,
         featureStoreId,
       );
 
       if (data.length) {
-        dispatch.featureStoreSources.setData(data);
+        dispatch.featureStoreStorageConnectors.setData(data);
       }
     },
     fetchOne: async ({
@@ -42,14 +42,14 @@ const featureStoreSourcesModel = createModel()({
       featureStoreId: number;
       connectorName: string;
     }): Promise<void> => {
-      const { data } = await FeatureStoresService.getSource(
+      const { data } = await FeatureStoresService.getStorageConnector(
         projectId,
         featureStoreId,
         connectorName,
       );
 
       if (data) {
-        dispatch.featureStoreSources.setData([data]);
+        dispatch.featureStoreStorageConnectors.setData([data]);
       }
     },
     create: async ({
@@ -111,4 +111,4 @@ const featureStoreSourcesModel = createModel()({
   }),
 });
 
-export default featureStoreSourcesModel;
+export default featureStoreStorageConnectorsModel;

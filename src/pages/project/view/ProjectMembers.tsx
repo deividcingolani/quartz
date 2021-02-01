@@ -32,7 +32,7 @@ import { User as UserType } from '../../../types/user';
 // Services
 import ProfileService from '../../../services/ProfileService';
 // Styles
-import styles from '../sources/list/source-list.styles';
+import styles from '../storage-connectors/list/storage-connector-list.styles';
 // Selectors
 import {
   selectIsDeletingMember,
@@ -47,7 +47,7 @@ import { uppercaseFirst } from '../../../utils/uppercaseFirst';
 import NotificationTitle from '../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../utils/notifications/notificationValue';
 
-export interface SourceListContentProps {
+export interface StorageConnectorListContentProps {
   data: Project;
 }
 
@@ -67,7 +67,7 @@ const getVariant = (role: string) => {
 
 const DATA_OWNER = 'Data owner';
 
-const ProjectMembers: FC<SourceListContentProps> = ({ data }) => {
+const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
   const { id } = useParams();
 
   const allMembers = useSelector(selectMembers);

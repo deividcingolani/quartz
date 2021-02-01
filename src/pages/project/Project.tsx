@@ -18,10 +18,10 @@ import {
   FeatureGroupDataPreview,
   FeatureGroupDataCorrelation,
   FeatureGroupStatistics,
-  SourcesList,
-  SourcesCreate,
-  SourcesEdit,
-  SourcesImportSample,
+  StorageConnectorsList,
+  StorageConnectorsCreate,
+  StorageConnectorsEdit,
+  StorageConnectorsImportSample,
   FeatureGroupOverview,
   TrainingDatasetList,
   ProjectView,
@@ -47,7 +47,7 @@ const Project: FC = () => {
   const clearData = useCallback((): void => {
     dispatch.featureGroups.setFeatureGroups([]);
     dispatch.trainingDatasets.set([]);
-    dispatch.featureStoreSources.clear();
+    dispatch.featureStoreStorageConnectors.clear();
     dispatch.featureStores.setFeatureStores(null);
   }, [dispatch]);
 
@@ -153,23 +153,23 @@ const Project: FC = () => {
 
       <Route
         path={routeNames.storageConnector.list}
-        element={<SourcesList />}
+        element={<StorageConnectorsList />}
       />
       <Route
         path={routeNames.storageConnector.create}
-        element={<SourcesCreate />}
+        element={<StorageConnectorsCreate />}
       />
       <Route
         path={routeNames.storageConnector.edit}
-        element={<SourcesEdit />}
+        element={<StorageConnectorsEdit />}
       />
       <Route
         path={routeNames.storageConnector.importSample}
-        element={<SourcesImportSample />}
+        element={<StorageConnectorsImportSample />}
       />
       <Route
         path={routeNames.storageConnector.createWithProtocol}
-        element={<SourcesCreate />}
+        element={<StorageConnectorsCreate />}
       />
       <Route path="/" element={<Redirect to={`${location.pathname}/view`} />} />
       <Route path="*" element={<Error404 />} />

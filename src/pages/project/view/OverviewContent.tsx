@@ -72,7 +72,7 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
             )}
             <Flex flexDirection="column">
               <Microlabeling mb="3px" gray>
-                Sources
+                Storage Connectors
               </Microlabeling>
               <Value primary>{data.projectId}</Value>
             </Flex>

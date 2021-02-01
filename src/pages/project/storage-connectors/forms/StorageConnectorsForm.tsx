@@ -32,10 +32,10 @@ import { name, shortText } from '../../../../utils/validators';
 // Routes
 import routeNames from '../../../../routes/routeNames';
 // Types
-import { SourceProtocol } from '../types';
-import { DescriptionsData, SourcesFormData } from './types';
+import { StorageConnectorProtocol } from '../types';
+import { DescriptionsData, StorageConnectorsFormData } from './types';
 import { EffectError } from '../../../../store/plugins/errors.plugin';
-import { FeatureStoreSource } from '../../../../types/feature-store';
+import { FeatureStoreStorageConnector } from '../../../../types/feature-store';
 // Components
 import Loader from '../../../../components/loader/Loader';
 // Styles
@@ -54,15 +54,15 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import featureStoreService from '../../../../services/project/FeatureStoresService';
 
-export interface SourcesCreateFormProps {
+export interface StorageConnectorsCreateFormProps {
   error?: EffectError<{ errorMsg: string }>;
-  initialProtocol?: SourceProtocol;
+  initialProtocol?: StorageConnectorProtocol;
   isLoading: boolean;
   isDisabled: boolean;
-  onSubmit: (data: SourcesFormData) => void;
+  onSubmit: (data: StorageConnectorsFormData) => void;
   onDelete?: () => void;
   isEdit?: boolean;
-  initialData?: FeatureStoreSource;
+  initialData?: FeatureStoreStorageConnector;
 }
 
 export const commonSchema = yup.object().shape({
@@ -70,9 +70,9 @@ export const commonSchema = yup.object().shape({
   name: name.label('Name'),
 });
 
-const SourcesForm: FC<SourcesCreateFormProps> = ({
+const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
   error,
-  initialProtocol = SourceProtocol.aws,
+  initialProtocol = StorageConnectorProtocol.aws,
   isLoading,
   isDisabled,
   onSubmit,
@@ -110,7 +110,7 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
       ...(initialData?.arguments
         ? { arguments: formatStringToArguments(initialData.arguments) }
         : {}),
-    } as SourcesFormData,
+    } as StorageConnectorsFormData,
     shouldUnregister: false,
     resolver: yupResolver(schema),
   });
@@ -146,7 +146,7 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
 
   const isValidName = useCallback(async () => {
     if (featureStoreData?.featurestoreId && projectId) {
-      const { data } = await featureStoreService.getSources(
+      const { data } = await featureStoreService.getStorageConnectors(
         +projectId,
         featureStoreData?.featurestoreId,
       );
@@ -292,4 +292,4 @@ const SourcesForm: FC<SourcesCreateFormProps> = ({
   );
 };
 
-export default memo(SourcesForm);
+export default memo(StorageConnectorsForm);

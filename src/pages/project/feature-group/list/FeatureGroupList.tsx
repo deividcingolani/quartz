@@ -195,14 +195,14 @@ const FeatureGroupList: FC = () => {
       {!isLoading && !maxVersionsData.length && (
         <NoData
           mainText="No Feature Group"
-          secondaryText="Create or import feature groups from sources"
+          secondaryText="Create or import feature groups from storage connectors"
         >
           <Button
             intent="secondary"
             onClick={handleRouteChange(routeNames.storageConnector.list)}
             mr="14px"
           >
-            All Sources
+            All Storage Connectors
           </Button>
           <Button intent="secondary" onClick={handleRouteChange('')} mr="14px">
             Feature Group Documentation

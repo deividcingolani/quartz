@@ -7,7 +7,7 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
-const SourcesImportSample: FC = () => {
+const StorageConnectorsImportSample: FC = () => {
   const navigate = useNavigateRelative();
 
   useTitle(titles.importSample);
@@ -24,7 +24,7 @@ const SourcesImportSample: FC = () => {
       </Text>
       <Flex mt="20px">
         <Button
-          onClick={() => navigate('/sources', 'p/:id/*')}
+          onClick={() => navigate('/storage-connectors', 'p/:id/*')}
           intent="secondary"
         >
           Use another method
@@ -37,4 +37,4 @@ const SourcesImportSample: FC = () => {
   );
 };
 
-export default SourcesImportSample;
+export default StorageConnectorsImportSample;

@@ -20,7 +20,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ProjectFormData } from './types';
 import { Project } from '../../../types/project';
 // Utils
-import { cropText } from '../sources/utils';
+import { cropText } from '../storage-connectors/utils';
 import { name, shortText } from '../../../utils/validators';
 import getInputValidation from '../../../utils/getInputValidation';
 // Components

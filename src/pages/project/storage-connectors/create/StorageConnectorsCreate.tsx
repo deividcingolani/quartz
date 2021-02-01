@@ -5,11 +5,11 @@ import React, { FC, useCallback } from 'react';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
-import { SourceProtocol } from '../types';
-import { SourcesFormData } from '../forms/types';
+import { StorageConnectorProtocol } from '../types';
+import { StorageConnectorsFormData } from '../forms/types';
 import { Dispatch, RootState } from '../../../../store';
 // Components
-import SourcesForm from '../forms/SourcesForm';
+import StorageConnectorsForm from '../forms/StorageConnectorsForm';
 import Loader from '../../../../components/loader/Loader';
 // Utils
 import {
@@ -21,16 +21,18 @@ import {
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
-const SourcesCreate: FC = () => {
+const StorageConnectorsCreate: FC = () => {
   useTitle(titles.createStorageConnector);
 
   const { protocol, id: projectId } = useParams();
 
   const isSubmit = useSelector(
-    (state: RootState) => state.loading.effects.featureStoreSources.create,
+    (state: RootState) =>
+      state.loading.effects.featureStoreStorageConnectors.create,
   );
   const error = useSelector(
-    (state: RootState) => state.error.effects.featureStoreSources.create,
+    (state: RootState) =>
+      state.error.effects.featureStoreStorageConnectors.create,
   );
   const featureStoreData = useSelector((state: RootState) =>
     state.featureStores?.length ? state.featureStores[0] : null,
@@ -42,13 +44,15 @@ const SourcesCreate: FC = () => {
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();
 
-  const initialProtocol = Object.keys(SourceProtocol).includes(String(protocol))
-    ? (protocol as SourceProtocol)
+  const initialProtocol = Object.keys(StorageConnectorProtocol).includes(
+    String(protocol),
+  )
+    ? (protocol as StorageConnectorProtocol)
     : undefined;
 
   // Handlers
   const handleSubmit = useCallback(
-    async (data: SourcesFormData) => {
+    async (data: StorageConnectorsFormData) => {
       const {
         protocol: storageConnectorType,
         arguments: args,
@@ -59,17 +63,17 @@ const SourcesCreate: FC = () => {
 
       if (featureStoreData?.featurestoreId) {
         dispatch.error.clear({
-          name: 'featureStoreSources',
+          name: 'featureStoreStorageConnectors',
           action: 'create',
         });
-        await dispatch.featureStoreSources.create({
+        await dispatch.featureStoreStorageConnectors.create({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
           data: {
-            ...(storageConnectorType === SourceProtocol.jdbc && {
+            ...(storageConnectorType === StorageConnectorProtocol.jdbc && {
               arguments: formattedArgs,
             }),
-            ...(storageConnectorType === SourceProtocol.redshift && {
+            ...(storageConnectorType === StorageConnectorProtocol.redshift && {
               databaseGroup: formatGroups(args),
             }),
             type: getDtoType(storageConnectorType),
@@ -80,7 +84,7 @@ const SourcesCreate: FC = () => {
           },
         });
 
-        dispatch.featureStoreSources.clear();
+        dispatch.featureStoreStorageConnectors.clear();
 
         navigate('/storage-connectors', 'p/:id/*');
       }
@@ -93,7 +97,7 @@ const SourcesCreate: FC = () => {
   }
 
   return (
-    <SourcesForm
+    <StorageConnectorsForm
       error={error}
       initialProtocol={initialProtocol}
       isLoading={isSubmit}
@@ -103,4 +107,4 @@ const SourcesCreate: FC = () => {
   );
 };
 
-export default SourcesCreate;
+export default StorageConnectorsCreate;

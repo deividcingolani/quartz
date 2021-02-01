@@ -6,7 +6,7 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
 import { Project } from '../../../../types/project';
 // Utils
-import { cropText } from '../../sources/utils';
+import { cropText } from '../../storage-connectors/utils';
 import { TrainingDatasetProvenance } from '../../../../types/training-dataset';
 
 const useProvenanceListRowData = (

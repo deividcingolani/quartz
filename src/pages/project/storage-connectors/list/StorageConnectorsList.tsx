@@ -3,22 +3,22 @@ import { useParams } from 'react-router-dom';
 import { Button } from '@logicalclocks/quartz/dist';
 
 // Components
-import SourceListContent from './SourceListContent';
+import StorageConnectorListContent from './StorageConnectorListContent';
 import Loader from '../../../../components/loader/Loader';
 import NoData from '../../../../components/no-data/NoData';
 // Hooks
-import useSourcesData from './useSourcesData';
+import useStorageConnectorsData from './useStorageConnectorsData';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
-const SourcesList: FC = () => {
+const StorageConnectorsList: FC = () => {
   useTitle(titles.storageConnectors);
 
   const { id } = useParams();
   const navigate = useNavigateRelative();
 
-  const { data, isLoading } = useSourcesData(+id);
+  const { data, isLoading } = useStorageConnectorsData(+id);
 
   const handleNavigate = (to: string) => () => {
     navigate(to, 'p/:id/storage-conectors/');
@@ -48,7 +48,7 @@ const SourcesList: FC = () => {
     );
   }
 
-  return <SourceListContent data={data} />;
+  return <StorageConnectorListContent data={data} />;
 };
 
-export default SourcesList;
+export default StorageConnectorsList;

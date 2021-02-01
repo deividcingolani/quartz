@@ -20,7 +20,6 @@ import featureGroupView from './feature/featureGroupView.model';
 import featureGroupLabels from './feature/featureGroupLabels.model';
 import { trainingDatasetLabelModel } from './training-dataset-label';
 import featureGroupRows from './feature/statistics/featureGroupRows.model';
-import featureStoreSources from './feature/sources/featureStoreSources.model';
 import trainingDatasetView from './training-dataset/trainingDatasetView.model';
 import featureGroupDataPreview from './feature/data/featureGroupsDataPreview.model';
 import featureGroupStatistics from './feature/statistics/featureGroupStatistics.model';
@@ -30,6 +29,7 @@ import trainingDatasetQuery from './training-dataset/trainingDatasetQuery.model'
 import schematisedTags from './schematised-tags/schematised-tags.model';
 import schematisedTagView from './schematised-tags/schematised-tag-view.model';
 import trainingDatasetStatistics from './training-dataset/statistics/trainingDatasetStatistics.model';
+import featureStoreStorageConnectors from './feature/storageConnectors/featureStoreStorageConnectors.model';
 import trainingDatasetStatisticsCommits from './training-dataset/statistics/trainingDatasetStatisticsCommits.model';
 import featureGroupSchematisedTags from './feature/statistics/featureGroupSchematisedTags.model';
 import featureGroupActivity from './feature/activity/featureGroupActivity.model';
@@ -62,12 +62,12 @@ export interface RootModel extends Models<RootModel> {
   trainingDatasetView: typeof trainingDatasetView;
   trainingDatasetLabels: typeof trainingDatasetLabelModel;
   trainingDatasetQuery: typeof trainingDatasetQuery;
-  featureStoreSources: typeof featureStoreSources;
   featureGroupDataPreview: typeof featureGroupDataPreview;
   featureGroupCommitsDetail: typeof featureGroupCommitsDetail;
   featureGroupSchematisedTags: typeof featureGroupSchematisedTags;
   featureGroupStatisticsCommits: typeof featureGroupStatisticsCommits;
   trainingDatasetStatistics: typeof trainingDatasetStatistics;
+  featureStoreStorageConnectors: typeof featureStoreStorageConnectors;
   trainingDatasetStatisticsCommits: typeof trainingDatasetStatisticsCommits;
 }
 
@@ -92,7 +92,6 @@ const models: RootModel = {
   featureGroupRows,
   featureGroupLabels,
   schematisedTagView,
-  featureStoreSources,
   featureGroupActivity,
   featureGroupStatistics,
   featureGroupDataPreview,
@@ -102,6 +101,7 @@ const models: RootModel = {
   trainingDatasets: trainingDatasetModel,
   trainingDatasetView,
   trainingDatasetStatistics,
+  featureStoreStorageConnectors,
   trainingDatasetStatisticsCommits,
   trainingDatasetLabels: trainingDatasetLabelModel,
   trainingDatasetQuery,

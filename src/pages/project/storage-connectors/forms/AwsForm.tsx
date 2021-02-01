@@ -14,7 +14,7 @@ import { selectFeatureStoreData } from '../../../../store/models/feature/selecto
 // Default validators
 import { shortText } from '../../../../utils/validators';
 // Types
-import { SourceFormProps } from './types';
+import { StorageConnectorFormProps } from './types';
 import { RoleMapping } from '../../../../types/role-mapping';
 
 export const schema = yup.object().shape({
@@ -37,7 +37,7 @@ export const schema = yup.object().shape({
   }),
 });
 
-const AwsForm: FC<SourceFormProps> = ({
+const AwsForm: FC<StorageConnectorFormProps> = ({
   register,
   watch,
   control,

@@ -21,7 +21,7 @@ import { mapTags, validateSchema } from '../../feature-group/utils';
 import { name, shortText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
 // Selectors
-import { selectFeatureStoreSources } from '../../../../store/models/feature/sources/selectors';
+import { selectFeatureStoreStorageConnectors } from '../../../../store/models/feature/storageConnectors/selectors';
 import { selectSchematisedTags } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
 import {
   Button,
@@ -37,7 +37,7 @@ import {
   Tooltip,
   Value,
 } from '@logicalclocks/quartz';
-import { ISource } from '../../../../types/source';
+import { IStorageConnector } from '../../../../types/storage-connector';
 import { RootState } from '../../../../store';
 import StatisticConfigurationForm from '../../feature-group/forms/StatisticsConfigurationForm';
 
@@ -67,7 +67,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     defaultValues: {
       tags: {},
       name: '',
-      storage: {} as ISource,
+      storage: {} as IStorageConnector,
       keywords: [],
       description: '',
       features: [],
@@ -83,7 +83,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         keywords: initialData.labels,
         dataFormat: initialData.dataFormat,
         description: initialData.description,
-        storage: {} as ISource,
+        storage: {} as IStorageConnector,
         correlations: initialData.statisticsConfig.correlations,
         enabled: initialData.statisticsConfig.enabled,
         histograms: initialData.statisticsConfig.histograms,
@@ -114,7 +114,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
   const { id: projectId } = useParams();
   const navigate = useNavigate();
 
-  const storages = useSelector(selectFeatureStoreSources);
+  const storages = useSelector(selectFeatureStoreStorageConnectors);
 
   const onSubmit = useCallback(
     handleSubmit(async (data: TrainingDatasetFormData) => {
@@ -211,7 +211,9 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                   <Value mt="10px">Storage</Value>
                   <Button
                     mr="-15px"
-                    onClick={() => navigate(`/p/${projectId}/sources/new`)}
+                    onClick={() =>
+                      navigate(`/p/${projectId}/storage-connectors/new`)
+                    }
                     intent="inline"
                   >
                     Create a source

@@ -10,14 +10,18 @@ import { selectFeatureStoreData } from '../../../../store/models/feature/selecto
 // Default validators
 import { shortText } from '../../../../utils/validators';
 // Types
-import { SourceFormProps } from './types';
+import { StorageConnectorFormProps } from './types';
 import { Dataset } from '../../../../types/dataset';
 
 export const schema = yup.object().shape({
   datasetName: shortText.required().label('Dataset'),
 });
 
-const HopsForm: FC<SourceFormProps> = ({ control, isDisabled, errors }) => {
+const HopsForm: FC<StorageConnectorFormProps> = ({
+  control,
+  isDisabled,
+  errors,
+}) => {
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   const datasets = useSelector((state: RootState) => state.dataset);
