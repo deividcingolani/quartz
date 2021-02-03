@@ -117,6 +117,29 @@ const useAppNavigation = (): TreeNode[] => {
         tooltipText: 'Home',
         isActive: isActive('/p/:id/view'),
         onClick: handleNavigateRelative('/view', routeNames.project.view),
+        children: [
+          {
+            id: 'projectDatabricks',
+            title: 'Databricks',
+            isActive: isActive(routeNames.project.integrations.databricks),
+            onClick: handleNavigateRelative(
+              '/integrations/databricks',
+              '/p/:id/*',
+            ),
+          },
+          {
+            id: 'projectSpark',
+            title: 'Spark',
+            isActive: isActive(routeNames.project.integrations.spark),
+            onClick: handleNavigateRelative('/integrations/spark', '/p/:id/*'),
+          },
+          {
+            id: 'projectCode',
+            title: 'Connect to Feature Store',
+            isActive: isActive(routeNames.project.integrations.code),
+            onClick: handleNavigateRelative('/integrations/code', '/p/:id/*'),
+          },
+        ],
       },
       {
         id: 'fg',

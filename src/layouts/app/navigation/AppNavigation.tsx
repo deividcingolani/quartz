@@ -13,6 +13,7 @@ import { RootState } from '../../../store';
 const map: { [key: string]: string } = {
   'p/:id/fg/:id/statistics/*': '/fg',
   'p/:id/fg/:id/data-preview': '/fg',
+  'p/:id/integrations/*': '/',
 };
 
 const AppNavigation: FC = () => {

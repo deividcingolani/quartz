@@ -119,6 +119,7 @@ const clearNotGlobalAction = <TModels extends Models<TModels>>(
 };
 
 export interface ErrorsPluginOptions {
+  whiteList: string[];
   globalErrors: Array<number>;
 }
 
@@ -163,7 +164,7 @@ export default <
       Object.keys(modelActions).forEach((action: string) => {
         const origEffect = rematch.dispatch[name][action];
 
-        if (!origEffect.isEffect) {
+        if (!origEffect.isEffect || options?.whiteList.includes(name)) {
           return;
         }
 

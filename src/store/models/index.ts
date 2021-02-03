@@ -31,6 +31,7 @@ import schematisedTagView from './schematised-tags/schematised-tag-view.model';
 import trainingDatasetStatistics from './training-dataset/statistics/trainingDatasetStatistics.model';
 import featureStoreStorageConnectors from './feature/storageConnectors/featureStoreStorageConnectors.model';
 import trainingDatasetStatisticsCommits from './training-dataset/statistics/trainingDatasetStatisticsCommits.model';
+import databricks from './databricks/databricks.model';
 import featureGroupSchematisedTags from './feature/statistics/featureGroupSchematisedTags.model';
 import featureGroupActivity from './feature/activity/featureGroupActivity.model';
 import members from './projects/members.model';
@@ -46,6 +47,7 @@ export interface RootModel extends Models<RootModel> {
   members: typeof members;
   project: typeof project;
   profile: typeof profile;
+  databricks: typeof databricks;
   deepSearch: typeof deepSearch;
   projectsList: typeof projectsList;
   roleMappings: typeof roleMappings;
@@ -84,6 +86,7 @@ const models: RootModel = {
   members,
   deepSearch,
   roleMappings,
+  databricks,
   projectsList,
   featureGroups,
   featureStores,

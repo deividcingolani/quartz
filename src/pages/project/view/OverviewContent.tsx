@@ -15,6 +15,7 @@ import { Project } from '../../../types/project';
 // Components
 import DateValue from '../feature-group/list/DateValue';
 import ProjectMembers from './ProjectMembers';
+import Integrations from './Integrations';
 
 export interface ContentProps {
   data: Project;
@@ -92,6 +93,7 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
         </Flex>
       </Card>
       {!!data.projectTeam && <ProjectMembers data={data} />}
+      <Integrations />
     </>
   );
 };

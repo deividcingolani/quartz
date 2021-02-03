@@ -20,6 +20,11 @@ const routeNames = {
 
   project: {
     view: 'p/:id/*',
+    integrations: {
+      code: 'p/:id/integrations/code',
+      databricks: 'p/:id/integrations/databricks',
+      spark: 'p/:id/integrations/spark',
+    },
     viewHome: 'p/:id/view',
     list: '/',
     edit: 'p/:id/edit',

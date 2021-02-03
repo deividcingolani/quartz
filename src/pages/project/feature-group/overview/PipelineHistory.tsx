@@ -6,7 +6,7 @@ import {
   Card,
   Text,
   Row as QRow,
-  Subtitle,
+  Labeling,
 } from '@logicalclocks/quartz';
 import { Job } from '../../../../types/feature-group';
 import usePipelineHistoryRowData from './usePipelineHistoryRowData';
@@ -43,7 +43,25 @@ const PipelineHistory: FC<PipelineHistoryProps> = ({ data }) => {
   }, [data]);
 
   if (!groupComponents || !groupProps) {
-    return <Subtitle>No Pipeline History</Subtitle>;
+    return (
+      <Card
+        mt="20px"
+        title="Pipeline History"
+        actions={
+          <Button p={0} intent="inline">
+            edit
+          </Button>
+        }
+      >
+        <Box mt="20px" mx="-20px">
+          <Flex height="50px" mt="30px" justifyContent="center">
+            <Labeling fontSize="18px" gray>
+              No pipeline history
+            </Labeling>
+          </Flex>
+        </Box>
+      </Card>
+    );
   }
 
   return (

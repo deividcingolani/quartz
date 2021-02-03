@@ -69,6 +69,11 @@ const Login: FC = () => {
       const error = await dispatch.auth.login({
         data,
       });
+
+      if (error?.message === 'Network Error') {
+        return;
+      }
+
       if (error) {
         setError(error);
       } else {

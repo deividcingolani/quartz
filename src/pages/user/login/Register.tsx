@@ -77,6 +77,11 @@ const Register: FC = () => {
       const error = await dispatch.auth.register({
         data,
       });
+
+      if (error?.message === 'Network Error') {
+        return;
+      }
+
       if (error) {
         setError(error);
       } else {

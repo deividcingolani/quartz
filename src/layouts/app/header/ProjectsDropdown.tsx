@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   List,
   ListItem,
@@ -12,7 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // Styled
 import Button from './project-button.styles';
 // Types
-import { RootState } from '../../../store';
+import { Dispatch, RootState } from '../../../store';
 
 const ProjectsDropdown: FC = () => {
   const projects = useSelector((state: RootState) => state.projectsList);
@@ -22,6 +22,7 @@ const ProjectsDropdown: FC = () => {
 
   const { id: projectId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch<Dispatch>();
 
   const buttonRef = useRef(null);
 
@@ -52,7 +53,10 @@ const ProjectsDropdown: FC = () => {
               key={id}
               variant={+projectId === id ? 'active' : 'primary'}
               hasDivider={index === projects.length - 1}
-              onClick={() => navigate(`/p/${id}/view`)}
+              onClick={() => {
+                dispatch.featureStores.clear();
+                navigate(`/p/${id}/view`);
+              }}
             >
               {name}
             </ListItem>

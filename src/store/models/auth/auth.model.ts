@@ -12,6 +12,10 @@ const handleAuthError = async (fn: () => any) => {
   try {
     await fn();
   } catch (e) {
+    if (e.message === 'Network Error') {
+      throw e;
+    }
+
     return {
       error: true,
       message:

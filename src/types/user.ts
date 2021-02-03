@@ -1,7 +1,7 @@
 export interface User {
   accountType: string;
   email: string;
-  fname?: string;
+  fname: string;
   lname?: string;
   firstname: string;
   href: string;

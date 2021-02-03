@@ -29,6 +29,9 @@ import {
   TrainingDatasetOverview,
   TrainingDatasetStatistics,
   TrainingDatasetCreate,
+  ProjectCode,
+  ProjectDatabricks,
+  ProjectSpark,
 } from './lazyComponents';
 
 const Project: FC = () => {
@@ -171,6 +174,11 @@ const Project: FC = () => {
         path={routeNames.storageConnector.createWithProtocol}
         element={<StorageConnectorsCreate />}
       />
+
+      <Route path="/integrations/code" element={<ProjectCode />} />
+      <Route path="/integrations/spark" element={<ProjectSpark />} />
+      <Route path="/integrations/databricks" element={<ProjectDatabricks />} />
+
       <Route path="/" element={<Redirect to={`${location.pathname}/view`} />} />
       <Route path="*" element={<Error404 />} />
     </Routes>
