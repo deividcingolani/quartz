@@ -29,6 +29,7 @@ import {
   TrainingDatasetOverview,
   TrainingDatasetStatistics,
   TrainingDatasetCreate,
+  TrainingDatasetEdit,
   ProjectCode,
   ProjectDatabricks,
   ProjectSpark,
@@ -128,6 +129,10 @@ const Project: FC = () => {
       <Route
         path={routeNames.trainingDataset.create}
         element={<TrainingDatasetCreate />}
+      />
+      <Route
+        path={routeNames.trainingDataset.edit}
+        element={<TrainingDatasetEdit />}
       />
       <Route
         path={routeNames.trainingDataset.list}

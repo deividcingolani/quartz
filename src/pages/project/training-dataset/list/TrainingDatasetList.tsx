@@ -126,8 +126,9 @@ const TrainingDatasetList: FC = () => {
         />
         <Tooltip
           ml="8px"
+          mt="7px"
           disabled={!isFilterDisabled}
-          mainText="No keywords defined. Add them from edit page of feature groups"
+          mainText="No keywords defined."
         >
           <Select
             disabled={isFilterDisabled}

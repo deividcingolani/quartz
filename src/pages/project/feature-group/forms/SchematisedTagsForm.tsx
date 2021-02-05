@@ -28,7 +28,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
     tagA.name.localeCompare(tagB.name),
   );
 
-  const { getValues } = useFormContext();
+  const { getValues, setValue } = useFormContext();
 
   const navigate = useNavigate();
 
@@ -46,12 +46,14 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
     const remainingOptions = baseOptions.filter((option) => {
       const spaceIndex = option.indexOf(' ');
       const name = spaceIndex > -1 ? option.slice(0, spaceIndex) : option;
+
       return !listTags.find(({ tag }) => name === tag?.name);
     });
 
     if (remainingOptions.length) {
       remainingOptions.push('none');
     }
+
     return remainingOptions;
   }, [baseOptions, listTags]);
 
@@ -84,6 +86,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
     setList((list) => {
       const copy = list.slice();
       copy.push({ id: randomArrayString(10)[0], selected: ['none'] });
+
       return copy;
     });
   }, []);
@@ -93,10 +96,23 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
       setList((list) => {
         const copy = list.slice();
         copy.splice(index, 1);
+
+        const deletedName = list[index].tag?.name;
+
+        const tags = getValues('tags');
+        const filtered = Object.keys(tags).filter(
+          (name) => name !== deletedName,
+        );
+
+        setValue(
+          'tags',
+          filtered.reduce((acc, key) => ({ ...acc, [key]: tags[key] }), {}),
+        );
+
         return copy;
       });
     },
-    [],
+    [setValue, getValues],
   );
 
   useEffect(() => {

@@ -75,7 +75,9 @@ const TrainingDatasetCreate: FC = () => {
             },
             queryDTO: mapFeatures(features),
             statisticsConfig: {
-              columns: [],
+              columns: enabled
+                ? features[0].features.map(({ name }) => name)
+                : [],
               correlations,
               enabled,
               histograms,

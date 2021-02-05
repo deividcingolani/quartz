@@ -41,7 +41,7 @@ const SingleTag: FC<SingleTagProps> = ({
       <Flex mb="20px" width="100%" flexDirection="column">
         <Flex width="100%" flexDirection="column">
           <Flex justifyContent="space-between">
-            <Value mt="10px">Schematised tag {index + 1}</Value>
+            <Value mt="10px">Schematised tag #{index + 1}</Value>
             {isFirstItem && (
               <Button
                 mr="-15px"
@@ -110,7 +110,7 @@ const SingleTag: FC<SingleTagProps> = ({
         )}
       </Flex>
 
-      <Divider mb="15px" mt="15px" />
+      {!isLastItem && <Divider mb="15px" mt="15px" />}
     </>
   );
 };

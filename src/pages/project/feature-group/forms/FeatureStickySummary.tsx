@@ -37,7 +37,7 @@ const FeatureStickySummary: FC<StickySummaryProps> = ({
           {type === ItemDrawerTypes.td &&
             !isEdit &&
             'Create New Training Dataset'}
-          {type === ItemDrawerTypes.td && isEdit && 'Save training dataset'}
+          {type === ItemDrawerTypes.td && isEdit && 'Save'}
 
           {type === ItemDrawerTypes.fg && !isEdit && 'Create New Feature Group'}
           {type === ItemDrawerTypes.fg &&

@@ -37,13 +37,13 @@ export interface DataEntity {
   tags: Tag[];
   highlights: any;
   matchText: string;
-  versions: DataEntityVersion[];
   statisticsConfig: {
     enabled: boolean;
     histograms: boolean;
     correlations: boolean;
     columns: string[];
   };
+  versions: DataEntityVersion[];
 }
 
 export interface HoverableCardProps<T> {

@@ -2,6 +2,8 @@ import { createModel } from '@rematch/core';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import { TrainingDataset } from '../../../types/training-dataset';
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
+import { SchemaType } from '../feature/featureGroupView.model';
+import { TrainingDatasetLabelService } from '../../../services/project';
 import { getValidPromisesValues } from '../search/deep-search.model';
 
 export type TrainingDatasetViewState = TrainingDataset | null;
@@ -67,10 +69,45 @@ const trainingDatasetView = createModel()({
         data.name,
       );
 
+      const { data: tags } = await TrainingDatasetService.getTags(
+        projectId,
+        featureStoreId,
+        trainingDatasetId,
+      );
+
+      const mappedTags = tags?.items?.map(({ name, value, schema }: any) => {
+        const tags = JSON.parse(value);
+        const { properties }: SchemaType = JSON.parse(schema.value);
+
+        return {
+          name,
+          tags,
+          types: Object.entries(properties).reduce(
+            (acc, [key, value]) => ({
+              ...acc,
+              [key]:
+                value.type === 'array'
+                  ? `Array of ${value.items.type}`
+                  : value.type,
+            }),
+            {},
+          ),
+        };
+      });
+
+      const keywords =
+        (await new TrainingDatasetLabelService().getList(
+          projectId,
+          featureStoreId,
+          trainingDatasetId,
+        )) || [];
+
       dispatch.trainingDatasetView.setData({
         ...data,
         provenance: tdProvenances,
         versions: tdsWithSameName.map(({ id, version }) => ({ id, version })),
+        tags: mappedTags || [],
+        labels: keywords,
       });
     },
   }),

@@ -1,7 +1,7 @@
 import { Box, Flex } from 'rebass';
 import React, { FC, memo, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Checkbox, Icon, Label, Tooltip } from '@logicalclocks/quartz';
+import { Checkbox, Icon, Tooltip } from '@logicalclocks/quartz';
 
 export interface StatisticConfigurationFormProps {
   isLoading: boolean;
@@ -24,8 +24,6 @@ const StatisticConfigurationForm: FC<StatisticConfigurationFormProps> = ({
 
   return (
     <>
-      <Label mb="8px">Statistic configuration</Label>
-
       <Flex>
         <Controller
           control={control}

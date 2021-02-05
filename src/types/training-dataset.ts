@@ -1,5 +1,6 @@
 import { Entry, FeatureGroup } from './feature-group';
 import { DataEntity } from './index';
+import { IStorageConnector } from './storage-connector';
 
 export interface TrainingDatasetFeature {
   name: string;
@@ -46,6 +47,7 @@ export interface TrainingDataset extends DataEntity {
   provenance: TrainingDatasetProvenance[];
   parentProjectId: number;
   parentProjectName: string;
+  storageConnector: IStorageConnector;
 }
 
 export interface TrainingDatasetQuery {

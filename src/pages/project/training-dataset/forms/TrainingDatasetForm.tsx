@@ -21,7 +21,6 @@ import { mapTags, validateSchema } from '../../feature-group/utils';
 import { name, shortText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
 // Selectors
-import { selectFeatureStoreStorageConnectors } from '../../../../store/models/feature/storageConnectors/selectors';
 import { selectSchematisedTags } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
 import {
   Button,
@@ -31,15 +30,18 @@ import {
   Divider,
   Icon,
   Input,
-  Label,
   Labeling,
+  Microlabeling,
   Select,
   Tooltip,
   Value,
 } from '@logicalclocks/quartz';
-import { IStorageConnector } from '../../../../types/storage-connector';
 import { RootState } from '../../../../store';
 import StatisticConfigurationForm from '../../feature-group/forms/StatisticsConfigurationForm';
+import { dataFormatMap } from '../utils';
+import StatisticsFeaturesForm from './StatisticsFeaturesForm';
+import { IStorageConnector } from '../../../../types/storage-connector';
+import { selectFeatureStoreStorageConnectors } from '../../../../store/models/feature/storageConnectors/selectors';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -77,16 +79,17 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
       enabled: true,
       histograms: false,
       ...(!!initialData && {
-        location: '',
         name: initialData.name,
         tags: mapTags(initialData),
         keywords: initialData.labels,
+        features: initialData.features,
         dataFormat: initialData.dataFormat,
         description: initialData.description,
-        storage: {} as IStorageConnector,
         correlations: initialData.statisticsConfig.correlations,
         enabled: initialData.statisticsConfig.enabled,
         histograms: initialData.statisticsConfig.histograms,
+        statisticsColumns: initialData.statisticsConfig.columns,
+        storage: initialData.storageConnector,
       }),
     },
     shouldUnregister: false,
@@ -107,14 +110,20 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     (state: RootState) => state.trainingDatasets,
   ).map(({ name }) => name);
 
-  const { storage, name } = watch(['storage', 'name']);
+  const { storage, name, dataFormat } = watch([
+    'storage',
+    'name',
+    'dataFormat',
+  ]);
 
   const serverTags = useSelector(selectSchematisedTags);
 
   const { id: projectId } = useParams();
   const navigate = useNavigate();
 
-  const storages = useSelector(selectFeatureStoreStorageConnectors);
+  const storages = useSelector(selectFeatureStoreStorageConnectors).filter(
+    ({ storageConnectorType }) => storageConnectorType !== 'JDBC',
+  );
 
   const onSubmit = useCallback(
     handleSubmit(async (data: TrainingDatasetFormData) => {
@@ -167,146 +176,215 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             overflow: 'unset',
           }}
           title={
-            isEdit ? 'Edit Training Dataset' : 'Create New Training Dataset'
+            isEdit ? 'Edit training dataset' : 'Create New Training Dataset'
           }
-          mb="20px"
+          mb={isEdit ? '100px' : '20px'}
         >
-          <Flex justifyContent="space-between" mb="20px">
-            <Input
-              name="name"
-              ref={register}
-              readOnly={isEdit}
-              placeholder="name"
-              label="Training Dataset Name"
-              labelProps={{ width: '170px' }}
-              disabled={isLoading || isDisabled}
-              {...getInputValidation('name', errors)}
-            />
-            <Input
-              ref={register}
-              name="description"
-              placeholder="description"
-              disabled={isDisabled || isLoading}
-              label="Training Dataset Description"
-              labelProps={{ ml: '30px', flex: 1 }}
-              {...getInputValidation('description', errors)}
-            />
-          </Flex>
+          {!isEdit && (
+            <>
+              <Flex justifyContent="space-between" mb="20px">
+                <Input
+                  name="name"
+                  ref={register}
+                  readOnly={isEdit}
+                  placeholder="name"
+                  label="Training Dataset Name"
+                  labelProps={{ width: '170px' }}
+                  disabled={isLoading || isDisabled}
+                  {...getInputValidation('name', errors)}
+                />
+                <Input
+                  ref={register}
+                  name="description"
+                  placeholder="description"
+                  disabled={isDisabled || isLoading}
+                  label="Training Dataset Description"
+                  labelProps={{ ml: '30px', flex: 1 }}
+                  {...getInputValidation('description', errors)}
+                />
+              </Flex>
 
-          {trainingDatasetsNames.includes(name) && (
-            <Box mt="-10px">
-              <Callout
-                content="A training dataset already has this name. Creating a new training dataset with the same name will create a new version."
-                type={CalloutTypes.warning}
+              {trainingDatasetsNames.includes(name) && (
+                <Box mt="-10px">
+                  <Callout
+                    content="A training dataset already has this name. Creating a new training dataset with the same name will create a new version."
+                    type={CalloutTypes.warning}
+                  />
+                </Box>
+              )}
+            </>
+          )}
+
+          {isEdit && (
+            <Flex mb="20px">
+              <Flex flexDirection="column">
+                <Microlabeling mb="3px" gray>
+                  Name
+                </Microlabeling>
+                <Value primary>{name}</Value>
+              </Flex>
+              <Flex flexDirection="column" ml="20px">
+                <Microlabeling mb="3px" gray>
+                  Storage
+                </Microlabeling>
+                <Value primary>{storage.name}</Value>
+              </Flex>
+              <Flex flexDirection="column" ml="20px">
+                <Microlabeling mb="3px" gray>
+                  Data format
+                </Microlabeling>
+                <Value primary>
+                  {dataFormatMap.getByValue(dataFormat as string)}
+                </Value>
+              </Flex>
+            </Flex>
+          )}
+
+          {isEdit && (
+            <Box>
+              <Input
+                optional={true}
+                label="Description"
+                ref={register}
+                name="description"
+                placeholder="description"
+                disabled={isDisabled || isLoading}
+                width="100%"
+                mb="20px"
+                {...getInputValidation('description', errors)}
               />
             </Box>
           )}
 
-          <Controller
-            control={control}
-            name="storage"
-            render={({ onChange, value }) => (
-              <Flex flexDirection="column">
-                <Flex justifyContent="space-between">
-                  <Value mt="10px">Storage</Value>
-                  <Button
-                    mr="-15px"
-                    onClick={() =>
-                      navigate(`/p/${projectId}/storage-connectors/new`)
-                    }
-                    intent="inline"
-                  >
-                    Create a source
-                  </Button>
-                </Flex>
-                <Select
-                  label=""
+          {!isEdit && (
+            <>
+              <Controller
+                control={control}
+                name="storage"
+                render={({ onChange, value }) => (
+                  <Flex flexDirection="column">
+                    <Flex justifyContent="space-between">
+                      <Value mt="10px">Storage</Value>
+                      <Button
+                        mr="-15px"
+                        onClick={() => navigate(`/p/${projectId}/sources/new`)}
+                        intent="inline"
+                      >
+                        Create a source
+                      </Button>
+                    </Flex>
+                    <Select
+                      label=""
+                      mb="20px"
+                      listWidth="100%"
+                      width="100%"
+                      value={
+                        value.name
+                          ? [`${value.name} (${value.storageConnectorType})`]
+                          : []
+                      }
+                      disabled={isEdit}
+                      options={storages.map(
+                        ({ name, storageConnectorType }) =>
+                          `${name} (${storageConnectorType})`,
+                      )}
+                      placeholder="pick a source"
+                      onChange={(val) => {
+                        const storageName = val[0].slice(
+                          0,
+                          val[0].indexOf(' '),
+                        );
+                        onChange(
+                          storages.find(({ name }) => name === storageName),
+                        );
+                      }}
+                    />
+                  </Flex>
+                )}
+              />
+
+              {storage?.storageConnectorType === 'S3' && (
+                <Input
                   mb="20px"
                   width="100%"
-                  value={
-                    value.name
-                      ? [`${value.name} (${value.storageConnectorType})`]
-                      : []
+                  ref={register}
+                  name="location"
+                  label="Location"
+                  placeholder="location"
+                  disabled={isDisabled || isLoading}
+                  labelAction={
+                    <Flex>
+                      <Labeling ml="5px" gray>
+                        (optional)
+                      </Labeling>
+                      <Tooltip
+                        mainText="Path within storage connector, e.g. a bucket sub-directory"
+                        ml="5px"
+                      >
+                        <Icon icon="info-circle" size="sm" />
+                      </Tooltip>
+                    </Flex>
                   }
-                  disabled={isEdit}
-                  options={storages.map(
-                    ({ name, storageConnectorType }) =>
-                      `${name} (${storageConnectorType})`,
-                  )}
-                  placeholder="pick a source"
-                  onChange={(val) => {
-                    const storageName = val[0].slice(0, val[0].indexOf(' '));
-                    onChange(storages.find(({ name }) => name === storageName));
-                  }}
                 />
-              </Flex>
-            )}
-          />
+              )}
 
-          {storage?.storageConnectorType === 'S3' && (
-            <Input
-              mb="20px"
-              width="100%"
-              ref={register}
-              name="location"
-              label="Location"
-              placeholder="location"
-              disabled={isDisabled || isLoading}
-              labelAction={
-                <Flex>
-                  <Labeling ml="5px" gray>
-                    (optional)
-                  </Labeling>
-                  <Tooltip
-                    mainText="Path within storage connector, e.g. a bucket sub-directory"
-                    ml="5px"
-                  >
-                    <Icon icon="info-circle" size="sm" />
-                  </Tooltip>
-                </Flex>
-              }
-            />
+              <Controller
+                control={control}
+                name="dataFormat"
+                render={({ onChange, value }) => (
+                  <Select
+                    mb="20px"
+                    width="100%"
+                    value={value}
+                    listWidth="100%"
+                    placeholder=""
+                    label="Data format"
+                    disabled={isEdit}
+                    options={[
+                      'TF Record',
+                      'CSV',
+                      'Parquet',
+                      'TSV',
+                      'Avro',
+                      'ORC',
+                    ]}
+                    onChange={(val) => onChange(val)}
+                  />
+                )}
+              />
+            </>
           )}
 
-          <Controller
-            control={control}
-            name="dataFormat"
-            render={({ onChange, value }) => (
-              <Select
-                mb="20px"
-                width="100%"
-                value={value}
-                placeholder=""
-                label="Data format"
-                disabled={isEdit}
-                options={['TF Record', 'CSV', 'Parquet', 'TSV', 'Avro', 'ORC']}
-                onChange={(val) => onChange(val)}
-              />
-            )}
-          />
-
-          <Divider mb="15px" mt="-5px" />
+          <Divider mb="15px" mt="-5px" legend="Statistic configuration" />
 
           <StatisticConfigurationForm isLoading={isLoading} />
 
-          <Divider mb="15px" ml="-20px" mt="-5px" />
+          <Divider mb="10px" mt="-5px" legend="Metadata" />
 
           <SchematisedTagsForm isDisabled={isDisabled} />
 
-          <LabelsForm isDisabled={isDisabled || isLoading} />
+          <Box mb={!isEdit ? '20px' : 0}>
+            <LabelsForm isDisabled={isDisabled || isLoading} />
+          </Box>
+
+          {isEdit && (
+            <Box>
+              <Divider legend="Features" />
+              <StatisticsFeaturesForm />
+            </Box>
+          )}
 
           {isEdit && onDelete && (
             <>
-              <Divider mb="20px" ml="-20px" mt="20px" />
-              <Label text="Danger zone" width="fit-content">
-                <Button
-                  intent="alert"
-                  onClick={onDelete}
-                  disabled={isLoading || isDisabled}
-                >
-                  Delete training dataset
-                </Button>
-              </Label>
+              <Divider mt="20px" mb="8px" legend="Danger zone" />
+              <Button
+                intent="alert"
+                onClick={onDelete}
+                mb="30px"
+                disabled={isLoading || isDisabled}
+              >
+                Delete training dataset
+              </Button>
             </>
           )}
 
@@ -319,7 +397,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
 
           {isLoading && <Loader />}
         </Card>
-        <FeaturesForm />
+        {!isEdit && <FeaturesForm />}
       </>
     </FormProvider>
   );

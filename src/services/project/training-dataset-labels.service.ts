@@ -12,15 +12,17 @@ export interface IRTrainingDatasetLabels {
 export class TrainingDatasetLabelService extends BaseApiService {
   protected baseUrl = '/project';
 
-  public getList = (
+  getList = async (
     projectId: number,
     featureStoreId: number,
     trainingDatasetId: number,
-  ): AxiosPromise<IRTrainingDatasetLabels> => {
-    return this.request<IRTrainingDatasetLabels>({
-      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/tags`,
+  ): Promise<string[]> => {
+    const { data } = await this.request<any>({
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/keywords`,
       type: RequestType.get,
     });
+
+    return data.keywords || [];
   };
 
   public getKeywords = (

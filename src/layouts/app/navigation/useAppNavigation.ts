@@ -155,7 +155,8 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgOverview',
             title: 'Overview',
-            isActive: isActive('/p/:id/fg/:fgId', ['new']) && !location.hash,
+            isActive:
+              isActive('/p/:id/fg/:fgId', ['new', 'edit']) && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
               createFgAnchorLink('Feature List', featureList, 'fgFeatures'),
@@ -218,7 +219,8 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdOverview',
             title: 'Overview',
-            isActive: isActive('/p/:id/td/:tdId', ['new']) && !location.hash,
+            isActive:
+              isActive('/p/:id/td/:tdId', ['new', 'edit']) && !location.hash,
             onClick: handleNavigateRelative('/', '/p/:id/td/:tdId/*'),
             children: [
               createTdAnchorLink('Feature List', featureList, 'tdFeatures'),

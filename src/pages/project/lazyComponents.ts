@@ -50,6 +50,9 @@ export const TrainingDatasetStatistics = React.lazy(
 export const TrainingDatasetCreate = React.lazy(
   () => import('./training-dataset/create/TrainingDatasetCreate'),
 );
+export const TrainingDatasetEdit = React.lazy(
+  () => import('./training-dataset/edit/TrainingDatasetEdit'),
+);
 
 export const ProjectCode = React.lazy(() => import('./integrations/Code'));
 export const ProjectDatabricks = React.lazy(

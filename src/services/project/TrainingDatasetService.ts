@@ -7,7 +7,6 @@ import {
 import { Provenance } from '../../types/feature-group';
 import { GetStatisticsData } from './FeatureGroupsService';
 
-
 class TrainingDatasetService extends BaseApiService {
   getList = async (
     projectId: number,
@@ -146,6 +145,34 @@ class TrainingDatasetService extends BaseApiService {
       data,
     });
 
+  edit = (
+    projectId: number,
+    featureStoreId: number,
+    trainingDatasetId: number,
+    data: any,
+  ) =>
+    this.request<any>({
+      type: RequestType.put,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}?updateMetadata=true&updateStatsConfig=true`,
+      data,
+    });
+
+  delete = (
+    projectId: number,
+    featureStoreId: number,
+    trainingDatasetId: number,
+  ) =>
+    this.request<any>({
+      type: RequestType.delete,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}`,
+    });
+
+  getTags = (projectId: number, featureStoreId: number, tdId: number) =>
+    this.request<any>({
+      type: RequestType.get,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${tdId}/tags?expand=tag_schemas`,
+    });
+
   attachTag = (
     projectId: number,
     featureStoreId: number,
@@ -157,6 +184,17 @@ class TrainingDatasetService extends BaseApiService {
       type: RequestType.put,
       url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${tdId}/tags/${name}`,
       data,
+    });
+
+  deleteTag = (
+    projectId: number,
+    featureStoreId: number,
+    tdId: number,
+    name: string,
+  ) =>
+    this.request<any>({
+      type: RequestType.delete,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${tdId}/tags/${name}`,
     });
 }
 

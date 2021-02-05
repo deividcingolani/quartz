@@ -1,5 +1,4 @@
 import labelValueMap from '../../../utils/labelValueBind';
-import { TrainingDataset } from '../../../types/training-dataset';
 import { FeatureGroupBasket } from '../../../store/models/localManagement/basket.model';
 import { Feature } from '../../../types/feature-group';
 
@@ -23,11 +22,22 @@ export const mapFeatures = (featureGroups: FeatureGroupBasket[]) => {
   };
 };
 
-export const mapFeaturesToTable = (trainingDataset?: TrainingDataset) => {
-  if (trainingDataset) {
-    return [];
-  }
-  return [];
+export const createStatistics = (
+  features: Feature[],
+  enabledColumns: string[],
+) => {
+  return features.map(({ name }) => ({
+    row: [
+      {
+        columnValue: name,
+        columnName: 'Name',
+      },
+      {
+        columnValue: !enabledColumns.length || enabledColumns.includes(name),
+        columnName: 'Statistics',
+      },
+    ],
+  }));
 };
 
 export const dataFormatMap = labelValueMap<{ [key: string]: string }>({

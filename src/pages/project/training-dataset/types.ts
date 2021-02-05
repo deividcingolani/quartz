@@ -12,4 +12,5 @@ export interface TrainingDatasetFormData {
   correlations: boolean;
   enabled: boolean;
   histograms: boolean;
+  statisticsColumns: string[];
 }

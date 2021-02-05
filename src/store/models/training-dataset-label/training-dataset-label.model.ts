@@ -28,7 +28,7 @@ export const trainingDatasetLabelModel = createModel()({
       featureStoreId: number;
       trainingDatasetId: number;
     }): Promise<void> => {
-      const { data } = await new TrainingDatasetLabelService().getList(
+      const data = await new TrainingDatasetLabelService().getList(
         projectId,
         featureStoreId,
         trainingDatasetId,
@@ -36,7 +36,7 @@ export const trainingDatasetLabelModel = createModel()({
 
       dispatch.trainingDatasetLabels.set({
         id: trainingDatasetId,
-        data: data.items,
+        data: data,
       });
     },
   }),

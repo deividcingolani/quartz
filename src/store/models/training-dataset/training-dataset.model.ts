@@ -99,15 +99,11 @@ export const trainingDatasetModel = createModel()({
             featureStoreId,
             td.id,
           );
-          const {
-            data: keywordsData,
-          } = await new TrainingDatasetLabelService().getList(
+          const items = await new TrainingDatasetLabelService().getList(
             projectId,
             featureStoreId,
             td.id,
           );
-
-          const { items = [] } = keywordsData;
 
           return {
             ...td,
@@ -143,6 +139,67 @@ export const trainingDatasetModel = createModel()({
       await attachTags(projectId, featureStoreId, id, data.tags);
 
       return id;
+    },
+    edit: async ({
+      projectId,
+      featureStoreId,
+      trainingDatasetId,
+      data,
+      prevTagNames,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      trainingDatasetId: number;
+      data: any;
+      prevTagNames: string[];
+    }): Promise<any> => {
+      await TrainingDatasetService.edit(
+        projectId,
+        featureStoreId,
+        trainingDatasetId,
+        data,
+      );
+
+      const newTags = Object.keys(data.tags || {});
+
+      const deletedTags = prevTagNames.filter(
+        (name: string) => !newTags.includes(name),
+      );
+
+      await Promise.allSettled(
+        deletedTags.map(async (name: string) => {
+          await TrainingDatasetService.deleteTag(
+            projectId,
+            featureStoreId,
+            trainingDatasetId,
+            name,
+          );
+        }),
+      );
+
+      await TrainingDatasetService.attachKeywords(
+        projectId,
+        featureStoreId,
+        trainingDatasetId,
+        data.keywords,
+      );
+
+      await attachTags(projectId, featureStoreId, trainingDatasetId, data.tags);
+    },
+    delete: async ({
+      projectId,
+      featureStoreId,
+      trainingDatasetId,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      trainingDatasetId: number;
+    }): Promise<any> => {
+      await TrainingDatasetService.delete(
+        projectId,
+        featureStoreId,
+        trainingDatasetId,
+      );
     },
   }),
 });

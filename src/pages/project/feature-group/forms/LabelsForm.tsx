@@ -7,7 +7,6 @@ import {
   Select,
   TinyPopup,
   usePopup,
-  Divider
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -85,7 +84,6 @@ const LabelsForm: FC<FeatureFormProps> = ({ isDisabled }) => {
             </Box>
           )}
         />
-        <Divider />
       </Box>
 
       <TinyPopup
