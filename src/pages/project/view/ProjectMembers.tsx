@@ -11,7 +11,6 @@ import {
   Labeling,
   TinyPopup,
   IconButton,
-  TooltipPositions,
   NotificationsManager,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
@@ -32,7 +31,7 @@ import { User as UserType } from '../../../types/user';
 // Services
 import ProfileService from '../../../services/ProfileService';
 // Styles
-import styles from '../storage-connectors/list/storage-connector-list.styles';
+import styles from './members.list.styles';
 // Selectors
 import {
   selectIsDeletingMember,
@@ -192,9 +191,6 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
     if (isEditMembers) {
       return projectTeam.map(({ user, teamRole }, index) => [
         {
-          mainText: user.email,
-          ml: '10px',
-          position: TooltipPositions.right,
           children: (
             <User name={user.email} photo={ProfileService.avatar(user.email)} />
           ),
@@ -285,7 +281,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
         onClose={() => setIsAddMembers(false)}
       />
       <Card
-        mt="30px"
+        mt="20px"
         title="Members"
         actions={
           myRole === DATA_OWNER && (

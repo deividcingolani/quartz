@@ -128,6 +128,7 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, onClose }) => {
           width="400px"
           isMulti={true}
           label="Members"
+          hasPlaceholder={false}
           value={selectedEmails}
           placeholder="pick members"
           noDataMessage="no members defined"

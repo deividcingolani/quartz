@@ -26,7 +26,6 @@ import NoData from '../../../../components/no-data/NoData';
 import routeNames from '../../../../routes/routeNames';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { SortDirection } from '../../../../utils/sort';
-import { selectFeatureGroups } from '../../../../store/models/localManagement/basket.selectors';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
@@ -57,8 +56,6 @@ const TrainingDatasetList: FC = () => {
     (state: RootState) =>
       state.loading.effects.trainingDatasets.fetchKeywordsAndLastUpdate,
   );
-
-  const featureGroups = useSelector(selectFeatureGroups);
 
   const labels = useMemo(
     () =>
@@ -114,7 +111,7 @@ const TrainingDatasetList: FC = () => {
   }, [data, sort, filter, search]);
 
   return (
-    <Flex flexGrow={1} flexDirection="column">
+    <Flex mb="40px" flexGrow={1} flexDirection="column">
       <Flex alignItems="center">
         <Input
           variant="white"
@@ -137,9 +134,10 @@ const TrainingDatasetList: FC = () => {
             value={filter}
             variant="white"
             isMulti
+            mt="-7px"
             noDataMessage="keywords"
             options={labels}
-            placeholder="keywords filter"
+            placeholder="keywords"
             onChange={setFilter}
           />
         </Tooltip>
@@ -163,14 +161,16 @@ const TrainingDatasetList: FC = () => {
         </Flex>
       </Flex>
       <Flex mt="20px" mb="20px">
-        <Value primary mr="5px">
-          {dataResult.length}
-        </Value>
-        <Value>training datasets</Value>
+        {!isLoading && (
+          <>
+            <Value primary mr="5px">
+              {dataResult.length}
+            </Value>
+            <Value>training datasets</Value>
+          </>
+        )}
         <Box ml="auto">
-          <Button disabled={!featureGroups.length} onClick={handleCreate}>
-            New Training Dataset
-          </Button>
+          <Button onClick={handleCreate}>New Training Dataset</Button>
         </Box>
       </Flex>
       {isLoading && <Loader />}
@@ -190,12 +190,7 @@ const TrainingDatasetList: FC = () => {
           <Button intent="secondary" onClick={handleClickFG}>
             Feature Groups
           </Button>
-          <Button
-            disabled={!featureGroups.length}
-            intent="primary"
-            ml="20px"
-            onClick={handleCreate}
-          >
+          <Button intent="primary" ml="20px" onClick={handleCreate}>
             New Training Dataset
           </Button>
         </NoData>

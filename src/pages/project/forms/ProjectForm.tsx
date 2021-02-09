@@ -64,32 +64,34 @@ const ProjectForm: FC<ProjectFormProps> = ({
   return (
     <Card title={isEdit ? 'Edit a project' : 'Create a New Project'}>
       <Flex flexDirection="column">
-        <Input
-          label="Name"
-          readOnly={isEdit}
-          name="projectName"
-          disabled={isLoading}
-          placeholder="project_acme"
-          ref={register}
-          labelAction={
-            <Tooltip
-              mainText="Only alphanumeric characters, dash or underscore"
-              ml="5px"
-            >
-              <Icon icon="info-circle" />
-            </Tooltip>
-          }
-          {...getInputValidation('projectName', errors)}
-        />
-        <Input
-          labelProps={{ width: '100%', mt: '20px' }}
-          label="Description"
-          name="description"
-          disabled={isLoading}
-          placeholder="project about...."
-          ref={register}
-          {...getInputValidation('description', errors)}
-        />
+        <Flex>
+          <Input
+            label="Name"
+            readOnly={isEdit}
+            name="projectName"
+            disabled={isLoading}
+            placeholder="project_acme"
+            ref={register}
+            labelAction={
+              <Tooltip
+                mainText="Only alphanumeric characters, dash or underscore"
+                ml="5px"
+              >
+                <Icon icon="info-circle" />
+              </Tooltip>
+            }
+            {...getInputValidation('projectName', errors)}
+          />
+          <Input
+            labelProps={{ ml: '20px', flex: 1 }}
+            label="Description"
+            name="description"
+            disabled={isLoading}
+            placeholder="project about...."
+            ref={register}
+            {...getInputValidation('description', errors)}
+          />
+        </Flex>
 
         {!isEdit && <MembersForm control={control} isLoading={isLoading} />}
 
@@ -112,6 +114,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
                   </Label>
                   <Button
                     pl="3px"
+                    my="-8px"
                     onClick={() =>
                       window.open(
                         'https://hopsworks.readthedocs.io/en/latest/user_guide/hopsworks/projectMembers.html',

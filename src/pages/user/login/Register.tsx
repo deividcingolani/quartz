@@ -190,20 +190,24 @@ const Register: FC = () => {
           </Flex>
         </Card>
 
-        <Flex
-          mt="20px"
-          width="466px"
-          height="fit-content"
-          p="20px"
-          justifyContent="space-between"
-          backgroundColor="white"
-          alignItems="center"
+        <Box
+          sx={{
+            h4: {
+              fontSize: '12px',
+            },
+          }}
         >
-          <Value fontFamily="Inter">Already have an account?</Value>
-          <Button intent="secondary" onClick={() => navigate('/login')}>
-            Login
-          </Button>
-        </Flex>
+          <Card
+            mt="20px"
+            width="466px"
+            actions={
+              <Button intent="secondary" onClick={() => navigate('/login')}>
+                Login
+              </Button>
+            }
+            title="Already have an account?"
+          />
+        </Box>
 
         <LoginHelp />
       </Flex>

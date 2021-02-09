@@ -25,18 +25,7 @@ const SplitGraph: FC<SplitGraphProps> = ({ graph }) => {
 
   if (!mapped.length) {
     return (
-      <Card
-        title={
-          <>
-            Splits{' '}
-            <Tooltip mainText="Splits" ml="5px">
-              <Icon icon="info-circle" size="sm" />
-            </Tooltip>
-          </>
-        }
-        mt="20px"
-        mb="20px"
-      >
+      <Card title="Splits" mt="20px" mb="20px">
         <Box mt="20px" mx="-20px">
           <Flex height="50px" mt="30px" justifyContent="center">
             <Labeling fontSize="18px" gray>

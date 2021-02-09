@@ -10,12 +10,10 @@ import {
   CalloutTypes,
   Card,
   Input,
-  Label,
-  Labeling,
   Microlabeling,
-  NotificationsManager,
   User,
   Value,
+  NotificationsManager,
 } from '@logicalclocks/quartz';
 
 // Validators
@@ -24,17 +22,16 @@ import getInputValidation from '../../../../utils/getInputValidation';
 import { Dispatch, RootState } from '../../../../store';
 import { AuthError } from '../../login/Login';
 // Utils
-import { shortRequiredText, shortText } from '../../../../utils/validators';
+import { shortRequiredText } from '../../../../utils/validators';
 // Services
 import ProfileService from '../../../../services/ProfileService';
-// Components
-import NotificationBadge from '../../../../utils/notifications/notificationBadge';
+
 import NotificationContent from '../../../../utils/notifications/notificationValue';
+import NotificationBadge from '../../../../utils/notifications/notificationBadge';
 
 export const schema = yup.object().shape({
   firstname: shortRequiredText.label('First name'),
   lastname: shortRequiredText.label('Last name'),
-  phoneNumber: shortText.label('Phone Number'),
 });
 
 const ProfileForm: FC = () => {
@@ -52,7 +49,6 @@ const ProfileForm: FC = () => {
     defaultValues: {
       firstname: user.firstname,
       lastname: user.lastname,
-      phoneNumber: user.phoneNumber,
     },
     shouldUnregister: false,
     resolver: yupResolver(schema),
@@ -125,23 +121,6 @@ const ProfileForm: FC = () => {
               ref={register}
               {...getInputValidation('lastname', errors)}
             />
-            <Label>
-              <Flex>
-                Phone number
-                <Labeling ml="5px" gray>
-                  (optional)
-                </Labeling>
-              </Flex>
-              <Input
-                label=""
-                mt="8px"
-                name="phoneNumber"
-                disabled={isLoading}
-                placeholder="+46 12-345 67 89"
-                ref={register}
-                {...getInputValidation('phoneNumber', errors)}
-              />
-            </Label>
           </Flex>
           <Button
             disabled={isLoading}

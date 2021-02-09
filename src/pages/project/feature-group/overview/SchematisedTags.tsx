@@ -3,11 +3,9 @@ import React, { ComponentType, FC, memo, useCallback, useState } from 'react';
 import {
   Button,
   Card,
-  Icon,
   Labeling,
   Row as QRow,
   Select,
-  Tooltip,
   Value,
 } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
@@ -57,14 +55,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
   return (
     <Card
       mt="20px"
-      title={
-        <>
-          Schematised Tags{' '}
-          <Tooltip mainText="Tooltip" ml="5px">
-            <Icon icon="info-circle" size="sm" />
-          </Tooltip>
-        </>
-      }
+      title="Schematised Tags"
       actions={
         <Button
           p={0}
@@ -98,7 +89,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
             listWidth="100%"
             options={data.map(({ name }) => name)}
             value={[selected.name]}
-            placeholder="display"
+            placeholder="tags"
             onChange={onChange}
           />
           <Box mt="20px" mx="-20px" sx={tagsListStyles}>

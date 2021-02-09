@@ -102,7 +102,6 @@ const useAppNavigation = (): TreeNode[] => {
       featureList,
       provenance,
       schematisedTags,
-      pipelineHistory,
       runningCode,
       api,
       splitGraph,
@@ -155,19 +154,12 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgOverview',
             title: 'Overview',
-            isActive:
-              isActive('/p/:id/fg/:fgId', ['new', 'edit']) && !location.hash,
+            isActive: isActive('/p/:id/fg/:fgId', ['new']),
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
               createFgAnchorLink('Feature List', featureList, 'fgFeatures'),
               createFgAnchorLink('Provenance', provenance, 'fgProvenance'),
               createFgAnchorLink('Schematised Tags', schematisedTags, 'fgTags'),
-              createFgAnchorLink(
-                'Pipeline History',
-                pipelineHistory,
-                'fgPipeline',
-              ),
-              createFgAnchorLink('Running Code', runningCode, 'fgCode'),
               createFgAnchorLink('API', api, 'fgApi'),
             ],
           },
@@ -219,18 +211,12 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdOverview',
             title: 'Overview',
-            isActive:
-              isActive('/p/:id/td/:tdId', ['new', 'edit']) && !location.hash,
+            isActive: isActive('/p/:id/td/:tdId', ['new']),
             onClick: handleNavigateRelative('/', '/p/:id/td/:tdId/*'),
             children: [
               createTdAnchorLink('Feature List', featureList, 'tdFeatures'),
               createTdAnchorLink('Provenance', provenance, 'tdProvenance'),
               createTdAnchorLink('Schematised Tags', schematisedTags, 'tdTags'),
-              createTdAnchorLink(
-                'Pipeline History',
-                pipelineHistory,
-                'tdPipeline',
-              ),
               createTdAnchorLink('Query', runningCode, 'tdCode'),
               createTdAnchorLink('API', api, 'tdApi'),
               createTdAnchorLink('Splits', splitGraph, 'tdSplitGraph'),

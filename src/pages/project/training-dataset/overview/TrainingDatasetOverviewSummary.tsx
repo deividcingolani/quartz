@@ -68,7 +68,6 @@ const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
           text="features"
           value={data.features.length}
         />
-        <TextValueBadge variant="gray" ml="20px" text="rows" value="81M" />
         <TextValueBadge
           variant="gray"
           ml="20px"

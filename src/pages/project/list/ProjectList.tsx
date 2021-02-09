@@ -58,7 +58,7 @@ const ProjectList: FC = () => {
   }
 
   return (
-    <Flex flexGrow={1} flexDirection="column">
+    <Flex mb="20px" flexGrow={1} flexDirection="column">
       <Flex justifyContent="space-between" mt="20px" mb="20px">
         <Flex>
           <Value primary px="5px">

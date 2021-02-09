@@ -13,25 +13,7 @@ const Integrations: FC = () => {
   const navigate = useNavigateRelative();
 
   return (
-    <Card
-      mb="20px"
-      mt="20px"
-      title="Integrations"
-      actions={
-        <Button
-          onClick={() =>
-            window.open(
-              'https://hopsworks.readthedocs.io/en/latest/admin_guide/user-administration.html',
-              '_blank',
-            )
-          }
-          mr="-10px"
-          intent="inline"
-        >
-          add members
-        </Button>
-      }
-    >
+    <Card mb="40px" mt="20px" title="Integrations">
       <Box>
         <Callout
           content={

@@ -7,6 +7,7 @@ import {
   ToggleButton,
   Symbol,
   SymbolMode,
+  Icon,
 } from '@logicalclocks/quartz';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
@@ -138,7 +139,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
             checked={keyFilter === KeyFilters.primary}
             onChange={onToggleKey(KeyFilters.primary)}
           >
-            primary key only
+            <Icon icon="star" mr="8px" mt="-1px" size="xs" /> Primary Keys Only
           </ToggleButton>
           <ToggleButton
             ml="15px"
@@ -146,12 +147,14 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
             checked={keyFilter === KeyFilters.partition}
             onChange={onToggleKey(KeyFilters.partition)}
           >
-            partition key only
+            <Icon icon="grip-lines" mr="8px" mt="-1px" size="xs" /> Partition
+            Keys Only
           </ToggleButton>
 
           <Select
             width="max-content"
             variant="white"
+            listWidth="100%"
             value={[sortKey]}
             ml="auto"
             options={Object.keys(sortKeys)}
@@ -180,28 +183,44 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
             </Box>
           )}
 
-          <Select
-            width="max-content"
-            variant="white"
-            value={[pageLimit]}
+          <Box
             ml="auto"
-            label="show"
-            align="left"
-            options={Object.keys(pageLimits)}
-            placeholder=""
-            /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-            // @ts-ignore
-            onChange={setPageLimit}
-          />
-          <Label ml="10px" as="span" text="go to page" align="left">
-            <Pagination
+            sx={{
+              span: {
+                marginTop: '4px',
+              },
+            }}
+          >
+            <Select
+              width="max-content"
               variant="white"
-              disabled={totalPages === 1}
-              totalPages={totalPages}
-              currentPage={page}
-              onChange={setPage}
+              value={[pageLimit]}
+              label="show"
+              align="left"
+              options={Object.keys(pageLimits)}
+              placeholder=""
+              /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+              // @ts-ignore
+              onChange={setPageLimit}
             />
-          </Label>
+          </Box>
+          <Box
+            sx={{
+              span: {
+                marginTop: '4px',
+              },
+            }}
+          >
+            <Label ml="10px" as="span" text="go to page" align="left">
+              <Pagination
+                variant="white"
+                disabled={totalPages === 1}
+                totalPages={totalPages}
+                currentPage={page}
+                onChange={setPage}
+              />
+            </Label>
+          </Box>
         </Flex>
         <Box height="100%" width="100%">
           {sortedData.map((feature, index) => (
@@ -216,7 +235,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
           ))}
         </Box>
         {sortedData.length > 1 && (
-          <Label mt="65px" as="span" text="go to page" align="left">
+          <Label mt="65px" mb="40px" as="span" text="go to page" align="left">
             <Pagination
               variant="white"
               disabled={totalPages === 1}

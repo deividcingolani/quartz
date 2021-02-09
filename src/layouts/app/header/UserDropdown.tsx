@@ -35,7 +35,7 @@ const UserDropdown: FC = () => {
     <Flex
       sx={{ cursor: 'pointer' }}
       ref={buttonRef}
-      mr="10px"
+      mr="20px"
       ml="10px"
       onClick={() => handleToggle()}
     >

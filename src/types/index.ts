@@ -1,4 +1,5 @@
 import { Feature, Job } from './feature-group';
+import { Split } from './training-dataset';
 
 export interface Tag {
   name: string;
@@ -43,6 +44,7 @@ export interface DataEntity {
     correlations: boolean;
     columns: string[];
   };
+  splits: Split[];
   versions: DataEntityVersion[];
 }
 

@@ -43,7 +43,7 @@ const DonutChart: FC<ChartProps> = ({ data, dataType }) => {
       alignItems="center"
       sx={styles.donut}
     >
-      <PieChart width={251} height={180}>
+      <PieChart width={251} height={171}>
         <Pie
           isAnimationActive={false}
           data={mappedData}

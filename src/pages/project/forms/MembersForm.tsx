@@ -33,6 +33,7 @@ const MembersForm: FC<MembersFormProps> = ({ control, isLoading }) => {
         name="membersEmails"
         render={({ onChange, value }) => (
           <Select
+            hasPlaceholder={false}
             disabled={isLoading}
             width="100%"
             value={value}

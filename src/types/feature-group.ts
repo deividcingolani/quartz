@@ -4,9 +4,9 @@ import { User } from './user';
 
 export enum FeatureType {
   stringUnknown = 'Unknown',
-  int = 'Fractional',
+  int = 'int',
   bigInt = 'Integral',
-  string = 'String',
+  string = 'float',
   boolean = 'Boolean',
 }
 

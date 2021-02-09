@@ -54,11 +54,7 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
 
   return (
     <>
-      <QuartzCard
-        mb="20px"
-        key={data.id}
-        style={{ boxShadow: '1px 1px 28px 1px rgba(0, 0, 0, 0.07)' }}
-      >
+      <QuartzCard mb="20px" key={data.id}>
         <Flex my="6px" flexDirection="column">
           <Flex justifyContent="space-between" alignItems="center">
             <Flex>

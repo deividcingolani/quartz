@@ -73,7 +73,9 @@ export const trainingDatasetModel = createModel()({
           ...dataset,
           labels: [],
           updated: dataset.created,
-          versions: data.map(({ version, id }) => ({ id, version })),
+          versions: data
+            .filter(({ name }) => dataset.name === name)
+            .map(({ version, id }) => ({ id, version })),
         })),
       );
 
@@ -92,7 +94,7 @@ export const trainingDatasetModel = createModel()({
       projectId: number;
       featureStoreId: number;
     }): Promise<void> => {
-      await Promise.allSettled(
+      const promises = await Promise.allSettled(
         data.map(async (td) => {
           const readLast = await TrainingDatasetService.getWriteLast(
             projectId,
@@ -109,12 +111,16 @@ export const trainingDatasetModel = createModel()({
             ...td,
             updated: readLast || td.created,
             labels: items,
-            versions: data.map(({ version, id }) => ({ id, version })),
+            versions: data
+              .filter(({ name }) => td.name === name)
+              .map(({ version, id }) => ({ id, version })),
           };
         }),
-      )
-        .then((values) => getValidPromisesValues(values))
-        .then((data) => dispatch.trainingDatasets.set(data));
+      );
+
+      const tds = getValidPromisesValues(promises);
+
+      dispatch.trainingDatasets.set(tds);
     },
     create: async ({
       projectId,

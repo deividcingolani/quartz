@@ -1,6 +1,12 @@
 import React, { FC } from 'react';
 import { Flex } from 'rebass';
-import { Input, RadioGroup, Select, ToggleButton } from '@logicalclocks/quartz';
+import {
+  Icon,
+  Input,
+  RadioGroup,
+  Select,
+  ToggleButton,
+} from '@logicalclocks/quartz';
 
 // Hooks
 import { KeyFilters } from '../../hooks/useFeatureFilters';
@@ -77,7 +83,7 @@ const FeatureFilters: FC<FeatureFiltersProps> = ({
           checked={keyFilter === KeyFilters.primary}
           onChange={onToggleKey(KeyFilters.primary)}
         >
-          primary key only
+          <Icon icon="star" mr="8px" mt="-1px" size="xs" /> Primary Keys Only
         </ToggleButton>
         <ToggleButton
           ml="15px"
@@ -85,7 +91,8 @@ const FeatureFilters: FC<FeatureFiltersProps> = ({
           checked={keyFilter === KeyFilters.partition}
           onChange={onToggleKey(KeyFilters.partition)}
         >
-          partition key only
+          <Icon icon="grip-lines" mr="8px" mt="-1px" size="xs" /> Partition Keys
+          Only
         </ToggleButton>
         <Flex ml="20px" alignItems="center">
           <RadioGroup

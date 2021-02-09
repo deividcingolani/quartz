@@ -36,7 +36,7 @@ const DeepSearchButtons: FC<{ search: string; activeIndex: number }> = ({
         height="30px"
         alignItems="center"
       >
-        <Text>Advanced search across all project</Text>
+        <Text>Advanced search across all projects</Text>
       </Flex>
       <Flex
         sx={{

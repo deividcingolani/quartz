@@ -5,13 +5,15 @@ import JobExecution from './items/JobExecution';
 import DataIngestion from './items/DataIngestion';
 import NewStatistics from './items/NewStatistics';
 import { ActivityItemData, ActivityType } from '../../types/feature-group';
-import { Tooltip } from '@logicalclocks/quartz';
+import { Tooltip, TooltipPositions } from '@logicalclocks/quartz';
 import { format } from 'date-fns';
 
 export interface ActivityItemProps {
   activities: ActivityItemData[];
   actions?: Map<ActivityType, () => void>;
 }
+
+export const dateFormat = 'y-MM-dd hh:mm:ss';
 
 export const getForm = (
   type: ActivityType,
@@ -46,8 +48,9 @@ const ActivityDataItem: FC<ActivityItemProps> = ({ activities, actions }) => {
 
         return (
           <Tooltip
+            position={TooltipPositions.left}
             key={`${activity.timestamp}-${index}`}
-            mainText={format(activity.timestamp, 'y-MM-dd hh:mm:ss')}
+            mainText={format(activity.timestamp, dateFormat)}
           >
             <Box
               sx={{

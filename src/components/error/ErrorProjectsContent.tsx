@@ -1,39 +1,33 @@
-import React, { FC, memo, ReactNode } from 'react';
 import { Button } from '@logicalclocks/quartz';
+import React, { FC, memo, ReactNode } from 'react';
+
 // Hooks
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 // Selectors
-import { projectsList } from '../../store/models/projects/selectors';
-// Components
-import Loader from '../loader/Loader';
+import { selectProjectId } from '../../store/models/localManagement/store.selectors';
+
+import { RootState } from '../../store';
 
 export interface ErrorProjectsContentProps {
   actions: ReactNode;
 }
 
 const ErrorProjectsContent: FC<ErrorProjectsContentProps> = ({ actions }) => {
-  const { projects, isLoading } = useSelector(projectsList);
-
   const navigate = useNavigate();
 
-  if (isLoading) {
-    return <Loader mt="58px" ml="-10px" width={30} height={30} />;
-  }
+  const lastProjectId = useSelector(selectProjectId);
 
-  if (projects.length) {
+  const projects = useSelector((state: RootState) => state.projectsList);
+
+  const name = projects.find(({ id }) => lastProjectId === id)?.name;
+
+  if (name) {
     return (
       <>
-        {projects.map((p) => (
-          <Button
-            key={p.id}
-            intent="secondary"
-            onClick={() => navigate(`/p/${p.id}/fg`)}
-            mr="14px"
-          >
-            {p.name}
-          </Button>
-        ))}
+        <Button onClick={() => navigate(`/p/${lastProjectId}`)}>
+          back to {name}
+        </Button>
         {actions}
       </>
     );
@@ -41,9 +35,7 @@ const ErrorProjectsContent: FC<ErrorProjectsContentProps> = ({ actions }) => {
 
   return (
     <>
-      <Button mr="14px" onClick={() => navigate(`/p/new`)}>
-        Create a project
-      </Button>
+      <Button onClick={() => navigate('/')}>back to project list</Button>
       {actions}
     </>
   );

@@ -68,7 +68,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
         <Flex my="6px" flexDirection="column">
           <Flex alignItems="center" justifyContent="space-between">
             <Flex>
-              <Box ml="12px">
+              <Box ml="12px" mt="7px">
                 <Dot
                   mainText={data.onlineEnabled ? 'Online' : 'Offline'}
                   variant={data.onlineEnabled ? 'green' : 'black'}
@@ -77,7 +77,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               <HoverableText
                 fontFamily="Inter"
                 onClick={handleNavigate(data.id, '/fg/:fgId')}
-                ml="30px"
+                ml="20px"
                 fontSize="20px"
                 color={
                   !projectsIds.includes(data.parentProjectId) && hasMatchText
@@ -120,7 +120,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 />
               )}
 
-              <CardLabels loading={loading} labels={data.labels} />
+              <CardLabels ml="5px" loading={loading} labels={data.labels} />
             </Flex>
 
             {hasMatchText && <Badge value={data.matchText} />}

@@ -155,7 +155,7 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
           secondaryButton={['Cancel', handleToggle]}
           onClose={handleToggle}
         >
-          <Box mb="20px">
+          <Box mt="-20px" mb="20px">
             <Input
               ref={register}
               labelProps={{ width: '100%' }}

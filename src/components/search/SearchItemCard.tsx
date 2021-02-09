@@ -48,7 +48,7 @@ const SearchItemCard: FC<SearchItemCardProps> = ({
         ml="5px"
         sx={{
           color:
-            type === ItemDrawerTypes.fg ? 'labels.orange' : 'labels.skyblue',
+            type === ItemDrawerTypes.fg ? 'labels.orange' : 'labels.purple',
         }}
       >
         #{item.id}

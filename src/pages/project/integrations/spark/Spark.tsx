@@ -172,7 +172,7 @@ const Spark: FC = () => {
         mainButton={['Authenticate', onSubmit]}
         secondaryButton={['Back', handleToggle]}
       >
-        <Box mt="-20px" mb="20px">
+        <Box mb="20px">
           <Box>
             <Callout
               content="Enter your user password to verify your account"
@@ -203,7 +203,7 @@ const Spark: FC = () => {
         onClose={handleToggleDownload}
         secondaryButton={['Done', handleToggleDownload]}
       >
-        <Box mt="-20px" mb="20px">
+        <Box mb="20px">
           <Value mb="8px">1. Certificates</Value>
           <Flex flexDirection="column">
             <Flex>
@@ -280,6 +280,7 @@ const Spark: FC = () => {
       </TinyPopup>
 
       <Card
+        mb="40px"
         title="Configure Spark integration"
         actions={
           <Button

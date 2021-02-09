@@ -142,7 +142,7 @@ const HorizontalBarChart: FC<ChartProps> = ({ data, dataType }) => {
         <BarChart
           layout="vertical"
           width={260}
-          height={mappedData.length * 36}
+          height={mappedData.length * 32}
           data={mappedData}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}

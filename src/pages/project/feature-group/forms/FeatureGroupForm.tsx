@@ -156,6 +156,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
                 mb="20px"
                 label="Enable Online Feature Serving for this Feature Group"
                 checked={value}
+                disabled={isDisabled || isLoading}
                 onChange={() => onChange(!value)}
               />
             </Box>

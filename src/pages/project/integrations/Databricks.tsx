@@ -133,6 +133,7 @@ const ProjectDatabricks: FC = () => {
   return (
     <>
       <Card
+        mb="40px"
         title="Configure Databricks integration"
         actions={
           <Button

@@ -76,13 +76,17 @@ const Routes: FC = () => {
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
-    dispatch.profile.getUser();
+    if (token) {
+      dispatch.profile.getUser();
+    }
+
     dispatch.basket.getFromLocalStorage();
     window.addEventListener('storage', dispatch.basket.onUpdateStorage);
 
     return () => {
       window.removeEventListener('storage', dispatch.basket.onUpdateStorage);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useErrorCleaner();

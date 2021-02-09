@@ -7,6 +7,7 @@ import {
   Button,
   Select,
   ToggleButton,
+  Icon,
 } from '@logicalclocks/quartz';
 
 // Types
@@ -73,14 +74,15 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           checked={keyFilter === KeyFilters.primary}
           onChange={onToggleKey(KeyFilters.primary)}
         >
-          primary key only
+          <Icon icon="star" mr="8px" mt="-1px" size="xs" /> Primary Keys Only
         </ToggleButton>
         <ToggleButton
           ml="15px"
           checked={keyFilter === KeyFilters.partition}
           onChange={onToggleKey(KeyFilters.partition)}
         >
-          partition key only
+          <Icon icon="grip-lines" mr="8px" mt="-1px" size="xs" /> Partition Keys
+          Only
         </ToggleButton>
       </Flex>
 

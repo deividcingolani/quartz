@@ -42,6 +42,8 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
   creationDate,
   setStartDate,
   onResetFilters,
+  defaultToDate,
+  defaultFromDate,
   handleDateChange,
   handleRefreshData,
   handleLoadPreviousData,
@@ -116,7 +118,11 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
                 variant: 'white',
                 onChange: () => {},
                 noDataMessage: 'from',
-                value: [getDatePickerTime(startDate)],
+                value: [
+                  getDatePickerTime(startDate, true, {
+                    fromDate: defaultFromDate,
+                  }),
+                ],
               }}
               selected={startDate}
               onChange={(date) => {
@@ -149,7 +155,9 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
               variant: 'white',
               onChange: () => {},
               noDataMessage: 'to',
-              value: [getDatePickerTime(endDate)],
+              value: [
+                getDatePickerTime(endDate, false, { toDate: defaultToDate }),
+              ],
             }}
             selected={endDate}
             minDate={startDate}

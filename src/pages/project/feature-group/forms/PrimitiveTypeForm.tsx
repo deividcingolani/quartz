@@ -9,7 +9,12 @@ import { TypeFormProps } from '../types';
 import { isServerBooleanType } from '../utils';
 import getInputValidation from '../../../../utils/getInputValidation';
 
-const PrimitiveTypeForm: FC<TypeFormProps> = ({ type, tag, name }) => {
+const PrimitiveTypeForm: FC<TypeFormProps> = ({
+  type,
+  tag,
+  name,
+  isDisabled,
+}) => {
   const { setValue, control, errors, getValues } = useFormContext();
 
   const isBoolean = isServerBooleanType(type);
@@ -58,6 +63,7 @@ const PrimitiveTypeForm: FC<TypeFormProps> = ({ type, tag, name }) => {
           defaultValue={getValues(propertyName)}
           placeholder="enter the value"
           onChange={handleChange}
+          disabled={isDisabled}
           {...getInputValidation(name, (errors.tags || {})[tag.name])}
         />
       )}

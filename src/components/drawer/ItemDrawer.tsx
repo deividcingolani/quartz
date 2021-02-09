@@ -152,7 +152,10 @@ const ItemDrawer = <T extends DataEntity>({
   const { latestVersion } = useLatestVersion<T>(item, data);
 
   const versions = useMemo(() => {
-    const versions = data.filter(({ name }) => name === item?.name);
+    const versions = data
+      .filter(({ name }) => name === item?.name)
+      .sort((itemA, itemB) => Math.sign(itemA.version - itemB.version));
+
     return versions.map(
       ({ version }) =>
         `${version.toString()} ${
@@ -192,16 +195,22 @@ const ItemDrawer = <T extends DataEntity>({
         <Box height="100%">
           <Flex height="100%">
             <TextValueBadge text="features" value={item.features.length} />
-            <TextValueBadge ml="10px" text="rows" value="81M" />
-            <TextValueBadge ml="10px" text="commits" value={32} />
-            <TextValueBadge ml="10px" text="training datasets" value={32} />
+            {type === ItemDrawerTypes.td && (
+              <TextValueBadge
+                ml="10px"
+                text="splits"
+                value={item.splits.length}
+              />
+            )}
           </Flex>
-          <Box mt="30px">
-            <Microlabeling gray>Location</Microlabeling>
-            <Value sx={{ wordBreak: 'break-all' }} primary>
-              {item.location}
-            </Value>
-          </Box>
+          {type === ItemDrawerTypes.fg && (
+            <Box mt="30px">
+              <Microlabeling gray>Location</Microlabeling>
+              <Value sx={{ wordBreak: 'break-all' }} primary>
+                {item.location}
+              </Value>
+            </Box>
+          )}
         </Box>
       }
       bottomButton={[

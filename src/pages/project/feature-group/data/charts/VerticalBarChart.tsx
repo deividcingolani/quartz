@@ -103,7 +103,7 @@ const VerticalBarChart: FC<ChartProps> = ({ data, dataType }) => {
 
         <BarChart
           width={215}
-          height={205}
+          height={171}
           data={mappedData}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}

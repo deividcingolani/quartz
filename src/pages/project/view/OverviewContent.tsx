@@ -55,7 +55,7 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
               <>
                 <Flex width="max-content" flexDirection="column" mr="30px">
                   <Microlabeling gray mb="3px" width="100%">
-                    Last update
+                    Last updated
                   </Microlabeling>
                   <Flex alignItems="center">
                     <FreshnessBar time={data.created.replace('T', ' ')} />
@@ -71,12 +71,12 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
                 />
               </>
             )}
-            <Flex flexDirection="column">
-              <Microlabeling mb="3px" gray>
-                Storage Connectors
-              </Microlabeling>
-              <Value primary>{data.projectId}</Value>
-            </Flex>
+            {/*<Flex flexDirection="column">*/}
+            {/*  <Microlabeling mb="3px" gray>*/}
+            {/*    Storage Connectors*/}
+            {/*  </Microlabeling>*/}
+            {/*  <Value primary>{data.projectId}</Value>*/}
+            {/*</Flex>*/}
             <Flex flexDirection="column" ml="30px">
               <Microlabeling mb="3px" gray>
                 Feature Groups

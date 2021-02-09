@@ -58,7 +58,7 @@ const NewStatistics: FC<NewStatisticsProps> = ({ activity, onButtonClick }) => {
             name={activity.user.firstname}
           />
         </Box>
-        <Box mr="15px" mt="-15px" sx={iconStyles}>
+        <Box mr="15px" sx={iconStyles}>
           <IconButton
             icon="search"
             tooltip="open statistics"

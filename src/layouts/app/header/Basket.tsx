@@ -35,17 +35,23 @@ const BasketMenu: FC = () => {
   return (
     <>
       <BasketDrawer isOpen={isOpenPopup} handleToggle={handleTogglePopup} />
-      <Box mt="5px" mr="15px" ref={buttonRef} sx={{ position: 'relative' }}>
-        <Text sx={{ cursor: 'pointer' }} onClick={() => handleToggle()}>
-          {isSwitched ? svg.open : svg.close}
-        </Text>
+      <Box
+        mt="5px"
+        ref={buttonRef}
+        sx={{ position: 'relative', right: '16px' }}
+      >
+        <Tooltip mainText="Feature basket">
+          <Text sx={{ cursor: 'pointer' }} onClick={() => handleToggle()}>
+            {isSwitched ? svg.open : svg.close}
+          </Text>
+        </Tooltip>
         {isOpen && (
           <List
             overflow="visible"
-            style={{ position: 'absolute', right: '-15px', top: '25px' }}
+            style={{ position: 'absolute', right: '-10px', top: '25px' }}
           >
             <ListItem onClick={() => dispatch.basket.switch(!isSwitched)}>
-              {isSwitched ? 'Hide markers' : 'Show markets'}
+              {isSwitched ? 'Hide markers' : 'Show markers'}
             </ListItem>
             <ListItem onClick={handleTogglePopup}>Open basket</ListItem>
             <ListItem
@@ -56,8 +62,8 @@ const BasketMenu: FC = () => {
               }}
             >
               {featureLength} features selected
-              <Box ml="5px">
-                <Tooltip mainText="Collect feature using this basket">
+              <Box ml="8px">
+                <Tooltip mainText="Use markers to add features to this basket and create a training dataset">
                   <Icon icon="info-circle" size="sm" />
                 </Tooltip>
               </Box>

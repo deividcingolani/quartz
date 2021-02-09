@@ -74,7 +74,7 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
   }, [data, navigate]);
 
   return (
-    <Card title="Storage connectors" contentProps={contentProps}>
+    <Card mb="40px" title="Storage connectors" contentProps={contentProps}>
       <Flex alignItems="center" pb="15px">
         <Text>{cardText}</Text>
         <Button ml="auto" onClick={handleCreate}>

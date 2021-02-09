@@ -59,12 +59,10 @@ const StatisticsRows: FC<StatisticsRowsProps> = ({ featureName, isDrawer }) => {
       width={isDrawer ? '100%' : 'initial'}
       flexDirection="column"
       mt="auto"
-      ml="auto"
     >
       <Box
-        ml={isDrawer ? 0 : '11px'}
         width={isDrawer ? '100%' : '249px'}
-        height="171px"
+        height="205px"
         overflow="auto"
         sx={styles.container}
       >

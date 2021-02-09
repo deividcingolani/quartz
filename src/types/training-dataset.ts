@@ -38,7 +38,6 @@ export interface TrainingDataset extends DataEntity {
   featurestoreName: string;
   fromQuery: boolean;
   inodeId: number;
-  splits: Split[];
   storageConnectorId: number;
   storageConnectorName: string;
   storageConnectorType: string;

@@ -288,10 +288,6 @@ const FeatureGroupActivity: FC = () => {
 
   useEffect(() => {
     if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroups.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
       dispatch.featureGroupView.fetch({
         projectId: +id,
         featureGroupId: +fgId,
@@ -347,6 +343,8 @@ const FeatureGroupActivity: FC = () => {
       setStartDate={setFromDate}
       creationDate={creationDate}
       isLoading={isLoadingActivity}
+      defaultFromDate={twentyEventDate}
+      defaultToDate={new Date()}
       onResetFilters={handleResetFilters}
       handleDateChange={handleDateChange}
       handleRefreshData={handleRefreshData}

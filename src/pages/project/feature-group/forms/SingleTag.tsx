@@ -48,6 +48,7 @@ const SingleTag: FC<SingleTagProps> = ({
                 onClick={() =>
                   navigate(`/${routeNames.settings.schematisedTags.create}`)
                 }
+                disabled={isDisabled}
                 intent="inline"
               >
                 Create a schematised tag
@@ -56,7 +57,7 @@ const SingleTag: FC<SingleTagProps> = ({
           </Flex>
 
           <Select
-            disabled={hasNext}
+            disabled={hasNext || isDisabled}
             listWidth="100%"
             width="100%"
             options={options}
@@ -92,7 +93,12 @@ const SingleTag: FC<SingleTagProps> = ({
           })}
 
         {isLastItem && !!tag && !!options.length && (
-          <Button mt="10px" alignSelf="flex-end" onClick={onAdd}>
+          <Button
+            mt="10px"
+            disabled={isDisabled}
+            alignSelf="flex-end"
+            onClick={onAdd}
+          >
             Add another schematised tag
           </Button>
         )}
@@ -104,6 +110,7 @@ const SingleTag: FC<SingleTagProps> = ({
             intent="inline"
             alignSelf="flex-end"
             onClick={onRemove}
+            disabled={isDisabled}
           >
             Remove schematised tag
           </Button>

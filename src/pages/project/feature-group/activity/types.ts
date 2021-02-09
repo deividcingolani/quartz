@@ -18,8 +18,10 @@ export interface FeatureGroupActivityContentProps {
   endDate: Date;
   startDate: Date;
   isLoading: boolean;
+  defaultToDate: Date;
   view: FeatureGroup;
   creationDate: string;
+  defaultFromDate: Date;
   activity: ActivityItem;
   onResetFilters: () => void;
   handleRefreshData: () => void;

@@ -160,7 +160,7 @@ const FeatureGroupDataPreview: FC = () => {
   const displayFeaturesLength = filteredFeatures.length;
   const isFiltered = featuresLength !== displayFeaturesLength;
 
-  useTitle(`${titles.dataPreview} - ${view?.name}`);
+  useTitle(`${titles.dataPreview} ${view?.name}`);
 
   if (isLoading || !view) {
     return <Loader />;
@@ -200,11 +200,11 @@ const FeatureGroupDataPreview: FC = () => {
         <Value primary px="5px">
           {displayFeaturesLength}
         </Value>
-        <Value>features displayed out of</Value>
+        <Value>out of</Value>
         <Value primary px="5px">
           {featuresLength}
         </Value>
-        <Value>features</Value>
+        <Value>features displayed</Value>
         {isSwitch && (
           <Box ml="5px">
             <Symbol
@@ -217,7 +217,7 @@ const FeatureGroupDataPreview: FC = () => {
           </Box>
         )}
       </Flex>
-      <Box mb="10px" maxWidth="100vw">
+      <Box mb="-23px" mr="-18px" maxWidth="100vw">
         {!!filteredFeatures.length && !!filteredData.length && (
           <ReadOnlyTable
             staticColumn={staticColumn}

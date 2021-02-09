@@ -16,7 +16,6 @@ import TrainingDatasetFeatureList from './TrainingDatasetFeatureList';
 import CodeCard from '../../feature-group/overview/CodeCard';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import SchematisedTags from '../../feature-group/overview/SchematisedTags';
-import PipelineHistory from '../../feature-group/overview/PipelineHistory';
 import Provenance from './Provenance';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import SplitGraph from './SplitGraph';
@@ -41,7 +40,6 @@ const {
   featureList,
   provenance,
   schematisedTags,
-  pipelineHistory,
   runningCode,
   splitGraph,
   api,
@@ -159,7 +157,7 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
           />
         }
       />
-      <Box mt="55px" width="100%">
+      <Box mb="20px" mt="55px" width="100%">
         <TrainingDatasetOverviewSummary data={data} />
         <Anchor groupName="tdOverview" anchor={featureList}>
           <TrainingDatasetFeatureList data={data.features} />
@@ -171,10 +169,6 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
 
         <Anchor groupName="tdOverview" anchor={schematisedTags}>
           <SchematisedTags data={data.tags} />
-        </Anchor>
-
-        <Anchor groupName="tdOverview" anchor={pipelineHistory}>
-          <PipelineHistory data={data.jobs} />
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={runningCode}>

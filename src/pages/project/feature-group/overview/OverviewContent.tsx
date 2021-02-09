@@ -13,7 +13,6 @@ import Panel from '../../../../components/panel/Panel';
 import { FeatureGroup } from '../../../../types/feature-group';
 // Features
 import SummaryData from './SummaryData';
-import PipelineHistory from './PipelineHistory';
 import SchematisedTags from './SchematisedTags';
 import Provenance from './Provenance';
 import FeatureList from './FeatureList';
@@ -31,9 +30,14 @@ const action = (
   <Button
     p={0}
     intent="inline"
-    onClick={() => window.open('https://docs.hopsworks.ai/', '_blank')}
+    onClick={() =>
+      window.open(
+        'https://docs.hopsworks.ai/latest/generated/api/feature_group_api/#get_feature_group',
+        '_blank',
+      )
+    }
   >
-    full documentation
+    API documentation ↗
   </Button>
 );
 
@@ -41,8 +45,6 @@ const {
   featureList,
   provenance,
   schematisedTags,
-  pipelineHistory,
-  runningCode,
   api,
 } = routeNames.overviewAnchors;
 
@@ -51,17 +53,6 @@ const OverviewContent: FC<ContentProps> = ({
   onClickRefresh,
   onClickEdit,
 }) => {
-  const runningCodes = useMemo(() => {
-    return [
-      {
-        title: 'Snippet',
-        code: `SELECT ‘${data.name}’.’home_team_id’, ‘${data.name}’.
-FROM ‘demo_featurestore_admin000’
-INNER JOIN ‘demo_featurestore’`,
-      },
-    ];
-  }, [data]);
-
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   const apiCode = useMemo(() => {
@@ -148,22 +139,10 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
           <SchematisedTags data={data.tags} />
         </Anchor>
 
-        <Anchor groupName="fgOverview" anchor={pipelineHistory}>
-          <PipelineHistory data={data.jobs} />
-        </Anchor>
-
-        <Anchor groupName="fgOverview" anchor={runningCode}>
-          <CodeCard
-            title="Running Code"
-            actions={action}
-            content={runningCodes}
-          />
-        </Anchor>
-
         <Anchor anchor={api} groupName="fgOverview">
           <CodeCard
             mt="20px"
-            mb="20px"
+            mb="40px"
             title="API"
             actions={action}
             content={apiCode}

@@ -1,6 +1,10 @@
-import React, { FC, useCallback, useState } from 'react';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { Box, Flex } from 'rebass';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, useCallback, useState } from 'react';
 import {
   Button,
   Callout,
@@ -11,12 +15,7 @@ import {
   TooltipPositions,
   Value,
 } from '@logicalclocks/quartz';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 
-import Hero from '../Hero';
 // Validators
 import { alphanum } from '../../../utils/validators';
 // Utils
@@ -24,10 +23,11 @@ import getInputValidation from '../../../utils/getInputValidation';
 // Types
 import { Dispatch, RootState } from '../../../store';
 // Components
-import LoginHelp from './LoginHelp';
+import Hero from '../Hero';
 import styles from './styles';
-import useTitle from '../../../hooks/useTitle';
+import LoginHelp from './LoginHelp';
 import titles from '../../../sources/titles';
+import useTitle from '../../../hooks/useTitle';
 import useHistory from '../../../hooks/useHistory';
 import routeNames from '../../../routes/routeNames';
 import { pageToViewPathStorageName } from '../../../routes';
@@ -66,6 +66,7 @@ const Login: FC = () => {
   const handleLogin = useCallback(
     async (data) => {
       setError(null);
+
       const error = await dispatch.auth.login({
         data,
       });
@@ -78,9 +79,11 @@ const Login: FC = () => {
         setError(error);
       } else {
         dispatch.profile.getUser();
+
         const lastPath =
           history.slice().reverse()[1] ||
           localStorage.getItem(pageToViewPathStorageName);
+
         localStorage.removeItem(pageToViewPathStorageName);
 
         if (lastPath && lastPath !== routeNames.auth.login) {
@@ -101,6 +104,7 @@ const Login: FC = () => {
       flexDirection="column"
       alignItems="center"
       as="form"
+      autoComplete="on"
       onSubmit={handleSubmit(handleLogin)}
     >
       <Hero />
@@ -119,6 +123,7 @@ const Login: FC = () => {
             labelProps={{ width: '100%' }}
             name="email"
             disabled={isLoading}
+            autoComplete="on"
             placeholder="enter your email address"
             ref={register}
             {...getInputValidation('email', errors)}
@@ -129,6 +134,7 @@ const Login: FC = () => {
             label="Password"
             name="password"
             disabled={isLoading}
+            autoComplete="on"
             placeholder="••••••"
             ref={register}
             rightIcon={
@@ -166,20 +172,24 @@ const Login: FC = () => {
         </Flex>
       </Card>
 
-      <Flex
-        mt="20px"
-        width="466px"
-        height="fit-content"
-        p="20px"
-        justifyContent="space-between"
-        backgroundColor="white"
-        alignItems="center"
+      <Box
+        sx={{
+          h4: {
+            fontSize: '12px',
+          },
+        }}
       >
-        <Value fontFamily="Inter">Don’t have an account?</Value>
-        <Button intent="secondary" onClick={() => navigate('/register')}>
-          Register
-        </Button>
-      </Flex>
+        <Card
+          mt="20px"
+          width="466px"
+          actions={
+            <Button intent="secondary" onClick={() => navigate('/register')}>
+              Register
+            </Button>
+          }
+          title="Don’t have an account?"
+        />
+      </Box>
 
       <LoginHelp />
     </Flex>

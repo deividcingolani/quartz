@@ -322,8 +322,31 @@ export const validateSchema = async (
   return next;
 };
 
-export const getDatePickerTime = (time: Date): string => {
-  return isToday(time) ? 'today' : format(time, 'dd MMM. y');
+export const getDatePickerTime = (
+  time: Date,
+  isFromDate = true,
+  defaultDates: {
+    fromDate?: Date;
+    toDate?: Date;
+  },
+): string => {
+  if (isToday(time)) {
+    return 'today';
+  }
+
+  if (isFromDate && defaultDates.fromDate) {
+    return +time === +defaultDates.fromDate
+      ? format(time, 'dd MMM. y')
+      : format(time, 'dd MMM. y ha');
+  }
+
+  if (defaultDates.toDate) {
+    return +time === +defaultDates.toDate
+      ? format(time, 'dd MMM. y')
+      : format(time, 'dd MMM. y ha');
+  }
+
+  return format(time, 'dd MMM. y ha');
 };
 
 export const getMinDate = (activity: ActivityItem) => {

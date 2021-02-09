@@ -90,26 +90,29 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
       )}
 
       {statistics && (
-        <Flex alignItems="flex-start" mt="20px" flexWrap="wrap">
+        <Flex
+          justifyContent="space-between"
+          alignItems="flex-start"
+          mt="20px"
+          flexWrap="wrap"
+        >
           <StatisticsTables data={statistics} />
-          <Flex
-            sx={
-              dataType === ItemDrawerTypes.td
-                ? { flexGrow: 1, justifyContent: 'center' }
-                : {}
-            }
-          >
-            {statistics.histogram && (
+          {statistics.histogram ? (
+            <Box mr="20px">
               <StatisticsCharts
                 dataType={dataType}
                 data={statistics.histogram}
                 type={type}
               />
-            )}
-            {dataType === ItemDrawerTypes.fg && (
-              <StatisticsRows featureName={name} />
-            )}
-          </Flex>
+            </Box>
+          ) : (
+            <Box mr="20px" width="25%" />
+          )}
+          {dataType === ItemDrawerTypes.fg ? (
+            <StatisticsRows featureName={name} />
+          ) : (
+            <Box mr="20px" width="25%" />
+          )}
         </Flex>
       )}
     </Card>

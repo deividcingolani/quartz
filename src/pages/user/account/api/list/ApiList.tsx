@@ -90,7 +90,13 @@ const ApiList: FC = () => {
       </Flex>
       <Box mt="20px" mx="-20px" sx={apiKeysListStyles}>
         <Row
-          legend={['name', 'scope', 'prefix', 'creation', 'modification']}
+          legend={[
+            'name',
+            'scope',
+            'API key prefix',
+            'creation',
+            'modification',
+          ]}
           middleColumn={1}
           groupComponents={groupComponents as ComponentType<any>[][]}
           groupProps={groupProps}

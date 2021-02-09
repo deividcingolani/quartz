@@ -76,7 +76,9 @@ const featureGroups = createModel()({
           ...group,
           labels: [],
           updated: group.created,
-          versions: data.map(({ version, id }) => ({ id, version })),
+          versions: data
+            .filter(({ name }) => group.name === name)
+            .map(({ version, id }) => ({ id, version })),
         })),
       );
 
@@ -95,7 +97,7 @@ const featureGroups = createModel()({
       projectId: number;
       featureStoreId: number;
     }): Promise<void> => {
-      await Promise.allSettled(
+      const promises = await Promise.allSettled(
         data.map(async (group) => {
           const readLast = await FeatureGroupsService.getWriteLast(
             projectId,
@@ -116,12 +118,16 @@ const featureGroups = createModel()({
             ...group,
             labels: keywords,
             updated: readLast || group.created,
-            versions: data.map(({ version, id }) => ({ id, version })),
+            versions: data
+              .filter(({ name }) => group.name === name)
+              .map(({ version, id }) => ({ id, version })),
           };
         }),
-      )
-        .then((values) => getValidPromisesValues(values))
-        .then((data) => dispatch.featureGroups.setFeatureGroups(data));
+      );
+
+      const groups = getValidPromisesValues(promises);
+
+      dispatch.featureGroups.setFeatureGroups(groups);
     },
     create: async ({
       projectId,

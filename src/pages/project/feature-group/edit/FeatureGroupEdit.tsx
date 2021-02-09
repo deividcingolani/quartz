@@ -89,7 +89,7 @@ const FeatureGroupEdit: FC = () => {
       dispatch.featureGroupView.clear();
       dispatch.featureGroups.clear();
 
-      navigate('/fg', 'p/:id/*');
+      navigate(`/${fgId}`, 'p/:id/fg/*');
     },
     [dispatch, featureStoreData, navigate, projectId, fgId, featureGroup],
   );

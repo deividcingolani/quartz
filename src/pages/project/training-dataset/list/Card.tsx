@@ -22,11 +22,11 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ProfileService from '../../../../services/ProfileService';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import CardLabels from './CardLabels';
 import { HoverableCardProps } from '../../../../types';
 import styles from '../../styles/hoverable-card';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import { RootState } from '../../../../store';
+import CardLabels from '../../feature-group/list/CardLabels';
 
 const Card: FC<HoverableCardProps<TrainingDataset>> = ({
   data,
@@ -86,7 +86,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                 />
               )}
 
-              <CardLabels loading={loading} labels={data.labels} />
+              <CardLabels ml="5px" loading={loading} labels={data.labels} />
             </Flex>
 
             {hasMatchText && <Badge value={data.matchText} />}
@@ -107,7 +107,10 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
           )}
 
           <Flex mt="15px" alignItems="center">
-            <User name="" photo={ProfileService.avatar('')} />
+            <User
+              name={data.creator}
+              photo={ProfileService.avatar(data.creator)}
+            />
             <Flex flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>
                 Latest version
@@ -138,7 +141,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
             </Flex>
 
             <Flex ml="auto">
-              <IconButton tooltip="tooltip" icon="eye" />
+              <IconButton tooltip="Preview" icon="eye" />
               <IconButton
                 tooltip="Overview"
                 tooltipProps={{ ml: '40px' } as TooltipProps}
@@ -146,12 +149,12 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                 onClick={handleNavigate(data.id, '/td/:tdId')}
               />
               <IconButton
-                tooltip="tooltip"
+                tooltip="Data"
                 tooltipProps={{ ml: '6px' } as TooltipProps}
                 icon="search"
               />
               <IconButton
-                tooltip="tooltip"
+                tooltip="Activity"
                 tooltipProps={{ ml: '6px' } as TooltipProps}
                 icon="history"
               />

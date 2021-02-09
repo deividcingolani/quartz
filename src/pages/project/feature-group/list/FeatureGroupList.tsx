@@ -123,7 +123,7 @@ const FeatureGroupList: FC = () => {
   useTitle(titles.featureGroups);
 
   return (
-    <Flex flexGrow={1} flexDirection="column">
+    <Flex mb="20px" flexGrow={1} flexDirection="column">
       <Flex alignItems="center">
         <Input
           variant="white"
@@ -146,9 +146,10 @@ const FeatureGroupList: FC = () => {
             value={filter}
             variant="white"
             isMulti
+            mt="-7px"
             options={labels}
             noDataMessage="keywords"
-            placeholder="keywords filter"
+            placeholder="keywords"
             onChange={setFilter}
           />
         </Tooltip>
@@ -172,14 +173,18 @@ const FeatureGroupList: FC = () => {
         </Flex>
       </Flex>
       <Flex mt="20px" mb="20px">
-        <Value primary px="5px">
-          {dataResult.length}
-        </Value>
-        <Value>feature group displayed out of</Value>
-        <Value primary px="5px">
-          {maxVersionsData.length}
-        </Value>
-        <Value>features</Value>
+        {!isLoading && (
+          <>
+            <Value primary px="5px">
+              {dataResult.length}
+            </Value>
+            <Value>out of</Value>
+            <Value primary px="5px">
+              {maxVersionsData.length}
+            </Value>
+            <Value>feature groups displayed</Value>
+          </>
+        )}
         <Box ml="auto">
           <Button onClick={handleCreate}>New Feature Group</Button>
         </Box>

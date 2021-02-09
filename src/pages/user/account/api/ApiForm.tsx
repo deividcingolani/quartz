@@ -6,6 +6,8 @@ import {
   Card,
   CheckboxGroup,
   Input,
+  Microlabeling,
+  Value,
 } from '@logicalclocks/quartz';
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
@@ -60,26 +62,43 @@ const ApiForm: FC<ApiFormProps> = ({
   });
 
   return (
-    <Card title={isEdit ? 'Edit API key' : 'Create new API key'}>
+    <Card
+      actions={
+        <Button
+          mr="-15px"
+          onClick={() =>
+            window.open(
+              'https://docs.hopsworks.ai/integrations/databricks/api_key',
+              '_blank',
+            )
+          }
+          intent="inline"
+        >
+          documentation ↗
+        </Button>
+      }
+      title={isEdit ? 'Edit API key' : 'Create new API key'}
+    >
       <Flex flexDirection="column">
-        <Input
-          name="name"
-          label="Name"
-          ref={register}
-          readOnly={isEdit}
-          disabled={isLoading}
-          placeholder="name of the API key"
-          {...getInputValidation('name', errors)}
-        />
-
-        {isEdit && !!initialData?.prefix && (
+        <Flex>
           <Input
-            label="Prefix"
-            disabled={true}
-            labelProps={{ mt: '20px' }}
-            value={initialData.prefix}
+            name="name"
+            label="Name"
+            ref={register}
+            readOnly={isEdit}
+            disabled={isLoading}
+            placeholder="name of the API key"
+            {...getInputValidation('name', errors)}
           />
-        )}
+          {isEdit && !!initialData?.prefix && (
+            <Box mt="25px" ml="20px">
+              <Microlabeling mb="3px" gray>
+                API key prefix
+              </Microlabeling>
+              <Value primary>{initialData.prefix}</Value>
+            </Box>
+          )}
+        </Flex>
 
         <Controller
           name="scope"

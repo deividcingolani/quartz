@@ -172,7 +172,7 @@ const FeatureGroupStatistics: FC = () => {
     [data, commit, navigateToStatistics],
   );
 
-  useTitle(`${titles.statistics} - ${data?.name}`);
+  useTitle(`${titles.statistics} ${data?.name}`);
 
   if (isLoading || isStatisticsLoading) {
     return <Loader />;
@@ -212,7 +212,7 @@ const FeatureGroupStatistics: FC = () => {
         title={data.name}
         id={data.id}
         idColor="labels.orange"
-        onClickEdit={() => ({})}
+        onClickEdit={() => navigate(`/edit`, 'p/:id/fg/:id/*')}
         onClickRefresh={handleRefreshData}
         hasCommitDropdown={true}
         hasVersionDropdown={true}

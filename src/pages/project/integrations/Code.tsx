@@ -26,6 +26,7 @@ const ProjectCode: FC = () => {
   return (
     <Card
       mt="20px"
+      mb="40px"
       title="Connect to Feature Store"
       actions={
         <Button
