@@ -54,8 +54,7 @@ const routeNames = {
     statisticsViewCommit: '/fg/:fgId/statistics/commit/:commitTime',
     statisticsViewCommitAndOne:
       '/fg/:fgId/statistics/commit/:commitTime/f/:featureName',
-    dataCorrelation: '/fg/:fgId/data/correlation',
-    correlation: '/fg/:fgId/data/correlation',
+    correlation: '/fg/:fgId/correlation',
   },
 
   trainingDataset: {
@@ -69,7 +68,7 @@ const routeNames = {
     statisticsViewCommit: '/td/:tdId/statistics/commit/:commitTime',
     statisticsViewCommitAndOne:
       '/td/:tdId/statistics/commit/:commitTime/f/:featureName',
-    correlation: '/td/:tdId/data/correlation',
+    correlation: '/td/:tdId/correlation',
   },
 
   storageConnector: {

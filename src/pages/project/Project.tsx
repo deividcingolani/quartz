@@ -28,6 +28,7 @@ import {
   ProjectEdit,
   TrainingDatasetOverview,
   TrainingDatasetStatistics,
+  TrainingDatasetCorrelation,
   TrainingDatasetCreate,
   TrainingDatasetEdit,
   ProjectCode,
@@ -157,6 +158,10 @@ const Project: FC = () => {
       <Route
         path={routeNames.trainingDataset.statisticsViewCommitAndOne}
         element={<TrainingDatasetStatistics />}
+      />
+      <Route
+        path={routeNames.trainingDataset.correlation}
+        element={<TrainingDatasetCorrelation />}
       />
 
       <Route

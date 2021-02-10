@@ -183,7 +183,7 @@ const useAppNavigation = (): TreeNode[] => {
             id: 'fgCorrelation',
             title: 'Feature correlations',
             disabled: disabledTabs.fgCorrelationsDisabled,
-            isActive: isActive(routeNames.featureGroup.correlation),
+            isActive: isActive('/p/:id/fg/:fgId/correlation/*'),
             onClick: handleNavigateRelative(
               '/correlation',
               '/p/:id/fg/:fgId/*',

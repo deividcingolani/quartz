@@ -47,7 +47,7 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
           inspect data
         </Button>
       }
-      contentProps={{ pb: '1px' }}
+      contentProps={{ overflow: 'auto', pb: 0 }}
       maxHeight="400px"
     >
       <Flex>
@@ -88,7 +88,7 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
         </ToggleButton>
       </Flex>
       {/* Data Rows */}
-      <Box mt="30px" mx="-20px" pb="18px" sx={featureListStyles}>
+      <Box mt="30px" mx="-20px" sx={featureListStyles}>
         <Row
           middleColumn={2}
           groupComponents={groupComponents as ComponentType<any>[][]}
