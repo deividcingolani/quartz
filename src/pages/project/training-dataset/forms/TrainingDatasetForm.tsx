@@ -5,6 +5,7 @@ import React, { FC, memo, useCallback } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { CardSecondary } from '@logicalclocks/quartz';
 
 // Types
 import { TrainingDatasetFormData } from '../types';
@@ -27,7 +28,6 @@ import {
   Callout,
   CalloutTypes,
   Card,
-  Divider,
   Icon,
   Input,
   Labeling,
@@ -42,6 +42,7 @@ import { dataFormatMap } from '../utils';
 import StatisticsFeaturesForm from './StatisticsFeaturesForm';
 import { IStorageConnector } from '../../../../types/storage-connector';
 import { selectFeatureStoreStorageConnectors } from '../../../../store/models/feature/storageConnectors/selectors';
+import SplitsForm from './SplitsForm';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -77,6 +78,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
       dataFormat: ['CSV'],
       correlations: false,
       enabled: true,
+      splits: [],
       histograms: false,
       ...(!!initialData && {
         name: initialData.name,
@@ -135,15 +137,69 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         next = false;
       }
 
-      const storage = data.storage;
+      const { storage } = data;
       if (!storage.id) {
         setError('features', { message: 'Select storage' });
         next = false;
       }
 
+      let { splits } = data;
+
+      if (splits.length) {
+        if (
+          splits.length === 2 &&
+          splits.every(({ name, percentage }) => !name && !percentage)
+        ) {
+          data.splits = [];
+          splits = [];
+        } else if (
+          splits.length === 2 &&
+          splits.find(({ name, percentage }) => !name || !percentage)
+        ) {
+          setError('splits', {
+            message: 'At least 2 splits are required to enable the function',
+          });
+          next = false;
+        }
+
+        if (
+          splits.length &&
+          splits.find(({ name, percentage }) => !name || !percentage)
+        ) {
+          setError('splits', {
+            message: 'Every split requires a name and a value',
+          });
+          next = false;
+        }
+
+        splits.forEach(({ percentage }, index) => {
+          if (!Number.isInteger(+percentage)) {
+            next = false;
+            setError(`splits[${index}].percentage`, {
+              message: 'Invalid percentage',
+            });
+          }
+        });
+
+        if (!next) {
+          return;
+        }
+
+        if (
+          splits.length &&
+          splits.reduce((acc, { percentage }) => acc + +percentage, 0) !== 100
+        ) {
+          setError('splits', {
+            message: 'The sum of all splits should be 100',
+          });
+          next = false;
+        }
+      }
+
       if (!next) {
         return;
       }
+
       submitHandler(data);
     }),
     [setError, serverTags, clearErrors],
@@ -178,7 +234,6 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
           title={
             isEdit ? 'Edit training dataset' : 'Create New Training Dataset'
           }
-          mb={isEdit ? '100px' : '20px'}
         >
           {!isEdit && (
             <>
@@ -267,13 +322,16 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                       <Value mt="10px">Storage</Value>
                       <Button
                         mr="-15px"
-                        onClick={() => navigate(`/p/${projectId}/sources/new`)}
+                        onClick={() =>
+                          navigate(`/p/${projectId}/storage-connectors/new`)
+                        }
                         intent="inline"
                       >
                         Create a source
                       </Button>
                     </Flex>
                     <Select
+                      hasPlaceholder={false}
                       label=""
                       mb="20px"
                       listWidth="100%"
@@ -355,49 +413,46 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             </>
           )}
 
-          <Divider mb="15px" mt="-5px" legend="Statistic configuration" />
-
           <StatisticConfigurationForm isLoading={isLoading} />
 
-          <Divider mb="10px" mt="-5px" legend="Metadata" />
-
+          <Box sx={{ div: { zIndex: 2 } }}>
+            <FeatureStickySummary
+              isEdit={isEdit}
+              onSubmit={onSubmit}
+              type={ItemDrawerTypes.td}
+              disabled={isLoading || isDisabled}
+            />
+          </Box>
+        </Card>
+        <CardSecondary
+          mt="20px"
+          contentProps={{
+            mt: '-10px',
+          }}
+          mb="20px"
+          title="Metadata"
+        >
           <SchematisedTagsForm isDisabled={isDisabled} />
 
-          <Box mb={!isEdit ? '20px' : 0}>
+          <Box>
             <LabelsForm isDisabled={isDisabled || isLoading} />
           </Box>
-
-          {isEdit && (
-            <Box>
-              <Divider legend="Features" />
-              <StatisticsFeaturesForm />
-            </Box>
-          )}
-
-          {isEdit && onDelete && (
-            <>
-              <Divider mt="20px" mb="8px" legend="Danger zone" />
-              <Button
-                intent="alert"
-                onClick={onDelete}
-                mb="30px"
-                disabled={isLoading || isDisabled}
-              >
-                Delete training dataset
-              </Button>
-            </>
-          )}
-
-          <FeatureStickySummary
-            isEdit={isEdit}
-            onSubmit={onSubmit}
-            type={ItemDrawerTypes.td}
-            disabled={isLoading || isDisabled}
-          />
-
-          {isLoading && <Loader />}
-        </Card>
+        </CardSecondary>
+        {!isEdit && <SplitsForm isDisabled={isLoading || isDisabled} />}
         {!isEdit && <FeaturesForm />}
+        {isEdit && <StatisticsFeaturesForm />}
+        {isEdit && onDelete && (
+          <CardSecondary mb="100px" title="Danger zone">
+            <Button
+              intent="alert"
+              onClick={onDelete}
+              disabled={isLoading || isDisabled}
+            >
+              Delete training dataset
+            </Button>
+          </CardSecondary>
+        )}
+        {isLoading && <Loader />}
       </>
     </FormProvider>
   );

@@ -1,11 +1,5 @@
 import React, { FC, useMemo } from 'react';
-import {
-  Card,
-  Icon,
-  Labeling,
-  SplitGraph as Splits,
-  Tooltip,
-} from '@logicalclocks/quartz';
+import { Card, Labeling, SplitGraph as Splits } from '@logicalclocks/quartz';
 import { Split } from '../../../../types/training-dataset';
 import { Box, Flex } from 'rebass';
 
@@ -38,18 +32,7 @@ const SplitGraph: FC<SplitGraphProps> = ({ graph }) => {
   }
 
   return (
-    <Card
-      title={
-        <>
-          Splits{' '}
-          <Tooltip mainText="Splits" ml="5px">
-            <Icon icon="info-circle" size="sm" />
-          </Tooltip>
-        </>
-      }
-      mt="20px"
-      mb="20px"
-    >
+    <Card title="Splits" mt="20px" mb="20px">
       <Splits values={mapped} />
     </Card>
   );

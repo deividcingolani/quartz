@@ -1,6 +1,6 @@
 import { Box } from 'rebass';
 import { useFormContext } from 'react-hook-form';
-import { EditableTable, Label } from '@logicalclocks/quartz';
+import { EditableTable, CardSecondary } from '@logicalclocks/quartz';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
 
@@ -59,20 +59,21 @@ const StatisticsFeaturesForm: FC = () => {
   }, []);
 
   return (
-    <Box sx={tableStyles} mt="20px" mb="10px">
-      <Label mb="20px">Features</Label>
-      {!!features.length && (
-        <EditableTable
-          hasFreezeButton={false}
-          minWidth="100%"
-          columns={featuresColumns()}
-          values={features}
-          onChangeData={handleChangeData}
-          onDeleteRow={handleRemoveRow}
-          actions={[]}
-        />
-      )}
-    </Box>
+    <CardSecondary mb="20px" title="Features">
+      <Box sx={tableStyles}>
+        {!!features.length && (
+          <EditableTable
+            hasFreezeButton={false}
+            minWidth="100%"
+            columns={featuresColumns()}
+            values={features}
+            onChangeData={handleChangeData}
+            onDeleteRow={handleRemoveRow}
+            actions={[]}
+          />
+        )}
+      </Box>
+    </CardSecondary>
   );
 };
 

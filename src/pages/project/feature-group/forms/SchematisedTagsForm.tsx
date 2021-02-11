@@ -1,6 +1,5 @@
 import { Box, Flex } from 'rebass';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { useFormContext } from 'react-hook-form';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Callout, CalloutTypes, Value } from '@logicalclocks/quartz';
@@ -29,8 +28,6 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
   );
 
   const { getValues, setValue } = useFormContext();
-
-  const navigate = useNavigate();
 
   const baseOptions = useMemo(() => {
     return tags.map(({ name, description }) =>
@@ -149,10 +146,13 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
             <Button
               intent="ghost"
               onClick={() =>
-                navigate(`/${routeNames.settings.schematisedTags.create}`)
+                window.open(
+                  `/${routeNames.settings.schematisedTags.create}`,
+                  '_blank',
+                )
               }
             >
-              Create a schematised tag
+              Create a schematised tag ↗
             </Button>
           }
         />

@@ -1,6 +1,11 @@
 import { IStorageConnector } from '../../../types/storage-connector';
 import { FeatureGroupBasket } from '../../../store/models/localManagement/basket.model';
 
+export interface TdSplit {
+  name: string;
+  percentage: string;
+}
+
 export interface TrainingDatasetFormData {
   tags: any;
   name: string;
@@ -13,4 +18,5 @@ export interface TrainingDatasetFormData {
   enabled: boolean;
   histograms: boolean;
   statisticsColumns: string[];
+  splits: TdSplit[];
 }

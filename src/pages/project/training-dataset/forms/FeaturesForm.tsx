@@ -3,7 +3,7 @@ import {
   Button,
   Callout,
   CalloutTypes,
-  Card,
+  CardSecondary,
   IconButton,
   Labeling,
   Value,
@@ -158,7 +158,7 @@ const FeaturesForm: FC = () => {
             fgId={selectedFeature?.fgId}
           />
         )}
-      <Card mb="100px">
+      <CardSecondary title="Features" mb="100px">
         <Flex flexDirection="column">
           <Value>Withdraw features from a basket</Value>
           <Flex mt="10px">
@@ -259,7 +259,7 @@ const FeaturesForm: FC = () => {
             ))}
           </Flex>
         )}
-      </Card>
+      </CardSecondary>
     </>
   );
 };

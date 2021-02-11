@@ -1,6 +1,5 @@
 import { Flex } from 'rebass';
 import React, { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button, Select, Value, Divider } from '@logicalclocks/quartz';
 
 import routeNames from '../../../../routes/routeNames';
@@ -34,8 +33,6 @@ const SingleTag: FC<SingleTagProps> = ({
   isLastItem,
   isFirstItem,
 }) => {
-  const navigate = useNavigate();
-
   return (
     <>
       <Flex mb="20px" width="100%" flexDirection="column">
@@ -46,12 +43,15 @@ const SingleTag: FC<SingleTagProps> = ({
               <Button
                 mr="-15px"
                 onClick={() =>
-                  navigate(`/${routeNames.settings.schematisedTags.create}`)
+                  window.open(
+                    `/${routeNames.settings.schematisedTags.create}`,
+                    '_blank',
+                  )
                 }
                 disabled={isDisabled}
                 intent="inline"
               >
-                Create a schematised tag
+                Create a schematised tag ↗
               </Button>
             )}
           </Flex>

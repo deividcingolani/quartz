@@ -75,6 +75,7 @@ const LabelsForm: FC<FeatureFormProps> = ({ isDisabled }) => {
                     listWidth="100%"
                     isMulti
                     flex={1}
+                    hasPlaceholder={false}
                     onChange={onChange}
                     value={value}
                     options={options}
