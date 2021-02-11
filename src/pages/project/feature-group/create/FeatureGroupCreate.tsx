@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroupFormData } from '../types';
 // Components
-import Loader from '../../../../components/loader/Loader';
 import FeatureGroupForm from '../forms/FeatureGroupForm';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
@@ -75,21 +74,9 @@ const FeatureGroupCreate: FC = () => {
     (state: RootState) => state.loading.effects.featureStores.fetch,
   );
 
-  const isKeywordsLoading = useSelector(
-    (state: RootState) => state.loading.effects.featureGroups.fetch,
-  );
-
-  const isTagsLoading = useSelector(
-    (state: RootState) => state.loading.effects.schematisedTags.fetch,
-  );
-
   const isSubmit = useSelector(
     (state: RootState) => state.loading.effects.featureGroups.create,
   );
-
-  if (isKeywordsLoading || isTagsLoading) {
-    return <Loader />;
-  }
 
   return (
     <FeatureGroupForm

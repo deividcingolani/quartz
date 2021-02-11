@@ -33,6 +33,32 @@ const trainingDatasetView = createModel()({
         trainingDatasetId,
       );
 
+      dispatch.trainingDatasetView.setData({
+        ...data,
+        provenance: [],
+        versions: [{ id: data.id, version: data.version }],
+        tags: [],
+        labels: [],
+      });
+
+      dispatch.trainingDatasetView.loadRemainingData({
+        data,
+        projectId,
+        featureStoreId,
+        trainingDatasetId,
+      });
+    },
+    loadRemainingData: async ({
+      projectId,
+      featureStoreId,
+      trainingDatasetId,
+      data,
+    }: {
+      data: TrainingDataset;
+      projectId: number;
+      featureStoreId: number;
+      trainingDatasetId: number;
+    }): Promise<void> => {
       const { data: provenance } = await TrainingDatasetService.getProvenance(
         projectId,
         featureStoreId,

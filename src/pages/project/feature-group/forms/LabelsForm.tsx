@@ -8,7 +8,7 @@ import {
   TinyPopup,
   usePopup,
 } from '@logicalclocks/quartz';
-import React, { FC, memo, useCallback, useState } from 'react';
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 // Types
 import { FeatureFormProps } from '../types';
@@ -34,6 +34,10 @@ const LabelsForm: FC<FeatureFormProps> = ({ isDisabled }) => {
   );
 
   const [options, setOptions] = useState<string[]>(baseOptions);
+
+  useEffect(() => {
+    setOptions(baseOptions);
+  }, [baseOptions]);
 
   const handleAdd = useCallback(
     async (keyword: string) => {

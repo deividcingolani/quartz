@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback } from 'react';
 import { Flex } from 'rebass';
-import { Text, TextValueBadge, User } from '@logicalclocks/quartz';
+import { Text, TextValueBadge, User, Labeling } from '@logicalclocks/quartz';
 
 // Services
 import ProfileService from '../../../../services/ProfileService';
@@ -27,6 +27,11 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
   const dispatch = useDispatch<Dispatch>();
 
   const featureCount = data.features.length;
+
+  const isLoading = useSelector(
+    (state: RootState) =>
+      state.loading.effects.featureGroupView.loadRemainingData,
+  );
 
   const keywordsSaveHandler = useCallback(
     async (keywords) => {
@@ -73,7 +78,11 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
       </Flex>
       <Text my="20px">{data?.description || '-'}</Text>
 
-      <KeywordsEditor onSave={keywordsSaveHandler} value={data.labels} />
+      {isLoading ? (
+        <Labeling gray>loading...</Labeling>
+      ) : (
+        <KeywordsEditor onSave={keywordsSaveHandler} value={data.labels} />
+      )}
     </>
   );
 };

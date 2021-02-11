@@ -1,5 +1,12 @@
 import { Box, Flex } from 'rebass';
-import React, { ComponentType, FC, memo, useCallback, useState } from 'react';
+import React, {
+  ComponentType,
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Button,
   Card,
@@ -19,6 +26,8 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import tagsListStyles from './tags-list-styles';
 
 import routeNames from '../../../../routes/routeNames';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store';
 
 export interface SchematisedTagsProps {
   data: Tag[];
@@ -50,7 +59,68 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
     [data],
   );
 
+  useEffect(() => {
+    setSelected(data[0]);
+  }, [data]);
+
   const [groupComponents, groupProps] = useSchematisedTagsListRowData(selected);
+
+  const isLoading = useSelector(
+    (state: RootState) =>
+      state.loading.effects.trainingDatasetView.loadRemainingData,
+  );
+
+  if (isLoading) {
+    return (
+      <Card
+        mt="20px"
+        title="Schematised Tags"
+        actions={
+          <Button
+            p={0}
+            intent="inline"
+            onClick={handleNavigate(+fgId, routeNames.featureGroup.edit)}
+          >
+            edit
+          </Button>
+        }
+      >
+        <Box mt="20px" mx="-20px">
+          <Flex height="50px" mt="30px" justifyContent="center">
+            <Labeling fontSize="18px" gray>
+              Loading...
+            </Labeling>
+          </Flex>
+        </Box>
+      </Card>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Card
+        mt="20px"
+        title="Schematised Tags"
+        actions={
+          <Button
+            p={0}
+            intent="inline"
+            onClick={handleNavigate(+fgId, routeNames.featureGroup.edit)}
+          >
+            edit
+          </Button>
+        }
+      >
+        <Box mt="20px" mx="-20px">
+          <Flex height="50px" mt="30px" justifyContent="center">
+            <Labeling fontSize="18px" gray>
+              Loading...
+            </Labeling>
+          </Flex>
+        </Box>
+      </Card>
+    );
+  }
 
   return (
     <Card
@@ -88,7 +158,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
             mt="20px"
             listWidth="100%"
             options={data.map(({ name }) => name)}
-            value={[selected.name]}
+            value={[selected?.name || 'none']}
             placeholder="tags"
             onChange={onChange}
           />

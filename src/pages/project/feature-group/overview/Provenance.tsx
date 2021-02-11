@@ -23,6 +23,25 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
     currentProject,
   );
 
+  const isLoading = useSelector(
+    (state: RootState) =>
+      state.loading.effects.featureGroupView.loadRemainingData,
+  );
+
+  if (isLoading) {
+    return (
+      <Card mt="30px" title="Provenance">
+        <Box mt="20px" mx="-20px">
+          <Flex height="50px" mt="30px" justifyContent="center">
+            <Labeling fontSize="18px" gray>
+              Loading...
+            </Labeling>
+          </Flex>
+        </Box>
+      </Card>
+    );
+  }
+
   if (!data?.length) {
     return (
       <Card mt="30px" title="Provenance">

@@ -38,12 +38,32 @@ const featureGroupView = createModel()({
         featureGroupId,
       );
 
-      const { data: provenance } = await FeatureGroupsService.getProvenance(
+      dispatch.featureGroupView.setData({
+        ...data,
+        provenance: [],
+        labels: [],
+        tags: [],
+        versions: [{ id: data.id, version: data.version }],
+      });
+
+      dispatch.featureGroupView.loadRemainingData({
+        data,
         projectId,
         featureStoreId,
-        data,
-      );
-
+        featureGroupId,
+      });
+    },
+    loadRemainingData: async ({
+      data,
+      projectId,
+      featureGroupId,
+      featureStoreId,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      featureGroupId: number;
+      data: FeatureGroup;
+    }) => {
       let keywords: string[] = [];
       if (data.type === 'cachedFeaturegroupDTO') {
         keywords = await FeatureGroupLabelsService.getList(
@@ -52,6 +72,12 @@ const featureGroupView = createModel()({
           featureGroupId,
         );
       }
+
+      const { data: provenance } = await FeatureGroupsService.getProvenance(
+        projectId,
+        featureStoreId,
+        data,
+      );
 
       const entries =
         provenance.items && provenance.items.map(({ out }) => out.entry[0]);
@@ -82,13 +108,6 @@ const featureGroupView = createModel()({
           return acc;
         }, []);
       }
-
-      data.type === 'cachedFeaturegroupDTO' &&
-        dispatch.featureGroupLabels.fetch({
-          projectId,
-          featureStoreId,
-          featureGroupId,
-        });
 
       const { data: tags } = await FeatureGroupsService.getTags(
         projectId,

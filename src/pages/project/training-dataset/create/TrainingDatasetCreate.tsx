@@ -8,7 +8,6 @@ import { Dispatch, RootState } from '../../../../store';
 // Utils
 import { dataFormatMap, mapFeatures } from '../utils';
 // Components
-import Loader from '../../../../components/loader/Loader';
 import TrainingDatasetForm from '../forms/TrainingDatasetForm';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
@@ -98,21 +97,9 @@ const TrainingDatasetCreate: FC = () => {
     (state: RootState) => state.loading.effects.featureStores.fetch,
   );
 
-  const isKeywordsLoading = useSelector(
-    (state: RootState) => state.loading.effects.featureGroupLabels.fetch,
-  );
-
-  const isTagsLoading = useSelector(
-    (state: RootState) => state.loading.effects.schematisedTags.fetch,
-  );
-
   const isSubmit = useSelector(
     (state: RootState) => state.loading.effects.trainingDatasets.create,
   );
-
-  if (isKeywordsLoading || isTagsLoading) {
-    return <Loader />;
-  }
 
   return (
     <>
