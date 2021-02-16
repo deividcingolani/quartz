@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { matchPath, useLocation } from 'react-router-dom';
 // eslint-disable-next-line import/no-unresolved
 import { TreeNode } from '@logicalclocks/quartz/dist/components/navigation/types';
@@ -15,12 +15,51 @@ import fg from '../../../sources/FG_06.json';
 import home from '../../../sources/home.json';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import useOS, { OSNames } from '../../../hooks/useOS';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
   const fgOverviewAnchors = useAnchor('fgOverview');
   const tdOverviewAnchors = useAnchor('tdOverview');
   const navigateRelative = useNavigateRelative();
+
+  const navigate = useNavigateRelative();
+
+  const handleShortcut = useCallback(
+    (e) => {
+      if (e.ctrlKey || (e.metaKey && ['0', '1', '2', '3'].includes(e.key))) {
+        switch (e.key) {
+          case '0': {
+            navigate('/view', 'p/:id/*');
+            break;
+          }
+          case '1': {
+            navigate('/fg', 'p/:id/*');
+            break;
+          }
+          case '2': {
+            navigate('/td', 'p/:id/*');
+            break;
+          }
+          case '3': {
+            navigate('/storage-connectors', 'p/:id/*');
+            break;
+          }
+        }
+
+        e.preventDefault();
+      }
+    },
+    [navigate],
+  );
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleShortcut);
+
+    return () => window.removeEventListener('keydown', handleShortcut);
+  }, [handleShortcut]);
+
+  const { name: osName } = useOS();
 
   const handleNavigateRelative = useCallback(
     (to: string, relativeTo?: string) => (): void => {
@@ -113,7 +152,7 @@ const useAppNavigation = (): TreeNode[] => {
         title: 'Home',
         icon: home,
         hasDivider: true,
-        tooltipText: 'Home',
+        tooltipText: `Home | ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 0`,
         isActive: isActive('/p/:id/view'),
         onClick: handleNavigateRelative('/view', routeNames.project.view),
         children: [
@@ -143,7 +182,9 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: 'fg',
         title: 'Feature Groups',
-        tooltipText: 'Feature Groups',
+        tooltipText: `Feature Groups | ${
+          osName === OSNames.MAC ? '⌘' : 'Ctrl'
+        } + 1`,
         icon: fg,
         onClick: handleNavigateRelative(
           routeNames.featureGroup.list,
@@ -200,7 +241,9 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: 'td',
         title: 'Training Datasets',
-        tooltipText: 'Training Datasets',
+        tooltipText: `Training Datasets | ${
+          osName === OSNames.MAC ? '⌘' : 'Ctrl'
+        } + 2`,
         icon: td,
         isActive: isActive('/p/:id/td'),
         onClick: handleNavigateRelative(
@@ -251,7 +294,9 @@ const useAppNavigation = (): TreeNode[] => {
         id: 'sc',
         title: 'Storage Connectors',
         icon: sources,
-        tooltipText: 'Storage Connectors',
+        tooltipText: `Storage Connectors | ${
+          osName === OSNames.MAC ? '⌘' : 'Ctrl'
+        } + 3`,
         isActive: location.pathname.includes(routeNames.storageConnector.list),
         onClick: handleNavigateRelative(
           routeNames.storageConnector.list,
@@ -260,6 +305,7 @@ const useAppNavigation = (): TreeNode[] => {
       },
     ];
   }, [
+    osName,
     createFgAnchorLink,
     createTdAnchorLink,
     location,
