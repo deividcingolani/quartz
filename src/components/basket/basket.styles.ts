@@ -10,6 +10,12 @@ const featureListStyles = {
     'td:nth-of-type(1)': {
       pr: '10px',
     },
+    'td:nth-of-type(2)': {
+      pr: '0px',
+    },
+    'td:nth-of-type(3)': {
+      pl: '8px',
+    },
   },
 };
 

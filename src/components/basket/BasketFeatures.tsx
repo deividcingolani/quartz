@@ -1,8 +1,7 @@
 import { Box, Flex } from 'rebass';
-import { DataEntity } from '../../types';
 import featureListStyles from './basket.styles';
 import React, { ComponentType, FC, useCallback } from 'react';
-import { Feature } from '../../types/feature-group';
+import { Feature, FeatureGroup } from '../../types/feature-group';
 import { useNavigate } from 'react-router-dom';
 import useFeaturesListRowData from './useFeaturesListRowData';
 import { Drawer, Labeling, Row, Value } from '@logicalclocks/quartz';
@@ -12,7 +11,7 @@ import { Dispatch } from '../../store';
 export interface BasketFeaturesProps {
   data: Feature[];
   projectId: number;
-  parent: DataEntity;
+  parent: FeatureGroup;
 }
 
 const BasketFeatures: FC<BasketFeaturesProps> = ({
@@ -20,7 +19,11 @@ const BasketFeatures: FC<BasketFeaturesProps> = ({
   parent,
   projectId,
 }) => {
-  const [featureComponents, featureProps] = useFeaturesListRowData(data);
+  const [featureComponents, featureProps] = useFeaturesListRowData(
+    data,
+    parent,
+    projectId,
+  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
