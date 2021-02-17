@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Types
-import { Dispatch } from '../../../../store';
+import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroup } from '../../../../types/feature-group';
 // Selectors
 import {
@@ -18,10 +18,23 @@ const useFeatureGroups = (
 
   const dispatch = useDispatch<Dispatch>();
 
+  const searchFgs = useSelector(
+    (state: RootState) => state.search.featureGroups,
+  );
+
   useEffect(() => {
     if (!data.length && featureStoreId) {
-      dispatch.featureGroups.fetch({ projectId, featureStoreId });
+      if (searchFgs.length) {
+        dispatch.featureGroups.fetchAfterSearch({
+          projectId,
+          featureStoreId,
+          data: searchFgs,
+        });
+      } else {
+        dispatch.featureGroups.fetch({ projectId, featureStoreId });
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, data.length, projectId, featureStoreId]);
 
   return { data, isLoading };

@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Header, Label, User, Value } from '@logicalclocks/quartz';
+import { Header, Label, User, Value, Labeling } from '@logicalclocks/quartz';
 
 // Components
 import BasketMenu from './Basket';
@@ -51,11 +51,13 @@ const AppHeader: FC<AppHeaderProps> = ({
       menuAction={<UserDropdown />}
       user={
         <>
-          {!!(firstname && email && lastname) && (
+          {!!(firstname && email && lastname) ? (
             <>
               <User name={firstname} photo={ProfileService.avatar(email)} />
               <Label ml="10px">{`${firstname} ${lastname}`}</Label>
             </>
+          ) : (
+            <Labeling gray>loading...</Labeling>
           )}
         </>
       }

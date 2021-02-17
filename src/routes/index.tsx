@@ -21,6 +21,7 @@ import useTokenApiInterceptor from '../hooks/useTokenApiInterceptor';
 
 import routeNames from './routeNames';
 import useCloseNotifications from '../hooks/useCloseNotifications';
+import useLoadAfterOther from '../hooks/useLoadAfterOther';
 
 // Pages
 const DeepSearch = React.lazy(() => import('../pages/search/DeepSearch'));
@@ -75,9 +76,11 @@ const Routes: FC = () => {
 
   const dispatch = useDispatch<Dispatch>();
 
+  const { loadAfterAll } = useLoadAfterOther();
+
   useEffect(() => {
     if (token) {
-      dispatch.profile.getUser();
+      loadAfterAll(dispatch.profile.getUser);
     }
 
     dispatch.basket.getFromLocalStorage();

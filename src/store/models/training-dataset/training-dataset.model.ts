@@ -54,6 +54,32 @@ export const trainingDatasetModel = createModel()({
     clear: (): TrainingDatasetState => [],
   },
   effects: (dispatch) => ({
+    fetchAfterSearch: async ({
+      data,
+      projectId,
+      featureStoreId,
+    }: {
+      data: TrainingDataset[];
+      projectId: number;
+      featureStoreId: number;
+    }): Promise<void> => {
+      dispatch.trainingDatasets.set(
+        data.map((dataset) => ({
+          ...dataset,
+          labels: [],
+          updated: dataset.created,
+          versions: data
+            .filter(({ name }) => dataset.name === name)
+            .map(({ version, id }) => ({ id, version })),
+        })),
+      );
+
+      dispatch.trainingDatasets.fetchKeywordsAndLastUpdate({
+        data,
+        projectId,
+        featureStoreId,
+      });
+    },
     fetch: async ({
       projectId,
       featureStoreId,

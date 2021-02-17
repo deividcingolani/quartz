@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 // Types
 import { Dispatch, RootState } from '../../../store';
 import { ProjectFormData } from '../forms/types';
-import { Project } from '../../../types/project';
 // Hooks
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Components
@@ -23,9 +22,9 @@ const ProjectEdit: FC = () => {
     dispatch.project.getProject(+projectId);
 
     return () => {
-      dispatch.project.setProject({} as Project);
+      dispatch.project.getProject(+projectId);
     };
-  }, [projectId, dispatch]);
+  }, [dispatch, projectId]);
 
   const isSubmit = useSelector(
     (state: RootState) => state.loading.effects.project.edit,

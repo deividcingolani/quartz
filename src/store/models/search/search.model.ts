@@ -39,7 +39,7 @@ const search = createModel()({
     }),
   },
   effects: (dispatch) => ({
-    fetch: async ({
+    fetchFg: async ({
       projectId,
       featureStoreId,
     }: {
@@ -51,7 +51,35 @@ const search = createModel()({
         featureStoreId,
       );
 
+      dispatch.search.setFeatureGroups(featureGroups);
+    },
+    fetchTd: async ({
+      projectId,
+      featureStoreId,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+    }): Promise<void> => {
       const trainingDatasets = await TrainingDatasetService.getList(
+        projectId,
+        featureStoreId,
+      );
+
+      dispatch.search.setTrainingDatasets(trainingDatasets);
+    },
+    fetch: async ({
+      projectId,
+      featureStoreId,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+    }): Promise<void> => {
+      const trainingDatasets = await TrainingDatasetService.getList(
+        projectId,
+        featureStoreId,
+      );
+
+      const featureGroups = await FeatureGroupsService.getList(
         projectId,
         featureStoreId,
       );

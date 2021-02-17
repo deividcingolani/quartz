@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import * as selector from '../../../store/models/training-dataset/training-dataset.selectors';
 // Types
-import { Dispatch } from '../../../store';
+import { Dispatch, RootState } from '../../../store';
 import { ISelectData } from '../../../store/types';
 import { TrainingDataset } from '../../../types/training-dataset';
 
@@ -16,10 +16,23 @@ const useTrainingDatasets = (
 
   const { data, isLoading } = useSelector(selector.selectTrainingDatasetsData);
 
+  const searchTds = useSelector(
+    (state: RootState) => state.search.trainingDatasets,
+  );
+
   useEffect(() => {
     if (!data.length && featureStoreId) {
-      dispatch.trainingDatasets.fetch({ projectId, featureStoreId });
+      if (searchTds.length) {
+        dispatch.trainingDatasets.fetchAfterSearch({
+          projectId,
+          featureStoreId,
+          data: searchTds,
+        });
+      } else {
+        dispatch.trainingDatasets.fetch({ projectId, featureStoreId });
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, data.length, projectId, featureStoreId]);
 
   return { data, isLoading };

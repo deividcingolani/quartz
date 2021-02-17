@@ -1,33 +1,20 @@
-import React, { FC, memo, useEffect } from 'react';
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, memo } from 'react';
 import { useParams } from 'react-router-dom';
+import useNavigateRelative from '../../../hooks/useNavigateRelative';
 
 // Components
 import Loader from '../../../components/loader/Loader';
-// Types
-import { Dispatch, RootState } from '../../../store';
-// Components
 import OverviewContent from './OverviewContent';
+// Hooks
 import useTitle from '../../../hooks/useTitle';
+import useProject from './useProject';
 
 const ProjectView: FC = () => {
   const { id: projectId } = useParams();
 
   const navigate = useNavigateRelative();
 
-  const dispatch = useDispatch<Dispatch>();
-
-  useEffect(() => {
-    dispatch.project.getProject(+projectId);
-    dispatch.members.fetch();
-  }, [projectId, dispatch]);
-
-  const project = useSelector((state: RootState) => state.project);
-
-  const isLoading = useSelector(
-    (state: RootState) => state.loading.effects.project.getProject,
-  );
+  const { project, isLoading } = useProject(+projectId);
 
   useTitle(project.projectName);
 

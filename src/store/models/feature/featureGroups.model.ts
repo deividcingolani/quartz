@@ -57,6 +57,32 @@ const featureGroups = createModel()({
     clear: () => [],
   },
   effects: (dispatch) => ({
+    fetchAfterSearch: async ({
+      projectId,
+      featureStoreId,
+      data,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      data: FeatureGroup[];
+    }): Promise<void> => {
+      dispatch.featureGroups.setFeatureGroups(
+        data.map((group) => ({
+          ...group,
+          labels: [],
+          updated: group.created,
+          versions: data
+            .filter(({ name }) => group.name === name)
+            .map(({ version, id }) => ({ id, version })),
+        })),
+      );
+
+      dispatch.featureGroups.fetchKeywordsAndLastUpdate({
+        data,
+        projectId,
+        featureStoreId,
+      });
+    },
     fetch: async ({
       projectId,
       featureStoreId,
