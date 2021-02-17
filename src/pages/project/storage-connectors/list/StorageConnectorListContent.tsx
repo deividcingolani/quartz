@@ -16,6 +16,7 @@ import { FeatureStoreStorageConnector } from '../../../../types/feature-store';
 // Styles
 import styles from './storage-connector-list.styles';
 import routeNames from '../../../../routes/routeNames';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 export interface StorageConnectorListContentProps {
   data: FeatureStoreStorageConnector[];
@@ -33,6 +34,8 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
   const handleCreate = () => {
     navigate('/storage-connectors/new', 'p/:id*');
   };
+
+  const getHref = useGetHrefForRoute();
 
   const cardText = `${data.length} storage connector${
     data.length > 1 ? 's' : ''
@@ -64,6 +67,10 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
         icon: 'pen',
         intent: 'ghost',
         tooltip: 'Edit',
+        href: getHref(
+          routeNames.storageConnector.edit.replace(':connectorName', name),
+          routeNames.project.view,
+        ),
         onClick: () =>
           navigate(
             routeNames.storageConnector.edit.replace(':connectorName', name),
@@ -71,13 +78,16 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
           ),
       },
     ]);
-  }, [data, navigate]);
+  }, [data, navigate, getHref]);
 
   return (
     <Card mb="40px" title="Storage connectors" contentProps={contentProps}>
-      <Flex alignItems="center" pb="15px">
+      <Flex justifyContent="space-between" alignItems="center" pb="15px">
         <Text>{cardText}</Text>
-        <Button ml="auto" onClick={handleCreate}>
+        <Button
+          href={getHref('/storage-connectors/new', 'p/:id*')}
+          onClick={handleCreate}
+        >
           Set up new storage connector
         </Button>
       </Flex>

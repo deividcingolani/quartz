@@ -15,6 +15,7 @@ import fg from '../../../sources/FG_06.json';
 import home from '../../../sources/home.json';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 import useOS, { OSNames } from '../../../hooks/useOS';
 
 const useAppNavigation = (): TreeNode[] => {
@@ -126,6 +127,8 @@ const useAppNavigation = (): TreeNode[] => {
     [fgOverviewAnchors.active, handleJumpToAnchor],
   );
 
+  const getHref = useGetHrefForRoute();
+
   const createTdAnchorLink = useCallback(
     (title: string, to: string, id: string) => ({
       title,
@@ -154,12 +157,14 @@ const useAppNavigation = (): TreeNode[] => {
         hasDivider: true,
         tooltipText: `Home | ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 0`,
         isActive: isActive('/p/:id/view'),
+        href: getHref('/view', routeNames.project.view),
         onClick: handleNavigateRelative('/view', routeNames.project.view),
         children: [
           {
             id: 'projectDatabricks',
             title: 'Databricks',
             isActive: isActive(routeNames.project.integrations.databricks),
+            href: getHref('/integrations/databricks', '/p/:id/*'),
             onClick: handleNavigateRelative(
               '/integrations/databricks',
               '/p/:id/*',
@@ -168,11 +173,13 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'projectSpark',
             title: 'Spark',
+            href: getHref('/integrations/spark', '/p/:id/*'),
             isActive: isActive(routeNames.project.integrations.spark),
             onClick: handleNavigateRelative('/integrations/spark', '/p/:id/*'),
           },
           {
             id: 'projectCode',
+            href: getHref('/integrations/code', '/p/:id/*'),
             title: 'Connect to Feature Store',
             isActive: isActive(routeNames.project.integrations.code),
             onClick: handleNavigateRelative('/integrations/code', '/p/:id/*'),
@@ -190,11 +197,13 @@ const useAppNavigation = (): TreeNode[] => {
           routeNames.featureGroup.list,
           routeNames.project.view,
         ),
+        href: getHref(routeNames.featureGroup.list, routeNames.project.view),
         isActive: isActive('/p/:id/fg'),
         children: [
           {
             id: 'fgOverview',
             title: 'Overview',
+            href: getHref('/', '/p/:id/fg/:fgId/*'),
             isActive: isActive('/p/:id/fg/:fgId', ['new']),
             onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
             children: [
@@ -207,6 +216,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgDataPreview',
             title: 'Data preview',
+            href: getHref('/data-preview', '/p/:id/fg/:fgId/*'),
             isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
             onClick: handleNavigateRelative(
               '/data-preview',
@@ -216,6 +226,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgStats',
             title: 'Feature statistics',
+            href: getHref('/statistics', '/p/:id/fg/:fgId/*'),
             disabled: disabledTabs.fgStatisticsDisabled,
             isActive: isActive('/p/:id/fg/:fgId/statistics/*'),
             onClick: handleNavigateRelative('/statistics', '/p/:id/fg/:fgId/*'),
@@ -223,6 +234,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgCorrelation',
             title: 'Feature correlations',
+            href: getHref('/correlation', '/p/:id/fg/:fgId/*'),
             disabled: disabledTabs.fgCorrelationsDisabled,
             isActive: isActive('/p/:id/fg/:fgId/correlation/*'),
             onClick: handleNavigateRelative(
@@ -233,6 +245,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgActivity',
             title: 'Activity',
+            href: getHref('/activity', '/p/:id/fg/:fgId/*'),
             onClick: handleNavigateRelative('/activity', '/p/:id/fg/:fgId/*'),
             isActive: isActive('/p/:id/fg/:fgId/activity'),
           },
@@ -246,6 +259,7 @@ const useAppNavigation = (): TreeNode[] => {
         } + 2`,
         icon: td,
         isActive: isActive('/p/:id/td'),
+        href: getHref(routeNames.trainingDataset.list, routeNames.project.view),
         onClick: handleNavigateRelative(
           routeNames.trainingDataset.list,
           routeNames.project.view,
@@ -254,6 +268,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdOverview',
             title: 'Overview',
+            href: getHref('/', '/p/:id/td/:tdId/*'),
             isActive: isActive('/p/:id/td/:tdId', ['new']),
             onClick: handleNavigateRelative('/', '/p/:id/td/:tdId/*'),
             children: [
@@ -267,6 +282,7 @@ const useAppNavigation = (): TreeNode[] => {
           },
           {
             id: 'tdStats',
+            href: getHref('/statistics', '/p/:id/td/:tdId/*'),
             title: 'Feature statistics',
             disabled: disabledTabs.tdStatisticsDisabled,
             isActive: isActive('/p/:id/td/:tdId/statistics/*'),
@@ -275,6 +291,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdCorrelation',
             title: 'Feature correlations',
+            href: getHref('/correlation', '/p/:id/td/:tdId/*'),
             disabled: disabledTabs.tdCorrelationsDisabled,
             isActive: isActive(routeNames.trainingDataset.correlation),
             onClick: handleNavigateRelative(
@@ -285,6 +302,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdActivity',
             title: 'Activity',
+            href: getHref('/activity', '/p/:id/td/:tdId/*'),
             onClick: handleNavigateRelative('/activity', '/p/:id/td/:tdId/*'),
             isActive: isActive('/p/:id/td/:tdId/activity'),
           },
@@ -297,6 +315,10 @@ const useAppNavigation = (): TreeNode[] => {
         tooltipText: `Storage Connectors | ${
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 3`,
+        href: getHref(
+          routeNames.storageConnector.list,
+          routeNames.project.view,
+        ),
         isActive: location.pathname.includes(routeNames.storageConnector.list),
         onClick: handleNavigateRelative(
           routeNames.storageConnector.list,
@@ -310,6 +332,7 @@ const useAppNavigation = (): TreeNode[] => {
     createTdAnchorLink,
     location,
     isActive,
+    getHref,
     handleNavigateRelative,
     disabledTabs,
   ]);

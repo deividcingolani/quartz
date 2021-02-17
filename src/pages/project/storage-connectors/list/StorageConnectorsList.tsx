@@ -11,6 +11,7 @@ import useStorageConnectorsData from './useStorageConnectorsData';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 const StorageConnectorsList: FC = () => {
   useTitle(titles.storageConnectors);
@@ -21,8 +22,10 @@ const StorageConnectorsList: FC = () => {
   const { data, isLoading } = useStorageConnectorsData(+id);
 
   const handleNavigate = (to: string) => () => {
-    navigate(to, 'p/:id/storage-conectors/');
+    navigate(to, 'p/:id/storage-connectors/');
   };
+
+  const getHref = useGetHrefForRoute();
 
   if (isLoading) {
     return <Loader />;
@@ -34,12 +37,17 @@ const StorageConnectorsList: FC = () => {
         mainText="No storage connector setted up"
         secondaryText="Define your storage connector to let Hopsworks go through it and import feature groups"
       >
-        <Button intent="secondary" onClick={handleNavigate('/new')}>
+        <Button
+          href={getHref('/new', 'p/:id/storage-connectors/')}
+          intent="secondary"
+          onClick={handleNavigate('/new')}
+        >
           Set up a storage connector
         </Button>
         <Button
           ml="20px"
           intent="primary"
+          href={getHref('/import-sample', 'p/:id/storage-connectors/')}
           onClick={handleNavigate('/import-sample')}
         >
           Import Sample Data

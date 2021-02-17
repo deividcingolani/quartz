@@ -30,7 +30,8 @@ const action = (
   <Button
     p={0}
     intent="inline"
-    onClick={() => window.open('https://docs.hopsworks.ai/', '_blank')}
+    href="https://docs.hopsworks.ai"
+    onClick={() => window.open('https://docs.hopsworks.ai', '_blank')}
   >
     full documentation
   </Button>

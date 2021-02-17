@@ -28,6 +28,7 @@ import tagsListStyles from './tags-list-styles';
 import routeNames from '../../../../routes/routeNames';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 export interface SchematisedTagsProps {
   data: Tag[];
@@ -41,6 +42,8 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
   const [selected, setSelected] = useState<Tag>(data[0]);
 
   const navigate = useNavigateRelative();
+
+  const getHref = useGetHrefForRoute();
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
@@ -79,32 +82,10 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
           <Button
             p={0}
             intent="inline"
-            onClick={handleNavigate(+fgId, routeNames.featureGroup.edit)}
-          >
-            edit
-          </Button>
-        }
-      >
-        <Box mt="20px" mx="-20px">
-          <Flex height="50px" mt="30px" justifyContent="center">
-            <Labeling fontSize="18px" gray>
-              Loading...
-            </Labeling>
-          </Flex>
-        </Box>
-      </Card>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <Card
-        mt="20px"
-        title="Schematised Tags"
-        actions={
-          <Button
-            p={0}
-            intent="inline"
+            href={getHref(
+              routeNames.featureGroup.edit.replace(':fgId', String(+fgId)),
+              routeNames.project.view,
+            )}
             onClick={handleNavigate(+fgId, routeNames.featureGroup.edit)}
           >
             edit
@@ -130,6 +111,10 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
         <Button
           p={0}
           intent="inline"
+          href={getHref(
+            routeNames.featureGroup.edit.replace(':fgId', String(+fgId)),
+            routeNames.project.view,
+          )}
           onClick={handleNavigate(+fgId, routeNames.featureGroup.edit)}
         >
           edit

@@ -30,6 +30,7 @@ const action = (
   <Button
     p={0}
     intent="inline"
+    href="https://docs.hopsworks.ai/latest/generated/api/feature_group_api/#get_feature_group"
     onClick={() =>
       window.open(
         'https://docs.hopsworks.ai/latest/generated/api/feature_group_api/#get_feature_group',

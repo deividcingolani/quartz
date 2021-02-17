@@ -16,6 +16,7 @@ import { Project } from '../../../types/project';
 import DateValue from '../feature-group/list/DateValue';
 import ProjectMembers from './ProjectMembers';
 import Integrations from './Integrations';
+import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 
 export interface ContentProps {
   data: Project;
@@ -29,11 +30,18 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
     navigate(`/p/${data.projectId}/edit`);
   }, [data, navigate]);
 
+  const getHref = useGetHrefForRoute();
+
   return (
     <>
       <Card
         actions={
-          <Button mr="-10px" intent="inline" onClick={onClickEdit}>
+          <Button
+            href={getHref(`/p/${data.projectId}/edit`)}
+            mr="-10px"
+            intent="inline"
+            onClick={onClickEdit}
+          >
             edit
           </Button>
         }

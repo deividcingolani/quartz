@@ -28,6 +28,7 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { SortDirection } from '../../../../utils/sort';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 export const sortOptions: { [key: string]: keyof TrainingDataset } = {
   'last updated': 'updated',
@@ -41,6 +42,8 @@ const TrainingDatasetList: FC = () => {
   const { id: projectId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
+
+  const getHref = useGetHrefForRoute();
 
   const [filter, setFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
@@ -170,7 +173,9 @@ const TrainingDatasetList: FC = () => {
           </>
         )}
         <Box ml="auto">
-          <Button onClick={handleCreate}>New Training Dataset</Button>
+          <Button onClick={handleCreate} href={getHref('/new', '/p/:id/td/')}>
+            New Training Dataset
+          </Button>
         </Box>
       </Flex>
       {isLoading && <Loader />}
@@ -187,10 +192,19 @@ const TrainingDatasetList: FC = () => {
           mainText="No Training Dataset"
           secondaryText="Create one from feature groups"
         >
-          <Button intent="secondary" onClick={handleClickFG}>
+          <Button
+            href={getHref(routeNames.featureGroup.list, 'p/:id/*')}
+            intent="secondary"
+            onClick={handleClickFG}
+          >
             Feature Groups
           </Button>
-          <Button intent="primary" ml="20px" onClick={handleCreate}>
+          <Button
+            href={getHref('/new', '/p/:id/td/')}
+            intent="primary"
+            ml="20px"
+            onClick={handleCreate}
+          >
             New Training Dataset
           </Button>
         </NoData>

@@ -25,6 +25,7 @@ import FeatureGroupListContent from './FeatureGroupListContent';
 import Loader from '../../../../components/loader/Loader';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 const FeatureGroupList: FC = () => {
   const { id: projectId } = useParams();
@@ -78,6 +79,8 @@ const FeatureGroupList: FC = () => {
     isLoading || !labels?.length || isKeywordsAndLastUpdateLoading;
 
   const dispatch = useDispatch<Dispatch>();
+
+  const getHref = useGetHrefForRoute();
 
   // Handlers
   const handleRefresh = useCallback(() => {
@@ -186,7 +189,15 @@ const FeatureGroupList: FC = () => {
           </>
         )}
         <Box ml="auto">
-          <Button onClick={handleCreate}>New Feature Group</Button>
+          <Button
+            href={getHref(
+              routeNames.featureGroup.create,
+              routeNames.project.view,
+            )}
+            onClick={handleCreate}
+          >
+            New Feature Group
+          </Button>
         </Box>
       </Flex>
       {isLoading && <Loader />}
@@ -206,14 +217,31 @@ const FeatureGroupList: FC = () => {
           <Button
             intent="secondary"
             onClick={handleRouteChange(routeNames.storageConnector.list)}
+            href={getHref(
+              routeNames.storageConnector.list,
+              routeNames.project.view,
+            )}
             mr="14px"
           >
             All Storage Connectors
           </Button>
-          <Button intent="secondary" onClick={handleRouteChange('')} mr="14px">
+          <Button
+            href={getHref('', routeNames.project.view)}
+            intent="secondary"
+            onClick={handleRouteChange('')}
+            mr="14px"
+          >
             Feature Group Documentation
           </Button>
-          <Button onClick={handleCreate}>New Feature Group</Button>
+          <Button
+            href={getHref(
+              routeNames.featureGroup.create,
+              routeNames.project.view,
+            )}
+            onClick={handleCreate}
+          >
+            New Feature Group
+          </Button>
         </NoData>
       )}
     </Flex>

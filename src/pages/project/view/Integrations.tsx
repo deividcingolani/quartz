@@ -8,9 +8,12 @@ import {
 import { Box, Flex } from 'rebass';
 import React, { FC } from 'react';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
+import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 
 const Integrations: FC = () => {
   const navigate = useNavigateRelative();
+
+  const getHref = useGetHrefForRoute();
 
   return (
     <Card mb="40px" mt="20px" title="Integrations">
@@ -45,6 +48,7 @@ const Integrations: FC = () => {
         <Flex mt="20px">
           <Button
             onClick={() => navigate('/integrations/databricks', 'p/:id/*')}
+            href={getHref('/integrations/databricks', 'p/:id/*')}
             intent="secondary"
           >
             Databricks
@@ -52,11 +56,13 @@ const Integrations: FC = () => {
           <Button
             onClick={() => navigate('/integrations/spark', 'p/:id/*')}
             intent="secondary"
+            href={getHref('/integrations/spark', 'p/:id/*')}
             ml="20px"
           >
             Spark
           </Button>
           <Button
+            href={getHref('/integrations/code', 'p/:id/*')}
             onClick={() => navigate('/integrations/code', 'p/:id/*')}
             ml="20px"
             intent="ghost"
