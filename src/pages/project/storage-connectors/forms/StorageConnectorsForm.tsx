@@ -122,6 +122,7 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
     'connectionString', // Footer description for JDBC
     'datasetName', // Footer description for HopsFS
     'clusterIdentifier', // Footer description for Redshift
+    'directoryId', // Footer description for Azure
   ]);
 
   const { id: projectId } = useParams();
@@ -189,9 +190,8 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
                 <Tooltip
                   position={TooltipPositions.right}
                   mainText="Only alphanumeric characters, dash or underscore"
-                  ml="5px"
                 >
-                  <Icon icon="info-circle" />
+                  <Icon ml="5px" icon="info-circle" />
                 </Tooltip>
               )
             }

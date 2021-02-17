@@ -1,8 +1,9 @@
 export enum StorageConnectorType {
-  'aws' = 'S3',
-  'jdbc' = 'JDBC',
-  'hopsfs' = 'HOPSFS',
-  'redshift' = 'REDSHIFT',
+  redshift = 'REDSHIFT',
+  hops = 'HOPSFS',
+  jdbc = 'JDBC',
+  aws = 'S3',
+  azure = 'ADLS',
 }
 
 export interface IStorageConnector {
@@ -49,4 +50,13 @@ export interface ICreateREDSHIFTStorageConnector {
   databaseGroup: string;
   iamRole?: string;
   arguments?: string;
+}
+
+export interface ICreateADLSSource {
+  generation: number;
+  directoryId: string;
+  applicationId: string;
+  serviceCredential: string;
+  accountName: string;
+  containerName?: string;
 }

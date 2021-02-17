@@ -22,6 +22,7 @@ export enum StorageConnectorType {
   hops = 'HOPSFS',
   jdbc = 'JDBC',
   aws = 'S3',
+  azure = 'ADLS',
 }
 
 export interface FeatureStoreStorageConnector {

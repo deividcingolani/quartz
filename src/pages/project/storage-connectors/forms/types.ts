@@ -37,15 +37,22 @@ export interface StorageConnectorsFormData {
   datasetName: string;
   // Redshift
   clusterIdentifier: string;
-  databaseDriver?: string;
-  databaseEndpoint?: string;
-  databaseName?: string;
-  databasePort?: number;
-  tableName?: string;
+  databaseDriver: string;
+  databaseEndpoint: string;
+  databaseName: string;
+  databasePort: number;
+  tableName: string;
   databaseUserName?: string;
-  autoCreate?: boolean;
+  autoCreate: boolean;
   databaseGroup?: string;
   databasePassword?: string;
+  // Azure
+  generation: number;
+  directoryId: string;
+  applicationId: string;
+  serviceCredential: string;
+  accountName: string;
+  containerName?: string;
 }
 
 export enum Descriptions {
@@ -53,6 +60,7 @@ export enum Descriptions {
   connectionString = 'connectionString', // JDBC
   datasetName = 'datasetName', // HopsFS
   clusterIdentifier = 'clusterIdentifier', // Redshift
+  directoryId = 'directoryId', // Azure
 }
 
 export interface DescriptionsData {
@@ -60,4 +68,5 @@ export interface DescriptionsData {
   [Descriptions.connectionString]: string; // JDBC
   [Descriptions.datasetName]: string; // HopsFS
   [Descriptions.clusterIdentifier]: string; // Redshift
+  [Descriptions.directoryId]: string; // Azure
 }

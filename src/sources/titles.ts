@@ -19,7 +19,7 @@ const titles = {
   code: 'Code integration',
 
   storageConnectors: 'Storage connectors',
-  createStorageConnector: 'new storage connector',
+  createStorageConnector: 'New storage connector',
   editStorageConnector: 'Edit',
   importSample: 'Import sample data',
 

@@ -16,6 +16,7 @@ import AwsForm, { schema as awsSchema } from './forms/AwsForm';
 import JdbcForm, { schema as jdbcSchema } from './forms/JdbcForm';
 import HopsForm, { schema as hopsSchema } from './forms/HopsForm';
 import RedshiftForm, { schema as redshiftSchema } from './forms/RedshiftForm';
+import AzureForm, { schema as azureSchema } from './forms/AzureForm';
 
 export const protocolOptions = labelValueMap<
   { [key in keyof typeof StorageConnectorProtocol]: string }
@@ -24,6 +25,7 @@ export const protocolOptions = labelValueMap<
   [StorageConnectorProtocol.jdbc]: 'JDBC',
   [StorageConnectorProtocol.hops]: 'HOPSFS',
   [StorageConnectorProtocol.redshift]: 'REDSHIFT',
+  [StorageConnectorProtocol.azure]: 'ADLS',
 });
 
 export const protocolVisualOptions = labelValueMap<
@@ -33,6 +35,7 @@ export const protocolVisualOptions = labelValueMap<
   [StorageConnectorProtocol.jdbc]: 'JDBC',
   [StorageConnectorProtocol.hops]: 'HopsFS',
   [StorageConnectorProtocol.redshift]: 'Redshift',
+  [StorageConnectorProtocol.azure]: 'Azure Data Lake',
 });
 
 export const getForm = (
@@ -43,6 +46,7 @@ export const getForm = (
     [StorageConnectorProtocol.aws]: AwsForm,
     [StorageConnectorProtocol.hops]: HopsForm,
     [StorageConnectorProtocol.redshift]: RedshiftForm,
+    [StorageConnectorProtocol.azure]: AzureForm,
   };
 
   return memo(storageConnectorForms[protocol]);
@@ -56,6 +60,7 @@ export const getSchema = (commonSchema: Yup.ObjectSchema) => (
     [StorageConnectorProtocol.jdbc]: jdbcSchema,
     [StorageConnectorProtocol.hops]: hopsSchema,
     [StorageConnectorProtocol.redshift]: redshiftSchema,
+    [StorageConnectorProtocol.azure]: azureSchema,
   };
 
   return commonSchema.concat(storageConnectorSchemas[protocol]);
@@ -69,6 +74,7 @@ export const getConnectorType = (
     [StorageConnectorProtocol.jdbc]: StorageConnectorType.jdbc,
     [StorageConnectorProtocol.hops]: StorageConnectorType.hops,
     [StorageConnectorProtocol.redshift]: StorageConnectorType.redshift,
+    [StorageConnectorProtocol.azure]: StorageConnectorType.azure,
   };
 
   return protocolsMap[protocol];
@@ -80,6 +86,7 @@ export const getDtoType = (protocol: StorageConnectorProtocol): string => {
     [StorageConnectorProtocol.jdbc]: 'featurestoreJdbcConnectorDTO',
     [StorageConnectorProtocol.hops]: 'featurestoreHopsfsConnectorDTO',
     [StorageConnectorProtocol.redshift]: 'featurestoreRedshiftConnectorDTO',
+    [StorageConnectorProtocol.azure]: 'featurestoreADLSConnectorDTO',
   };
 
   return dtosMap[protocol];
@@ -94,6 +101,7 @@ export const getDescription = (
     [StorageConnectorProtocol.jdbc]: Descriptions.connectionString, // JDBC
     [StorageConnectorProtocol.hops]: Descriptions.datasetName, // HopsFS
     [StorageConnectorProtocol.redshift]: Descriptions.clusterIdentifier, // Redshift
+    [StorageConnectorProtocol.azure]: Descriptions.directoryId, // Azure
   };
   return descriptions[descMap[protocol]];
 };
