@@ -1,11 +1,12 @@
 import { createModel } from '@rematch/core';
 
 // Types
-import { FeatureGroup } from '../../../types/feature-group';
+import { ActivityItemData, FeatureGroup } from '../../../types/feature-group';
 // Services
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
+import { ActivityTypeSortOptions } from '../../../pages/project/feature-group/activity/types';
 
 export type FeatureGroupViewState = FeatureGroup | null;
 
@@ -151,6 +152,24 @@ const featureGroupView = createModel()({
     },
     updateLabels: ({ labels }: { labels: string[] }) => {
       dispatch.featureGroupView.setLabels(labels);
+    },
+    fetchLastJobs: async ({
+      projectId,
+      featureStoreId,
+      featureGroupId,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      featureGroupId: number;
+    }): Promise<ActivityItemData[]> => {
+      const { data } = await FeatureGroupsService.getActivity(
+        projectId,
+        featureStoreId,
+        featureGroupId,
+        ActivityTypeSortOptions.JOB,
+      );
+
+      return data.items || [];
     },
   }),
 });

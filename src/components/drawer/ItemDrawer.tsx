@@ -13,9 +13,10 @@ import {
   TextValueBadge,
   Value,
   Labeling,
+  Badge,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
-import { format } from 'date-fns';
+import { format, formatDistance } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import useNavigateRelative from '../../hooks/useNavigateRelative';
 import routeNames from '../../routes/routeNames';
@@ -26,13 +27,32 @@ import { useLatestVersion } from '../../hooks/useLatestVersion';
 import { selectFeatureStoreData } from '../../store/models/feature/selectors';
 import { Dispatch, RootState } from '../../store';
 import CommitGraph from './commit-graph';
-import { FeatureGroup } from '../../types/feature-group';
+import { ActivityItemData, FeatureGroup } from '../../types/feature-group';
 import SchematisedTagTable from './SchematisedTagTable';
 
 export enum ItemDrawerTypes {
   fg = 'fg',
   td = 'td',
 }
+
+const getVariant = (
+  status?: string,
+): 'light' | 'bold' | 'fail' | 'success' | 'label' => {
+  const statusMap = new Map<
+    string,
+    'light' | 'bold' | 'fail' | 'success' | 'label'
+  >([
+    ['accepted', 'bold'],
+    ['succeeded', 'success'],
+    ['fail', 'fail'],
+  ]);
+
+  if (!status) {
+    return 'bold';
+  }
+
+  return statusMap.get(status) || 'bold';
+};
 
 export interface FeatureGroupDrawerProps<T extends DataEntity> {
   id: number;
@@ -68,7 +88,8 @@ const ItemDrawer = <T extends DataEntity>({
     [navigate, isSearch, projectId],
   );
 
-  const [jobComponents, jobProps] = useJobRowData([]);
+  const [lastJobs, setJobs] = useState<ActivityItemData[]>([]);
+
   const [lastTrainingJobComponents, lastTrainingJobProps] = useJobRowData([]);
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
@@ -88,6 +109,10 @@ const ItemDrawer = <T extends DataEntity>({
   const isTagsLoading = useSelector(
     (state: RootState) =>
       state.loading.effects.featureGroupSchematisedTags.fetch,
+  );
+
+  const isJobsLoading = useSelector(
+    (state: RootState) => state.loading.effects.featureGroupView.fetchLastJobs,
   );
 
   const dispatch = useDispatch<Dispatch>();
@@ -130,6 +155,18 @@ const ItemDrawer = <T extends DataEntity>({
         featureStoreId: featureStoreData.featurestoreId,
         featureGroupId: item.id,
       });
+
+      const loadJObs = async () => {
+        const jobs = await dispatch.featureGroupView.fetchLastJobs({
+          projectId: featureStoreData.projectId,
+          featureStoreId: featureStoreData.featurestoreId,
+          featureGroupId: item.id,
+        });
+
+        setJobs(jobs);
+      };
+
+      loadJObs();
     }
     return () => {
       dispatch.featureGroupSchematisedTags.clear();
@@ -262,16 +299,52 @@ const ItemDrawer = <T extends DataEntity>({
             onChange={handleVersionChange}
           />
         </Drawer.Section>
-        <Drawer.Section
-          title="Last Ingestion Job"
-          action={['view all injection jobs -->', () => ({})]}
-        >
-          <Row
-            middleColumn={1}
-            groupComponents={jobComponents as ComponentType<any>[][]}
-            groupProps={jobProps}
-          />
-        </Drawer.Section>
+        {type === ItemDrawerTypes.fg && (
+          <Drawer.Section
+            title="Last Ingestion Job"
+            action={[
+              'view all jobs -->',
+              () => navigate(`/p/${projectId}/fg/${item.id}/activity/JOB`),
+            ]}
+          >
+            {isJobsLoading && (
+              <Box width="100%" height="55px" sx={{ position: 'relative' }}>
+                <Loader />
+              </Box>
+            )}
+            {!isJobsLoading &&
+              (!!lastJobs.length && !!lastJobs[0].job ? (
+                <Flex
+                  alignItems="center"
+                  px="10px"
+                  py="20px"
+                  width="100%"
+                  sx={{
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade2',
+                  }}
+                  justifyContent="space-between"
+                >
+                  <Flex>
+                    <Badge
+                      mr="20px"
+                      variant={getVariant(
+                        lastJobs[0].job.executions?.finalStatus?.toLowerCase(),
+                      )}
+                      value={lastJobs[0].job.executions?.finalStatus?.toLowerCase()}
+                    />
+                    <Value>{lastJobs[0].job.config?.appName}</Value>
+                  </Flex>
+                  <Value primary>
+                    {formatDistance(lastJobs[0].timestamp, new Date())} ago
+                  </Value>
+                </Flex>
+              ) : (
+                <Labeling gray>No last jobs</Labeling>
+              ))}
+          </Drawer.Section>
+        )}
 
         {type === ItemDrawerTypes.td ? (
           <Drawer.Section

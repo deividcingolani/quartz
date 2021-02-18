@@ -87,6 +87,18 @@ const Project: FC = () => {
         element={<FeatureGroupActivity />}
       />
       <Route
+        path={routeNames.featureGroup.activityType}
+        element={<FeatureGroupActivity />}
+      />
+      <Route
+        path={routeNames.featureGroup.activityFromAndTo}
+        element={<FeatureGroupActivity />}
+      />
+      <Route
+        path={routeNames.featureGroup.activityTypeAndFromAndTo}
+        element={<FeatureGroupActivity />}
+      />
+      <Route
         path={routeNames.featureGroup.preview}
         element={<FeatureGroupDataPreview />}
       />

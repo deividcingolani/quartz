@@ -336,6 +336,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                       mb="20px"
                       listWidth="100%"
                       width="100%"
+                      hasPlaceholder={false}
                       value={
                         value.name
                           ? [`${value.name} (${value.storageConnectorType})`]

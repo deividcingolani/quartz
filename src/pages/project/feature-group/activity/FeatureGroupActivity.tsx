@@ -34,11 +34,14 @@ import { ContentContext } from '../../../../layouts/app/AppLayout';
 import { getMaxDate, getMinDate } from '../utils';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 
 const batchSize = 20;
 
 const FeatureGroupActivity: FC = () => {
-  const { id, fgId } = useParams();
+  const { id, fgId, type, to, from } = useParams();
+
+  const navigate = useNavigateRelative();
 
   const { current: content } = useContext(ContentContext);
   const loader = useRef<HTMLButtonElement>(null);
@@ -61,12 +64,16 @@ const FeatureGroupActivity: FC = () => {
 
   const [twentyEventDate, setDateOfTwentyEvent] = useState(new Date());
 
-  const [fromDate, setFromDate] = useState(new Date());
-  const [toDate, setToDate] = useState(new Date());
-
-  const [event, setEvent] = useState<ActivityTypeSortOptions>(
-    ActivityTypeSortOptions.ALL,
+  const [fromDate, setFromDate] = useState(
+    !!from ? new Date(+from) : new Date(),
   );
+  const [toDate, setToDate] = useState(!!to ? new Date(+to) : new Date());
+
+  const eventType = Object.keys(ActivityTypeSortOptions).includes(type)
+    ? ActivityTypeSortOptions[type as keyof typeof ActivityTypeSortOptions]
+    : ActivityTypeSortOptions.ALL;
+
+  const [event, setEvent] = useState<ActivityTypeSortOptions>(eventType);
 
   const [offset, setOffset] = useState(0);
 
@@ -77,15 +84,21 @@ const FeatureGroupActivity: FC = () => {
   });
 
   const handleRefreshData = useCallback(
-    async (data: { newStartDate?: Date; newEndDate?: Date } = {}) => {
-      const { newEndDate, newStartDate } = data;
+    async (
+      data: {
+        newStartDate?: Date;
+        newEndDate?: Date;
+        newEvent?: ActivityTypeSortOptions;
+      } = {},
+    ) => {
+      const { newEndDate, newStartDate, newEvent } = data;
 
       if (featureStoreData?.featurestoreId) {
         const count = await dispatch.featureGroupActivity.fetch({
           projectId: +id,
           featureGroupId: +fgId,
           featureStoreId: featureStoreData.featurestoreId,
-          eventType: event,
+          eventType: newEvent ? newEvent : event,
           offsetOptions: {
             offset: 0,
             limit: batchSize,
@@ -142,11 +155,27 @@ const FeatureGroupActivity: FC = () => {
         });
       }
 
-      if (startDate > 0) {
-        setFromDate(new Date(startDate));
+      if (startDate > -1) {
+        setFromDate(new Date(startDate - 1));
+
+        navigate(
+          `/${type ? 'type/' : ''}${startDate - 1}/${+toDate + 1}`,
+          'p/:id/fg/:fgId/activity/*',
+        );
       }
     }
-  }, [id, fgId, event, hasData, minDate, dispatch, featureStoreData]);
+  }, [
+    id,
+    type,
+    fgId,
+    event,
+    hasData,
+    toDate,
+    navigate,
+    minDate,
+    dispatch,
+    featureStoreData,
+  ]);
 
   const handleLoadFollowingData = useCallback(async () => {
     if (featureStoreData?.featurestoreId) {
@@ -176,10 +205,26 @@ const FeatureGroupActivity: FC = () => {
       }
 
       if (endDate > -1) {
-        setToDate(new Date(endDate));
+        setToDate(new Date(endDate + 1));
+
+        navigate(
+          `/${type ? 'type/' : ''}${+fromDate - 1}/${endDate + 1}`,
+          'p/:id/fg/:fgId/activity/*',
+        );
       }
     }
-  }, [id, fgId, event, hasData, maxDate, dispatch, featureStoreData]);
+  }, [
+    id,
+    fgId,
+    event,
+    hasData,
+    maxDate,
+    fromDate,
+    dispatch,
+    featureStoreData,
+    type,
+    navigate,
+  ]);
 
   const handleLoadMore = useCallback(async () => {
     if (featureStoreData?.featurestoreId && hasData.hasMore) {
@@ -240,8 +285,8 @@ const FeatureGroupActivity: FC = () => {
       });
 
       if (startDate > 0) {
-        setFromDate(new Date(startDate));
-        setDateOfTwentyEvent(new Date(startDate));
+        setFromDate(new Date(startDate - 1));
+        setDateOfTwentyEvent(new Date(startDate - 1));
       }
 
       if (count < batchSize) {
@@ -256,6 +301,28 @@ const FeatureGroupActivity: FC = () => {
     }
   }, [id, fgId, event, offset, hasData, toDate, dispatch, featureStoreData]);
 
+  const handleLoadWithTime = useCallback(async () => {
+    if (featureStoreData?.featurestoreId) {
+      await dispatch.featureGroupActivity.fetch({
+        projectId: +id,
+        featureGroupId: +fgId,
+        featureStoreId: featureStoreData.featurestoreId,
+        eventType: event,
+        offsetOptions: {
+          limit: batchSize,
+          offset: 0,
+        },
+        timeOptions: {
+          to: +toDate,
+          from: +fromDate,
+        },
+      });
+
+      setOffset(offset + batchSize);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, fgId, event, offset, hasData, toDate, dispatch, featureStoreData]);
+
   const handleDateChange = useCallback(
     (data: { newStartDate?: Date; newEndDate?: Date } = {}) => {
       setHasData({
@@ -267,9 +334,16 @@ const FeatureGroupActivity: FC = () => {
       setOffset(0);
 
       handleRefreshData(data);
+
+      navigate(
+        `/${!!type ? `${type}/` : ''}${
+          data.newStartDate ? +data.newStartDate : +fromDate - 1
+        }/${data.newEndDate ? +data.newEndDate : +toDate + 1}`,
+        'p/:id/fg/:fgId/activity/*',
+      );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [navigate, type, fromDate, toDate],
   );
 
   const handleResetFilters = useCallback(() => {
@@ -277,12 +351,55 @@ const FeatureGroupActivity: FC = () => {
 
     setToDate(new Date());
 
-    setFromDate(twentyEventDate);
+    if (!!from && creationDate) {
+      setFromDate(new Date(creationDate));
+    } else {
+      setFromDate(twentyEventDate);
+    }
 
-    handleRefreshData();
+    handleRefreshData({
+      newEndDate: new Date(),
+      newStartDate:
+        !!from && creationDate ? new Date(creationDate) : twentyEventDate,
+    });
 
+    navigate(
+      `/${!!type ? `${type}/` : ''}${+(!!from && creationDate
+        ? new Date(creationDate)
+        : twentyEventDate)}/${+new Date()}`,
+      'p/:id/fg/:fgId/activity/*',
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [twentyEventDate]);
+  }, [twentyEventDate, creationDate, navigate]);
+
+  const handleEventChange = useCallback(
+    (event: ActivityTypeSortOptions) => {
+      setEvent(event);
+
+      setHasData({
+        hasMore: true,
+        hasPrevious: true,
+        hasFollowing: true,
+      });
+
+      setOffset(0);
+
+      handleRefreshData({ newEvent: event });
+      const newType = Object.entries(ActivityTypeSortOptions).find(
+        ([_, value]) => value === event,
+      );
+
+      if (newType && newType[0]) {
+        navigate(
+          `/${newType[0]}/${!!from ? from : +twentyEventDate}/${
+            !!to ? to : +new Date()
+          }`,
+          'p/:id/fg/:fgId/activity/*',
+        );
+      }
+    },
+    [handleRefreshData, navigate, from, to, twentyEventDate],
+  );
 
   useInfinityLoad(loader, content, isLoadingMore, handleLoadMore);
 
@@ -298,22 +415,13 @@ const FeatureGroupActivity: FC = () => {
   }, [dispatch, id, fgId, featureStoreData]);
 
   useEffect(() => {
-    handleLoadFirst();
+    if (!from && !to) {
+      handleLoadFirst();
+    } else {
+      handleLoadWithTime();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    setHasData({
-      hasMore: true,
-      hasPrevious: true,
-      hasFollowing: true,
-    });
-
-    setOffset(0);
-
-    handleRefreshData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event]);
 
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.featureGroupView.fetch,
@@ -337,10 +445,10 @@ const FeatureGroupActivity: FC = () => {
       endDate={toDate}
       loaderRef={loader}
       activity={activity}
-      setEvent={setEvent}
       startDate={fromDate}
       setEndDate={setToDate}
       setStartDate={setFromDate}
+      setEvent={handleEventChange}
       creationDate={creationDate}
       isLoading={isLoadingActivity}
       defaultFromDate={twentyEventDate}

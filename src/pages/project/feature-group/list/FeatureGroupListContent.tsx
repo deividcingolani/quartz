@@ -9,6 +9,7 @@ import useDrawer from '../../../../hooks/useDrawer';
 import ItemDrawer from '../../../../components/drawer/ItemDrawer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from '../../../../store';
+import { useParams } from 'react-router-dom';
 
 export interface FeatureGroupListContentProps {
   data: FeatureGroup[];
@@ -25,6 +26,8 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
   hasMatchText,
   loading,
 }) => {
+  const { id } = useParams();
+
   const { isOpen, selectedId, handleSelectItem, handleClose } = useDrawer();
 
   const dispatch = useDispatch<Dispatch>();
@@ -41,6 +44,7 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
 
   const projectId = useMemo(() => {
     const fg = data.find(({ id }) => id === selectedId);
+
     if (fg) {
       return fg.parentProjectId;
     }
@@ -55,7 +59,7 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
       {!!selectedId && (
         <ItemDrawer<FeatureGroup>
           data={allFeatureGroups}
-          projectId={projectId}
+          projectId={projectId || +id}
           isSearch={hasMatchText}
           id={selectedId}
           isOpen={isOpen}

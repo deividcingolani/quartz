@@ -247,7 +247,12 @@ const useAppNavigation = (): TreeNode[] => {
             title: 'Activity',
             href: getHref('/activity', '/p/:id/fg/:fgId/*'),
             onClick: handleNavigateRelative('/activity', '/p/:id/fg/:fgId/*'),
-            isActive: isActive('/p/:id/fg/:fgId/activity'),
+            isActive: isActive([
+              '/p/:id/fg/:fgId/activity',
+              '/p/:id/fg/:fgId/activity/:type',
+              '/p/:id/fg/:fgId/activity/:type/:from/:to',
+              '/p/:id/fg/:fgId/activity/:from/:to',
+            ]),
           },
         ],
       },
