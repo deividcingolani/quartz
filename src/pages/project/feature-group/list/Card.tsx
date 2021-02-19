@@ -158,7 +158,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
             />
             <Flex width="max-content" flexDirection="column" ml="20px">
               <Microlabeling gray mb="3px" width="100%">
-                Last update
+                Last updated
               </Microlabeling>
               {loading ? (
                 <Labeling gray>loading</Labeling>
@@ -202,6 +202,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 }}
               />
               <IconButton
+                onClick={handleNavigate(data.id, '/fg/:fgId/activity')}
                 tooltip="Activity"
                 tooltipProps={{ ml: '6px' } as TooltipProps}
                 icon="history"

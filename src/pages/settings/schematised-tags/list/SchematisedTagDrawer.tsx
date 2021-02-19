@@ -63,7 +63,7 @@ const SchematisedTagDrawer: FC<SchematisedTagDrawerProps> = ({
       <Drawer.Section title="">
         <Callout
           type={CalloutTypes.neutral}
-          content="Schematised tags are immutable"
+          content="Tag schemas are immutable."
         />
       </Drawer.Section>
     </Drawer>

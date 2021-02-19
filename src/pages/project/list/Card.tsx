@@ -117,7 +117,7 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
             </Flex>
             <Flex width="max-content" flexDirection="column" ml="30px">
               <Microlabeling gray mb="3px" width="100%">
-                Last update
+                Last updated
               </Microlabeling>
               <Flex alignItems="center">
                 <FreshnessBar time={data.created.replace('T', ' ')} />

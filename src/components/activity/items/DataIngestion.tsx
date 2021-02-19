@@ -37,19 +37,11 @@ const DataIngestion: FC<DataIngestionProps> = ({ activity }) => {
 
       <Flex alignItems="center" width="100px">
         <ActivityCircle
-          color="#21B182"
+          rowsUpdated={rowsUpdated}
+          rowsDeleted={rowsDeleted}
+          rowsInserted={rowsInserted}
+          allRowsCount={allRowsCount}
           ml="20px"
-          percent={(rowsInserted / allRowsCount) * 100}
-        />
-        <ActivityCircle
-          color="#f2994a"
-          ml="4px"
-          percent={(rowsUpdated / allRowsCount) * 100}
-        />
-        <ActivityCircle
-          color="#EB5757"
-          ml="4px"
-          percent={(rowsDeleted / allRowsCount) * 100}
         />
       </Flex>
 

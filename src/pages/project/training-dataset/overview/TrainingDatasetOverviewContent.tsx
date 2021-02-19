@@ -19,6 +19,7 @@ import SchematisedTags from '../../feature-group/overview/SchematisedTags';
 import Provenance from './Provenance';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import SplitGraph from './SplitGraph';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 export interface TrainingDatasetContentProps {
   data: TrainingDataset;
@@ -125,10 +126,15 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = data?.versions.find(({ version }) => version === values[0])
-        ?.id;
+      const ver = values[0].includes(' ')
+        ? +values[0].slice(0, values[0].indexOf(' '))
+        : +values[0];
 
-      navigate(`/td/${newId}`, routeNames.project.view);
+      const newId = data?.versions.find(({ version }) => version === ver)?.id;
+
+      if (newId) {
+        navigate(`/td/${newId}`, routeNames.project.view);
+      }
     },
     [data, navigate],
   );
@@ -169,7 +175,7 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={schematisedTags}>
-          <SchematisedTags data={data.tags} />
+          <SchematisedTags type={ItemDrawerTypes.td} data={data.tags} />
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={runningCode}>

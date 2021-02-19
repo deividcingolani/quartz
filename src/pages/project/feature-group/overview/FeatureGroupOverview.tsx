@@ -1,6 +1,6 @@
 import { Subtitle } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
-import React, { FC, memo, useCallback } from 'react';
+import React, { FC, memo, useCallback, useEffect } from 'react';
 
 import routeNames from '../../../../routes/routeNames';
 import useFeatureGroupView from '../hooks/useFeatureGroupView';
@@ -13,6 +13,8 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
 import useTitle from '../../../../hooks/useTitle';
+import { useDispatch } from 'react-redux';
+import { Dispatch } from '../../../../store';
 
 const FeatureGroupOverview: FC = () => {
   const { fgId, id: projectId } = useParams();
@@ -21,12 +23,20 @@ const FeatureGroupOverview: FC = () => {
 
   const navigate = useNavigateRelative();
 
+  const dispatch = useDispatch<Dispatch>();
+
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
       navigate(route.replace(':fgId', String(id)), routeNames.project.view);
     },
     [navigate],
   );
+
+  useEffect(() => {
+    return () => {
+      dispatch.featureGroupView.clear();
+    };
+  }, [dispatch]);
 
   useTitle(data?.name);
 

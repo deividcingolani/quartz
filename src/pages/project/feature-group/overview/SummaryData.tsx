@@ -61,22 +61,41 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
         />
         <DateValue
           ml="50px"
-          label="Last update"
+          label="Last updated"
           date={data?.created ? new Date(data?.created) : new Date()}
         />
       </Flex>
-      <Flex mt="17px">
+      <Flex mt="17px" alignItems="center">
         <TextValueBadge variant="gray" text="features" value={featureCount} />
-        <TextValueBadge variant="gray" ml="20px" text="rows" value="81M" />
-        <TextValueBadge variant="gray" ml="20px" text="commits" value={32} />
-        <TextValueBadge
-          variant="gray"
-          ml="20px"
-          text="training datasets"
-          value={32}
-        />
+        {/*<TextValueBadge variant="gray" ml="20px" text="rows" value="81M" />*/}
+        {isLoading ? (
+          <Labeling ml="8px" gray>
+            loading...
+          </Labeling>
+        ) : (
+          <Flex>
+            <TextValueBadge
+              variant="gray"
+              ml="8px"
+              text="commits"
+              value={data.commits.length}
+            />
+            <TextValueBadge
+              variant="gray"
+              ml="8px"
+              text="training datasets"
+              value={data.provenance.length}
+            />
+          </Flex>
+        )}
       </Flex>
-      <Text my="20px">{data?.description || '-'}</Text>
+      {!!data.description ? (
+        <Text my="20px">{data?.description || '-'}</Text>
+      ) : (
+        <Labeling my="20px" gray>
+          -
+        </Labeling>
+      )}
 
       {isLoading ? (
         <Labeling gray>loading...</Labeling>

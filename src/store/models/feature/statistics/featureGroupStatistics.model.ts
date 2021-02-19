@@ -59,12 +59,6 @@ const featureGroupStatistics = createModel()({
           contentData.columns,
           [featureGroupStatisticsEntity],
         );
-
-        dispatch.featureGroupRows.fetch({
-          projectId,
-          featureStoreId,
-          featureGroupId,
-        });
         dispatch.featureGroupStatistics.setData(normalizedData);
       }
     },

@@ -1,33 +1,60 @@
-import { Box, BoxProps } from 'rebass';
 import React, { FC, useMemo } from 'react';
+import { Box, BoxProps } from 'rebass';
 
 export interface ActivityCircleProps extends Omit<BoxProps, 'css'> {
-  color: string;
-  percent: number;
+  rowsUpdated: number;
+  rowsDeleted: number;
+  rowsInserted: number;
+  allRowsCount: number;
 }
 
-const maxSize = 32;
-const minSize = 1;
-
 const ActivityCircle: FC<ActivityCircleProps> = ({
-  color,
-  percent,
+  rowsDeleted,
+  rowsInserted,
+  rowsUpdated,
+  allRowsCount,
   ...props
 }) => {
-  const diameter = useMemo(() => {
-    return `${Math.ceil(minSize + (maxSize - minSize) * (percent / 100))}px`;
-  }, [percent]);
+  const deletedPercent = useMemo(() => {
+    return Math.ceil((rowsDeleted / allRowsCount) * 100);
+  }, [allRowsCount, rowsDeleted]);
+
+  const updatedPercent = useMemo(() => {
+    return deletedPercent + Math.ceil((rowsUpdated / allRowsCount) * 100);
+  }, [allRowsCount, rowsUpdated, deletedPercent]);
 
   return (
-    <Box
-      {...props}
-      sx={{
-        width: diameter,
-        height: diameter,
-        borderRadius: '50%',
-        border: `1px solid ${color}`,
-      }}
-    />
+    <Box {...props}>
+      <svg width="22px" height="22px" viewBox="-5 -5 45 45">
+        <path
+          d="M18 2.0845
+      a 15.9155 15.9155 0 0 1 0 31.831
+      a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="#21B182"
+          strokeWidth="7"
+          strokeDasharray="100, 100"
+        />
+        <path
+          d="M18 2.0845
+      a 15.9155 15.9155 0 0 1 0 31.831
+      a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="#F2994A"
+          strokeWidth="7"
+          strokeDasharray={`${updatedPercent}, 100`}
+        />
+        <path
+          d="M18 2.0845
+      a 15.9155 15.9155 0 0 1 0 31.831
+      a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="#EB5757"
+          strokeWidth="7"
+          strokeDasharray={`${deletedPercent}, 100`}
+        />
+      </svg>
+    </Box>
   );
 };
 

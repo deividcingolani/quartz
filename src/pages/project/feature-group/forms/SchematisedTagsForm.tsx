@@ -1,8 +1,14 @@
 import { Box, Flex } from 'rebass';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Callout, CalloutTypes, Value } from '@logicalclocks/quartz';
+import {
+  Button,
+  Callout,
+  CalloutTypes,
+  Value,
+  Labeling,
+} from '@logicalclocks/quartz';
 
 // Types
 import { FeatureFormProps } from '../types';
@@ -10,11 +16,18 @@ import { SchematisedTagEntity } from '../../../../types/feature-group';
 // Components
 import SingleTag from './SingleTag';
 // Selectors
-import { selectSchematisedTags } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
+import {
+  selectSchematisedTagListLoading,
+  selectSchematisedTags,
+} from '../../../../store/models/schematised-tags/schematised-tags.selectors';
 // Utils
 import { randomArrayString } from '../../../../utils';
 
 import routeNames from '../../../../routes/routeNames';
+import { schematisedTagAddEvent } from '../../../../store/models/localManagement/store.model';
+import { Dispatch, RootState } from '../../../../store';
+import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 export interface ListItem {
   id: string;
@@ -22,9 +35,26 @@ export interface ListItem {
   tag?: SchematisedTagEntity;
 }
 
-const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
+const SchematisedTags: FC<FeatureFormProps> = ({
+  isDisabled,
+  type = ItemDrawerTypes.fg,
+}) => {
   const tags = useSelector(selectSchematisedTags).sort((tagA, tagB) =>
     tagA.name.localeCompare(tagB.name),
+  );
+
+  const dispatch = useDispatch<Dispatch>();
+
+  const isLoading = useSelector(selectSchematisedTagListLoading);
+
+  const isLoadingServerTagsFG = useSelector(
+    (state: RootState) =>
+      state.loading.effects.featureGroupView.loadRemainingData,
+  );
+
+  const isLoadingServerTagsTD = useSelector(
+    (state: RootState) =>
+      state.loading.effects.trainingDatasetView.loadRemainingData,
   );
 
   const { getValues, setValue } = useFormContext();
@@ -79,6 +109,22 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
     [tags],
   );
 
+  useEffect(() => {
+    window.addEventListener('storage', function (e) {
+      if (e.key === schematisedTagAddEvent) {
+        dispatch.schematisedTags.fetch();
+      }
+    });
+  }, [dispatch]);
+
+  const featureGroup = useSelector<RootState, FeatureGroupViewState>(
+    (state) => state.featureGroupView,
+  );
+
+  const trainingDataset = useSelector(
+    (state: RootState) => state.trainingDatasetView,
+  );
+
   const handleAddTag = useCallback(() => {
     setList((list) => {
       const copy = list.slice();
@@ -113,34 +159,59 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
   );
 
   useEffect(() => {
-    const serverTags = getValues('tags');
+    const serverTags =
+      type === ItemDrawerTypes.fg ? featureGroup?.tags : trainingDataset?.tags;
 
-    if (serverTags && Object.values(serverTags).length) {
+    if (serverTags && serverTags?.length) {
       setList(() => {
-        return Object.keys(serverTags).reduce((acc: ListItem[], key) => {
-          const tag = tags.find(({ name }) => name === key);
-          const item = {
-            id: randomArrayString(10)[0],
-            selected: [tag?.description ? `${key} - ${tag?.description}` : key],
-            tag,
-          };
+        return serverTags
+          .map(({ name }) => name)
+          .reduce((acc: ListItem[], key) => {
+            const tag = tags.find(({ name }) => name === key);
 
-          return [...acc, item];
-        }, []);
+            const item = {
+              id: randomArrayString(10)[0],
+              selected: [
+                tag?.description ? `${key} - ${tag?.description}` : key,
+              ],
+              tag,
+            };
+
+            return [...acc, item];
+          }, []);
       });
+
+      setValue(
+        'tags',
+        serverTags.reduce(
+          (acc, { name, tags }) => ({ ...acc, [name]: tags }),
+          {},
+        ),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoadingServerTagsFG, isLoadingServerTagsTD, type]);
+
+  if (isLoading || isLoadingServerTagsFG || isLoadingServerTagsTD) {
+    return (
+      <Box>
+        <Flex mb="10px">
+          <Value>Tags schemas</Value>
+        </Flex>
+        <Labeling gray>loading...</Labeling>
+      </Box>
+    );
+  }
 
   if (!tags.length) {
     return (
       <Box>
         <Flex mb="10px">
-          <Value>Schematised tags</Value>
+          <Value>Tag schemas</Value>
         </Flex>
 
         <Callout
-          content="There are no schematised tags defined"
+          content="There are no tags defined"
           type={CalloutTypes.neutral}
           cta={
             <Button
@@ -152,7 +223,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
                 )
               }
             >
-              Create a schematised tag ↗
+              Create a new schematised tag ↗
             </Button>
           }
         />
@@ -165,7 +236,6 @@ const SchematisedTags: FC<FeatureFormProps> = ({ isDisabled }) => {
       {listTags.map((item, index) => (
         <SingleTag
           item={item}
-          index={index}
           key={item.id}
           options={options}
           onAdd={handleAddTag}

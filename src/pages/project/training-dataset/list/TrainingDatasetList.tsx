@@ -121,29 +121,36 @@ const TrainingDatasetList: FC = () => {
           label=""
           value={search}
           width="180px"
+          disabled={!data.length}
           placeholder="Find a training dataset..."
           onChange={handleSearchChange}
         />
-        <Tooltip
-          ml="8px"
-          mt="7px"
-          disabled={!isFilterDisabled}
-          mainText="No keywords defined."
-        >
-          <Select
-            disabled={isFilterDisabled}
-            maxWidth="180px"
-            width="max-content"
-            value={filter}
-            variant="white"
-            isMulti
-            mt="-7px"
-            noDataMessage="keywords"
-            options={labels}
-            placeholder="keywords"
-            onChange={setFilter}
-          />
-        </Tooltip>
+        {!!labels.length && (
+          <Tooltip
+            ml="8px"
+            mt="7px"
+            disabled={!isFilterDisabled}
+            mainText="No keywords defined."
+          >
+            <Select
+              disabled={isFilterDisabled}
+              maxWidth="180px"
+              width="max-content"
+              value={
+                filter.length
+                  ? filter.filter((keyword) => keyword !== 'any')
+                  : ['any']
+              }
+              variant="white"
+              isMulti
+              mt="-7px"
+              noDataMessage="keywords"
+              options={labels}
+              placeholder="keywords"
+              onChange={setFilter}
+            />
+          </Tooltip>
+        )}
         <Flex ml="auto" alignItems="center">
           <IconButton
             tooltip="Refresh"

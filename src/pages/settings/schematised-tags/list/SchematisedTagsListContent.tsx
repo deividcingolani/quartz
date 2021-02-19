@@ -53,16 +53,16 @@ const SchematisedTagsListContent: FC<SchematisedTagsListContentProps> = ({
           />
         )}
 
-        <Card title="All schematised tag" contentProps={contentProps}>
+        <Card title="All tags schemas" contentProps={contentProps}>
           <Flex alignItems="center" justifyContent="space-between" pb="15px">
             <Flex>
               <Value primary>{data.length}</Value>
               <Labeling bold ml="5px">
-                schematised tag template
+                {data.length > 1 ? 'schematised tags' : 'schematised tag'}
               </Labeling>
             </Flex>
             <Flex>
-              <Button onClick={handleCreate}>New schematised tag</Button>
+              <Button onClick={handleCreate}>New tag schema</Button>
             </Flex>
           </Flex>
           <Box mx="-20px" sx={styles}>
@@ -78,7 +78,7 @@ const SchematisedTagsListContent: FC<SchematisedTagsListContentProps> = ({
   }
 
   return (
-    <Card title="All schematised tag templates" contentProps={contentProps}>
+    <Card title="All tag schemas" contentProps={contentProps}>
       <Flex
         alignItems="center"
         justifyContent="center"
@@ -86,9 +86,9 @@ const SchematisedTagsListContent: FC<SchematisedTagsListContentProps> = ({
         height="190px"
       >
         <Labeling fontSize="18px" gray mb="20px">
-          There are no schematised tags defined
+          There are no tag schema defined
         </Labeling>
-        <Button onClick={handleCreate}>New schematised tag</Button>
+        <Button onClick={handleCreate}>New tag schemas</Button>
       </Flex>
     </Card>
   );

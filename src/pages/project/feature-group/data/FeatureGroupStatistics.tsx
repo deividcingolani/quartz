@@ -164,10 +164,15 @@ const FeatureGroupStatistics: FC = () => {
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = data?.versions.find(({ version }) => version === values[0])
-        ?.id;
+      const ver = values[0].includes(' ')
+        ? +values[0].slice(0, values[0].indexOf(' '))
+        : +values[0];
 
-      navigateToStatistics(commit, newId);
+      const newId = data?.versions.find(({ version }) => version === ver)?.id;
+
+      if (newId) {
+        navigateToStatistics(commit, newId);
+      }
     },
     [data, commit, navigateToStatistics],
   );

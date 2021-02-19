@@ -136,26 +136,32 @@ const FeatureGroupList: FC = () => {
           placeholder="Find a feature group..."
           onChange={handleSearchChange}
         />
-        <Tooltip
-          ml="8px"
-          mt="7px"
-          disabled={!isFilterDisabled}
-          mainText="No keywords defined"
-        >
-          <Select
-            disabled={isFilterDisabled}
-            maxWidth="180px"
-            width="max-content"
-            value={filter}
-            variant="white"
-            isMulti
-            mt="-7px"
-            options={labels}
-            noDataMessage="keywords"
-            placeholder="keywords"
-            onChange={setFilter}
-          />
-        </Tooltip>
+        {!!labels.length && (
+          <Tooltip
+            ml="8px"
+            mt="7px"
+            disabled={!isFilterDisabled}
+            mainText="No keywords defined"
+          >
+            <Select
+              disabled={isFilterDisabled}
+              maxWidth="180px"
+              width="max-content"
+              value={
+                filter.length
+                  ? filter.filter((keyword) => keyword !== 'any')
+                  : ['any']
+              }
+              variant="white"
+              isMulti
+              mt="-7px"
+              options={labels}
+              noDataMessage="keywords"
+              placeholder="keywords"
+              onChange={setFilter}
+            />
+          </Tooltip>
+        )}
         <Flex ml="auto" alignItems="center">
           <IconButton
             tooltip="Refresh"

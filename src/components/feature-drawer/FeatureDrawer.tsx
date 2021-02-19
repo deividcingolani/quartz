@@ -124,7 +124,13 @@ const FeatureDrawer: FC<FeatureDrawerProps> = ({
         title="Data preview"
         action={['view data preview table -->', () => navigate(dataPreviewUrl)]}
       >
-        <StatisticsRows isDrawer={true} featureName={feature.name} />
+        <StatisticsRows
+          projectId={projectId}
+          featureStoreId={featureStoreId}
+          fgId={fgId}
+          isDrawer={true}
+          featureName={feature.name}
+        />
       </Drawer.Section>
 
       <Drawer.Section title="Statistics">

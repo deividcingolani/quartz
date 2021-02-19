@@ -209,7 +209,7 @@ const useAppNavigation = (): TreeNode[] => {
             children: [
               createFgAnchorLink('Feature List', featureList, 'fgFeatures'),
               createFgAnchorLink('Provenance', provenance, 'fgProvenance'),
-              createFgAnchorLink('Schematised Tags', schematisedTags, 'fgTags'),
+              createFgAnchorLink('Tags', schematisedTags, 'fgTags'),
               createFgAnchorLink('API', api, 'fgApi'),
             ],
           },
@@ -279,7 +279,7 @@ const useAppNavigation = (): TreeNode[] => {
             children: [
               createTdAnchorLink('Feature List', featureList, 'tdFeatures'),
               createTdAnchorLink('Provenance', provenance, 'tdProvenance'),
-              createTdAnchorLink('Schematised Tags', schematisedTags, 'tdTags'),
+              createTdAnchorLink('Tags', schematisedTags, 'tdTags'),
               createTdAnchorLink('Query', runningCode, 'tdCode'),
               createTdAnchorLink('API', api, 'tdApi'),
               createTdAnchorLink('Splits', splitGraph, 'tdSplitGraph'),

@@ -47,7 +47,7 @@ const JobExecution: FC<JobExecutionProps> = ({ activity }) => {
         <Value ml="20px">{activity.job?.name}</Value>
       </Flex>
 
-      <Box mr="20px">
+      <Box mr="72px">
         <User
           photo={ProfileService.avatar(String(activity.user.email))}
           name={activity.user.firstname}

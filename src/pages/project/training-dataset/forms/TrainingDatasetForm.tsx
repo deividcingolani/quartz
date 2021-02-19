@@ -243,7 +243,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                   ref={register}
                   readOnly={isEdit}
                   placeholder="name"
-                  label="Training Dataset Name"
+                  label="Training dataset name"
                   labelProps={{ width: '170px' }}
                   disabled={isLoading || isDisabled}
                   {...getInputValidation('name', errors)}
@@ -253,7 +253,8 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                   name="description"
                   placeholder="description"
                   disabled={isDisabled || isLoading}
-                  label="Training Dataset Description"
+                  label="Training dataset description"
+                  optional={true}
                   labelProps={{ ml: '30px', flex: 1 }}
                   {...getInputValidation('description', errors)}
                 />
@@ -331,7 +332,6 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                       </Button>
                     </Flex>
                     <Select
-                      hasPlaceholder={false}
                       label=""
                       mb="20px"
                       listWidth="100%"
@@ -433,7 +433,10 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
           mb="20px"
           title="Metadata"
         >
-          <SchematisedTagsForm isDisabled={isDisabled} />
+          <SchematisedTagsForm
+            type={ItemDrawerTypes.td}
+            isDisabled={isDisabled}
+          />
 
           <Box>
             <LabelsForm isDisabled={isDisabled || isLoading} />

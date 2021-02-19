@@ -78,23 +78,30 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
   const navigate = useNavigateRelative();
 
   const latestVersion = useMemo(
-    () => Math.max(...data.versions.map(({ version }) => version)),
+    () => Math.max(...(data.versions?.map(({ version }) => version) || [])),
     [data],
   );
 
   const versions = useMemo(() => {
-    return data.versions.map(
-      ({ version }) =>
-        `${version} ${version === latestVersion ? '(latest)' : ''}`,
+    return (
+      data.versions?.map(
+        ({ version }) =>
+          `${version} ${version === latestVersion ? '(latest)' : ''}`,
+      ) || []
     );
   }, [data, latestVersion]);
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = data.versions.find(({ version }) => version === values[0])
-        ?.id;
+      const ver = values[0].includes(' ')
+        ? +values[0].slice(0, values[0].indexOf(' '))
+        : +values[0];
 
-      navigate(`/fg/${newId}`, routeNames.project.view);
+      const newId = data?.versions?.find(({ version }) => version === ver)?.id;
+
+      if (newId) {
+        navigate(`/fg/${newId}`, routeNames.project.view);
+      }
     },
     [data, navigate],
   );

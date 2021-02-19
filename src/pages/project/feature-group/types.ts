@@ -2,6 +2,7 @@ import {
   FeatureGroup,
   SchematisedTagEntity,
 } from '../../../types/feature-group';
+import { ItemDrawerTypes } from '../../../components/drawer/ItemDrawer';
 
 export enum TimeTravelType {
   'hudi' = 'Hudi',
@@ -24,6 +25,7 @@ export interface FeatureGroupFormData {
 export interface FeatureFormProps {
   isDisabled: boolean;
   isEdit?: boolean;
+  type?: ItemDrawerTypes;
 }
 
 export interface FeatureGroupFormProps {

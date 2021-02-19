@@ -1,17 +1,27 @@
 import { createModel } from '@rematch/core';
 import FeatureGroupsService from '../../../../services/project/FeatureGroupsService';
-import { FeatureGroupCommitDetail } from '../../../../types/feature-group';
+import {
+  FeatureGroup,
+  FeatureGroupCommitDetail,
+} from '../../../../types/feature-group';
 
-export type FeatureGroupCommitsDetailState = FeatureGroupCommitDetail[];
+export type FeatureGroupCommitsDetailState = {
+  commits: FeatureGroupCommitDetail[];
+  tds: number;
+};
 
 const featureGroupCommitsDetail = createModel()({
-  state: [] as FeatureGroupCommitsDetailState,
+  state: { commits: [], tds: 0 } as FeatureGroupCommitsDetailState,
   reducers: {
     setData: (
       _: FeatureGroupCommitsDetailState,
       payload: FeatureGroupCommitsDetailState,
     ): FeatureGroupCommitsDetailState => payload,
-    clear: (): FeatureGroupCommitsDetailState => [],
+    setDataTds: (
+      state: FeatureGroupCommitsDetailState,
+      payload: number,
+    ): FeatureGroupCommitsDetailState => ({ commits: [], tds: payload }),
+    clear: (): FeatureGroupCommitsDetailState => ({ commits: [], tds: 0 }),
   },
   effects: (dispatch) => ({
     fetch: async ({
@@ -31,7 +41,27 @@ const featureGroupCommitsDetail = createModel()({
         featureGroupId,
         limit,
       );
-      dispatch.featureGroupCommitsDetail.setData(data.items || []);
+      dispatch.featureGroupCommitsDetail.setData({
+        commits: data.items || [],
+        tds: 10,
+      });
+    },
+    fetchTD: async ({
+      projectId,
+      featureStoreId,
+      featureGroup,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      featureGroup: FeatureGroup;
+    }): Promise<void> => {
+      const { data } = await FeatureGroupsService.getProvenance(
+        projectId,
+        featureStoreId,
+        featureGroup,
+      );
+
+      dispatch.featureGroupCommitsDetail.setDataTds(data?.items?.length || 0);
     },
   }),
 });

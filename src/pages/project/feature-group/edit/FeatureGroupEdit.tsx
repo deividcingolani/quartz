@@ -113,14 +113,6 @@ const FeatureGroupEdit: FC = () => {
     (state: RootState) => state.loading.effects.featureStores.fetch,
   );
 
-  const isKeywordsLoading = useSelector(
-    (state: RootState) => state.loading.effects.featureGroups.fetch,
-  );
-
-  const isTagsLoading = useSelector(
-    (state: RootState) => state.loading.effects.schematisedTags.fetch,
-  );
-
   const isDeleting = useSelector(
     (state: RootState) => state.loading.effects.featureGroups.delete,
   );
@@ -131,7 +123,7 @@ const FeatureGroupEdit: FC = () => {
 
   useTitle(`${titles.editFg} - ${featureGroup?.name}`);
 
-  if (isKeywordsLoading || isTagsLoading || !featureGroup) {
+  if (!featureGroup) {
     return <Loader />;
   }
 

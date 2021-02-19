@@ -40,6 +40,8 @@ const FeatureGroupDataPreview: FC = () => {
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
   const [storageConnectorType, setType] = useState<StorageConnectorType>(
     StorageConnectorType.offline,
   );
@@ -56,19 +58,26 @@ const FeatureGroupDataPreview: FC = () => {
   const navigate = useNavigateRelative();
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupDataPreview.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-        storage: StorageConnectorType.offline,
-      });
-    }
-
     return () => {
       dispatch.featureGroupRows.clear();
       dispatch.featureGroupView.clear();
     };
+  }, [dispatch]);
+
+  useEffect(() => {
+    const load = async () => {
+      if (featureStoreData?.featurestoreId) {
+        await dispatch.featureGroupDataPreview.fetch({
+          projectId: +id,
+          featureStoreId: featureStoreData.featurestoreId,
+          featureGroupId: +fgId,
+          storage: StorageConnectorType.offline,
+        });
+
+        setIsFirstLoad(false);
+      }
+    };
+    load();
   }, [id, fgId, dispatch, storageConnectorType, featureStoreData]);
 
   const handleRefreshData = useCallback(() => {
@@ -162,7 +171,7 @@ const FeatureGroupDataPreview: FC = () => {
 
   useTitle(`${titles.dataPreview} ${view?.name}`);
 
-  if (isLoading || !view) {
+  if (!view || (isLoading && isFirstLoad)) {
     return <Loader />;
   }
 
@@ -196,29 +205,31 @@ const FeatureGroupDataPreview: FC = () => {
         onSearchChange={onSearchChange}
         onTypeFiltersChange={onTypeFiltersChange}
       />
-      <Flex>
-        <Value primary px="5px">
-          {displayFeaturesLength}
-        </Value>
-        <Value>out of</Value>
-        <Value primary px="5px">
-          {featuresLength}
-        </Value>
-        <Value>features displayed</Value>
-        {isSwitch && (
-          <Box ml="5px">
-            <Symbol
-              mode={SymbolMode.bulk}
-              tooltipMainText="Add all features to basket"
-              tooltipSecondaryText={`${filteredFeatures.length} features`}
-              handleClick={handleBasket(filteredFeatures, view)}
-              inBasket={isActiveFeatures(filteredFeatures, view)}
-            />
-          </Box>
-        )}
-      </Flex>
+      {!isLoading && (
+        <Flex>
+          <Value primary px="5px">
+            {displayFeaturesLength}
+          </Value>
+          <Value>out of</Value>
+          <Value primary px="5px">
+            {featuresLength}
+          </Value>
+          <Value>features displayed</Value>
+          {isSwitch && (
+            <Box ml="5px">
+              <Symbol
+                mode={SymbolMode.bulk}
+                tooltipMainText="Add all features to basket"
+                tooltipSecondaryText={`${filteredFeatures.length} features`}
+                handleClick={handleBasket(filteredFeatures, view)}
+                inBasket={isActiveFeatures(filteredFeatures, view)}
+              />
+            </Box>
+          )}
+        </Flex>
+      )}
       <Box mb="-23px" mr="-18px" maxWidth="100vw">
-        {!!filteredFeatures.length && !!filteredData.length && (
+        {!!filteredFeatures.length && !!filteredData.length && !isLoading && (
           <ReadOnlyTable
             staticColumn={staticColumn}
             onFreeze={handleChangeStaticColumn}
@@ -232,7 +243,7 @@ const FeatureGroupDataPreview: FC = () => {
           />
         )}
       </Box>
-      {isFiltered && !filteredFeatures.length && (
+      {isFiltered && !filteredFeatures.length && !isLoading && (
         <Box mb="20px">
           <FilterResult
             subject="features"
@@ -241,6 +252,7 @@ const FeatureGroupDataPreview: FC = () => {
           />
         </Box>
       )}
+      {isLoading && <Loader />}
     </Box>
   );
 };

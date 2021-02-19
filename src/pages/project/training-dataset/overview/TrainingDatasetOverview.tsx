@@ -1,7 +1,7 @@
 import { Subtitle } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 
-import React, { FC, memo, useCallback } from 'react';
+import React, { FC, memo, useCallback, useEffect } from 'react';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
@@ -10,6 +10,8 @@ import Loader from '../../../../components/loader/Loader';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import TrainingDatasetOverviewContent from './TrainingDatasetOverviewContent';
 import useTitle from '../../../../hooks/useTitle';
+import { useDispatch } from 'react-redux';
+import { Dispatch } from '../../../../store';
 
 const TrainingDatasetOverview: FC = () => {
   const { tdId, id: projectId } = useParams();
@@ -19,6 +21,8 @@ const TrainingDatasetOverview: FC = () => {
     +tdId,
   );
 
+  const dispatch = useDispatch<Dispatch>();
+
   const navigate = useNavigateRelative();
 
   const handleNavigate = useCallback(
@@ -27,6 +31,12 @@ const TrainingDatasetOverview: FC = () => {
     },
     [navigate],
   );
+
+  useEffect(() => {
+    return () => {
+      dispatch.featureGroupView.clear();
+    };
+  }, [dispatch]);
 
   useTitle(data?.name);
 

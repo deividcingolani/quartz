@@ -50,12 +50,13 @@ const HopsForm: FC<StorageConnectorFormProps> = ({
         defaultValue=""
         render={({ onChange, value }) => (
           <Select
-            mt="20px"
             disabled={isDisabled || !(datasets?.length > 0)}
             width="fit-end"
             noDataMessage="no dataset defined"
             placeholder="select a dataset"
             label="Dataset"
+            listWidth="100%"
+            hasPlaceholder={false}
             options={datasetNames}
             value={value ? [value] : []}
             onChange={(val) => onChange(val)}

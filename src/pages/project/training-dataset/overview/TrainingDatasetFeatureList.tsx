@@ -90,7 +90,7 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
       {/* Data Rows */}
       <Box mt="30px" mx="-20px" sx={featureListStyles}>
         <Row
-          middleColumn={2}
+          middleColumn={3}
           groupComponents={groupComponents as ComponentType<any>[][]}
           groupProps={groupProps}
         />

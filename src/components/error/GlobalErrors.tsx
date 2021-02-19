@@ -15,6 +15,7 @@ import NotificationContent from '../../utils/notifications/notificationValue';
 import NotificationTitle from '../../utils/notifications/notificationBadge';
 // Services
 import TokenService from '../../services/TokenService';
+import { useNavigate } from 'react-router-dom';
 
 const getErrorTitle = (error: any) => {
   if (error.message === 'Network Error') {
@@ -63,6 +64,7 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   );
 
   const dispatch = useDispatch<Dispatch>();
+  const navigate = useNavigate();
 
   const error = useSelector((state: RootState) => state.error.error);
 
@@ -85,11 +87,10 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   }, [error]);
 
   useEffect(() => {
-    if (
-      error &&
-      ([error.response?.status, error?.status].includes(401) ||
-        error.message === 'Network Error')
-    ) {
+    if (error?.message === 'Network Error') {
+      navigate('/');
+    }
+    if (error && [error.response?.status, error?.status].includes(401)) {
       logout();
     }
     // eslint-disable-next-line

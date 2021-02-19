@@ -9,7 +9,7 @@ const titles = {
   resetPassword: 'Reset password',
 
   settings: 'Cluster settings',
-  schematisedTagsSettings: 'Schematised tags settings',
+  schematisedTagsSettings: 'Tags settings',
 
   searchWithinProject: 'Search within a project',
   searchAcrossProject: 'Search across project',

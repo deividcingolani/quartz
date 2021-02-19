@@ -29,14 +29,19 @@ import routeNames from '../../../../routes/routeNames';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 export interface SchematisedTagsProps {
   data: Tag[];
+  type?: ItemDrawerTypes;
 }
 
 const Row = memo(QRow);
 
-const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
+const SchematisedTags: FC<SchematisedTagsProps> = ({
+  data = [],
+  type = ItemDrawerTypes.fg,
+}) => {
   const { fgId } = useParams();
 
   const [selected, setSelected] = useState<Tag>(data[0]);
@@ -68,16 +73,21 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
 
   const [groupComponents, groupProps] = useSchematisedTagsListRowData(selected);
 
-  const isLoading = useSelector(
+  const isLoadingTD = useSelector(
     (state: RootState) =>
       state.loading.effects.trainingDatasetView.loadRemainingData,
   );
 
-  if (isLoading) {
+  const isLoadingFG = useSelector(
+    (state: RootState) =>
+      state.loading.effects.featureGroupView.loadRemainingData,
+  );
+
+  if (isLoadingFG || isLoadingTD) {
     return (
       <Card
         mt="20px"
-        title="Schematised Tags"
+        title="Tag schemas"
         actions={
           <Button
             p={0}
@@ -106,15 +116,15 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
   return (
     <Card
       mt="20px"
-      title="Schematised Tags"
+      title="Tag schemas"
       actions={
         <Button
           p={0}
-          intent="inline"
           href={getHref(
             routeNames.featureGroup.edit.replace(':fgId', String(+fgId)),
             routeNames.project.view,
           )}
+          intent="inline"
           onClick={handleNavigate(+fgId, routeNames.featureGroup.edit)}
         >
           edit
@@ -124,7 +134,9 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
       {!data.length && (
         <Flex mt="20px" mb="20px" justifyContent="center">
           <Labeling gray fontSize="18px">
-            No tags defined
+            {type === ItemDrawerTypes.fg
+              ? 'There are no tags added to this feature group'
+              : 'There are no tags added to this training dataset'}
           </Labeling>
         </Flex>
       )}
@@ -134,7 +146,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
           <Flex>
             <Value primary>{data.length}</Value>
             <Labeling ml="5px" gray mr="5px">
-              schematised tags attached:
+              tag schemas attached:
             </Labeling>
             <Value primary>{data.map(({ name }) => name).join(', ')}</Value>
           </Flex>
@@ -144,7 +156,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({ data = [] }) => {
             listWidth="100%"
             options={data.map(({ name }) => name)}
             value={[selected?.name || 'none']}
-            placeholder="tags"
+            placeholder="schema"
             onChange={onChange}
           />
           <Box mt="20px" mx="-20px" sx={tagsListStyles}>

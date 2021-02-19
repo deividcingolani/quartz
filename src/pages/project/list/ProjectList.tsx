@@ -64,7 +64,7 @@ const ProjectList: FC = () => {
           <Value primary px="5px">
             {projects.length}
           </Value>
-          <Value px="5px">active projects</Value>
+          <Value px="5px">projects</Value>
         </Flex>
         <Button onClick={handleCreate}>Create new project</Button>
       </Flex>

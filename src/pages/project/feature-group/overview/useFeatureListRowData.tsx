@@ -29,10 +29,10 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
   const groupComponents = useMemo(() => {
     return features.map(({ partition, primary }) => [
       Value,
+      Badge,
       Labeling,
       ...(partition ? [Badge] : [() => null]),
       ...(primary ? [Badge] : [() => null]),
-      Badge,
       Tooltip,
     ]);
   }, [features]);
@@ -63,6 +63,12 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
           ),
         },
         {
+          value: type,
+          variant: 'bold',
+          marginLeft: 'auto',
+          width: 'max-content',
+        },
+        {
           children: description || 'No description ',
           gray: true,
         },
@@ -80,12 +86,6 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
               variant: 'success',
             }
           : {},
-        {
-          value: type,
-          variant: 'bold',
-          marginLeft: 'auto',
-          width: 'max-content',
-        },
         {
           disabled: true,
           children: React.createElement(

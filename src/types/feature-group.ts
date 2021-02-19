@@ -150,6 +150,7 @@ export interface FeatureGroup extends DataEntity {
   version: number;
   name: string;
   matchText: string;
+  commits: any[];
 }
 
 export interface FeatureGroupLabel {

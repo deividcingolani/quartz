@@ -39,7 +39,7 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
 
   const cardText = `${data.length} storage connector${
     data.length > 1 ? 's' : ''
-  } defined`;
+  }`;
 
   const groupComponents = useMemo(() => {
     return new Array(data.length)

@@ -1,17 +1,20 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
-import { useSelector } from 'react-redux';
-import { Value } from '@logicalclocks/quartz';
+import { useDispatch, useSelector } from 'react-redux';
+import { Value, Button } from '@logicalclocks/quartz';
 
 // Components
 import Loader from '../../../../components/loader/Loader';
 // Types
-import { RootState } from '../../../../store';
+import { Dispatch, RootState } from '../../../../store';
 import randomArrayString from '../../../../utils/randomArrayString';
 
 export interface StatisticsRowsProps {
   featureName: string;
   isDrawer?: boolean;
+  fgId: number;
+  projectId: number;
+  featureStoreId: number;
 }
 
 const styles = {
@@ -39,10 +42,17 @@ const styles = {
   },
 };
 
-const StatisticsRows: FC<StatisticsRowsProps> = ({ featureName, isDrawer }) => {
+const StatisticsRows: FC<StatisticsRowsProps> = ({
+  featureName,
+  isDrawer,
+  featureStoreId,
+  fgId,
+  projectId,
+}) => {
   const data = useSelector(
     (state: RootState) => state.featureGroupRows[featureName],
   );
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.featureGroupRows.fetch,
@@ -50,8 +60,30 @@ const StatisticsRows: FC<StatisticsRowsProps> = ({ featureName, isDrawer }) => {
 
   const keys = useMemo(() => randomArrayString(data?.length), [data]);
 
-  if (!isLoading && !data) {
+  const dispatch = useDispatch<Dispatch>();
+
+  if (!isLoading && !data && isLoaded) {
     return null;
+  }
+
+  if (!data && !isLoading) {
+    return (
+      <Flex justifyContent="center" mr="20px" width="19%">
+        <Button
+          onClick={() => {
+            dispatch.featureGroupRows.fetch({
+              projectId,
+              featureStoreId,
+              featureGroupId: fgId,
+            });
+            setIsLoaded(true);
+          }}
+          intent="secondary"
+        >
+          Preview data
+        </Button>
+      </Flex>
+    );
   }
 
   return (

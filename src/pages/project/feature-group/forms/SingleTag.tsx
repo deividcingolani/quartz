@@ -9,7 +9,6 @@ import PrimitiveTypeForm from './PrimitiveTypeForm';
 import ArrayTypeForm from './ArrayTypeForm';
 
 export interface SingleTagProps {
-  index: number;
   item: ListItem;
   hasNext: boolean;
   options: string[];
@@ -23,7 +22,6 @@ export interface SingleTagProps {
 
 const SingleTag: FC<SingleTagProps> = ({
   item: { selected, tag },
-  index,
   onAdd,
   hasNext,
   options,
@@ -38,7 +36,7 @@ const SingleTag: FC<SingleTagProps> = ({
       <Flex mb="20px" width="100%" flexDirection="column">
         <Flex width="100%" flexDirection="column">
           <Flex justifyContent="space-between">
-            <Value mt="10px">Schematised tag #{index + 1}</Value>
+            {isFirstItem && <Value mt="10px">Tag schemas</Value>}
             {isFirstItem && (
               <Button
                 mr="-15px"
@@ -51,7 +49,7 @@ const SingleTag: FC<SingleTagProps> = ({
                 disabled={isDisabled}
                 intent="inline"
               >
-                Create a schematised tag ↗
+                Create a new schematised tag ↗
               </Button>
             )}
           </Flex>
@@ -99,7 +97,7 @@ const SingleTag: FC<SingleTagProps> = ({
             alignSelf="flex-end"
             onClick={onAdd}
           >
-            Add another schematised tag
+            Add another tag
           </Button>
         )}
 

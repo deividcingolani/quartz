@@ -190,7 +190,7 @@ const SearchResults: FC<{ search?: string; data: SearchState }> = ({
               px="12px"
               alignItems="center"
             >
-              <Text>No feature group or training dataset matches</Text>
+              <Text>No matches found</Text>
             </Flex>
           )}
         </Box>

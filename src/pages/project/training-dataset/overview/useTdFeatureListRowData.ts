@@ -18,10 +18,10 @@ const useTdFeatureListRowData = (features: Feature[]) => {
   const groupComponents = useMemo(() => {
     return features.map(({ label }) => [
       Value,
+      Badge,
       TdFeatureGroupHandle,
       Labeling,
       ...(label ? [Badge] : [() => null]),
-      Badge,
       IconButton,
     ]);
   }, [features]);
@@ -30,6 +30,11 @@ const useTdFeatureListRowData = (features: Feature[]) => {
     return features.map(({ name, featuregroup, description, type, label }) => [
       {
         children: name,
+      },
+      {
+        value: type,
+        variant: 'bold',
+        width: 'max-content',
       },
       {
         featureGroup: featuregroup,
@@ -45,11 +50,6 @@ const useTdFeatureListRowData = (features: Feature[]) => {
             variant: 'success',
           }
         : {},
-      {
-        value: type,
-        variant: 'bold',
-        width: 'max-content',
-      },
       {
         intent: 'ghost',
         icon: 'poll',

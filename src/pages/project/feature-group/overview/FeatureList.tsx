@@ -89,7 +89,7 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
       {/* Data Rows */}
       <Box mt="30px" mx="-19px" sx={featureListStyles}>
         <Row
-          middleColumn={1}
+          middleColumn={2}
           groupComponents={groupComponents as ComponentType<any>[][]}
           groupProps={groupProps}
         />

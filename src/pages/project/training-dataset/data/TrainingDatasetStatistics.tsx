@@ -169,8 +169,11 @@ const TrainingDatasetStatistics: FC = () => {
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = data?.versions.find(({ version }) => version === values[0])
-        ?.id;
+      const ver = values[0].includes(' ')
+        ? +values[0].slice(0, values[0].indexOf(' '))
+        : +values[0];
+
+      const newId = data?.versions.find(({ version }) => version === ver)?.id;
 
       navigateToStatistics(commit, newId);
     },

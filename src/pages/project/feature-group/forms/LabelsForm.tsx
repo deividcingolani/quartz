@@ -7,6 +7,7 @@ import {
   Select,
   TinyPopup,
   usePopup,
+  Labeling,
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -18,8 +19,13 @@ import { RootState } from '../../../../store';
 import getInputValidation from '../../../../utils/getInputValidation';
 // Schemas
 import { keywordSchema } from '../../../../components/keywords-editor/KeywordsEditor';
+import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
-const LabelsForm: FC<FeatureFormProps> = ({ isDisabled }) => {
+const LabelsForm: FC<FeatureFormProps> = ({
+  isDisabled,
+  type = ItemDrawerTypes.fg,
+}) => {
   const { control, setValue, getValues } = useFormContext();
 
   const [isPopupOpen, handleToggle] = usePopup(false);
@@ -34,6 +40,34 @@ const LabelsForm: FC<FeatureFormProps> = ({ isDisabled }) => {
   );
 
   const [options, setOptions] = useState<string[]>(baseOptions);
+
+  const isLoadingKeywordsFG = useSelector(
+    (state: RootState) =>
+      state.loading.effects.featureGroupView.loadRemainingData,
+  );
+
+  const isLoadingKeywordsTD = useSelector(
+    (state: RootState) =>
+      state.loading.effects.trainingDatasetView.loadRemainingData,
+  );
+
+  const featureGroup = useSelector<RootState, FeatureGroupViewState>(
+    (state) => state.featureGroupView,
+  );
+
+  const trainingDataset = useSelector(
+    (state: RootState) => state.featureGroupView,
+  );
+
+  useEffect(() => {
+    if (featureGroup?.labels && type === ItemDrawerTypes.fg) {
+      setValue('keywords', featureGroup.labels);
+    }
+    if (trainingDataset?.labels && type === ItemDrawerTypes.td) {
+      setValue('keywords', trainingDataset.labels);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingKeywordsFG, isLoadingKeywordsTD]);
 
   useEffect(() => {
     setOptions(baseOptions);
@@ -58,6 +92,15 @@ const LabelsForm: FC<FeatureFormProps> = ({ isDisabled }) => {
     }),
     [handleAdd, baseOptions],
   );
+
+  if (isLoadingKeywordsFG || isLoadingKeywordsTD) {
+    return (
+      <Box mt="20px">
+        <Label mb="4px">Keywords</Label>
+        <Labeling gray>loading...</Labeling>
+      </Box>
+    );
+  }
 
   return (
     <>

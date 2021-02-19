@@ -53,7 +53,7 @@ const ActivityTimeline: FC<ActivityTimelineProps> = ({ items, hasData }) => {
           <Flex alignItems="center" flexDirection="column" key={`date-${key}`}>
             <Value
               sx={{
-                cursor: 'pointer',
+                cursor: 'default',
               }}
             >
               {key}

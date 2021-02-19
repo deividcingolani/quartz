@@ -7,6 +7,7 @@ import {
   IconButton,
   Labeling,
   Value,
+  InputValidation,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
@@ -20,7 +21,10 @@ import { Feature } from '../../../../types/feature-group';
 import { FeatureGroupBasket } from '../../../../store/models/localManagement/basket.model';
 // Selectors
 import FeatureDrawer from '../../../../components/feature-drawer/FeatureDrawer';
-import { selectFeatureGroups } from '../../../../store/models/localManagement/basket.selectors';
+import {
+  selectBasketFeaturesLength,
+  selectFeatureGroups,
+} from '../../../../store/models/localManagement/basket.selectors';
 // Hooks
 import useDrawer from '../../../../hooks/useDrawer';
 
@@ -37,6 +41,8 @@ const FeaturesForm: FC = () => {
   const [isOpen, setOpen] = useState<boolean>();
 
   const { handleSelectItem, handleClose } = useDrawer();
+
+  const featureLength = useSelector(selectBasketFeaturesLength);
 
   const featureStoreData = useSelector((state: RootState) =>
     state.featureStores?.length ? state.featureStores[0] : null,
@@ -177,7 +183,18 @@ const FeaturesForm: FC = () => {
               Withdraw and clear basket
             </Button>
           </Flex>
-          <Box mt="20px">
+          <Box my="8px">
+            {!!featureLength ? (
+              <InputValidation>
+                {featureLength} features in basket
+              </InputValidation>
+            ) : (
+              <InputValidation intent="warning">
+                Your basket is empty
+              </InputValidation>
+            )}
+          </Box>
+          <Box>
             <Callout
               type={CalloutTypes.neutral}
               content="Joins will be performed on the maximum matching subset of feature group primary keys. Please use the SDK for advanced joining."

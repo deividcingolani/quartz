@@ -29,7 +29,7 @@ const PrimitiveTypeForm: FC<TypeFormProps> = ({
   );
 
   return (
-    <Box mt="20px">
+    <Box ml="20px" mt="20px">
       <Flex mb="5px">
         <Value>
           {name} ({type})

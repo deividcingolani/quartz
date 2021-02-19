@@ -53,7 +53,7 @@ const ArrayTypeForm: FC<TypeFormProps> = ({ tag, type, name, isDisabled }) => {
         const isLastItem = index === fields.length - 1;
 
         return (
-          <Flex key={item.id} my="10px" alignItems="flex-end">
+          <Flex ml="20px" key={item.id} my="10px" alignItems="flex-end">
             {isBoolean ? (
               <Box mt="10px" mb="5px">
                 <Controller

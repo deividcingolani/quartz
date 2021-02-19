@@ -22,8 +22,8 @@ const Integrations: FC = () => {
           content={
             <Flex alignItems="center">
               <Value>
-                Hopsworks let you manage integrations with Databricks and Spark.
-                More info in
+                Hopsworks lets you manage integrations with Databricks and
+                Spark. More info in
               </Value>
               <Button
                 ml="-10px"

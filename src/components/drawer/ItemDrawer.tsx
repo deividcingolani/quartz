@@ -94,7 +94,7 @@ const ItemDrawer = <T extends DataEntity>({
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
-  const commits = useSelector(
+  const { commits, tds } = useSelector(
     (state: RootState) => state.featureGroupCommitsDetail,
   );
 
@@ -103,7 +103,9 @@ const ItemDrawer = <T extends DataEntity>({
   );
 
   const isCommitsLoading = useSelector(
-    (state: RootState) => state.loading.effects.featureGroupCommitsDetail.fetch,
+    (state: RootState) =>
+      state.loading.effects.featureGroupCommitsDetail.fetch ||
+      state.loading.effects.featureGroupCommitsDetail.fetchTD,
   );
 
   const isTagsLoading = useSelector(
@@ -155,6 +157,13 @@ const ItemDrawer = <T extends DataEntity>({
         featureStoreId: featureStoreData.featurestoreId,
         featureGroupId: item.id,
       });
+      if (((item as unknown) as FeatureGroup).timeTravelFormat !== 'HUDI') {
+        dispatch.featureGroupCommitsDetail.fetchTD({
+          projectId: featureStoreData.projectId,
+          featureStoreId: featureStoreData.featurestoreId,
+          featureGroup: (item as unknown) as FeatureGroup,
+        });
+      }
 
       const loadJObs = async () => {
         const jobs = await dispatch.featureGroupView.fetchLastJobs({
@@ -232,6 +241,22 @@ const ItemDrawer = <T extends DataEntity>({
         <Box height="100%">
           <Flex height="100%">
             <TextValueBadge text="features" value={item.features.length} />
+            {type === ItemDrawerTypes.fg && (
+              <Flex alignItems="center" ml="8px">
+                {isCommitsLoading ? (
+                  <Labeling gray>loading...</Labeling>
+                ) : (
+                  <>
+                    <TextValueBadge text="commits" value={commits.length} />
+                    <TextValueBadge
+                      ml="8px"
+                      text="training dataset"
+                      value={tds}
+                    />
+                  </>
+                )}
+              </Flex>
+            )}
             {type === ItemDrawerTypes.td && (
               <TextValueBadge
                 ml="10px"
@@ -361,7 +386,7 @@ const ItemDrawer = <T extends DataEntity>({
           </Drawer.Section>
         ) : null}
 
-        <Drawer.Section title="Schematised Tags">
+        <Drawer.Section title="Tags">
           {isTagsLoading && (
             <Box width="100%" height="55px" sx={{ position: 'relative' }}>
               <Loader />
@@ -375,7 +400,7 @@ const ItemDrawer = <T extends DataEntity>({
                 ))}
               </Flex>
             ) : (
-              <Labeling gray>No schematised tags attached</Labeling>
+              <Labeling gray>No tag schemas attached</Labeling>
             ))}
         </Drawer.Section>
       </Box>

@@ -5,6 +5,8 @@ export type StoreState = {
   history: string[];
 };
 
+export const schematisedTagAddEvent = 'TAGS_CHANGE';
+
 const store = createModel()({
   state: { lastProject: null, history: [] } as StoreState,
   reducers: {

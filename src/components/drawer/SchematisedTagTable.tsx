@@ -31,6 +31,7 @@ const SchematisedTagTable: FC<{ tag: Tag }> = ({ tag: { tags, name } }) => {
             td: {
               pl: '10px !important',
               pr: '14px !important',
+              whiteSpace: 'nowrap',
             },
           },
         }}

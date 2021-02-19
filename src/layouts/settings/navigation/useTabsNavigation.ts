@@ -30,7 +30,7 @@ const useTabsNavigation = () => {
   const tabs = useMemo(
     () => [
       {
-        title: 'Schematised tags',
+        title: 'Tag schemas',
         isActive: isActive(routeNames.settings.schematisedTags.list),
         onCLick: handleNavigateRelative(
           routeNames.settings.schematisedTags.list,

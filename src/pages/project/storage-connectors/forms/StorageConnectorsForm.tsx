@@ -1,5 +1,5 @@
 import Yup from 'yup';
-import { Flex } from 'rebass';
+import { Box, Flex } from 'rebass';
 import {
   Card,
   Label,
@@ -13,6 +13,8 @@ import {
   Icon,
   Divider,
   TooltipPositions,
+  Value,
+  Microlabeling,
 } from '@logicalclocks/quartz';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -47,6 +49,7 @@ import {
   getDescription,
   getForm,
   getSchema,
+  protocolOptions,
   protocolVisualOptions,
 } from '../utils';
 import getInputValidation from '../../../../utils/getInputValidation';
@@ -178,27 +181,54 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
           />
         )}
         {/* Name and Description */}
+        {isEdit && !!initialData && (
+          <Flex>
+            <Box mr="20px">
+              <Microlabeling gray>Name</Microlabeling>
+              <Value mt="4px" primary>
+                {initialData.name}
+              </Value>
+            </Box>
+            <Box>
+              <Microlabeling gray>Protocol</Microlabeling>
+              <Value mt="4px" primary>
+                {protocolVisualOptions.getByKey(
+                  protocolOptions.getByValue(
+                    initialData.storageConnectorType,
+                  ) as StorageConnectorProtocol,
+                )}
+              </Value>
+            </Box>
+          </Flex>
+        )}
         <Flex mb="20px">
+          {!isEdit && (
+            <Input
+              label="Name"
+              name="name"
+              disabled={isLoading || isDisabled || isEdit}
+              placeholder="name of the source"
+              ref={register}
+              labelAction={
+                !isEdit && (
+                  <Tooltip
+                    position={TooltipPositions.right}
+                    mainText="Only alphanumeric characters, dash or underscore"
+                    ml="5px"
+                  >
+                    <Icon icon="info-circle" />
+                  </Tooltip>
+                )
+              }
+              {...getInputValidation('name', errors)}
+            />
+          )}
           <Input
-            label="Name"
-            name="name"
-            disabled={isLoading || isDisabled || isEdit}
-            placeholder="name of the source"
-            ref={register}
-            labelAction={
-              !isEdit && (
-                <Tooltip
-                  position={TooltipPositions.right}
-                  mainText="Only alphanumeric characters, dash or underscore"
-                >
-                  <Icon ml="5px" icon="info-circle" />
-                </Tooltip>
-              )
-            }
-            {...getInputValidation('name', errors)}
-          />
-          <Input
-            labelProps={{ flexGrow: 1, marginLeft: '20px' }}
+            labelProps={{
+              flexGrow: 1,
+              mt: isEdit ? '20px' : 0,
+              marginLeft: !isEdit ? '20px' : 0,
+            }}
             label="Description"
             name="description"
             disabled={isLoading || isDisabled}
@@ -209,28 +239,32 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
         </Flex>
 
         {/* Protocol Radio control */}
-        <Label mt={0} mb="8px">
-          Protocol
-        </Label>
-        <Controller
-          control={control}
-          name="protocol"
-          render={({ onChange, value }) => (
-            <RadioGroup
-              flexDirection="row"
-              mr="30px"
-              disabled={isEdit || isLoading}
-              value={protocolVisualOptions.getByKey(value)}
-              options={protocolVisualOptions.labels}
-              onChange={(val) => {
-                reset(); // reset values from previous protocol
-                onChange(protocolVisualOptions.getByValue(val));
-              }}
+        {!isEdit && (
+          <Box>
+            <Label mt={0} mb="8px">
+              Protocol
+            </Label>
+            <Controller
+              control={control}
+              name="protocol"
+              render={({ onChange, value }) => (
+                <RadioGroup
+                  flexDirection="row"
+                  mr="30px"
+                  disabled={isEdit || isLoading}
+                  value={protocolVisualOptions.getByKey(value)}
+                  options={protocolVisualOptions.labels}
+                  onChange={(val) => {
+                    reset(); // reset values from previous protocol
+                    onChange(protocolVisualOptions.getByValue(val));
+                  }}
+                />
+              )}
             />
-          )}
-        />
+          </Box>
+        )}
 
-        <Divider mb="0" legend="Parameters" />
+        <Divider mt={isEdit ? '0' : '20px'} legend="Parameters" />
 
         {/* Form Section */}
         <Form

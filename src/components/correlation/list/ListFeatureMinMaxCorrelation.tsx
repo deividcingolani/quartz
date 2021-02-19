@@ -28,11 +28,11 @@ const ListFeatureMinMaxCorrelation: FC<ListFeatureMinMaxCorrelationProps> = ({
   }, [data, name]);
 
   const highest = useMemo(() => {
-    return sorted.slice(0, displayedValuesCount);
+    return sorted.slice(0, displayedValuesCount).reverse();
   }, [sorted]);
 
   const lowest = useMemo(() => {
-    return sorted.slice(-displayedValuesCount);
+    return sorted.slice(-displayedValuesCount).reverse();
   }, [sorted]);
 
   useEffect(() => {

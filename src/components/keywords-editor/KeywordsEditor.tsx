@@ -172,7 +172,7 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
 
   return (
     <Flex>
-      {value.length ? (
+      {value?.length ? (
         <CardLabels labels={values} />
       ) : (
         <Badge variant="bold" value="No keywords" />

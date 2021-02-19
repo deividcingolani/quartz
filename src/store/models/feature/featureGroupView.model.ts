@@ -44,6 +44,7 @@ const featureGroupView = createModel()({
         provenance: [],
         labels: [],
         tags: [],
+        commits: [],
         versions: [{ id: data.id, version: data.version }],
       });
 
@@ -142,10 +143,18 @@ const featureGroupView = createModel()({
         data.name,
       );
 
+      const { data: commits } = await FeatureGroupsService.getCommitsDetail(
+        projectId,
+        featureStoreId,
+        featureGroupId,
+        100,
+      );
+
       dispatch.featureGroupView.setData({
         ...data,
         provenance: fgProvenances,
         labels: keywords,
+        commits: commits.items || [],
         tags: mappedTags || [],
         versions: fgsWithSameName.map(({ id, version }) => ({ id, version })),
       });

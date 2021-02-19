@@ -6,6 +6,7 @@ import {
   TextValueBadge,
   User,
   Value,
+  Labeling,
 } from '@logicalclocks/quartz';
 
 import {
@@ -36,7 +37,7 @@ const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
         />
         <DateValue
           ml="50px"
-          label="Last update"
+          label="Last updated"
           date={data?.created ? new Date(data?.created) : new Date()}
         />
         <Flex flexDirection="column" ml="50px">
@@ -75,7 +76,13 @@ const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
           value={data?.splits.length || 0}
         />
       </Flex>
-      <Text my="20px">{data?.description || '-'}</Text>
+      {!!data.description ? (
+        <Text my="20px">{data?.description}</Text>
+      ) : (
+        <Labeling mt="20px" gray>
+          -
+        </Labeling>
+      )}
     </>
   );
 };

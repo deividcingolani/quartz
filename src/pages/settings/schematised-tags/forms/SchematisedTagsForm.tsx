@@ -17,13 +17,13 @@ import PropertiesForm from './PropertiesForm';
 // Types
 import { SchematisedTagFormData, SchematisedTagFormProps } from './types';
 // Utils
-import { name, shortRequiredText } from '../../../../utils/validators';
+import { name, shortText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
 import { mapPropertiesToTable } from '../utils';
 
 export const schema = yup.object().shape({
   name: name.label('Name'),
-  description: shortRequiredText.label('Description'),
+  description: shortText.label('Description'),
 });
 
 const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
@@ -83,7 +83,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
         alignSelf="flex-start"
         onClick={() => navigate(-1)}
       >
-        &#8701; all schematised tag templates
+        &#8701; all schemas
       </Button>
 
       {!!error && <Callout content={error} type={CalloutTypes.error} />}
@@ -97,7 +97,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
         </Box>
       )}
 
-      <Card mt="10px" width="100%" title="Create new schematised tag">
+      <Card mt="10px" width="100%" title="Create new tag schemas">
         <Flex flexDirection="column">
           <Flex flexDirection="column">
             <Flex>
@@ -113,6 +113,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
                 label="Description"
                 name="description"
                 disabled={isDisabled}
+                optional={true}
                 labelProps={{ ml: '20px', flex: 1 }}
                 placeholder="description of the schema"
                 ref={register}
@@ -133,7 +134,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
             mt="20px"
             alignSelf="flex-end"
           >
-            {isEdit ? 'Save' : 'Create new schematised tag template'}
+            {isEdit ? 'Save' : 'Create new tag template'}
           </Button>
         </Flex>
       </Card>
