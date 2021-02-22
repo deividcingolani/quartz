@@ -2,14 +2,7 @@ import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  Button,
-  Input,
-  Tooltip,
-  Select,
-  Value,
-  IconButton,
-} from '@logicalclocks/quartz';
+import { Button, Input, Tooltip, Select, Value } from '@logicalclocks/quartz';
 import routeNames from '../../../../routes/routeNames';
 // Types
 import { Dispatch, RootState } from '../../../../store';
@@ -26,6 +19,7 @@ import Loader from '../../../../components/loader/Loader';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+import icons from '../../../../sources/icons';
 
 const FeatureGroupList: FC = () => {
   const { id: projectId } = useParams();
@@ -163,11 +157,29 @@ const FeatureGroupList: FC = () => {
           </Tooltip>
         )}
         <Flex ml="auto" alignItems="center">
-          <IconButton
-            tooltip="Refresh"
-            icon="sync-alt"
-            onClick={handleRefresh}
-          />
+          <Tooltip mainText="Refresh">
+            <Flex
+              onClick={handleRefresh}
+              backgroundColor="#FFFFFF"
+              justifyContent="center"
+              alignItems="center"
+              width="34px"
+              height="32px"
+              sx={{
+                borderStyle: 'solid',
+                borderWidth: '1px',
+                borderColor: 'grayShade1',
+                cursor: 'pointer',
+                transition: 'all .25s ease',
+
+                ':hover': {
+                  borderColor: 'black',
+                },
+              }}
+            >
+              {icons.refresh}
+            </Flex>
+          </Tooltip>
           <Select
             width="150px"
             variant="white"

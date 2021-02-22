@@ -13,8 +13,6 @@ import sources from '../../../sources/source_02rev.json';
 import td from '../../../sources/TD_01 (1).json';
 import fg from '../../../sources/FG_06.json';
 import home from '../../../sources/home.json';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 import useOS, { OSNames } from '../../../hooks/useOS';
 
@@ -90,32 +88,38 @@ const useAppNavigation = (): TreeNode[] => {
     [location],
   );
 
-  const featureGroup = useSelector(
-    (state: RootState) => state.featureGroupView,
-  );
-  const trainingDataset = useSelector(
-    (state: RootState) => state.trainingDatasetView,
-  );
+  // const featureGroup = useSelector(
+  //   (state: RootState) => state.featureGroupView,
+  // );
+  // const trainingDataset = useSelector(
+  //   (state: RootState) => state.trainingDatasetView,
+  // );
 
   const disabledTabs = useMemo(() => {
-    const fgConfig = featureGroup?.statisticsConfig;
-    const tdConfig = trainingDataset?.statisticsConfig;
-
-    const fgStatisticsDisabled = !fgConfig?.enabled || !fgConfig?.histograms;
-    const fgCorrelationsDisabled =
-      !fgConfig?.enabled || !fgConfig?.correlations;
-
-    const tdStatisticsDisabled = !tdConfig?.enabled || !tdConfig?.histograms;
-    const tdCorrelationsDisabled =
-      !tdConfig?.enabled || !tdConfig?.correlations;
-
     return {
-      fgStatisticsDisabled,
-      fgCorrelationsDisabled,
-      tdStatisticsDisabled,
-      tdCorrelationsDisabled,
+      fgStatisticsDisabled: false,
+      fgCorrelationsDisabled: false,
+      tdStatisticsDisabled: false,
+      tdCorrelationsDisabled: false,
     };
-  }, [featureGroup, trainingDataset]);
+    // const fgConfig = featureGroup?.statisticsConfig;
+    // const tdConfig = trainingDataset?.statisticsConfig;
+    //
+    // const fgStatisticsDisabled = !fgConfig?.enabled || !fgConfig?.histograms;
+    // const fgCorrelationsDisabled =
+    //   !fgConfig?.enabled || !fgConfig?.correlations;
+    //
+    // const tdStatisticsDisabled = !tdConfig?.enabled || !tdConfig?.histograms;
+    // const tdCorrelationsDisabled =
+    //   !tdConfig?.enabled || !tdConfig?.correlations;
+    //
+    // return {
+    //   fgStatisticsDisabled,
+    //   fgCorrelationsDisabled,
+    //   tdStatisticsDisabled,
+    //   tdCorrelationsDisabled,
+    // };
+  }, []);
 
   const createFgAnchorLink = useCallback(
     (title: string, to: string, id: string) => ({
@@ -304,13 +308,13 @@ const useAppNavigation = (): TreeNode[] => {
               '/p/:id/td/:tdId/*',
             ),
           },
-          {
-            id: 'tdActivity',
-            title: 'Activity',
-            href: getHref('/activity', '/p/:id/td/:tdId/*'),
-            onClick: handleNavigateRelative('/activity', '/p/:id/td/:tdId/*'),
-            isActive: isActive('/p/:id/td/:tdId/activity'),
-          },
+          // {
+          //   id: 'tdActivity',
+          //   title: 'Activity',
+          //   href: getHref('/activity', '/p/:id/td/:tdId/*'),
+          //   onClick: handleNavigateRelative('/activity', '/p/:id/td/:tdId/*'),
+          //   isActive: isActive('/p/:id/td/:tdId/activity'),
+          // },
         ],
       },
       {

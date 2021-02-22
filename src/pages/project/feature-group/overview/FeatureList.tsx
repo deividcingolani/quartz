@@ -7,7 +7,6 @@ import {
   Button,
   Select,
   ToggleButton,
-  Icon,
 } from '@logicalclocks/quartz';
 
 // Types
@@ -17,6 +16,7 @@ import useFeatureFilter, { KeyFilters } from '../hooks/useFeatureFilters';
 import useFeatureListRowData from './useFeatureListRowData';
 // Styles
 import featureListStyles from './feature-lists-styles';
+import icons from '../../../../sources/icons';
 
 export interface FeatureListProps {
   data: FeatureGroup;
@@ -71,18 +71,49 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
         />
         <ToggleButton
           ml="15px"
+          sx={{
+            textAlign: 'center',
+          }}
           checked={keyFilter === KeyFilters.primary}
           onChange={onToggleKey(KeyFilters.primary)}
         >
-          <Icon icon="star" mr="8px" mt="-1px" size="xs" /> Primary Keys Only
+          <Box
+            p="0 !important"
+            ml="-8px"
+            mr="3px"
+            sx={{
+              svg: {
+                width: '15px',
+                height: '15px',
+              },
+            }}
+          >
+            {icons.primary}
+          </Box>
+          Primary Keys Only
         </ToggleButton>
         <ToggleButton
           ml="15px"
+          sx={{
+            textAlign: 'center',
+          }}
           checked={keyFilter === KeyFilters.partition}
           onChange={onToggleKey(KeyFilters.partition)}
         >
-          <Icon icon="grip-lines" mr="8px" mt="-1px" size="xs" /> Partition Keys
-          Only
+          <Box
+            p="0 !important"
+            ml="-8px"
+            mr="3px"
+            sx={{
+              svg: {
+                width: '15px',
+                height: '15px',
+              },
+            }}
+          >
+            {icons.partition}
+          </Box>
+          Partition Keys Only
         </ToggleButton>
       </Flex>
 

@@ -4,7 +4,7 @@ import {
   Subtitle,
   Value,
   Button,
-  IconButton,
+  Tooltip,
   Symbol,
   SymbolMode,
 } from '@logicalclocks/quartz';
@@ -12,6 +12,7 @@ import {
 import { ItemDrawerTypes } from '../drawer/ItemDrawer';
 import useBasket from '../../hooks/useBasket';
 import { FeatureGroup } from '../../types/feature-group';
+import icons from '../../sources/icons';
 
 export interface PanelProps {
   onClickEdit: () => void;
@@ -92,11 +93,29 @@ const Panel: FC<PanelProps> = ({
           edit
         </Button>
         <Box ml="15px" mr="50px">
-          <IconButton
-            tooltip="Refresh"
-            icon="sync-alt"
-            onClick={onClickRefresh}
-          />
+          <Tooltip mainText="Refresh">
+            <Flex
+              onClick={onClickRefresh}
+              backgroundColor="#FFFFFF"
+              justifyContent="center"
+              alignItems="center"
+              width="34px"
+              height="32px"
+              sx={{
+                borderStyle: 'solid',
+                borderWidth: '1px',
+                borderColor: 'grayShade1',
+                cursor: 'pointer',
+                transition: 'all .25s ease',
+
+                ':hover': {
+                  borderColor: 'black',
+                },
+              }}
+            >
+              {icons.refresh}
+            </Flex>
+          </Tooltip>
         </Box>
       </Flex>
     </Flex>

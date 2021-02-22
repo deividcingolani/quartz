@@ -63,7 +63,6 @@ const TrainingDatasetCreate: FC = () => {
           featureStoreId: featureStoreData?.featurestoreId,
           data: {
             ...restData,
-            version: 1,
             dataFormat: dataFormatMap.getByKey(dataFormat[0]),
             trainingDatasetType:
               storage.storageConnectorType === 'S3'

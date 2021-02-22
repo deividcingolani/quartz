@@ -1,12 +1,13 @@
 import React, { FC, useRef } from 'react';
 import {
   List,
+  Tooltip,
   ListItem,
   useDropdown,
   useOnClickOutside,
-  IconButton,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
+import icons from '../../../sources/icons';
 
 const HelpDropdown: FC = () => {
   const buttonRef = useRef(null);
@@ -26,12 +27,18 @@ const HelpDropdown: FC = () => {
         }}
       />
       <Box ref={buttonRef} sx={{ position: 'relative', left: '-4px' }}>
-        <IconButton
-          icon={['far', 'question-circle']}
-          intent="ghost-white"
-          tooltip="Help"
-          onClick={() => handleToggle()}
-        />
+        <Tooltip mainText="Help">
+          <Box
+            sx={{
+              cursor: 'pointer',
+            }}
+            ml="3px"
+            mt="5px"
+            onClick={() => handleToggle()}
+          >
+            {icons.interrogation}
+          </Box>
+        </Tooltip>
         {isOpen && (
           <List style={{ position: 'absolute', right: '0' }}>
             <ListItem

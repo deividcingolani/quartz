@@ -2,7 +2,8 @@ import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import ProfileService from '../../../services/ProfileService';
 import { ActivityItemData } from '../../../types/feature-group';
-import { IconButton, Labeling, User, Value } from '@logicalclocks/quartz';
+import { Tooltip, Labeling, User, Value } from '@logicalclocks/quartz';
+import icons from '../../../sources/icons';
 
 export interface NewStatisticsProps {
   activity: ActivityItemData;
@@ -58,15 +59,24 @@ const NewStatistics: FC<NewStatisticsProps> = ({ activity, onButtonClick }) => {
             name={activity.user.firstname}
           />
         </Box>
-        <Box mr="20px" sx={iconStyles}>
-          <IconButton
-            icon="search"
-            tooltip="open statistics"
+        <Tooltip mr="25px" mainText="open statistics">
+          <Box
+            mt="10px"
+            sx={{
+              cursor: 'pointer',
+
+              svg: {
+                width: '16px',
+                height: '16px',
+              },
+            }}
             onClick={() =>
               onButtonClick && onButtonClick(+activity.statistics.commitTime)
             }
-          />
-        </Box>
+          >
+            {icons.more_zoom}
+          </Box>
+        </Tooltip>
       </Flex>
     </Flex>
   );

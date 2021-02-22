@@ -1,8 +1,12 @@
-import { useCallback, useMemo } from 'react';
-import { Value, Labeling, Badge, IconButton } from '@logicalclocks/quartz';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { Box } from 'rebass';
+import React, { useCallback, useMemo } from 'react';
+import { Value, Labeling, Badge, Tooltip } from '@logicalclocks/quartz';
+
 import TdFeatureGroupHandle from './TdFeatureGroupHandle';
 import { Feature } from '../../../../types/feature-group';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+
+import icons from '../../../../sources/icons';
 
 const useTdFeatureListRowData = (features: Feature[]) => {
   const navigate = useNavigateRelative();
@@ -22,7 +26,7 @@ const useTdFeatureListRowData = (features: Feature[]) => {
       TdFeatureGroupHandle,
       Labeling,
       ...(label ? [Badge] : [() => null]),
-      IconButton,
+      Tooltip,
     ]);
   }, [features]);
 
@@ -51,10 +55,30 @@ const useTdFeatureListRowData = (features: Feature[]) => {
           }
         : {},
       {
-        intent: 'ghost',
-        icon: 'poll',
-        tooltip: 'Statistics',
-        onClick: handleNavigate(1, `/statistics/f/${name}`),
+        mainText: 'Statistics',
+        children: (
+          <Box
+            p="5px"
+            height="28px"
+            sx={{
+              cursor: 'pointer',
+              backgroundColor: '#ffffff',
+              transition: 'all .4s ease',
+
+              ':hover': {
+                backgroundColor: 'grayShade3',
+              },
+
+              svg: {
+                width: '20px',
+                height: '20px',
+              },
+            }}
+            onClick={handleNavigate(1, `/statistics/f/${name}`)}
+          >
+            {icons.stats}
+          </Box>
+        ),
       },
     ]);
   }, [features, handleNavigate]);

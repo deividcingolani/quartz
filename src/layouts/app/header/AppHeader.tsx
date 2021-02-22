@@ -81,7 +81,6 @@ const AppHeader: FC<AppHeaderProps> = ({
           primary
           onClick={handleNavigate}
         >
-          {' '}
           &#8701; back to {!!name ? name : 'project list'}
         </Value>
       )}

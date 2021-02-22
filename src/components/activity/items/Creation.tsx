@@ -37,7 +37,7 @@ const Creation: FC<CreationProps> = ({ activity }) => {
         <Value ml="120px">{activity.metadata}</Value>
       </Flex>
 
-      <Box mr="72px">
+      <Box mr="61px">
         <User
           photo={ProfileService.avatar(String(activity.user.email))}
           name={activity.user.firstname}

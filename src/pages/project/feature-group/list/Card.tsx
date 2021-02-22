@@ -3,7 +3,6 @@ import {
   Value,
   Button,
   Labeling,
-  IconButton,
   FreshnessBar,
   Microlabeling,
   HoverableText,
@@ -13,12 +12,11 @@ import {
   ProjectBadge,
   Symbol,
   SymbolMode,
+  Tooltip,
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback } from 'react';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, Box } from 'rebass';
-// eslint-disable-next-line import/no-unresolved
-import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
 
 import routeNames from '../../../../routes/routeNames';
 
@@ -37,6 +35,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useParams } from 'react-router-dom';
 import useBasket from '../../../../hooks/useBasket';
+import icons from '../../../../sources/icons';
 
 const Card: FC<HoverableCardProps<FeatureGroup>> = ({
   data,
@@ -174,39 +173,120 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
 
             {/* Feature group actions */}
             <Flex ml="auto">
-              <IconButton tooltip="Preview" icon="eye" />
-              <IconButton
-                tooltip="Overview"
-                tooltipProps={{ ml: '40px' } as TooltipProps}
-                icon="ellipsis-v"
-                onClick={() => {
-                  if (hasMatchText) {
-                    navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
-                  } else {
-                    handleNavigate(data.id, '/fg/:fgId')();
-                  }
-                }}
-              />
-              <IconButton
-                tooltip="Data"
-                tooltipProps={{ ml: '6px' } as TooltipProps}
-                icon="search"
-                onClick={() => {
-                  if (hasMatchText) {
-                    navigate(
-                      `/p/${data.parentProjectId}/fg/${data.id}/statistics`,
-                    );
-                  } else {
-                    handleNavigate(data.id, '/fg/:fgId/statistics')();
-                  }
-                }}
-              />
-              <IconButton
-                onClick={handleNavigate(data.id, '/fg/:fgId/activity')}
-                tooltip="Activity"
-                tooltipProps={{ ml: '6px' } as TooltipProps}
-                icon="history"
-              />
+              <Tooltip mainText="Preview">
+                <Flex
+                  justifyContent="center"
+                  alignItems="center"
+                  width="34px"
+                  height="32px"
+                  sx={{
+                    boxShadow: '0px 5px 15px rgba(144, 144, 144, 0.2)',
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade1',
+                    cursor: 'pointer',
+                    transition: 'all .25s ease',
+
+                    ':hover': {
+                      borderColor: 'black',
+                    },
+                  }}
+                >
+                  {icons.eye}
+                </Flex>
+              </Tooltip>
+              <Tooltip ml="40px" mainText="Overview">
+                <Flex
+                  onClick={() => {
+                    if (hasMatchText) {
+                      navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
+                    } else {
+                      handleNavigate(data.id, '/fg/:fgId')();
+                    }
+                  }}
+                  justifyContent="center"
+                  alignItems="center"
+                  width="34px"
+                  height="32px"
+                  sx={{
+                    boxShadow: '0px 5px 15px rgba(144, 144, 144, 0.2)',
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade1',
+                    cursor: 'pointer',
+                    transition: 'all .25s ease',
+
+                    ':hover': {
+                      borderColor: 'black',
+                    },
+                  }}
+                >
+                  {icons.more_zoom}
+                </Flex>
+              </Tooltip>
+              <Tooltip ml="6px" mainText="Statistics">
+                <Flex
+                  onClick={() => {
+                    if (hasMatchText) {
+                      navigate(
+                        `/p/${data.parentProjectId}/fg/${data.id}/statistics`,
+                      );
+                    } else {
+                      handleNavigate(data.id, '/fg/:fgId/statistics')();
+                    }
+                  }}
+                  justifyContent="center"
+                  alignItems="center"
+                  width="34px"
+                  height="32px"
+                  sx={{
+                    boxShadow: '0px 5px 15px rgba(144, 144, 144, 0.2)',
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade1',
+                    cursor: 'pointer',
+                    transition: 'all .25s ease',
+
+                    ':hover': {
+                      borderColor: 'black',
+                    },
+                  }}
+                >
+                  {icons.stats}
+                </Flex>
+              </Tooltip>
+
+              <Tooltip ml="6px" mainText="Activity">
+                <Flex
+                  onClick={() => {
+                    if (hasMatchText) {
+                      navigate(
+                        `/p/${data.parentProjectId}/fg/${data.id}/activity`,
+                      );
+                    } else {
+                      handleNavigate(data.id, '/fg/:fgId/activity')();
+                    }
+                  }}
+                  justifyContent="center"
+                  alignItems="center"
+                  width="34px"
+                  height="32px"
+                  sx={{
+                    boxShadow: '0px 5px 15px rgba(144, 144, 144, 0.2)',
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade1',
+                    cursor: 'pointer',
+                    transition: 'all .25s ease',
+
+                    ':hover': {
+                      borderColor: 'black',
+                    },
+                  }}
+                >
+                  {icons.history}
+                </Flex>
+              </Tooltip>
             </Flex>
           </Flex>
         </Flex>

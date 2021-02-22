@@ -1,12 +1,6 @@
 import React, { FC } from 'react';
-import { Flex } from 'rebass';
-import {
-  Icon,
-  Input,
-  RadioGroup,
-  Select,
-  ToggleButton,
-} from '@logicalclocks/quartz';
+import { Box, Flex } from 'rebass';
+import { Input, RadioGroup, Select, ToggleButton } from '@logicalclocks/quartz';
 
 // Hooks
 import { KeyFilters } from '../../hooks/useFeatureFilters';
@@ -14,6 +8,7 @@ import { KeyFilters } from '../../hooks/useFeatureFilters';
 import { StorageConnectorType } from '../../../../../types/feature-group-data-preview';
 import { Feature } from '../../../../../types/feature-group';
 import sort, { SortFunc } from '../../../../../utils/sort';
+import icons from '../../../../../sources/icons';
 
 export const sortKeys: {
   [key: string]: [keyof Feature, SortFunc<any>] | undefined;
@@ -77,23 +72,85 @@ const FeatureFilters: FC<FeatureFiltersProps> = ({
           onChange={onTypeFiltersChange}
           noDataMessage="type all"
         />
-        <ToggleButton
-          ml="15px"
-          variant="white"
-          checked={keyFilter === KeyFilters.primary}
-          onChange={onToggleKey(KeyFilters.primary)}
+        <Box
+          sx={{
+            label: {
+              div: {
+                backgroundColor: '#ffffff',
+              },
+              'div:hover': {
+                div: {
+                  backgroundColor: '#f5f5f5',
+                  borderColor: 'transparent',
+                },
+              },
+            },
+          }}
         >
-          <Icon icon="star" mr="8px" mt="-1px" size="xs" /> Primary Keys Only
-        </ToggleButton>
-        <ToggleButton
-          ml="15px"
-          variant="white"
-          checked={keyFilter === KeyFilters.partition}
-          onChange={onToggleKey(KeyFilters.partition)}
+          <ToggleButton
+            ml="15px"
+            sx={{
+              textAlign: 'center',
+            }}
+            checked={keyFilter === KeyFilters.primary}
+            onChange={onToggleKey(KeyFilters.primary)}
+          >
+            <Box
+              p="0 !important"
+              ml="-8px"
+              mr="3px"
+              sx={{
+                svg: {
+                  width: '15px',
+                  height: '15px',
+                },
+              }}
+            >
+              {icons.primary}
+            </Box>
+            Primary Keys Only
+          </ToggleButton>
+        </Box>
+        <Box
+          sx={{
+            label: {
+              div: {
+                backgroundColor: '#ffffff',
+              },
+              'div:hover': {
+                div: {
+                  backgroundColor: '#f5f5f5',
+                  borderColor: 'transparent',
+                },
+              },
+            },
+          }}
         >
-          <Icon icon="grip-lines" mr="8px" mt="-1px" size="xs" /> Partition Keys
-          Only
-        </ToggleButton>
+          <ToggleButton
+            ml="15px"
+            sx={{
+              textAlign: 'center',
+              backgroundColor: '#ffffff',
+            }}
+            checked={keyFilter === KeyFilters.partition}
+            onChange={onToggleKey(KeyFilters.partition)}
+          >
+            <Box
+              p="0 !important"
+              ml="-8px"
+              mr="3px"
+              sx={{
+                svg: {
+                  width: '15px',
+                  height: '15px',
+                },
+              }}
+            >
+              {icons.partition}
+            </Box>
+            Partition Keys Only
+          </ToggleButton>
+        </Box>
         <Flex ml="20px" alignItems="center">
           <RadioGroup
             value={storageConnectorType}

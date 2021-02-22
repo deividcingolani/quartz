@@ -165,7 +165,7 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
 
       <Box mt="8px">
         <InputValidation intent={intent}>
-          The sum off all splits is{' '}
+          The sum off all splits is
           {splits.reduce(
             (acc: number, cur: { percentage: string }) => acc + +cur.percentage,
             0,

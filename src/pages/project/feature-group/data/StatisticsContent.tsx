@@ -7,7 +7,6 @@ import {
   ToggleButton,
   Symbol,
   SymbolMode,
-  Icon,
 } from '@logicalclocks/quartz';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
@@ -25,6 +24,7 @@ import StatisticsCard from './StatisticsCard';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useBasket from '../../../../hooks/useBasket';
+import icons from '../../../../sources/icons';
 
 export interface StatisticsContentProps {
   data: FeatureGroup | TrainingDataset;
@@ -133,24 +133,78 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
             placeholder="type"
             onChange={onTypeFiltersChange}
           />
-          <ToggleButton
-            ml="15px"
-            variant="white"
-            checked={keyFilter === KeyFilters.primary}
-            onChange={onToggleKey(KeyFilters.primary)}
+          <Box
+            sx={{
+              label: {
+                div: {
+                  backgroundColor: '#ffffff',
+                },
+                'div:hover': {
+                  div: {
+                    backgroundColor: '#f5f5f5',
+                    borderColor: 'transparent',
+                  },
+                },
+              },
+            }}
           >
-            <Icon icon="star" mr="8px" mt="-1px" size="xs" /> Primary Keys Only
-          </ToggleButton>
-          <ToggleButton
-            ml="15px"
-            variant="white"
-            checked={keyFilter === KeyFilters.partition}
-            onChange={onToggleKey(KeyFilters.partition)}
+            <ToggleButton
+              ml="15px"
+              checked={keyFilter === KeyFilters.primary}
+              onChange={onToggleKey(KeyFilters.primary)}
+            >
+              <Box
+                p="0 !important"
+                ml="-8px"
+                mr="3px"
+                sx={{
+                  svg: {
+                    width: '15px',
+                    height: '15px',
+                  },
+                }}
+              >
+                {icons.primary}
+              </Box>
+              Primary Keys Only
+            </ToggleButton>
+          </Box>
+          <Box
+            sx={{
+              label: {
+                div: {
+                  backgroundColor: '#ffffff',
+                },
+                'div:hover': {
+                  div: {
+                    backgroundColor: '#f5f5f5',
+                    borderColor: 'transparent',
+                  },
+                },
+              },
+            }}
           >
-            <Icon icon="grip-lines" mr="8px" mt="-1px" size="xs" /> Partition
-            Keys Only
-          </ToggleButton>
-
+            <ToggleButton
+              ml="15px"
+              checked={keyFilter === KeyFilters.partition}
+              onChange={onToggleKey(KeyFilters.partition)}
+            >
+              <Box
+                p="0 !important"
+                ml="-8px"
+                mr="3px"
+                sx={{
+                  svg: {
+                    width: '15px',
+                    height: '15px',
+                  },
+                }}
+              >
+                {icons.partition}
+              </Box>
+              Partition Keys Only
+            </ToggleButton>
+          </Box>
           <Select
             width="max-content"
             variant="white"

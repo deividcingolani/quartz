@@ -12,7 +12,7 @@ import {
   Button,
   Callout,
   Checkbox,
-  IconButton,
+  Tooltip,
   CalloutTypes,
   TooltipPositions,
 } from '@logicalclocks/quartz';
@@ -28,6 +28,7 @@ import { Dispatch, RootState } from '../../../store';
 import Terms from './Terms';
 import LoginHelp from './LoginHelp';
 import styles from './styles';
+import icons from '../../../sources/icons';
 
 export const schema = yup.object().shape({
   email: yup.string().email().required().label('Email'),
@@ -147,18 +148,18 @@ const Register: FC = () => {
               placeholder="•••••••"
               ref={register}
               rightIcon={
-                <Box sx={styles(isShowPassword, !password)}>
-                  <IconButton
-                    icon="eye"
-                    onMouseDown={() => setIsShow(true)}
-                    onMouseUp={() => setIsShow(false)}
-                    onMouseOut={() => setIsShow(false)}
-                    disabled={!password}
-                    tooltip="show password"
-                    tooltipProps={{
-                      position: TooltipPositions.right,
-                    }}
-                  />
+                <Box
+                  onMouseDown={() => setIsShow(true)}
+                  onMouseUp={() => setIsShow(false)}
+                  onMouseOut={() => setIsShow(false)}
+                  sx={styles(isShowPassword, !password)}
+                >
+                  <Tooltip
+                    mainText="show password"
+                    position={TooltipPositions.right}
+                  >
+                    <Box>{icons.eye}</Box>
+                  </Tooltip>
                 </Box>
               }
               {...getInputValidation('password', errors)}

@@ -3,7 +3,6 @@ import {
   Value,
   Button,
   Labeling,
-  IconButton,
   FreshnessBar,
   Microlabeling,
   Card as QuartzCard,
@@ -11,12 +10,10 @@ import {
   Badge,
   ProjectBadge,
   HoverableText,
+  Tooltip,
 } from '@logicalclocks/quartz';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, Box } from 'rebass';
-
-// eslint-disable-next-line import/no-unresolved
-import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
 
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -27,6 +24,7 @@ import styles from '../../styles/hoverable-card';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import { RootState } from '../../../../store';
 import CardLabels from '../../feature-group/list/CardLabels';
+import icons from '../../../../sources/icons';
 
 const Card: FC<HoverableCardProps<TrainingDataset>> = ({
   data,
@@ -141,24 +139,119 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
             </Flex>
 
             <Flex ml="auto">
-              <IconButton tooltip="Preview" icon="eye" />
-              <IconButton
-                tooltip="Overview"
-                tooltipProps={{ ml: '40px' } as TooltipProps}
-                icon="ellipsis-v"
-                onClick={handleNavigate(data.id, '/td/:tdId')}
-              />
-              <IconButton
-                tooltip="Data"
-                tooltipProps={{ ml: '6px' } as TooltipProps}
-                icon="search"
-              />
-              <IconButton
-                tooltip="Activity"
-                tooltipProps={{ ml: '6px' } as TooltipProps}
-                icon="history"
-                onClick={handleNavigate(data.id, '/td/:tdId/activity')}
-              />
+              <Tooltip mainText="Preview">
+                <Flex
+                  justifyContent="center"
+                  alignItems="center"
+                  width="34px"
+                  height="32px"
+                  sx={{
+                    boxShadow: '0px 5px 15px rgba(144, 144, 144, 0.2)',
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade1',
+                    cursor: 'pointer',
+                    transition: 'all .25s ease',
+
+                    ':hover': {
+                      borderColor: 'black',
+                    },
+                  }}
+                >
+                  {icons.eye}
+                </Flex>
+              </Tooltip>
+              <Tooltip ml="40px" mainText="Overview">
+                <Flex
+                  onClick={() => {
+                    if (hasMatchText) {
+                      navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
+                    } else {
+                      handleNavigate(data.id, '/fg/:fgId')();
+                    }
+                  }}
+                  justifyContent="center"
+                  alignItems="center"
+                  width="34px"
+                  height="32px"
+                  sx={{
+                    boxShadow: '0px 5px 15px rgba(144, 144, 144, 0.2)',
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade1',
+                    cursor: 'pointer',
+                    transition: 'all .25s ease',
+
+                    ':hover': {
+                      borderColor: 'black',
+                    },
+                  }}
+                >
+                  {icons.more_zoom}
+                </Flex>
+              </Tooltip>
+              <Tooltip ml="6px" mainText="Statistics">
+                <Flex
+                  onClick={() => {
+                    if (hasMatchText) {
+                      navigate(
+                        `/p/${data.parentProjectId}/fg/${data.id}/statistics`,
+                      );
+                    } else {
+                      handleNavigate(data.id, '/fg/:fgId/statistics')();
+                    }
+                  }}
+                  justifyContent="center"
+                  alignItems="center"
+                  width="34px"
+                  height="32px"
+                  sx={{
+                    boxShadow: '0px 5px 15px rgba(144, 144, 144, 0.2)',
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade1',
+                    cursor: 'pointer',
+                    transition: 'all .25s ease',
+
+                    ':hover': {
+                      borderColor: 'black',
+                    },
+                  }}
+                >
+                  {icons.stats}
+                </Flex>
+              </Tooltip>
+
+              {/*<Tooltip ml="6px" mainText="Activity">*/}
+              {/*  <Flex*/}
+              {/*    onClick={() => {*/}
+              {/*      if (hasMatchText) {*/}
+              {/*        navigate(*/}
+              {/*          `/p/${data.parentProjectId}/fg/${data.id}/activity`,*/}
+              {/*        );*/}
+              {/*      } else {*/}
+              {/*        handleNavigate(data.id, '/fg/:fgId/activity')();*/}
+              {/*      }*/}
+              {/*    }}*/}
+              {/*    justifyContent="center"*/}
+              {/*    alignItems="center"*/}
+              {/*    width="34px"*/}
+              {/*    height="32px"*/}
+              {/*    sx={{*/}
+              {/*      borderStyle: 'solid',*/}
+              {/*      borderWidth: '1px',*/}
+              {/*      borderColor: 'grayShade1',*/}
+              {/*      cursor: 'pointer',*/}
+              {/*      transition: 'all .25s ease',*/}
+
+              {/*      ':hover': {*/}
+              {/*        borderColor: 'black',*/}
+              {/*      },*/}
+              {/*    }}*/}
+              {/*  >*/}
+              {/*    {icons.history}*/}
+              {/*  </Flex>*/}
+              {/*</Tooltip>*/}
             </Flex>
           </Flex>
         </Flex>

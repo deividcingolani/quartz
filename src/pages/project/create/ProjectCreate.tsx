@@ -118,7 +118,7 @@ const ProjectCreate: FC = () => {
             content={
               <Flex height="30px" alignItems="center">
                 <Value primary fontFamily="Inter">
-                  For an overview of Hopsworks, run a demo project{' '}
+                  For an overview of Hopsworks, run a demo project
                 </Value>
                 <Button
                   onClick={handleSubmitDemo}

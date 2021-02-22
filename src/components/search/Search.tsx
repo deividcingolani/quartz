@@ -1,4 +1,4 @@
-import { Box } from 'rebass';
+import { Box, Flex } from 'rebass';
 import { Input } from '@logicalclocks/quartz';
 import { useLocation } from 'react-router-dom';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
@@ -8,6 +8,7 @@ import useOS, { OSNames } from '../../hooks/useOS';
 // Components
 import SearchResults from './SearchResults';
 import SearchRightContent from './SearchRightContent';
+import icons from '../../sources/icons';
 
 const backdropStyles = {
   position: 'fixed',
@@ -72,19 +73,36 @@ const Search: FC = () => {
   return (
     <>
       <Box sx={{ zIndex: 30 }} mt="5px" ml="15px">
-        <Input
-          mt="-5px"
-          ref={inputRef}
-          icon="search"
-          onFocus={handleFocus}
-          iconPaddingRight={isMacOS ? '60px' : '80px'}
-          rightIcon={<SearchRightContent isOpen={isOpen} isMacOS={isMacOS} />}
-          placeholder="Search for"
-          width="474px"
-          height="40px"
-          onClick={() => setOpen(true)}
-          onChange={handleChange}
-        />
+        <Flex>
+          <Box
+            mr="-30px"
+            mt="3px"
+            sx={{
+              zIndex: 1,
+              svg: {
+                transform: 'scale(.5)',
+                path: {
+                  fill: '#A0A0A0',
+                },
+              },
+            }}
+          >
+            {icons.glass}
+          </Box>
+          <Input
+            mt="-5px"
+            paddingLeft="30px"
+            ref={inputRef}
+            onFocus={handleFocus}
+            iconPaddingRight={isMacOS ? '60px' : '80px'}
+            rightIcon={<SearchRightContent isOpen={isOpen} isMacOS={isMacOS} />}
+            placeholder="Search for"
+            width="474px"
+            height="40px"
+            onClick={() => setOpen(true)}
+            onChange={handleChange}
+          />
+        </Flex>
 
         {isOpen && (
           <Box bg="grayShade1" sx={{ position: 'absolute' }}>

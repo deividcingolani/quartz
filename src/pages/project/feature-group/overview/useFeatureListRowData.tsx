@@ -1,18 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
 
-import {
-  Value,
-  Badge,
-  Labeling,
-  IconButton,
-  Tooltip,
-  Symbol,
-} from '@logicalclocks/quartz';
+import { Value, Badge, Labeling, Tooltip, Symbol } from '@logicalclocks/quartz';
 
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { Feature, FeatureGroup } from '../../../../types/feature-group';
 import useBasket from '../../../../hooks/useBasket';
 import { Box, Flex } from 'rebass';
+import icons from '../../../../sources/icons';
 
 const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
   const navigate = useNavigateRelative();
@@ -88,21 +82,55 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
           : {},
         {
           disabled: true,
-          children: React.createElement(
-            Flex,
-            {},
-            React.createElement(IconButton, {
-              intent: 'ghost',
-              icon: 'table',
-              tooltip: 'Data preview',
-              onClick: handleNavigate(`/data-preview/${name}`),
-            }),
-            React.createElement(IconButton, {
-              intent: 'ghost',
-              icon: 'poll',
-              tooltip: 'Statistics',
-              onClick: handleNavigate(`/statistics/f/${name}`),
-            }),
+          children: (
+            <Flex>
+              <Tooltip mainText="Statistics">
+                <Box
+                  p="5px"
+                  height="28px"
+                  sx={{
+                    cursor: 'pointer',
+                    backgroundColor: '#ffffff',
+                    transition: 'all .4s ease',
+
+                    ':hover': {
+                      backgroundColor: 'grayShade3',
+                    },
+
+                    svg: {
+                      width: '20px',
+                      height: '20px',
+                    },
+                  }}
+                  onClick={handleNavigate(`/statistics/f/${name}`)}
+                >
+                  {icons.stats}
+                </Box>
+              </Tooltip>
+              <Tooltip ml="8px" mainText="Data preview">
+                <Box
+                  p="5px"
+                  height="28px"
+                  sx={{
+                    cursor: 'pointer',
+                    backgroundColor: '#ffffff',
+                    transition: 'all .4s ease',
+
+                    ':hover': {
+                      backgroundColor: 'grayShade3',
+                    },
+
+                    svg: {
+                      width: '20px',
+                      height: '20px',
+                    },
+                  }}
+                  onClick={handleNavigate(`/data-preview/${name}`)}
+                >
+                  {icons.table}
+                </Box>
+              </Tooltip>
+            </Flex>
           ),
         },
       ];

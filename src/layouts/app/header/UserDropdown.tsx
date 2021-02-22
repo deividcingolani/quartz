@@ -2,7 +2,6 @@ import React, { FC, useCallback, useRef } from 'react';
 import {
   List,
   ListItem,
-  MenuButton,
   useDropdown,
   useOnClickOutside,
 } from '@logicalclocks/quartz';
@@ -14,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import TokenService from '../../../services/TokenService';
 // Types
 import { Dispatch } from '../../../store';
+import icons from '../../../sources/icons';
 
 const UserDropdown: FC = () => {
   const navigate = useNavigate();
@@ -35,13 +35,11 @@ const UserDropdown: FC = () => {
     <Flex
       sx={{ cursor: 'pointer' }}
       ref={buttonRef}
-      mr="20px"
+      mr="10px"
       ml="10px"
       onClick={() => handleToggle()}
     >
-      <Box p="5px">
-        <MenuButton />
-      </Box>
+      <Box p="5px">{icons.more}</Box>
       {isOpen && (
         <Box sx={{ position: 'absolute', right: '10px', top: '60px' }}>
           <List>

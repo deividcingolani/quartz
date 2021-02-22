@@ -5,7 +5,7 @@ import {
   Badge,
   Button,
   Labeling,
-  IconButton,
+  Tooltip,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import React, { ComponentType, FC, useMemo } from 'react';
@@ -17,6 +17,7 @@ import { FeatureStoreStorageConnector } from '../../../../types/feature-store';
 import styles from './storage-connector-list.styles';
 import routeNames from '../../../../routes/routeNames';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+import icons from '../../../../sources/icons';
 
 export interface StorageConnectorListContentProps {
   data: FeatureStoreStorageConnector[];
@@ -44,7 +45,7 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
   const groupComponents = useMemo(() => {
     return new Array(data.length)
       .fill(null)
-      .map(() => [Labeling, Badge, Labeling, IconButton]);
+      .map(() => [Labeling, Badge, Labeling, Tooltip]);
   }, [data]);
 
   const groupProps = useMemo(() => {
@@ -64,21 +65,42 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
         bold: true,
       },
       {
-        icon: 'pen',
-        intent: 'ghost',
-        tooltip: 'Edit',
-        href: getHref(
-          routeNames.storageConnector.edit.replace(':connectorName', name),
-          routeNames.project.view,
+        mr: '10px',
+        mainText: 'Edit',
+        children: (
+          <Box
+            p="5px"
+            height="28px"
+            sx={{
+              cursor: 'pointer',
+              backgroundColor: '#ffffff',
+              transition: 'all .4s ease',
+
+              ':hover': {
+                backgroundColor: 'grayShade3',
+              },
+
+              svg: {
+                width: '20px',
+                height: '20px',
+              },
+            }}
+            onClick={() =>
+              navigate(
+                routeNames.storageConnector.edit.replace(
+                  ':connectorName',
+                  name,
+                ),
+                routeNames.project.view,
+              )
+            }
+          >
+            {icons.edit}
+          </Box>
         ),
-        onClick: () =>
-          navigate(
-            routeNames.storageConnector.edit.replace(':connectorName', name),
-            routeNames.project.view,
-          ),
       },
     ]);
-  }, [data, navigate, getHref]);
+  }, [data, navigate]);
 
   return (
     <Card mb="40px" title="Storage connectors" contentProps={contentProps}>

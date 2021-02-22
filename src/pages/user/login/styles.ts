@@ -8,7 +8,7 @@ const styles = (isShow: boolean, disabled: boolean) => ({
 
   cursor: 'pointer',
 
-  button: {
+  div: {
     ': hover': {
       backgroundColor: '#E2E2E2',
     },
