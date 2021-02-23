@@ -36,7 +36,7 @@ const SingleTag: FC<SingleTagProps> = ({
       <Flex mb="20px" width="100%" flexDirection="column">
         <Flex width="100%" flexDirection="column">
           <Flex justifyContent="space-between">
-            {isFirstItem && <Value mt="10px">Tag schemas</Value>}
+            {isFirstItem && <Value mt="10px">Tags</Value>}
             {isFirstItem && (
               <Button
                 mr="-15px"
@@ -49,7 +49,7 @@ const SingleTag: FC<SingleTagProps> = ({
                 disabled={isDisabled}
                 intent="inline"
               >
-                Create a new schematised tag ↗
+                Create a new tag schema ↗
               </Button>
             )}
           </Flex>
@@ -103,14 +103,13 @@ const SingleTag: FC<SingleTagProps> = ({
 
         {hasNext && (
           <Button
-            mr="-15px"
             mt="10px"
-            intent="inline"
+            intent="ghost"
             alignSelf="flex-end"
             onClick={onRemove}
             disabled={isDisabled}
           >
-            Remove schematised tag
+            Remove tag schema
           </Button>
         )}
       </Flex>

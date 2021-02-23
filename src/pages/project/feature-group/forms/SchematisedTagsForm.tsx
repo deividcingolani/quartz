@@ -207,7 +207,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
     return (
       <Box>
         <Flex mb="10px">
-          <Value>Tag schemas</Value>
+          <Value>Tags</Value>
         </Flex>
 
         <Callout
@@ -223,7 +223,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
                 )
               }
             >
-              Create a new schematised tag ↗
+              Create a new tag schema ↗
             </Button>
           }
         />

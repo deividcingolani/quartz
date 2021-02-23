@@ -58,7 +58,7 @@ const SchematisedTagsListContent: FC<SchematisedTagsListContentProps> = ({
             <Flex>
               <Value primary>{data.length}</Value>
               <Labeling bold ml="5px">
-                {data.length > 1 ? 'schematised tags' : 'schematised tag'}
+                {data.length > 1 ? 'tag schemas' : 'tag schema'}
               </Labeling>
             </Flex>
             <Flex>

@@ -56,7 +56,7 @@ const LabelsForm: FC<FeatureFormProps> = ({
   );
 
   const trainingDataset = useSelector(
-    (state: RootState) => state.featureGroupView,
+    (state: RootState) => state.trainingDatasetView,
   );
 
   useEffect(() => {

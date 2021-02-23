@@ -87,7 +87,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
     return (
       <Card
         mt="20px"
-        title="Tag schemas"
+        title="Tags"
         actions={
           <Button
             p={0}
@@ -146,7 +146,9 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
           <Flex>
             <Value primary>{data.length}</Value>
             <Labeling ml="5px" gray mr="5px">
-              tag schemas attached:
+              {data.length > 1
+                ? 'tag schemas attached:'
+                : 'tag schema attached:'}
             </Labeling>
             <Value primary>{data.map(({ name }) => name).join(', ')}</Value>
           </Flex>

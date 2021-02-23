@@ -104,7 +104,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
       }
       submitHandler(data);
     }),
-    [setError, serverTags, clearErrors],
+    [setError, serverTags, clearErrors, submitHandler],
   );
 
   const isUpdatedFunction = useCallback(
