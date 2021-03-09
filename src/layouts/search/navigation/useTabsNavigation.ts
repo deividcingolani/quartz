@@ -57,16 +57,6 @@ const useTabsNavigation = () => {
   const tabs = useMemo(() => {
     return [
       {
-        title: 'Features',
-        isActive: isActive([
-          `search/${routeNames.search.searchAllProjectsFeaturesWithoutSearch}`,
-          `search/${routeNames.search.searchAllProjectsFeatures}`,
-          `search/${routeNames.search.searchOneProjectFeaturesWithoutSearch}`,
-          `search/${routeNames.search.searchOneProjectFeatures}`,
-        ]),
-        onCLick: handleNavigateRelative(getRedirectPath('features')),
-      },
-      {
         title: 'Feature Groups',
         isActive: isActive([
           `search/${routeNames.search.searchAllProjectsFeatureGroupsWithoutSearch}`,
@@ -85,6 +75,16 @@ const useTabsNavigation = () => {
           `search/${routeNames.search.searchOneProjectTrainingDatasets}`,
         ]),
         onCLick: handleNavigateRelative(getRedirectPath('td')),
+      },
+      {
+        title: 'Features',
+        isActive: isActive([
+          `search/${routeNames.search.searchAllProjectsFeaturesWithoutSearch}`,
+          `search/${routeNames.search.searchAllProjectsFeatures}`,
+          `search/${routeNames.search.searchOneProjectFeaturesWithoutSearch}`,
+          `search/${routeNames.search.searchOneProjectFeatures}`,
+        ]),
+        onCLick: handleNavigateRelative(getRedirectPath('features')),
       },
     ];
   }, [isActive, handleNavigateRelative, getRedirectPath]);

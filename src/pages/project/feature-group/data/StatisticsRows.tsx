@@ -68,7 +68,10 @@ const StatisticsRows: FC<StatisticsRowsProps> = ({
 
   if (!data && !isLoading) {
     return (
-      <Flex justifyContent="center" mr="20px" width="19%">
+      <Flex
+        justifyContent="center"
+        width={isDrawer ? '100%' : 'calc((100% - 60px) / 4)'}
+      >
         <Button
           onClick={() => {
             dispatch.featureGroupRows.fetch({
@@ -88,16 +91,10 @@ const StatisticsRows: FC<StatisticsRowsProps> = ({
 
   return (
     <Flex
-      width={isDrawer ? '100%' : 'initial'}
       flexDirection="column"
-      mt="auto"
+      width={isDrawer ? '100%' : 'calc((100% - 60px) / 4)'}
     >
-      <Box
-        width={isDrawer ? '100%' : '249px'}
-        height="205px"
-        overflow="auto"
-        sx={styles.container}
-      >
+      <Box height="205px" overflow="auto" sx={styles.container}>
         {isLoading && <Loader />}
         {!isLoading &&
           data.map((value, index) => {

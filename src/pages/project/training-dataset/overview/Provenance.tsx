@@ -60,7 +60,7 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
     <Card mt="30px" title="Provenance">
       <Flex mt="5px" mb="25x">
         <Value fontFamily="Inter" mr="5px">
-          This training dataset use
+          This training dataset uses
         </Value>
         <Value primary>{data.length}</Value>
         <Value fontFamily="Inter" ml="5px">

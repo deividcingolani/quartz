@@ -1,6 +1,13 @@
 import React, { FC, memo, useCallback } from 'react';
 import { Flex } from 'rebass';
-import { Text, TextValueBadge, User, Labeling } from '@logicalclocks/quartz';
+import {
+  Text,
+  TextValueBadge,
+  User,
+  Labeling,
+  Microlabeling,
+  Value,
+} from '@logicalclocks/quartz';
 
 // Services
 import ProfileService from '../../../../services/ProfileService';
@@ -60,10 +67,16 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           date={data?.created ? new Date(data?.created) : new Date()}
         />
         <DateValue
-          ml="50px"
+          ml="20px"
           label="Last updated"
           date={data?.created ? new Date(data?.created) : new Date()}
         />
+        <Flex ml="20px" flexDirection="column">
+          <Microlabeling mb="3px" gray>
+            Mode
+          </Microlabeling>
+          <Value primary>{data.onlineEnabled ? 'online' : 'offline'}</Value>
+        </Flex>
       </Flex>
       <Flex mt="17px" alignItems="center">
         <TextValueBadge variant="gray" text="features" value={featureCount} />
@@ -78,15 +91,23 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
               variant="gray"
               ml="8px"
               text="commits"
-              value={data.commits.length}
+              value={data.commits?.length}
             />
             <TextValueBadge
               variant="gray"
               ml="8px"
               text="training datasets"
-              value={data.provenance.length}
+              value={data.provenance?.length}
             />
           </Flex>
+        )}
+        {!!data.timeTravelFormat && (
+          <TextValueBadge
+            ml="8px"
+            variant="gray"
+            text="time travel"
+            value={data.timeTravelFormat?.toLowerCase()}
+          />
         )}
       </Flex>
       {!!data.description ? (

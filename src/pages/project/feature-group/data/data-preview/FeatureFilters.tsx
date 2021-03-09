@@ -92,17 +92,19 @@ const FeatureFilters: FC<FeatureFiltersProps> = ({
             sx={{
               textAlign: 'center',
             }}
+            height="35px"
             checked={keyFilter === KeyFilters.primary}
             onChange={onToggleKey(KeyFilters.primary)}
           >
             <Box
               p="0 !important"
-              ml="-8px"
-              mr="3px"
+              ml="-10px"
+              mr="4px"
+              mt="-3px"
               sx={{
                 svg: {
-                  width: '15px',
-                  height: '15px',
+                  width: '20px',
+                  height: '20px',
                 },
               }}
             >
@@ -132,17 +134,19 @@ const FeatureFilters: FC<FeatureFiltersProps> = ({
               textAlign: 'center',
               backgroundColor: '#ffffff',
             }}
+            height="35px"
             checked={keyFilter === KeyFilters.partition}
             onChange={onToggleKey(KeyFilters.partition)}
           >
             <Box
               p="0 !important"
-              ml="-8px"
-              mr="3px"
+              ml="-10px"
+              mr="4px"
+              mt="-3px"
               sx={{
                 svg: {
-                  width: '15px',
-                  height: '15px',
+                  width: '20px',
+                  height: '20px',
                 },
               }}
             >

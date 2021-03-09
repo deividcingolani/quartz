@@ -105,7 +105,10 @@ const Search: FC = () => {
         </Flex>
 
         {isOpen && (
-          <Box bg="grayShade1" sx={{ position: 'absolute' }}>
+          <Box
+            bg="grayShade1"
+            sx={{ transform: 'translateX(-6px)', position: 'absolute' }}
+          >
             <SearchResults search={search} data={data} />
           </Box>
         )}

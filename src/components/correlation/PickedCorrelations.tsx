@@ -70,7 +70,7 @@ const PickedCorrelations: FC<PickedCorrelationsProps> = ({
         <Box mt="20px" mx="-20px">
           <Flex height="50px" mt="30px" justifyContent="center">
             <Labeling textAlign="center" fontSize="18px" gray>
-              To hand pick a correlation, click on square of the matrix or
+              To hand pick a correlation, click on a square of the matrix or
               select it from the list view
             </Labeling>
           </Flex>

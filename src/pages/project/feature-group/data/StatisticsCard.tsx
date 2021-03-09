@@ -105,7 +105,7 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
         >
           <StatisticsTables data={statistics} />
           {statistics.histogram ? (
-            <Box mr="20px">
+            <Box width="calc((100% - 60px) / 4)">
               <StatisticsCharts
                 dataType={dataType}
                 data={statistics.histogram}
@@ -113,7 +113,7 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
               />
             </Box>
           ) : (
-            <Box mr="20px" width="25%" />
+            <Box width="calc((100% - 60px) / 4)" />
           )}
           {dataType === ItemDrawerTypes.fg &&
           featureStoreData?.featurestoreId ? (
@@ -124,7 +124,7 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
               featureName={name}
             />
           ) : (
-            <Box mr="20px" width="25%" />
+            <Box width="calc((100% - 60px) / 4)" />
           )}
         </Flex>
       )}

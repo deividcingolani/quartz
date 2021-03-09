@@ -1,7 +1,7 @@
 import { Flex } from 'rebass';
+import { Button, Value } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
-import { Button, Value } from '@logicalclocks/quartz';
 
 // Types
 import { Dispatch, RootState } from '../../../store';
@@ -19,7 +19,9 @@ import titles from '../../../sources/titles';
 const ProjectList: FC = () => {
   useTitle(titles.projectList);
 
-  const projects = useSelector((state: RootState) => state.projectsList);
+  const projects = useSelector(
+    (state: RootState) => state.projectsList,
+  ).sort((p1, p2) => p1.name.localeCompare(p2.name));
 
   const isGetProjects = useSelector(
     (state: RootState) => state.loading.effects.projectsList.getProjects,

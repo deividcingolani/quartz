@@ -39,7 +39,9 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
         featureStoreId: td.featurestoreId,
       });
     }
-  }, [selectedId, data, hasMatchText, dispatch]);
+
+    /* eslint-disable react-hooks/exhaustive-deps */
+  }, [selectedId, hasMatchText, dispatch]);
 
   const projectId = useMemo(() => {
     const fg = data.find(({ id }) => id === selectedId);

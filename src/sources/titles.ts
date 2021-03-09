@@ -29,7 +29,7 @@ const titles = {
 
   activity: 'Activity -',
   dataPreview: 'Data preview -',
-  statistics: 'Statistics -',
+  statistics: 'Statistics',
   correlation: 'Correlation -',
   overview: '',
 

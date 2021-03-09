@@ -39,5 +39,25 @@ export const trainingDatasetLabelModel = createModel()({
         data: data,
       });
     },
+    attachLabels: async ({
+      projectId,
+      featureStoreId,
+      trainingDatasetId,
+      data,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      trainingDatasetId: number;
+      data: string[];
+    }): Promise<void> => {
+      await new TrainingDatasetLabelService().attachKeyword(
+        projectId,
+        featureStoreId,
+        trainingDatasetId,
+        data,
+      );
+
+      dispatch.trainingDatasetView.setLabels(data);
+    },
   }),
 });

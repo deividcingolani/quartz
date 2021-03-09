@@ -34,11 +34,12 @@ const MembersForm: FC<MembersFormProps> = ({ control, isLoading }) => {
         render={({ onChange, value }) => (
           <Select
             hasPlaceholder={false}
-            disabled={isLoading}
             width="100%"
             value={value}
             isMulti={true}
             label="Members"
+            listWidth="100%"
+            disabled={isLoading || !membersToSelect.length}
             labelAction={
               <Tooltip
                 ml="5px"
@@ -50,6 +51,7 @@ const MembersForm: FC<MembersFormProps> = ({ control, isLoading }) => {
             }
             placeholder="pick members"
             onChange={(val) => onChange(val)}
+            noDataMessage="No other member registred in this cluster"
             options={membersToSelect.map(({ email }) => email)}
           />
         )}

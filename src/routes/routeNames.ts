@@ -36,7 +36,6 @@ const routeNames = {
     provenance: 'provenance',
     schematisedTags: 'schematised-tags',
     pipelineHistory: 'pipeline-history',
-    runningCode: 'running-code',
     api: 'api',
     splitGraph: 'split-graph',
   },

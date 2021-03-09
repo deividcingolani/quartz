@@ -20,7 +20,6 @@ import randomArrayString from '../../../../../utils/randomArrayString';
 // Styles
 import styles from './styles';
 import { ChartProps } from './types';
-import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
 
 const renderCustomizedLabel = (count: number, theme: ITheme) => ({
   x = 0,
@@ -93,7 +92,7 @@ const renderCustomizedTick = () => ({ x, y, payload: { value } }: any) => {
   );
 };
 
-const HorizontalBarChart: FC<ChartProps> = ({ data, dataType }) => {
+const HorizontalBarChart: FC<ChartProps> = ({ data }) => {
   const theme = useTheme<ITheme>();
 
   const mappedData = useMemo(
@@ -132,12 +131,7 @@ const HorizontalBarChart: FC<ChartProps> = ({ data, dataType }) => {
   }, [mappedData]);
 
   return (
-    <Flex
-      ml={dataType === ItemDrawerTypes.fg ? 'auto' : 'initial'}
-      alignItems="center"
-      flexDirection="column"
-      sx={styles.container}
-    >
+    <Flex alignItems="center" flexDirection="column" sx={styles.container}>
       <Flex flexDirection="row" sx={styles.horizontal.chartWrapper}>
         <BarChart
           layout="vertical"

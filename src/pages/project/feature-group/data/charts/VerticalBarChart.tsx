@@ -11,7 +11,6 @@ import randomArrayString from '../../../../../utils/randomArrayString';
 // Styles
 import styles from './styles';
 import { ChartProps } from './types';
-import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
 
 export interface ChartTooltipProps {
   payload?: {
@@ -49,7 +48,7 @@ const ChartTooltip: FC<ChartTooltipProps> = ({ payload = [] }) => {
   );
 };
 
-const VerticalBarChart: FC<ChartProps> = ({ data, dataType }) => {
+const VerticalBarChart: FC<ChartProps> = ({ data }) => {
   const theme = useTheme<ITheme>();
 
   const mappedData = useMemo(
@@ -89,12 +88,7 @@ const VerticalBarChart: FC<ChartProps> = ({ data, dataType }) => {
   }, [setFocusBar]);
 
   return (
-    <Flex
-      ml={dataType === ItemDrawerTypes.fg ? 'auto' : 'initial'}
-      alignItems="center"
-      flexDirection="column"
-      sx={styles.container}
-    >
+    <Flex alignItems="center" flexDirection="column" sx={styles.container}>
       <Flex flexDirection="row" sx={styles.vertical.chartWrapper}>
         <div>
           <Labeling gray>{maxValue}</Labeling>
@@ -129,7 +123,7 @@ const VerticalBarChart: FC<ChartProps> = ({ data, dataType }) => {
           <Tooltip content={<ChartTooltip />} active cursor={false} />
         </BarChart>
       </Flex>
-      <Labeling bold mt="35px" ml="auto" mr="50px">
+      <Labeling bold mt="54px">
         distribution of values
       </Labeling>
     </Flex>

@@ -231,6 +231,7 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
             }}
             label="Description"
             name="description"
+            optional={true}
             disabled={isLoading || isDisabled}
             placeholder="description"
             ref={register}

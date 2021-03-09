@@ -65,7 +65,7 @@ const FeatureGroupCorrelation: FC = () => {
   }, [id, fgId, dispatch, featureStoreData]);
 
   const latestVersion = useMemo(
-    () => Math.max(...(data?.versions.map(({ version }) => version) || [])),
+    () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
     [data],
   );
 
@@ -88,7 +88,7 @@ const FeatureGroupCorrelation: FC = () => {
         ? +values[0].slice(0, values[0].indexOf(' '))
         : +values[0];
 
-      const newId = data?.versions.find(({ version }) => version === ver)?.id;
+      const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
         navigate(`/${newId}/correlation`, '/p/:id/fg/*');
@@ -125,7 +125,7 @@ const FeatureGroupCorrelation: FC = () => {
         title={data.name}
         id={data.id}
         idColor="labels.orange"
-        onClickEdit={() => ({})}
+        onClickEdit={() => navigate(`/edit`, 'p/:id/fg/:fgId/*')}
         onClickRefresh={handleRefreshData}
         hasVersionDropdown={true}
         versionDropdown={

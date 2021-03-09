@@ -91,8 +91,8 @@ export const featuresMap = labelValueMap<{ [key: string]: string }>({
 });
 
 const getColumnValue = (key: string, value: any) => {
-  if (key === 'type' || key === 'onlineType') {
-    return [value.toUpperCase()];
+  if (key === 'type') {
+    return [value];
   }
   if (value === null) {
     return '';
@@ -111,10 +111,17 @@ export const isUpdated = <T extends FGRow[]>(prev: T) => (next: T) => {
 export const mapFeatures = (features: FGRow[]) =>
   features.map(({ row }) =>
     row
-      .filter(({ columnName }) => columnName !== 'Statistics')
+      .filter(
+        ({ columnName }) =>
+          columnName &&
+          columnName !== 'Statistics' &&
+          columnName !== 'Default Value',
+      )
       .map(({ columnValue, columnName }) => ({
         [featuresMap.getByKey(columnName)]: Array.isArray(columnValue)
-          ? columnValue[0]
+          ? columnName === 'Offline type' || columnName === 'Online type'
+            ? columnValue[0]?.toUpperCase() || 'INT'
+            : columnValue[0]
           : columnValue,
       }))
       .reduce(
@@ -335,15 +342,23 @@ export const getDatePickerTime = (
   }
 
   if (isFromDate && defaultDates.fromDate) {
-    return +time === +defaultDates.fromDate
-      ? format(time, 'dd MMM. y')
-      : format(time, 'dd MMM. y ha');
+    if (+time === +defaultDates.fromDate) {
+      return format(time, 'dd MMM. y');
+    }
+
+    if (time.getHours() === 0 && time.getMinutes() === 0) {
+      return format(time, 'dd MMM. y');
+    }
   }
 
   if (defaultDates.toDate) {
-    return +time === +defaultDates.toDate
-      ? format(time, 'dd MMM. y')
-      : format(time, 'dd MMM. y ha');
+    if (+time === +defaultDates.toDate) {
+      return format(time, 'dd MMM. y');
+    }
+
+    if (time.getHours() === 23 && time.getMinutes() === 30) {
+      return format(time, 'dd MMM. y');
+    }
   }
 
   return format(time, 'dd MMM. y ha');

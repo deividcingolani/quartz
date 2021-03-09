@@ -149,13 +149,13 @@ const FeatureGroupStatistics: FC = () => {
   }, [id, fgId, dispatch, featureStoreData, commitTime]);
 
   const latestVersion = useMemo(
-    () => Math.max(...(data?.versions.map(({ version }) => version) || [])),
+    () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
     [data],
   );
 
   const versions = useMemo(() => {
     return (
-      data?.versions.map(
+      data?.versions?.map(
         ({ version }) =>
           `${version} ${version === latestVersion ? '(latest)' : ''}`,
       ) || []
@@ -168,7 +168,7 @@ const FeatureGroupStatistics: FC = () => {
         ? +values[0].slice(0, values[0].indexOf(' '))
         : +values[0];
 
-      const newId = data?.versions.find(({ version }) => version === ver)?.id;
+      const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
         navigateToStatistics(commit, newId);
@@ -177,7 +177,7 @@ const FeatureGroupStatistics: FC = () => {
     [data, commit, navigateToStatistics],
   );
 
-  useTitle(`${titles.statistics} ${data?.name}`);
+  useTitle(`${titles.statistics} ${data?.name ? ` - ${data.name}` : ''}`);
 
   if (isLoading || isStatisticsLoading) {
     return <Loader />;
@@ -217,7 +217,7 @@ const FeatureGroupStatistics: FC = () => {
         title={data.name}
         id={data.id}
         idColor="labels.orange"
-        onClickEdit={() => navigate(`/edit`, 'p/:id/fg/:id/*')}
+        onClickEdit={() => navigate(`/edit`, 'p/:id/fg/:fgId/*')}
         onClickRefresh={handleRefreshData}
         hasCommitDropdown={true}
         hasVersionDropdown={true}

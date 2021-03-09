@@ -25,6 +25,20 @@ export class TrainingDatasetLabelService extends BaseApiService {
     return data.keywords || [];
   };
 
+  attachKeyword = (
+    projectId: number,
+    featureStoreId: number,
+    trainingDatasetId: number,
+    data: string[],
+  ) =>
+    this.request<any>({
+      type: RequestType.post,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/keywords`,
+      data: {
+        keywords: data,
+      },
+    });
+
   public getKeywords = (
     projectId: number,
     featureStoreId: number,

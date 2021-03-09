@@ -144,9 +144,6 @@ const featureGroups = createModel()({
             ...group,
             labels: keywords,
             updated: readLast || group.created,
-            versions: data
-              .filter(({ name }) => group.name === name)
-              .map(({ version, id }) => ({ id, version })),
           };
         }),
       );
@@ -163,7 +160,7 @@ const featureGroups = createModel()({
       projectId: number;
       featureStoreId: number;
       data: any;
-    }): Promise<any> => {
+    }): Promise<number> => {
       const {
         data: { id },
       } = await FeatureGroupsService.create(projectId, featureStoreId, data);
@@ -176,6 +173,8 @@ const featureGroups = createModel()({
       );
 
       await attachTags(projectId, featureStoreId, id, data.tags);
+
+      return id;
     },
     edit: async ({
       projectId,

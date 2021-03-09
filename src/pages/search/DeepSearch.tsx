@@ -65,7 +65,9 @@ const DeepSearch: FC = () => {
       <Route
         path={routeNames.search.view}
         element={
-          <Redirect to={`/${routeNames.search.searchAllProjectsFeatures}`} />
+          <Redirect
+            to={`/${routeNames.search.searchAllProjectsFeatureGroups}`}
+          />
         }
       />
     </Routes>

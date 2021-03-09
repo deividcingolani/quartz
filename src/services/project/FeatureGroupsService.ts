@@ -15,6 +15,7 @@ const getQueryParams = (onlineEnabled: boolean) => {
   // [param name, is need to include in the query]
   const paramsMap = [
     ['updateMetadata=true', true],
+    ['updateStatsConfig=true', true],
     ['enableOnline=true', onlineEnabled],
     ['disableOnline=true', !onlineEnabled],
     ['updateStatsSettings=true', true],

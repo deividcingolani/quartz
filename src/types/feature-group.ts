@@ -68,7 +68,7 @@ export interface Feature {
   onlineType?: FeatureType;
   label: boolean;
   index: number;
-  featuregroup: string;
+  featuregroup: FeatureGroup;
   basefeaturegroup: FeatureGroup;
   version: number;
   created?: string;
@@ -153,12 +153,6 @@ export interface FeatureGroup extends DataEntity {
   commits: any[];
 }
 
-export interface FeatureGroupLabel {
-  href: string;
-  name: string;
-  value?: string;
-}
-
 export interface HistogramItem {
   value: number | string;
   count: number;
@@ -189,10 +183,6 @@ export interface FeatureGroupStatistics {
   approxPercentiles: any; // Todo: update type
 }
 
-export interface FeatureGroupRow {
-  [key: string]: string | number;
-}
-
 export interface FeatureGroupRowItem {
   columnName: string;
   columnValue: string;
@@ -204,7 +194,7 @@ export interface FeatureGroupCommitDetail {
   count: number;
   commitID: number;
   commitDateString: string;
-  committime: number;
+  commitTime: number;
   rowsInserted: number;
   rowsUpdated: number;
   rowsDeleted: number;

@@ -65,8 +65,12 @@ const StatisticsTables: FC<StatisticsTablesProps> = ({ data, isDrawer }) => {
 
   return (
     <>
-      {summaryData && <StatsTable data={summaryData} width="250px" />}
-      {detailsData && <StatsTable data={detailsData} width="250px" mx="20px" />}
+      {summaryData && (
+        <StatsTable data={summaryData} width="calc((100% - 60px) / 4)" />
+      )}
+      {detailsData && (
+        <StatsTable data={detailsData} width="calc((100% - 60px) / 4)" />
+      )}
     </>
   );
 };

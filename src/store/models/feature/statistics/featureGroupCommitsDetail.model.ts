@@ -41,6 +41,7 @@ const featureGroupCommitsDetail = createModel()({
         featureGroupId,
         limit,
       );
+
       dispatch.featureGroupCommitsDetail.setData({
         commits: data.items || [],
         tds: 10,

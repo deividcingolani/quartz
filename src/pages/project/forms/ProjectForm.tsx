@@ -102,7 +102,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
             </Button>
           </Label>
         )}
-        <Label mt="10px">
+        <Label mt="20px">
           Invite Collaborators
           <Box mt="5px">
             <Callout
@@ -160,7 +160,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
                 intent="primary"
                 onClick={handleSubmit(onSubmit)}
               >
-                {isEdit ? 'Edit Project' : 'Create New Project'}
+                {isEdit ? 'Save' : 'Create New Project'}
               </Button>
             }
             secondaryButton={

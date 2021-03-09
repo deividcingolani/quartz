@@ -98,6 +98,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
               variant="inline"
               p="0"
               mt="15px"
+              width="fit-content"
               onClick={handleNavigate(data.id, '/td/:tdId/edit')}
             >
               + add a description
@@ -165,9 +166,9 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                 <Flex
                   onClick={() => {
                     if (hasMatchText) {
-                      navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
+                      navigate(`/p/${data.parentProjectId}/td/${data.id}`);
                     } else {
-                      handleNavigate(data.id, '/fg/:fgId')();
+                      handleNavigate(data.id, '/td/:tdId')();
                     }
                   }}
                   justifyContent="center"
@@ -192,13 +193,17 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
               </Tooltip>
               <Tooltip ml="6px" mainText="Statistics">
                 <Flex
-                  onClick={() => {
+                  onClick={(e) => {
                     if (hasMatchText) {
                       navigate(
-                        `/p/${data.parentProjectId}/fg/${data.id}/statistics`,
+                        `/p/${data.parentProjectId}/td/${data.id}/statistics`,
                       );
                     } else {
-                      handleNavigate(data.id, '/fg/:fgId/statistics')();
+                      if (data.statisticsConfig.enabled) {
+                        handleNavigate(data.id, '/td/:tdId/statistics')();
+                      } else {
+                        e.stopPropagation();
+                      }
                     }
                   }}
                   justifyContent="center"
@@ -212,9 +217,14 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                     borderColor: 'grayShade1',
                     cursor: 'pointer',
                     transition: 'all .25s ease',
+                    backgroundColor: data.statisticsConfig.enabled
+                      ? 'initial'
+                      : 'grayShade3',
 
                     ':hover': {
-                      borderColor: 'black',
+                      borderColor: data.statisticsConfig.enabled
+                        ? 'black'
+                        : 'grayShade1',
                     },
                   }}
                 >
@@ -227,10 +237,10 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
               {/*    onClick={() => {*/}
               {/*      if (hasMatchText) {*/}
               {/*        navigate(*/}
-              {/*          `/p/${data.parentProjectId}/fg/${data.id}/activity`,*/}
+              {/*          `/p/${data.parentProjectId}/td/${data.id}/activity`,*/}
               {/*        );*/}
               {/*      } else {*/}
-              {/*        handleNavigate(data.id, '/fg/:fgId/activity')();*/}
+              {/*        handleNavigate(data.id, '/td/:tdId/activity')();*/}
               {/*      }*/}
               {/*    }}*/}
               {/*    justifyContent="center"*/}

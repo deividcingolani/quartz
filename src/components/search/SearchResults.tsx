@@ -61,15 +61,22 @@ const SearchResults: FC<{ search?: string; data: SearchState }> = ({
 
   const handleOpen = useCallback(
     (index?) => {
-      if (activeIndex === -1 && index === undefined) {
+      if (index !== undefined && index >= 0 && index < itemsLength) {
+        const item = result[index];
+
+        if (item) {
+          handleNavigate(item);
+          return;
+        }
+      }
+      if (activeIndex === -1) {
+        navigate(`/search/p/${projectId}/fg/${search}`);
         return;
       }
 
       if (activeIndex > itemsLength - 1) {
         if (activeIndex - itemsLength === 1) {
-          navigate(`/search/p/${projectId}/features/${search}`);
-        } else {
-          navigate(`/search/features/${search}`);
+          navigate(`/search/p/${projectId}/fg/${search}`);
         }
         return;
       }
@@ -108,7 +115,9 @@ const SearchResults: FC<{ search?: string; data: SearchState }> = ({
       if (['ArrowDown', 'ArrowUp'].includes(e.key)) {
         e.preventDefault();
 
-        const maxLength = itemsLength + deepSearchButtonsCount;
+        const deepButtonsCount = !!search ? deepSearchButtonsCount : 0;
+        const maxLength = itemsLength + deepButtonsCount;
+
         if (e.key === 'ArrowDown') {
           setActive((index) =>
             index === -1 ? 0 : index > maxLength - 2 ? 0 : index + 1,
@@ -129,11 +138,12 @@ const SearchResults: FC<{ search?: string; data: SearchState }> = ({
         handleOpen();
       }
     },
-    [itemsLength, handleOpen],
+    [itemsLength, handleOpen, search],
   );
 
   useEffect(() => {
     window.addEventListener('keydown', handleSelect);
+
     return () => {
       window.removeEventListener('keydown', handleSelect);
     };

@@ -34,13 +34,16 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
 
   useEffect(() => {
     const fg = data.find(({ id }) => id === selectedId);
+
     if (fg && selectedId && hasMatchText) {
       dispatch.featureGroups.fetch({
         projectId: fg.parentProjectId,
         featureStoreId: fg.featurestoreId,
       });
     }
-  }, [selectedId, data, hasMatchText, dispatch]);
+
+    /* eslint-disable react-hooks/exhaustive-deps */
+  }, [selectedId, hasMatchText, dispatch]);
 
   const projectId = useMemo(() => {
     const fg = data.find(({ id }) => id === selectedId);
