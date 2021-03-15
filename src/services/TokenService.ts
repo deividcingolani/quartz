@@ -1,5 +1,5 @@
 class TokenService {
-  private key = 'access_token';
+  private key = 'token';
 
   get(): string | null {
     return localStorage.getItem(this.key);
