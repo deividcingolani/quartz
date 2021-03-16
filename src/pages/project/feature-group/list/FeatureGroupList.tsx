@@ -229,8 +229,8 @@ const FeatureGroupList: FC = () => {
       )}
       {!isLoading && !maxVersionsData.length && (
         <NoData
-          mainText="No Feature Group"
-          secondaryText="Create or import feature groups from storage connectors"
+          mainText="No Feature Groups"
+          secondaryText="You can create a feature group from the UI or in a program"
         >
           <Button
             intent="secondary"

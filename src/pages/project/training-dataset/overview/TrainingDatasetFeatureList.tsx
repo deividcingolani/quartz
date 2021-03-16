@@ -7,14 +7,20 @@ import {
   ToggleButton,
   Select,
   Button,
+  Value,
 } from '@logicalclocks/quartz';
+
+// Hooks
 import useTdFeatureListRowData from './useTdFeatureListRowData';
-import featureListStyles from '../../feature-group/overview/feature-lists-styles';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTdFeatureFilter, { TdKeyFilters } from '../hooks/useTdFeatureFilters';
-import { Feature } from '../../../../types/feature-group';
+
+import { TrainingDataset } from '../../../../types/training-dataset';
+import featureListStyles from '../../feature-group/overview/feature-lists-styles';
 
 export interface TrainingDatasetFeatureListProps {
-  data: Feature[];
+  data: TrainingDataset;
 }
 
 const Row = memo(QRow);
@@ -34,18 +40,30 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
     onFgFiltersChange,
     onSearchChange,
     onToggleKey,
-  } = useTdFeatureFilter(data);
+    onReset,
+  } = useTdFeatureFilter(data.features);
 
   const [groupComponents, groupProps] = useTdFeatureListRowData(dataFiltered);
+
+  const navigate = useNavigateRelative();
+
+  const getHref = useGetHrefForRoute();
 
   return (
     <Card
       mt="20px"
       title="Feature list"
       actions={
-        <Button p={0} intent="inline">
-          inspect data
-        </Button>
+        data.statisticsConfig.enabled && (
+          <Button
+            p={0}
+            intent="inline"
+            href={getHref('/statistics', '/p/:id/td/:tdId/*')}
+            onClick={() => navigate('/statistics', '/p/:id/td/:tdId/*')}
+          >
+            inspect data
+          </Button>
+        )
       }
       contentProps={{ overflow: 'auto', pb: 0 }}
       maxHeight="400px"
@@ -87,14 +105,23 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
           target feature only
         </ToggleButton>
       </Flex>
-      {/* Data Rows */}
-      <Box mt="30px" mx="-20px" sx={featureListStyles}>
-        <Row
-          middleColumn={3}
-          groupComponents={groupComponents as ComponentType<any>[][]}
-          groupProps={groupProps}
-        />
-      </Box>
+
+      {!!dataFiltered.length ? (
+        <Box mt="30px" mx="-20px" sx={featureListStyles}>
+          <Row
+            middleColumn={3}
+            groupComponents={groupComponents as ComponentType<any>[][]}
+            groupProps={groupProps}
+          />
+        </Box>
+      ) : (
+        <Flex mt="40px" mb="40px" flexDirection="column" alignItems="center">
+          <Value fontSize="18px">No match with the filters</Value>
+          <Button mt="20px" onClick={onReset}>
+            Reset filters
+          </Button>
+        </Flex>
+      )}
     </Card>
   );
 };

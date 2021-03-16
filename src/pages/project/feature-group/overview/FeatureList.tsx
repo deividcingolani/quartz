@@ -7,6 +7,8 @@ import {
   Button,
   Select,
   ToggleButton,
+  Labeling,
+  Value,
 } from '@logicalclocks/quartz';
 
 // Types
@@ -17,6 +19,8 @@ import useFeatureListRowData from './useFeatureListRowData';
 // Styles
 import featureListStyles from './feature-lists-styles';
 import icons from '../../../../sources/icons';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 export interface FeatureListProps {
   data: FeatureGroup;
@@ -32,21 +36,64 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
     onTypeFiltersChange,
     onSearchChange,
     onToggleKey,
+    onReset,
   } = useFeatureFilter(data.features);
+
+  const navigate = useNavigateRelative();
+
+  const getHref = useGetHrefForRoute();
 
   const [groupComponents, groupProps] = useFeatureListRowData(
     dataFiltered,
     data,
   );
 
+  if (!data.features.length) {
+    return (
+      <Card
+        mt="20px"
+        title="Feature list"
+        actions={
+          data.statisticsConfig.enabled && (
+            <Button
+              p={0}
+              intent="inline"
+              href={getHref('/statistics', '/p/:id/fg/:fgId/*')}
+              onClick={() => navigate('/statistics', '/p/:id/fg/:fgId/*')}
+            >
+              inspect data
+            </Button>
+          )
+        }
+        contentProps={{ overflow: 'auto', pb: 0 }}
+        maxHeight="400px"
+      >
+        <Box mt="20px" mx="-20px">
+          <Flex mt="30px" mb="40px" justifyContent="center">
+            <Labeling fontSize="18px" gray>
+              This feature group does contain any feature
+            </Labeling>
+          </Flex>
+        </Box>
+      </Card>
+    );
+  }
+
   return (
     <Card
       mt="20px"
       title="Feature list"
       actions={
-        <Button p={0} intent="inline">
-          inspect data
-        </Button>
+        data.statisticsConfig.enabled && (
+          <Button
+            p={0}
+            intent="inline"
+            href={getHref('/statistics', '/p/:id/fg/:fgId/*')}
+            onClick={() => navigate('/statistics', '/p/:id/fg/:fgId/*')}
+          >
+            inspect data
+          </Button>
+        )
       }
       contentProps={{ overflow: 'auto', pb: 0 }}
       maxHeight="400px"
@@ -74,17 +121,19 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           sx={{
             textAlign: 'center',
           }}
+          height="35px"
           checked={keyFilter === KeyFilters.primary}
           onChange={onToggleKey(KeyFilters.primary)}
         >
           <Box
             p="0 !important"
-            ml="-8px"
-            mr="3px"
+            ml="-10px"
+            mr="4px"
+            mt="-3px"
             sx={{
               svg: {
-                width: '15px',
-                height: '15px',
+                width: '20px',
+                height: '20px',
               },
             }}
           >
@@ -97,17 +146,19 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           sx={{
             textAlign: 'center',
           }}
+          height="35px"
           checked={keyFilter === KeyFilters.partition}
           onChange={onToggleKey(KeyFilters.partition)}
         >
           <Box
             p="0 !important"
-            ml="-8px"
-            mr="3px"
+            ml="-10px"
+            mr="4px"
+            mt="-3px"
             sx={{
               svg: {
-                width: '15px',
-                height: '15px',
+                width: '20px',
+                height: '20px',
               },
             }}
           >
@@ -117,14 +168,22 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
         </ToggleButton>
       </Flex>
 
-      {/* Data Rows */}
-      <Box mt="30px" mx="-19px" sx={featureListStyles}>
-        <Row
-          middleColumn={2}
-          groupComponents={groupComponents as ComponentType<any>[][]}
-          groupProps={groupProps}
-        />
-      </Box>
+      {!!dataFiltered.length ? (
+        <Box mt="30px" mx="-19px" sx={featureListStyles}>
+          <Row
+            middleColumn={2}
+            groupComponents={groupComponents as ComponentType<any>[][]}
+            groupProps={groupProps}
+          />
+        </Box>
+      ) : (
+        <Flex mt="40px" mb="40px" flexDirection="column" alignItems="center">
+          <Value fontSize="18px">No match with the filters</Value>
+          <Button mt="20px" onClick={onReset}>
+            Reset filters
+          </Button>
+        </Flex>
+      )}
     </Card>
   );
 };

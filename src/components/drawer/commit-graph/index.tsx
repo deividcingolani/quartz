@@ -31,7 +31,7 @@ const CommitGraph: FC<CommitGraphProps> = ({
       .map((__x, idx) => ({
         date: idx.toString(),
         added: null,
-        removed: null,
+        deleted: null,
         modified: null,
       }));
     return values.concat(added);

@@ -1,28 +1,34 @@
-import React, { FC, useMemo, useState, ChangeEvent } from 'react';
-import { useParams } from 'react-router-dom';
 import { Box, Flex } from 'rebass';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, useMemo, useState, ChangeEvent } from 'react';
 import { Button, Input, Tooltip, Select, Value } from '@logicalclocks/quartz';
+
+// Types
 import { Dispatch, RootState } from '../../../../store';
+import { TrainingDataset } from '../../../../types/training-dataset';
+// Components
 import Loader from '../../../../components/loader/Loader';
+import NoData from '../../../../components/no-data/NoData';
+// Hooks
+import useTitle from '../../../../hooks/useTitle';
 import useTrainingDatasets from '../useTrainingDatasets';
+import TrainingDatasetListContent from './TrainingDatasetListContent';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+// Utils
+import { SortDirection } from '../../../../utils/sort';
 import {
   sort as sortFn,
   filter as filterFn,
   searchText,
   pipe,
 } from '../../../../utils';
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
-import { TrainingDataset } from '../../../../types/training-dataset';
-import TrainingDatasetListContent from './TrainingDatasetListContent';
-import NoData from '../../../../components/no-data/NoData';
-import routeNames from '../../../../routes/routeNames';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { SortDirection } from '../../../../utils/sort';
-import useTitle from '../../../../hooks/useTitle';
-import titles from '../../../../sources/titles';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+
 import icons from '../../../../sources/icons';
+import titles from '../../../../sources/titles';
+import routeNames from '../../../../routes/routeNames';
+import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 
 export const sortOptions: { [key: string]: keyof TrainingDataset } = {
   'last updated': 'updated',

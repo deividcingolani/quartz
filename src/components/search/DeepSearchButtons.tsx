@@ -27,14 +27,14 @@ const DeepSearchButtons: FC<{ search: string; activeIndex: number }> = ({
         sx={{
           cursor: 'pointer',
           ':hover': {
-            bg: 'grayShade3',
+            bg: 'grayShade2',
           },
         }}
-        bg={activeIndex === 0 ? 'grayShade3' : 'white'}
-        onClick={handleNavigate(true)}
         px="12px"
         height="30px"
         alignItems="center"
+        onClick={handleNavigate(true)}
+        bg={activeIndex === 0 ? 'grayShade2' : 'white'}
       >
         <Text>Advanced search across all projects</Text>
       </Flex>
@@ -42,14 +42,14 @@ const DeepSearchButtons: FC<{ search: string; activeIndex: number }> = ({
         sx={{
           cursor: 'pointer',
           ':hover': {
-            bg: 'grayShade3',
+            bg: 'grayShade2',
           },
         }}
-        bg={activeIndex === 1 ? 'grayShade3' : 'white'}
-        onClick={handleNavigate()}
         px="12px"
         height="30px"
         alignItems="center"
+        onClick={handleNavigate()}
+        bg={activeIndex === 1 ? 'grayShade2' : 'white'}
       >
         <Text>Advanced search in the current project</Text>
       </Flex>

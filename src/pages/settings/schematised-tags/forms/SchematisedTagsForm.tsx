@@ -83,7 +83,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
         alignSelf="flex-start"
         onClick={() => navigate(-1)}
       >
-        &#8701; all schema
+        &#8701; all schemas
       </Button>
 
       {!!error && <Callout content={error} type={CalloutTypes.error} />}

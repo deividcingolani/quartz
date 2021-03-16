@@ -102,7 +102,9 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
   }, [handleToggle, clearErrors]);
 
   const isLoading = useSelector(
-    (state: RootState) => state.loading.effects.featureGroupLabels.attachLabels,
+    (state: RootState) =>
+      state.loading.effects.featureGroupLabels.attachLabels ||
+      state.loading.effects.trainingDatasetLabels.attachLabels,
   );
 
   const onSubmit = useCallback(
@@ -155,7 +157,7 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
           secondaryButton={['Cancel', handleToggle]}
           onClose={handleToggle}
         >
-          <Box mt="-20px" mb="20px">
+          <Box mb="20px">
             <Input
               ref={register}
               labelProps={{ width: '100%' }}

@@ -34,6 +34,10 @@ const FeatureGroupCreate: FC = () => {
         projectId: +projectId,
       });
     }
+
+    return () => {
+      dispatch.featureGroupView.clear();
+    };
   }, [dispatch, projectId, featureStoreData]);
 
   const handleSubmit = useCallback(
@@ -41,7 +45,7 @@ const FeatureGroupCreate: FC = () => {
       const { features, enabled, histograms, correlations, ...restData } = data;
 
       if (featureStoreData?.featurestoreId) {
-        await dispatch.featureGroups.create({
+        const id = await dispatch.featureGroups.create({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
           data: {
@@ -61,11 +65,16 @@ const FeatureGroupCreate: FC = () => {
             },
           },
         });
+
+        if (id) {
+          dispatch.featureGroups.fetch({
+            projectId: +projectId,
+            featureStoreId: featureStoreData?.featurestoreId,
+          });
+
+          navigate(`/fg/${id}`, 'p/:id/*');
+        }
       }
-
-      dispatch.featureGroups.clear();
-
-      navigate('/fg', 'p/:id/*');
     },
     [dispatch, featureStoreData, navigate, projectId],
   );

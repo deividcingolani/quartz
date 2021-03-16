@@ -29,8 +29,21 @@ const useTdFeatureFilter = (
   initialSearch = '',
 ): UseTdFeatureFilters => {
   const [search, setSearch] = useState<string>(initialSearch);
-  const [typeFilters, onTypeFiltersChange] = useState<string[]>([]);
-  const [fgFilters, onFgFiltersChange] = useState<string[]>([]);
+  const [typeFilters, onTypeFiltersChange] = useState<string[]>(
+    Array.from(new Set(data.map(({ type }) => type))),
+  );
+  const [fgFilters, onFgFiltersChange] = useState<string[]>(
+    data[0] && data[0].featuregroup
+      ? Array.from(
+          new Set(
+            data.map(
+              ({ featuregroup }) =>
+                `${featuregroup.name} v${featuregroup.version}`,
+            ),
+          ),
+        )
+      : [],
+  );
   const [keyFilter, setKeyFilter] = useState(TdKeyFilters.null);
 
   const onSearchChange = useCallback(
@@ -58,12 +71,12 @@ const useTdFeatureFilter = (
   );
 
   const fgFilterOptions = useMemo(() => {
-    if (data[0]?.basefeaturegroup) {
+    if (data[0]?.featuregroup) {
       return Array.from(
         new Set(
           data.map(
-            ({ basefeaturegroup }) =>
-              `${basefeaturegroup.name} v${basefeaturegroup.version}`,
+            ({ featuregroup }) =>
+              `${featuregroup.name} v${featuregroup.version}`,
           ),
         ),
       );
@@ -80,11 +93,9 @@ const useTdFeatureFilter = (
 
     result = filterByAttribute<Feature>(result, typeFilters, 'type');
 
-    result = result.filter(({ basefeaturegroup }) => {
+    result = result.filter(({ featuregroup }) => {
       return fgFilters.length
-        ? fgFilters.includes(
-            `${basefeaturegroup.name} v${basefeaturegroup.version}`,
-          )
+        ? fgFilters.includes(`${featuregroup.name} v${featuregroup.version}`)
         : data;
     });
 

@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useCallback } from 'react';
 import { Flex } from 'rebass';
 import {
   Microlabeling,
@@ -15,6 +15,10 @@ import {
 } from '../../../../types/training-dataset';
 import DateValue from '../../feature-group/list/DateValue';
 import ProfileService from '../../../../services/ProfileService';
+import KeywordsEditor from '../../../../components/keywords-editor/KeywordsEditor';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch, RootState } from '../../../../store';
+import { useParams } from 'react-router-dom';
 
 export interface TdOverviewSummaryDataProps {
   data: TrainingDataset;
@@ -23,6 +27,33 @@ export interface TdOverviewSummaryDataProps {
 const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
   data,
 }) => {
+  const { id: projectId, tdId: id } = useParams();
+
+  const featureStoreData = useSelector((state: RootState) =>
+    state.featureStores?.length ? state.featureStores[0] : null,
+  );
+
+  const dispatch = useDispatch<Dispatch>();
+
+  const keywordsSaveHandler = useCallback(
+    async (keywords) => {
+      if (featureStoreData?.featurestoreId) {
+        await dispatch.trainingDatasetLabels.attachLabels({
+          projectId: +projectId,
+          trainingDatasetId: +id,
+          featureStoreId: featureStoreData.featurestoreId,
+          data: keywords,
+        });
+      }
+    },
+    [featureStoreData, dispatch, id, projectId],
+  );
+
+  const isLoading = useSelector(
+    (state: RootState) =>
+      state.loading.effects.trainingDatasetView.loadRemainingData,
+  );
+
   return (
     <>
       <Flex>
@@ -82,6 +113,12 @@ const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
         <Labeling mt="20px" gray>
           -
         </Labeling>
+      )}
+
+      {isLoading ? (
+        <Labeling gray>loading...</Labeling>
+      ) : (
+        <KeywordsEditor onSave={keywordsSaveHandler} value={data.labels} />
       )}
     </>
   );

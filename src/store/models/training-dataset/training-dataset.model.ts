@@ -1,9 +1,9 @@
 import { createModel } from '@rematch/core';
 import { TrainingDataset } from '../../../types/training-dataset';
-import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
-import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import { getValidPromisesValues } from '../search/deep-search.model';
 import { TrainingDatasetLabelService } from '../../../services/project';
+import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
+import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 
 export type TrainingDatasetState = TrainingDataset[];
 
@@ -94,19 +94,19 @@ export const trainingDatasetModel = createModel()({
 
       dispatch.search.setTrainingDatasets(data);
 
-      dispatch.trainingDatasets.set(
-        data.map((dataset) => ({
-          ...dataset,
-          labels: [],
-          updated: dataset.created,
-          versions: data
-            .filter(({ name }) => dataset.name === name)
-            .map(({ version, id }) => ({ id, version })),
-        })),
-      );
+      const mapped = data.map((dataset) => ({
+        ...dataset,
+        labels: [],
+        updated: dataset.created,
+        versions: data
+          .filter(({ name }) => dataset.name === name)
+          .map(({ version, id }) => ({ id, version })),
+      }));
+
+      dispatch.trainingDatasets.set(mapped);
 
       dispatch.trainingDatasets.fetchKeywordsAndLastUpdate({
-        data,
+        data: mapped,
         projectId,
         featureStoreId,
       });
@@ -127,7 +127,8 @@ export const trainingDatasetModel = createModel()({
             featureStoreId,
             td.id,
           );
-          const items = await new TrainingDatasetLabelService().getList(
+
+          const keywords = await new TrainingDatasetLabelService().getList(
             projectId,
             featureStoreId,
             td.id,
@@ -135,15 +136,13 @@ export const trainingDatasetModel = createModel()({
 
           return {
             ...td,
+            labels: keywords,
+            labelsData: keywords,
+            test: [],
             updated: readLast || td.created,
-            labels: items,
-            versions: data
-              .filter(({ name }) => td.name === name)
-              .map(({ version, id }) => ({ id, version })),
           };
         }),
       );
-
       const tds = getValidPromisesValues(promises);
 
       dispatch.trainingDatasets.set(tds);

@@ -35,7 +35,7 @@ const getFullData = async (
       const [fullFeatureGroup] = await FeatureGroupsService.getByName(
         feature.parentProjectId,
         feature.featurestoreId,
-        feature.featuregroup,
+        (feature.featuregroup as unknown) as string,
         feature.version,
       );
 
@@ -144,14 +144,6 @@ const deepSearch = createModel()({
     }),
   },
   effects: (dispatch) => ({
-    fetchAll: async ({ search }: { search: string }): Promise<void> => {
-      const data = await SearchService.getAll(search);
-
-      const mappedData = await getFullData(data);
-
-      dispatch.deepSearch.setData(mappedData);
-    },
-
     fetchType: async ({
       search,
       type,
@@ -165,21 +157,6 @@ const deepSearch = createModel()({
 
       dispatch.deepSearch.setData(mappedData);
     },
-
-    fetchAllPromProject: async ({
-      search,
-      projectId,
-    }: {
-      search: string;
-      projectId: number;
-    }): Promise<void> => {
-      const data = await SearchService.getAllFromProject(projectId, search);
-
-      const mappedData = await getFullData(data);
-
-      dispatch.deepSearch.setData(mappedData);
-    },
-
     fetchTypePromProject: async ({
       type,
       search,

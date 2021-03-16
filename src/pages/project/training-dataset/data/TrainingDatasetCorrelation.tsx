@@ -71,14 +71,14 @@ const TrainingDatasetCorrelation: FC = () => {
   }, [id, tdId, dispatch, featureStoreData]);
 
   const latestVersion = useMemo(
-    () => Math.max(...(data?.versions.map(({ version }) => version) || [])),
+    () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
     [data],
   );
 
   const versions = useMemo(() => {
     return (
       data?.versions
-        .sort((versionA, versionB) =>
+        ?.sort((versionA, versionB) =>
           Math.sign(versionA.version - versionB.version),
         )
         .map(
@@ -94,7 +94,7 @@ const TrainingDatasetCorrelation: FC = () => {
         ? +values[0].slice(0, values[0].indexOf(' '))
         : +values[0];
 
-      const newId = data?.versions.find(({ version }) => version === ver)?.id;
+      const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
         navigate(`/${newId}/correlation`, '/p/:id/td/*');

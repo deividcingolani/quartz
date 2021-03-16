@@ -29,7 +29,9 @@ const useFeatureFilter = (
 ): UseFeatureFilters => {
   // State
   const [search, setSearch] = useState<string>(initialSearch);
-  const [typeFilters, onTypeFiltersChange] = useState<string[]>([]);
+  const [typeFilters, onTypeFiltersChange] = useState<string[]>(
+    Array.from(new Set(data.map(({ type }) => type))),
+  );
   const [keyFilter, setKeyFilter] = useState<KeyFilters>(KeyFilters.null);
 
   // Handlers

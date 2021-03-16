@@ -16,7 +16,7 @@ interface IObjectKeys {
 export interface CommitDetails extends IObjectKeys {
   date: string;
   added: number | null;
-  removed: number | null;
+  deleted: number | null;
   modified: number | null;
 }
 
@@ -115,6 +115,13 @@ const BarChart: FC<BarChartProps> = ({
         });
 
       container
+        .append('rect')
+        .attr('width', width)
+        .attr('class', 'background')
+        .attr('height', height)
+        .attr('fill', '#F5F5F5');
+
+      container
         .append('g')
         .selectAll('g')
         .data(data)
@@ -124,7 +131,7 @@ const BarChart: FC<BarChartProps> = ({
         .attr(
           'transform',
           (d: CommitDetails) =>
-            `translate(${x0((d[groupKey] || 0).toString())},0)`,
+            `translate(${(x0((d[groupKey] || 0).toString()) || 0) + 30},0)`,
         )
         .selectAll('rect')
         .data((d: CommitDetails) => keys.map((key) => ({ key, value: d[key] })))
@@ -145,8 +152,52 @@ const BarChart: FC<BarChartProps> = ({
           d3.selectAll('rect').style('opacity', 0.3);
           // Set full opacity for hovered commit;
           d3.select(parentNode).selectChildren().style('opacity', 1);
+          // Don't change opacity for background and axis
+          d3.selectAll('.axis').style('opacity', 1);
+          d3.selectAll('.background').style('opacity', 1);
         }
       });
+
+      // Axis
+
+      container
+        .append('rect')
+        .attr('class', 'axis')
+        .attr('x', 10)
+        .attr('y', height - 10)
+        .attr('width', width)
+        .attr('height', 1)
+        .style('fill', theme.colors.grayShade2);
+
+      container
+        .append('rect')
+        .attr('x', 30)
+        .attr('y', 10)
+        .attr('class', 'axis')
+        .attr('width', 1)
+        .attr('height', height - 20)
+        .style('fill', theme.colors.grayShade2);
+
+      container
+        .append('text')
+        .attr('x', 20)
+        .attr('class', 'axis')
+        .attr('y', height - 13)
+        .style('fill', theme.colors.gray)
+        .attr('font-size', '12px')
+        .attr('font-family', 'Inter')
+        .text(0);
+
+      container
+        .append('text')
+        .attr('x', 28)
+        .attr('class', 'axis')
+        .attr('y', 23)
+        .attr('text-anchor', 'end')
+        .style('fill', theme.colors.gray)
+        .attr('font-size', '12px')
+        .attr('font-family', 'Inter')
+        .text(max);
 
       return container.node();
     },
@@ -158,6 +209,7 @@ const BarChart: FC<BarChartProps> = ({
       margin.right,
       margin.top,
       max,
+      theme,
       onSelect,
       themedBackground,
       themedColors,

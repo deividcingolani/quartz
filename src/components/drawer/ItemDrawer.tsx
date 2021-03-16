@@ -44,7 +44,7 @@ const getVariant = (
   >([
     ['accepted', 'bold'],
     ['succeeded', 'success'],
-    ['fail', 'fail'],
+    ['failed', 'fail'],
   ]);
 
   if (!status) {
@@ -184,10 +184,11 @@ const ItemDrawer = <T extends DataEntity>({
 
   const handleVersionChange = useCallback(
     (values) => {
-      const newId = data.find(
+      const newId = data?.find(
         ({ version, name }) =>
           version === +values[0].split(' ')[0] && name === item?.name,
       )?.id;
+
       if (newId) {
         setId(newId);
       }
@@ -239,15 +240,27 @@ const ItemDrawer = <T extends DataEntity>({
       isOpen={isOpen}
       headerSummary={
         <Box height="100%">
-          <Flex height="100%">
+          <Flex
+            flexWrap="wrap"
+            sx={{
+              rowGap: '8px',
+            }}
+            height="100%"
+          >
             <TextValueBadge text="features" value={item.features.length} />
             {type === ItemDrawerTypes.fg && (
-              <Flex alignItems="center" ml="8px">
+              <>
                 {isCommitsLoading ? (
-                  <Labeling gray>loading...</Labeling>
+                  <Labeling mx="8px" mt="3px" gray>
+                    loading...
+                  </Labeling>
                 ) : (
                   <>
-                    <TextValueBadge text="commits" value={commits.length} />
+                    <TextValueBadge
+                      ml="8px"
+                      text="commits"
+                      value={commits.length}
+                    />
                     <TextValueBadge
                       ml="8px"
                       text="training dataset"
@@ -255,15 +268,22 @@ const ItemDrawer = <T extends DataEntity>({
                     />
                   </>
                 )}
-              </Flex>
+              </>
             )}
             {type === ItemDrawerTypes.td && (
               <TextValueBadge
-                ml="10px"
+                ml="8px"
                 text="splits"
                 value={item.splits.length}
               />
             )}
+            {type === ItemDrawerTypes.fg &&
+              !!((item as unknown) as FeatureGroup).timeTravelFormat && (
+                <TextValueBadge
+                  text="time travel"
+                  value={((item as unknown) as FeatureGroup).timeTravelFormat.toLowerCase()}
+                />
+              )}
           </Flex>
           {type === ItemDrawerTypes.fg && (
             <Box mt="30px">
@@ -295,13 +315,13 @@ const ItemDrawer = <T extends DataEntity>({
             commits?.length > 0 && (
               <CommitGraph
                 values={commits.map((commit) => ({
-                  date: format(commit.committime, 'M/d/yyyy-HH:mm'),
+                  date: format(commit.commitTime, 'M/d/yyyy-HH:mm'),
                   added: commit.rowsInserted,
-                  removed: commit.rowsDeleted,
+                  deleted: commit.rowsDeleted,
                   modified: commit.rowsUpdated,
                 }))}
                 groupKey="date"
-                keys={['added', 'removed', 'modified']}
+                keys={['added', 'deleted', 'modified']}
               />
             )}
           {type === ItemDrawerTypes.fg &&
@@ -351,22 +371,34 @@ const ItemDrawer = <T extends DataEntity>({
                   }}
                   justifyContent="space-between"
                 >
-                  <Flex>
-                    <Badge
-                      mr="20px"
-                      variant={getVariant(
-                        lastJobs[0].job.executions?.finalStatus?.toLowerCase(),
-                      )}
-                      value={lastJobs[0].job.executions?.finalStatus?.toLowerCase()}
-                    />
-                    <Value>{lastJobs[0].job.config?.appName}</Value>
+                  <Flex alignItems="center">
+                    <Box minWidth="auto">
+                      <Badge
+                        mr="20px"
+                        variant={getVariant(
+                          lastJobs[0].job.executions?.finalStatus?.toLowerCase(),
+                        )}
+                        value={lastJobs[0].job.executions?.finalStatus?.toLowerCase()}
+                      />
+                    </Box>
+                    <Box
+                      sx={{
+                        div: {
+                          wordBreak: 'break-all',
+                        },
+                      }}
+                    >
+                      <Value>{lastJobs[0].job.config?.appName}</Value>
+                    </Box>
                   </Flex>
-                  <Value primary>
-                    {formatDistance(lastJobs[0].timestamp, new Date())} ago
-                  </Value>
+                  <Box ml="20px" minWidth="fit-content">
+                    <Value primary>
+                      {formatDistance(lastJobs[0].timestamp, new Date())} ago
+                    </Value>
+                  </Box>
                 </Flex>
               ) : (
-                <Labeling gray>No last jobs</Labeling>
+                <Labeling gray>No last job</Labeling>
               ))}
           </Drawer.Section>
         )}

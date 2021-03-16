@@ -30,14 +30,14 @@ const SearchItemCard: FC<SearchItemCardProps> = ({
       sx={{
         cursor: 'pointer',
         ':hover': {
-          bg: 'grayShade3',
+          bg: 'grayShade2',
         },
       }}
       px="12px"
-      onClick={handleClick}
-      bg={index === activeIndex ? 'grayShade3' : 'white'}
       height="30px"
       alignItems="center"
+      onClick={handleClick}
+      bg={index === activeIndex ? 'grayShade2' : 'white'}
     >
       <Text>{item.name.slice(0, matchPartIndex)}</Text>
       <Value fontWeight={900}>

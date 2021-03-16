@@ -133,6 +133,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               variant="inline"
               p="0"
               mt="15px"
+              width="fit-content"
               onClick={handleNavigate(data.id, routeNames.featureGroup.edit)}
             >
               + add a description
@@ -224,15 +225,26 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                   {icons.more_zoom}
                 </Flex>
               </Tooltip>
-              <Tooltip ml="6px" mainText="Statistics">
+              <Tooltip
+                ml="6px"
+                mainText={
+                  data.statisticsConfig.enabled
+                    ? 'Statistics'
+                    : 'Statistics are disabled'
+                }
+              >
                 <Flex
-                  onClick={() => {
+                  onClick={(e) => {
                     if (hasMatchText) {
                       navigate(
                         `/p/${data.parentProjectId}/fg/${data.id}/statistics`,
                       );
                     } else {
-                      handleNavigate(data.id, '/fg/:fgId/statistics')();
+                      if (data.statisticsConfig.enabled) {
+                        handleNavigate(data.id, '/fg/:fgId/statistics')();
+                      } else {
+                        e.stopPropagation();
+                      }
                     }
                   }}
                   justifyContent="center"
@@ -246,9 +258,14 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                     borderColor: 'grayShade1',
                     cursor: 'pointer',
                     transition: 'all .25s ease',
+                    backgroundColor: data.statisticsConfig.enabled
+                      ? 'initial'
+                      : 'grayShade3',
 
                     ':hover': {
-                      borderColor: 'black',
+                      borderColor: data.statisticsConfig.enabled
+                        ? 'black'
+                        : 'grayShade1',
                     },
                   }}
                 >

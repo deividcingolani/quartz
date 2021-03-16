@@ -78,13 +78,13 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
   const navigate = useNavigateRelative();
 
   const latestVersion = useMemo(
-    () => Math.max(...(data.versions?.map(({ version }) => version) || [])),
+    () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
     [data],
   );
 
   const versions = useMemo(() => {
     return (
-      data.versions?.map(
+      data?.versions?.map(
         ({ version }) =>
           `${version} ${version === latestVersion ? '(latest)' : ''}`,
       ) || []

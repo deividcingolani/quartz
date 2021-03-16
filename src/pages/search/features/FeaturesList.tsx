@@ -35,7 +35,9 @@ const FeaturesList: FC<FeaturesListProps> = ({ data }) => {
 
   const selectedItem = useMemo(() => {
     return data.find(({ featureId }) => featureId === selectedId);
-  }, [data, selectedId]);
+
+    /* eslint-disable react-hooks/exhaustive-deps */
+  }, [selectedId]);
 
   if (!data.length) {
     return <NoSearchData subject="features" />;

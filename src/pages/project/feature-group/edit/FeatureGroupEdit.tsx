@@ -42,6 +42,10 @@ const FeatureGroupEdit: FC = () => {
         projectId: +projectId,
       });
     }
+
+    return () => {
+      dispatch.featureGroupView.clear();
+    };
   }, [dispatch, projectId, featureStoreData, fgId]);
 
   const featureGroup = useSelector<RootState, FeatureGroupViewState>(
@@ -71,25 +75,26 @@ const FeatureGroupEdit: FC = () => {
             keywords,
             type: 'cachedFeaturegroupDTO',
             features: mapFeatures(features),
-            statisticColumns: getEnabledStatistics(features),
-            descStatsEnabled: !!getEnabledStatistics(features).length,
             onlineEnabled,
             tags,
             prevTags: featureGroup?.tags.map(({ name }) => name),
             statisticsConfig: {
-              columns: [],
+              columns: getEnabledStatistics(features),
               correlations,
               enabled,
               histograms,
             },
           },
         });
+
+        dispatch.featureGroupView.clear();
+        dispatch.featureGroups.fetch({
+          projectId: +projectId,
+          featureStoreId: featureStoreData?.featurestoreId,
+        });
+
+        navigate(`/${fgId}`, 'p/:id/fg/*');
       }
-
-      dispatch.featureGroupView.clear();
-      dispatch.featureGroups.clear();
-
-      navigate(`/${fgId}`, 'p/:id/fg/*');
     },
     [dispatch, featureStoreData, navigate, projectId, fgId, featureGroup],
   );
@@ -103,7 +108,10 @@ const FeatureGroupEdit: FC = () => {
         featureGroupId: +fgId,
       });
 
-      dispatch.featureGroups.clear();
+      dispatch.featureGroups.fetch({
+        projectId: +projectId,
+        featureStoreId: featureStoreData?.featurestoreId,
+      });
 
       navigate('/fg', 'p/:id/*');
     }

@@ -141,7 +141,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
                 },
                 'div:hover': {
                   div: {
-                    backgroundColor: '#f5f5f5',
+                    backgroundColor: 'grayShade3',
                     borderColor: 'transparent',
                   },
                 },
@@ -150,17 +150,19 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
           >
             <ToggleButton
               ml="15px"
+              height="35px"
               checked={keyFilter === KeyFilters.primary}
               onChange={onToggleKey(KeyFilters.primary)}
             >
               <Box
                 p="0 !important"
-                ml="-8px"
-                mr="3px"
+                ml="-10px"
+                mr="4px"
+                mt="-3px"
                 sx={{
                   svg: {
-                    width: '15px',
-                    height: '15px',
+                    width: '20px',
+                    height: '20px',
                   },
                 }}
               >
@@ -177,7 +179,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
                 },
                 'div:hover': {
                   div: {
-                    backgroundColor: '#f5f5f5',
+                    backgroundColor: 'grayShade3',
                     borderColor: 'transparent',
                   },
                 },
@@ -186,17 +188,19 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
           >
             <ToggleButton
               ml="15px"
+              height="35px"
               checked={keyFilter === KeyFilters.partition}
               onChange={onToggleKey(KeyFilters.partition)}
             >
               <Box
                 p="0 !important"
-                ml="-8px"
-                mr="3px"
+                ml="-10px"
+                mr="4px"
+                mt="-3px"
                 sx={{
                   svg: {
-                    width: '15px',
-                    height: '15px',
+                    width: '20px',
+                    height: '20px',
                   },
                 }}
               >

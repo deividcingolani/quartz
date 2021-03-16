@@ -68,7 +68,9 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
       tags: {},
       ...(!!initialData && {
         name: initialData.name,
-        timeTravelFormat: [uppercaseFirst(initialData.timeTravelFormat)],
+        timeTravelFormat: [
+          uppercaseFirst(initialData.timeTravelFormat) || TimeTravelType.none,
+        ],
         description: initialData.description,
         onlineEnabled: initialData.onlineEnabled,
         features: mapFeaturesToTable(initialData),

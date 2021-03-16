@@ -65,7 +65,7 @@ const Integrations: FC = () => {
             href={getHref('/integrations/code', 'p/:id/*')}
             onClick={() => navigate('/integrations/code', 'p/:id/*')}
             ml="20px"
-            intent="ghost"
+            intent="secondary"
           >
             Code integration
           </Button>

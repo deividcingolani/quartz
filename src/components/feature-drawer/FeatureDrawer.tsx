@@ -1,7 +1,7 @@
 import { Flex } from 'rebass';
 import React, { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Drawer, Value } from '@logicalclocks/quartz';
+import { Drawer, Labeling, Value } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Components
@@ -104,18 +104,20 @@ const FeatureDrawer: FC<FeatureDrawerProps> = ({
       onClose={handleToggle}
     >
       <Drawer.Section title="Data overview">
-        <Flex width="100%" ml="-20%">
-          {data.histogram && (
-            <StatisticsCharts
-              dataType={ItemDrawerTypes.fg}
-              data={data.histogram}
-              type={data.dataType}
-            />
+        <Flex width="100%">
+          {data.histogram && data.dataType && (
+            <Flex width="100%" justifyContent="center">
+              <StatisticsCharts
+                dataType={ItemDrawerTypes.fg}
+                data={data.histogram}
+                type={data.dataType}
+              />
+            </Flex>
           )}
-          {!data.histogram && (
-            <Value textAlign="center" mt="30px">
+          {(!data.histogram || !data.dataType) && (
+            <Labeling bold gray textAlign="center">
               No Feature Histogram
-            </Value>
+            </Labeling>
           )}
         </Flex>
       </Drawer.Section>

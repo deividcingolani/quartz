@@ -16,6 +16,10 @@ const trainingDatasetView = createModel()({
       payload: TrainingDataset,
     ): TrainingDatasetViewState => payload,
     clear: () => null,
+    setLabels: (state: TrainingDatasetViewState, payload: string[]): any => ({
+      ...state,
+      labels: payload,
+    }),
   },
   effects: (dispatch) => ({
     fetch: async ({
@@ -65,7 +69,8 @@ const trainingDatasetView = createModel()({
         data,
       );
 
-      const entries = provenance.items && provenance.items[0].in.entry;
+      const entries =
+        provenance.items && provenance.items[0] && provenance.items[0].in.entry;
 
       let tdProvenances = [];
 

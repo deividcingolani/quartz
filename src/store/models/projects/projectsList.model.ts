@@ -2,6 +2,7 @@ import { createModel } from '@rematch/core';
 import ProjectsService from '../../../services/project/ProjectsService';
 import { Project } from '../../../types/project';
 import FeatureStoresService from '../../../services/project/FeatureStoresService';
+import { getValidPromisesValues } from '../search/deep-search.model';
 
 export type ProjectsState = Project[];
 
@@ -28,13 +29,10 @@ const projectsList = createModel()({
         }),
       );
 
-      const mappedProjects = projectsPromises.reduce(
-        (acc: Project[], next) =>
-          next.status === 'fulfilled' ? [...acc, next.value] : acc,
-        [],
-      );
+      const mappedProjects = getValidPromisesValues(projectsPromises);
 
       dispatch.projectsList.setProjects(mappedProjects);
+
       return projects;
     },
   }),

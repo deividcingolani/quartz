@@ -154,13 +154,13 @@ const TrainingDatasetStatistics: FC = () => {
   }, [id, tdId, dispatch, featureStoreData, commitTime]);
 
   const latestVersion = useMemo(
-    () => Math.max(...(data?.versions.map(({ version }) => version) || [])),
+    () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
     [data],
   );
 
   const versions = useMemo(() => {
     return (
-      data?.versions.map(
+      data?.versions?.map(
         ({ version }) =>
           `${version} ${version === latestVersion ? '(latest)' : ''}`,
       ) || []
@@ -173,14 +173,14 @@ const TrainingDatasetStatistics: FC = () => {
         ? +values[0].slice(0, values[0].indexOf(' '))
         : +values[0];
 
-      const newId = data?.versions.find(({ version }) => version === ver)?.id;
+      const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       navigateToStatistics(commit, newId);
     },
     [data, commit, navigateToStatistics],
   );
 
-  useTitle(`${titles.statistics} - ${data?.name}`);
+  useTitle(`${titles.statistics}${data?.name ? ` - ${data.name}` : ''}`);
 
   if (isLoading || isStatisticsLoading) {
     return <Loader />;

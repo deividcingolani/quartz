@@ -33,7 +33,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
             'STRING',
             'BOOLEAN',
             'VARCHAR(1000)',
-          ]}
+          ].map((option) => option.toLowerCase())}
           placeholder=""
         />
       ),
@@ -46,7 +46,13 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
           width="100%"
           value={value}
           onChange={onChange}
-          options={['INT', 'FLOAT', 'TEXT', 'DOUBLE', 'VARCHAR(1000)']}
+          options={[
+            'INT',
+            'FLOAT',
+            'TEXT',
+            'DOUBLE',
+            'VARCHAR(1000)',
+          ].map((option) => option.toLowerCase())}
           placeholder=""
         />
       ),
