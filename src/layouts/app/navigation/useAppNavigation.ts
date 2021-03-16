@@ -9,6 +9,7 @@ import routeNames from '../../../routes/routeNames';
 // Hooks
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Svg
+import oldui from '../../../sources/back_oldui.json';
 import sources from '../../../sources/source_02rev.json';
 import td from '../../../sources/TD_01 (1).json';
 import fg from '../../../sources/FG_06.json';
@@ -333,6 +334,15 @@ const useAppNavigation = (): TreeNode[] => {
           routeNames.storageConnector.list,
           routeNames.project.view,
         ),
+      },
+      {
+        id: 'oldui',
+        title: 'Back to current Hopsworks',
+        icon: oldui,
+        tooltipText: `Back to current Hopsworks`,
+        href: '/hopsworks',
+        isActive: false,
+        onClick: () => { window.location.href = "/hopsworks"; },
       },
     ];
   }, [
