@@ -16,7 +16,7 @@ const useTokenApiInterceptor = () => {
   useEffect(() => {
     BaseApiService.setInterceptor(
       (response) => {
-        const token = response.headers.authorization; //?.split(' ')[1];
+        const token = response.headers.authorization;
         // If the server returned new token we need to refresh it in the app
         if (token) {
           TokenService.set(token);
