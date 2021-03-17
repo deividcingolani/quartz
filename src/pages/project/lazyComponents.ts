@@ -33,7 +33,8 @@ export const StorageConnectorsEdit = React.lazy(
   () => import('./storage-connectors/edit/StorageConnectorsEdit'),
 );
 export const StorageConnectorsImportSample = React.lazy(
-  () => import('./storage-connectors/import-sample/StorageConnectorsImportSample'),
+  () =>
+    import('./storage-connectors/import-sample/StorageConnectorsImportSample'),
 );
 export const FeatureGroupOverview = React.lazy(
   () => import('./feature-group/overview/FeatureGroupOverview'),
@@ -55,6 +56,9 @@ export const TrainingDatasetCreate = React.lazy(
 );
 export const TrainingDatasetEdit = React.lazy(
   () => import('./training-dataset/edit/TrainingDatasetEdit'),
+);
+export const TrainingDatasetActivity = React.lazy(
+  () => import('./training-dataset/activity/TrainingDatasetActivity'),
 );
 
 export const ProjectCode = React.lazy(() => import('./integrations/Code'));

@@ -232,36 +232,36 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                 </Flex>
               </Tooltip>
 
-              {/*<Tooltip ml="6px" mainText="Activity">*/}
-              {/*  <Flex*/}
-              {/*    onClick={() => {*/}
-              {/*      if (hasMatchText) {*/}
-              {/*        navigate(*/}
-              {/*          `/p/${data.parentProjectId}/td/${data.id}/activity`,*/}
-              {/*        );*/}
-              {/*      } else {*/}
-              {/*        handleNavigate(data.id, '/td/:tdId/activity')();*/}
-              {/*      }*/}
-              {/*    }}*/}
-              {/*    justifyContent="center"*/}
-              {/*    alignItems="center"*/}
-              {/*    width="34px"*/}
-              {/*    height="32px"*/}
-              {/*    sx={{*/}
-              {/*      borderStyle: 'solid',*/}
-              {/*      borderWidth: '1px',*/}
-              {/*      borderColor: 'grayShade1',*/}
-              {/*      cursor: 'pointer',*/}
-              {/*      transition: 'all .25s ease',*/}
+              <Tooltip ml="6px" mainText="Activity">
+                <Flex
+                  onClick={() => {
+                    if (hasMatchText) {
+                      navigate(
+                        `/p/${data.parentProjectId}/td/${data.id}/activity`,
+                      );
+                    } else {
+                      handleNavigate(data.id, '/td/:tdId/activity')();
+                    }
+                  }}
+                  justifyContent="center"
+                  alignItems="center"
+                  width="34px"
+                  height="32px"
+                  sx={{
+                    borderStyle: 'solid',
+                    borderWidth: '1px',
+                    borderColor: 'grayShade1',
+                    cursor: 'pointer',
+                    transition: 'all .25s ease',
 
-              {/*      ':hover': {*/}
-              {/*        borderColor: 'black',*/}
-              {/*      },*/}
-              {/*    }}*/}
-              {/*  >*/}
-              {/*    {icons.history}*/}
-              {/*  </Flex>*/}
-              {/*</Tooltip>*/}
+                    ':hover': {
+                      borderColor: 'black',
+                    },
+                  }}
+                >
+                  {icons.history}
+                </Flex>
+              </Tooltip>
             </Flex>
           </Flex>
         </Flex>

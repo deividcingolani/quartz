@@ -11,7 +11,7 @@ import {
 import { StorageConnectorType } from '../../types/feature-group-data-preview';
 import { ActivityTypeSortOptions } from '../../pages/project/feature-group/activity/types';
 
-const getQueryParams = (onlineEnabled: boolean) => {
+export const getQueryParams = (onlineEnabled: boolean) => {
   // [param name, is need to include in the query]
   const paramsMap = [
     ['updateMetadata=true', true],
@@ -27,11 +27,14 @@ const getQueryParams = (onlineEnabled: boolean) => {
   );
 };
 
-const getExpandParam = (): string => {
+export const getExpandParam = (): string => {
   return `expand=commits&expand=jobs&expand=users&expand=statistics&expand=executions`;
 };
 
-const getTimeParam = (timeProps?: { from?: number; to?: number }): string => {
+export const getTimeParam = (timeProps?: {
+  from?: number;
+  to?: number;
+}): string => {
   if (!timeProps) {
     return '';
   }
@@ -43,7 +46,7 @@ const getTimeParam = (timeProps?: { from?: number; to?: number }): string => {
   }`;
 };
 
-const getOffsetParam = (offsetProps?: {
+export const getOffsetParam = (offsetProps?: {
   offset: number;
   limit?: number;
 }): string => {
@@ -56,7 +59,7 @@ const getOffsetParam = (offsetProps?: {
   return `limit=${limit}&offset=${offset}`;
 };
 
-const getSortParam = (eventType: ActivityTypeSortOptions): string => {
+export const getSortParam = (eventType: ActivityTypeSortOptions): string => {
   const sortMap = new Map<ActivityTypeSortOptions, string>([
     [ActivityTypeSortOptions.ALL, ''],
     [ActivityTypeSortOptions.COMMIT, 'filter_by=type:COMMIT'],

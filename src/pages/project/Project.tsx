@@ -31,6 +31,7 @@ import {
   TrainingDatasetCorrelation,
   TrainingDatasetCreate,
   TrainingDatasetEdit,
+  TrainingDatasetActivity,
   ProjectCode,
   ProjectDatabricks,
   ProjectSpark,
@@ -174,6 +175,22 @@ const Project: FC = () => {
       <Route
         path={routeNames.trainingDataset.correlation}
         element={<TrainingDatasetCorrelation />}
+      />
+      <Route
+        path={routeNames.trainingDataset.activity}
+        element={<TrainingDatasetActivity />}
+      />
+      <Route
+        path={routeNames.trainingDataset.activityType}
+        element={<FeatureGroupActivity />}
+      />
+      <Route
+        path={routeNames.trainingDataset.activityFromAndTo}
+        element={<FeatureGroupActivity />}
+      />
+      <Route
+        path={routeNames.trainingDataset.activityTypeAndFromAndTo}
+        element={<FeatureGroupActivity />}
       />
 
       <Route

@@ -64,13 +64,16 @@ const routeNames = {
     overview: '/td/:tdId',
     edit: '/td/:tdId/edit',
     create: '/td/new',
-    activity: '/td/:tdId/activity',
     statistics: '/td/:tdId/statistics',
     statisticsViewOne: '/td/:tdId/statistics/f/:featureName',
     statisticsViewCommit: '/td/:tdId/statistics/commit/:commitTime',
     statisticsViewCommitAndOne:
       '/td/:tdId/statistics/commit/:commitTime/f/:featureName',
     correlation: '/td/:tdId/correlation',
+    activity: '/td/:tdId/activity',
+    activityType: '/td/:tdId/activity/:type',
+    activityTypeAndFromAndTo: '/td/:tdId/activity/:type/:from/:to',
+    activityFromAndTo: '/td/:tdId/activity/:from/:to',
   },
 
   storageConnector: {

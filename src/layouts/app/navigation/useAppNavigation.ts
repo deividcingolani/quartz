@@ -317,13 +317,13 @@ const useAppNavigation = (): TreeNode[] => {
               ? 'Correlation are disabled'
               : '',
           },
-          // {
-          //   id: 'tdActivity',
-          //   title: 'Activity',
-          //   href: getHref('/activity', '/p/:id/td/:tdId/*'),
-          //   onClick: handleNavigateRelative('/activity', '/p/:id/td/:tdId/*'),
-          //   isActive: isActive('/p/:id/td/:tdId/activity'),
-          // },
+          {
+            id: 'tdActivity',
+            title: 'Activity',
+            href: getHref('/activity', '/p/:id/td/:tdId/*'),
+            onClick: handleNavigateRelative('/activity', '/p/:id/td/:tdId/*'),
+            isActive: isActive('/p/:id/td/:tdId/activity'),
+          },
         ],
       },
       {

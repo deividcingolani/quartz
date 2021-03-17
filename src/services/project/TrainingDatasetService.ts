@@ -4,8 +4,15 @@ import {
   TrainingDatasetQuery,
 } from '../../types/training-dataset';
 
-import { Provenance } from '../../types/feature-group';
-import { GetStatisticsData } from './FeatureGroupsService';
+import { ActivityItemData, Provenance } from '../../types/feature-group';
+import {
+  getExpandParam,
+  getOffsetParam,
+  getSortParam,
+  GetStatisticsData,
+  getTimeParam,
+} from './FeatureGroupsService';
+import { ActivityTypeSortOptions } from '../../pages/project/feature-group/activity/types';
 
 class TrainingDatasetService extends BaseApiService {
   getList = async (
@@ -195,6 +202,32 @@ class TrainingDatasetService extends BaseApiService {
     this.request<any>({
       type: RequestType.delete,
       url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${tdId}/tags/${name}`,
+    });
+
+  getActivity = (
+    projectId: number,
+    featureStoreId: number,
+    tdId: number,
+    eventType: ActivityTypeSortOptions,
+    timeOptions?: {
+      from?: number;
+      to?: number;
+    },
+    offsetOptions?: {
+      offset: number;
+      limit?: number;
+    },
+    sortType: 'asc' | 'desc' = 'desc',
+  ) =>
+    this.request<{
+      items: ActivityItemData[];
+    }>({
+      type: RequestType.get,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${tdId}/activity?${getExpandParam()}&${getSortParam(
+        eventType,
+      )}&${getTimeParam(timeOptions)}&${getOffsetParam(
+        offsetOptions,
+      )}&sort_by=TIMESTAMP:${sortType}`,
     });
 }
 

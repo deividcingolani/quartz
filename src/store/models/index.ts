@@ -35,6 +35,7 @@ import databricks from './databricks/databricks.model';
 import featureGroupSchematisedTags from './feature/statistics/featureGroupSchematisedTags.model';
 import featureGroupActivity from './feature/activity/featureGroupActivity.model';
 import members from './projects/members.model';
+import trainingDatasetActivity from './training-dataset/activity/trainingDatasetActivity.model';
 
 export interface RootModel extends Models<RootModel> {
   api: typeof api;
@@ -60,6 +61,7 @@ export interface RootModel extends Models<RootModel> {
   schematisedTagView: typeof schematisedTagView;
   trainingDatasets: typeof trainingDatasetModel;
   featureGroupActivity: typeof featureGroupActivity;
+  trainingDatasetActivity: typeof trainingDatasetActivity;
   featureGroupStatistics: typeof featureGroupStatistics;
   trainingDatasetView: typeof trainingDatasetView;
   trainingDatasetLabels: typeof trainingDatasetLabelModel;
@@ -90,13 +92,14 @@ const models: RootModel = {
   projectsList,
   featureGroups,
   featureStores,
-  schematisedTags,
   featureGroupView,
   featureGroupRows,
+  schematisedTags,
   featureGroupLabels,
   schematisedTagView,
   featureGroupActivity,
   featureGroupStatistics,
+  trainingDatasetActivity,
   featureGroupDataPreview,
   featureGroupCommitsDetail,
   featureGroupSchematisedTags,
