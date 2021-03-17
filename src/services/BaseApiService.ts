@@ -47,7 +47,7 @@ export default class BaseApiService {
       ...headers,
       Accept: 'application/json, text/plain, */*',
       ...(token && {
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       }),
     };
   }

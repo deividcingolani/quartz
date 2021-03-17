@@ -13,11 +13,13 @@ import useOS, { OSNames } from '../../../hooks/useOS';
 import useAnchor from '../../../components/anchor/useAnchor';
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
-// Sources
+
+// Svg
 import fg from '../../../sources/FG_06.json';
 import home from '../../../sources/home.json';
 import td from '../../../sources/TD_01 (1).json';
 import sources from '../../../sources/source_02rev.json';
+import oldui from '../../../sources/back_oldui.json';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
@@ -340,6 +342,15 @@ const useAppNavigation = (): TreeNode[] => {
           routeNames.storageConnector.list,
           routeNames.project.view,
         ),
+      },
+      {
+        id: 'oldui',
+        title: 'Back to current Hopsworks',
+        icon: oldui,
+        tooltipText: `Back to current Hopsworks`,
+        href: '/hopsworks',
+        isActive: false,
+        onClick: () => { window.location.href = "/hopsworks"; },
       },
     ];
   }, [
