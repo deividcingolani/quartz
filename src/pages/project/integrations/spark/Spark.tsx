@@ -271,11 +271,13 @@ const Spark: FC = () => {
             <Labeling>download a file containing the password.</Labeling>
           </Flex>
 
-          <Code
-            mt="10px"
-            copyButton={true}
-            content={certificate?.password || ''}
-          />
+          <Box m="-20px" mt="20px">
+            <Code
+              isColorSyntax={false}
+              copyButton={true}
+              content={certificate?.password || ''}
+            />
+          </Box>
         </Box>
       </TinyPopup>
 
@@ -348,7 +350,14 @@ const Spark: FC = () => {
 
           <Flex mt="20px">
             <Value minWidth="200px">3. Configure Spark</Value>
-            <Code copyButton={true} content={configurations.join('\n')} />
+            <Box width="100%" m="-20px">
+              <Code
+                title="Spark configuration"
+                isColorSyntax={true}
+                copyButton={true}
+                content={configurations.join('\n')}
+              />
+            </Box>
           </Flex>
         </Flex>
       </Card>

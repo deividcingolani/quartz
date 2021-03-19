@@ -71,7 +71,14 @@ const ApiCreate: FC = () => {
           () => navigate(routeNames.account.api.list),
         ]}
       >
-        <Code copyButton content={createdKey} />
+        <Box
+          m="-20px"
+          sx={{
+            wordBreak: 'break-all',
+          }}
+        >
+          <Code copyButton content={createdKey} title="API key" />
+        </Box>
         <Box my="20px">
           <Callout
             content="Save this API key preciously. It won’t be accessible afterwards"

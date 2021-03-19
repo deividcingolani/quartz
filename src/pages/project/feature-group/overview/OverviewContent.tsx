@@ -60,6 +60,7 @@ const OverviewContent: FC<ContentProps> = ({
     return [
       {
         title: 'Python',
+        language: 'python',
         code: `import hsfs
 connection = hsfs.connection()
 fs = connection.get_feature_store(name='${featureStoreData?.featurestoreName}')
@@ -67,6 +68,7 @@ fg = fs.get_feature_group('${data.name}', version=${data.version})`,
       },
       {
         title: 'Scala',
+        language: 'scala',
         code: `import com.logicalclocks.hsfs._ 
 val connection = HopsworksConnection.builder().build();
 val fs = connection.getFeatureStore("${featureStoreData?.featurestoreName}");

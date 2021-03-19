@@ -55,6 +55,7 @@ const TrainingDatasetOverviewContent: FC<TrainingDatasetContentProps> = ({
     return [
       {
         title: 'Python',
+        language: 'python',
         code: `import hsfs
 connection = hsfs.connection()
 fs = connection.get_feature_store(name='${featureStoreData?.featurestoreName}')
@@ -62,6 +63,7 @@ td = fs.get_training_dataset('${data.name}', version=${data.version})`,
       },
       {
         title: 'Scala',
+        language: 'scala',
         code: `import com.logicalclocks.hsfs._ 
 val connection = HopsworksConnection.builder().build();
 val fs = connection.getFeatureStore("${featureStoreData?.featurestoreName}");
