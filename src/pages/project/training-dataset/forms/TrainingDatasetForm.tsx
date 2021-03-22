@@ -120,6 +120,11 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
 
   const serverTags = useSelector(selectSchematisedTags);
 
+  const errorsValue =
+    Object.keys(errors).length !== 0
+      ? `${Object.keys(errors).length.toString()} errors`
+      : '';
+
   const { id: projectId } = useParams();
   const navigate = useNavigate();
 
@@ -415,15 +420,6 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
           )}
 
           <StatisticConfigurationForm isLoading={isLoading} />
-
-          <Box sx={{ div: { zIndex: 2 } }}>
-            <FeatureStickySummary
-              isEdit={isEdit}
-              onSubmit={onSubmit}
-              type={ItemDrawerTypes.td}
-              disabled={isLoading || isDisabled}
-            />
-          </Box>
         </Card>
         <CardSecondary
           mt="20px"
@@ -437,7 +433,6 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             type={ItemDrawerTypes.td}
             isDisabled={isDisabled}
           />
-
           <Box>
             <LabelsForm isDisabled={isDisabled || isLoading} />
           </Box>
@@ -446,7 +441,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         {!isEdit && <FeaturesForm />}
         {isEdit && <StatisticsFeaturesForm />}
         {isEdit && onDelete && (
-          <CardSecondary mb="100px" title="Danger zone">
+          <CardSecondary title="Danger zone">
             <Button
               intent="alert"
               onClick={onDelete}
@@ -457,6 +452,13 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
           </CardSecondary>
         )}
         {isLoading && <Loader />}
+        <FeatureStickySummary
+          errorsValue={errorsValue}
+          isEdit={isEdit}
+          onSubmit={onSubmit}
+          type={ItemDrawerTypes.td}
+          disabled={isLoading || isDisabled}
+        />
       </>
     </FormProvider>
   );

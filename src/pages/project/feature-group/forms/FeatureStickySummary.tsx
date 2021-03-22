@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useFormContext } from 'react-hook-form';
 import { Button, StickySummary } from '@logicalclocks/quartz';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
 
 export interface StickySummaryProps {
   onSubmit: () => void;
   isEdit?: boolean;
   isUpdatedFeatures?: boolean;
   disabled: boolean;
+  errorsValue: string;
   type?: ItemDrawerTypes;
 }
 
@@ -17,13 +19,14 @@ const FeatureStickySummary: FC<StickySummaryProps> = ({
   isUpdatedFeatures,
   isEdit,
   disabled,
+  errorsValue,
   type = ItemDrawerTypes.fg,
 }) => {
   const { watch } = useFormContext();
 
   const navigate = useNavigate();
-
   const { name } = watch(['name']);
+  const hasScrollOnScreen = useScreenWithScroll();
 
   return (
     <StickySummary
@@ -61,6 +64,8 @@ const FeatureStickySummary: FC<StickySummaryProps> = ({
         </Button>
       }
       title={name}
+      errorsValue={errorsValue}
+      hasScrollOnScreen={hasScrollOnScreen}
     />
   );
 };

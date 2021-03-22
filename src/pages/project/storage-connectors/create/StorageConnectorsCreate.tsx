@@ -85,7 +85,6 @@ const StorageConnectorsCreate: FC = () => {
         });
 
         dispatch.featureStoreStorageConnectors.clear();
-
         navigate('/storage-connectors', 'p/:id/*');
       }
     },

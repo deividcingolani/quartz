@@ -50,9 +50,9 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
           ref={contentRef}
           justifyContent="center"
           minWidth="939px"
-          id="content"
           sx={styles}
           p="20px"
+          id="content"
           pb="0"
         >
           <Flex

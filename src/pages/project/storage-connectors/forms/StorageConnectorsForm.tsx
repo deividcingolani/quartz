@@ -56,6 +56,7 @@ import getInputValidation from '../../../../utils/getInputValidation';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import featureStoreService from '../../../../services/project/FeatureStoresService';
+import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
 
 export interface StorageConnectorsCreateFormProps {
   error?: EffectError<{ errorMsg: string }>;
@@ -118,6 +119,11 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
     resolver: yupResolver(schema),
   });
 
+  const errorsValue =
+    Object.keys(errors).length !== 0
+      ? `${Object.keys(errors).length.toString()} errors`
+      : '';
+
   const { name: storageName, protocol, ...descriptions } = watch([
     'name',
     'protocol',
@@ -148,6 +154,8 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
     if (isEdit) unregister('name');
   });
 
+  const hasScrollOnScreen = useScreenWithScroll();
+
   const isValidName = useCallback(async () => {
     if (featureStoreData?.featurestoreId && projectId) {
       const { data } = await featureStoreService.getStorageConnectors(
@@ -167,163 +175,166 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
   };
 
   return (
-    <Card
-      title={isEdit ? 'Edit storage connector' : 'Set up storage connector'}
-      mb="100px"
-      contentProps={{ overflow: 'visible' }}
-    >
-      <Flex sx={formStyles} flexDirection="column">
-        {/* API Error Messages */}
-        {error && (
-          <Callout
-            type={CalloutTypes.error}
-            content="Can’t connect to the server. Check your URL and credentials."
-          />
-        )}
-        {/* Name and Description */}
-        {isEdit && !!initialData && (
-          <Flex>
-            <Box mr="20px">
-              <Microlabeling gray>Name</Microlabeling>
-              <Value mt="4px" primary>
-                {initialData.name}
-              </Value>
-            </Box>
-            <Box>
-              <Microlabeling gray>Protocol</Microlabeling>
-              <Value mt="4px" primary>
-                {protocolVisualOptions.getByKey(
-                  protocolOptions.getByValue(
-                    initialData.storageConnectorType,
-                  ) as StorageConnectorProtocol,
-                )}
-              </Value>
-            </Box>
-          </Flex>
-        )}
-        <Flex mb="20px">
-          {!isEdit && (
-            <Input
-              label="Name"
-              name="name"
-              disabled={isLoading || isDisabled || isEdit}
-              placeholder="name of the source"
-              ref={register}
-              labelAction={
-                !isEdit && (
-                  <Tooltip
-                    position={TooltipPositions.right}
-                    mainText="Only alphanumeric characters, dash or underscore"
-                    ml="5px"
-                  >
-                    <Icon icon="info-circle" />
-                  </Tooltip>
-                )
-              }
-              {...getInputValidation('name', errors)}
+    <>
+      <Card
+        title={isEdit ? 'Edit storage connector' : 'Set up storage connector'}
+        contentProps={{ overflow: 'visible' }}
+        mb="100px"
+      >
+        <Flex sx={formStyles} flexDirection="column">
+          {/* API Error Messages */}
+          {error && (
+            <Callout
+              type={CalloutTypes.error}
+              content="Can’t connect to the server. Check your URL and credentials."
             />
           )}
-          <Input
-            labelProps={{
-              flexGrow: 1,
-              mt: isEdit ? '20px' : 0,
-              marginLeft: !isEdit ? '20px' : 0,
-            }}
-            label="Description"
-            name="description"
-            optional={true}
-            disabled={isLoading || isDisabled}
-            placeholder="description"
-            ref={register}
-            {...getInputValidation('description', errors)}
-          />
-        </Flex>
-
-        {/* Protocol Radio control */}
-        {!isEdit && (
-          <Box>
-            <Label mt={0} mb="8px">
-              Protocol
-            </Label>
-            <Controller
-              control={control}
-              name="protocol"
-              render={({ onChange, value }) => (
-                <RadioGroup
-                  flexDirection="row"
-                  mr="30px"
-                  disabled={isEdit || isLoading}
-                  value={protocolVisualOptions.getByKey(value)}
-                  options={protocolVisualOptions.labels}
-                  onChange={(val) => {
-                    reset(); // reset values from previous protocol
-                    onChange(protocolVisualOptions.getByValue(val));
-                  }}
-                />
-              )}
+          {/* Name and Description */}
+          {isEdit && !!initialData && (
+            <Flex>
+              <Box mr="20px">
+                <Microlabeling gray>Name</Microlabeling>
+                <Value mt="4px" primary>
+                  {initialData.name}
+                </Value>
+              </Box>
+              <Box>
+                <Microlabeling gray>Protocol</Microlabeling>
+                <Value mt="4px" primary>
+                  {protocolVisualOptions.getByKey(
+                    protocolOptions.getByValue(
+                      initialData.storageConnectorType,
+                    ) as StorageConnectorProtocol,
+                  )}
+                </Value>
+              </Box>
+            </Flex>
+          )}
+          <Flex mb="20px">
+            {!isEdit && (
+              <Input
+                label="Name"
+                name="name"
+                disabled={isLoading || isDisabled || isEdit}
+                placeholder="name of the source"
+                ref={register}
+                labelAction={
+                  !isEdit && (
+                    <Tooltip
+                      position={TooltipPositions.right}
+                      mainText="Only alphanumeric characters, dash or underscore"
+                      ml="5px"
+                    >
+                      <Icon icon="info-circle" />
+                    </Tooltip>
+                  )
+                }
+                {...getInputValidation('name', errors)}
+              />
+            )}
+            <Input
+              labelProps={{
+                flexGrow: 1,
+                mt: isEdit ? '20px' : 0,
+                marginLeft: !isEdit ? '20px' : 0,
+              }}
+              label="Description"
+              name="description"
+              optional={true}
+              disabled={isLoading || isDisabled}
+              placeholder="description"
+              ref={register}
+              {...getInputValidation('description', errors)}
             />
-          </Box>
-        )}
+          </Flex>
 
-        <Divider mt={isEdit ? '0' : '20px'} legend="Parameters" />
+          {/* Protocol Radio control */}
+          {!isEdit && (
+            <Box>
+              <Label mt={0} mb="8px">
+                Protocol
+              </Label>
+              <Controller
+                control={control}
+                name="protocol"
+                render={({ onChange, value }) => (
+                  <RadioGroup
+                    flexDirection="row"
+                    mr="30px"
+                    disabled={isEdit || isLoading}
+                    value={protocolVisualOptions.getByKey(value)}
+                    options={protocolVisualOptions.labels}
+                    onChange={(val) => {
+                      reset(); // reset values from previous protocol
+                      onChange(protocolVisualOptions.getByValue(val));
+                    }}
+                  />
+                )}
+              />
+            </Box>
+          )}
 
-        {/* Form Section */}
-        <Form
-          setValue={setValue}
-          watch={watch}
-          errors={errors}
-          key="form"
-          register={register}
-          control={control}
-          isDisabled={isLoading || isDisabled}
-        />
+          <Divider mt={isEdit ? '0' : '20px'} legend="Parameters" />
 
-        {/* Submit Section */}
-        {isEdit && onDelete && (
-          <>
-            <Divider legend="Danger zone" />
-            <Button
-              width="fit-content"
-              intent="alert"
-              disabled={isLoading || isDisabled}
-              onClick={onDelete}
-            >
-              Delete the storage connector
-            </Button>
-          </>
-        )}
-        <StickySummary
-          title={cropText(storageName, 24)}
-          firstValue={cropText(description, 50)}
-          mainButton={
-            <Button
-              disabled={isLoading || isDisabled}
-              intent="primary"
-              onClick={handleSubmitWithNameValidation}
-            >
-              {isEdit ? 'Save' : 'Setup storage connector'}
-            </Button>
-          }
-          secondaryButton={
-            <Button
-              type="button"
-              disabled={isLoading}
-              intent="secondary"
-              onClick={() =>
-                navigate(
-                  routeNames.storageConnector.list,
-                  routeNames.project.view,
-                )
-              }
-            >
-              Back
-            </Button>
-          }
-        />
-      </Flex>
+          {/* Form Section */}
+          <Form
+            setValue={setValue}
+            watch={watch}
+            errors={errors}
+            key="form"
+            register={register}
+            control={control}
+            isDisabled={isLoading || isDisabled}
+          />
 
-      {isLoading && <Loader />}
-    </Card>
+          {/* Submit Section */}
+          {isEdit && onDelete && (
+            <>
+              <Divider legend="Danger zone" />
+              <Button
+                width="fit-content"
+                intent="alert"
+                disabled={isLoading || isDisabled}
+                onClick={onDelete}
+              >
+                Delete the storage connector
+              </Button>
+            </>
+          )}
+        </Flex>
+        {isLoading && <Loader />}
+      </Card>
+      <StickySummary
+        title={cropText(storageName, 24)}
+        firstValue={cropText(description, 50)}
+        errorsValue={errorsValue}
+        mainButton={
+          <Button
+            disabled={isLoading || isDisabled}
+            intent="primary"
+            onClick={handleSubmitWithNameValidation}
+          >
+            {isEdit ? 'Save' : 'Setup storage connector'}
+          </Button>
+        }
+        secondaryButton={
+          <Button
+            type="button"
+            disabled={isLoading}
+            intent="secondary"
+            onClick={() =>
+              navigate(
+                routeNames.storageConnector.list,
+                routeNames.project.view,
+              )
+            }
+          >
+            Back
+          </Button>
+        }
+        hasScrollOnScreen={hasScrollOnScreen}
+      />
+    </>
   );
 };
 

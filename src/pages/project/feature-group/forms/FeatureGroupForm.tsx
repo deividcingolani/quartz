@@ -116,6 +116,11 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
 
   const { features } = watch(['features']);
 
+  const errorsValue =
+    Object.keys(errors).length !== 0
+      ? `${Object.keys(errors).length.toString()} errors`
+      : '';
+
   const isUpdatedFeatures = useMemo(() => isUpdatedFunction(features), [
     features,
     isUpdatedFunction,
@@ -226,15 +231,15 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
           </>
         )}
 
-        <FeatureStickySummary
-          isEdit={isEdit}
-          isUpdatedFeatures={isUpdatedFeatures}
-          onSubmit={onSubmit}
-          disabled={isLoading || isDisabled}
-        />
-
         {isLoading && <Loader />}
       </Card>
+      <FeatureStickySummary
+        isEdit={isEdit}
+        isUpdatedFeatures={isUpdatedFeatures}
+        onSubmit={onSubmit}
+        disabled={isLoading || isDisabled}
+        errorsValue={errorsValue}
+      />
     </FormProvider>
   );
 };
