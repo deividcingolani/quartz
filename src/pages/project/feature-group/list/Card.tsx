@@ -96,10 +96,11 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 #{data.id}
               </Value>
               {isSwitch && (
-                <Box onClick={(e) => e.stopPropagation()} ml="-5px" mr="5px">
+                <Box onClick={(e) => e.stopPropagation()} ml="-5px" mr="10px" mt="5px">
                   <Symbol
                     handleClick={handleBasket(data.features, data)}
                     mode={SymbolMode.bulk}
+                    possible={data.features.length > 0}
                     tooltipMainText={
                       isActiveFeatures(data.features, data)
                         ? 'Remove all features from basket'

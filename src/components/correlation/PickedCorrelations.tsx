@@ -123,6 +123,7 @@ const PickedCorrelations: FC<PickedCorrelationsProps> = ({
               <Symbol
                 handleClick={handleBasket(pickedFeatures, item as FeatureGroup)}
                 mode={SymbolMode.bulk}
+                possible={pickedFeatures.length > 0}
                 tooltipMainText={
                   isActiveFeatures(pickedFeatures, item as FeatureGroup)
                     ? 'Remove all features from basket'
@@ -172,7 +173,7 @@ const PickedCorrelations: FC<PickedCorrelationsProps> = ({
                   <Label ml="50px">{vertical}</Label>
 
                   {isSwitch && type === ItemDrawerTypes.fg && (
-                    <Box mb="2px" ml="10px">
+                    <Box ml="10px">
                       <Symbol
                         handleClick={handleBasket(
                           [verticalFeature],
@@ -196,7 +197,7 @@ const PickedCorrelations: FC<PickedCorrelationsProps> = ({
                   <Label>{horizontal}</Label>
 
                   {isSwitch && type === ItemDrawerTypes.fg && (
-                    <Box mb="2px" ml="10px">
+                    <Box ml="10px">
                       <Symbol
                         handleClick={handleBasket(
                           [horizontalFeature],

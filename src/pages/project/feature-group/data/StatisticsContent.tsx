@@ -230,9 +230,10 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
           </Value>
           <Value>features</Value>
           {isSwitch && type === ItemDrawerTypes.fg && (
-            <Box ml="5px">
+            <Box ml="10px">
               <Symbol
                 mode={SymbolMode.bulk}
+                possible={sortedData.length > 0}
                 tooltipMainText="Add all features to basket"
                 tooltipSecondaryText={`${sortedData.length} features`}
                 handleClick={handleBasket(sortedData, data as FeatureGroup)}

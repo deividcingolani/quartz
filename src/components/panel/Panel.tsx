@@ -70,8 +70,9 @@ const Panel: FC<PanelProps> = ({
         </Value>
 
         {isSwitch && !!data && type === ItemDrawerTypes.fg && (
-          <Box onClick={(e) => e.stopPropagation()} ml="-5px" mr="5px">
+          <Box onClick={(e) => e.stopPropagation()} ml="-5px" mr="10px">
             <Symbol
+              possible={data.features.length > 0}
               handleClick={handleBasket(data.features, data)}
               mode={SymbolMode.bulk}
               tooltipMainText={

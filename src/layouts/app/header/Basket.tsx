@@ -1,75 +1,48 @@
-import { Box } from 'rebass';
-import {
-  Text,
-  List,
-  Icon,
-  Tooltip,
-  ListItem,
-  useDropdown,
-  useOnClickOutside,
-  usePopup,
-} from '@logicalclocks/quartz';
+import { Box, Flex } from 'rebass';
+import { Text, Tooltip, usePopup } from '@logicalclocks/quartz';
 import React, { FC, useRef } from 'react';
-import { Dispatch } from '../../../store';
 import svg from '../../../sources/basketSvg';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   selectBasketFeaturesLength,
   selectSwitch,
 } from '../../../store/models/localManagement/basket.selectors';
 import BasketDrawer from '../../../components/basket/BasketDrawer';
 
-const BasketMenu: FC = () => {
-  const dispatch = useDispatch<Dispatch>();
+import {
+  basketContainerStyles,
+  openBasketIconStyles,
+  featureCountStyles,
+} from './basket.styles';
 
+const BasketMenu: FC = () => {
   const featureLength = useSelector(selectBasketFeaturesLength);
   const isSwitched = useSelector(selectSwitch);
 
   const buttonRef = useRef(null);
 
-  const [isOpen, handleToggle, handleClickOutside] = useDropdown();
   const [isOpenPopup, handleTogglePopup] = usePopup(false);
-
-  useOnClickOutside(buttonRef, handleClickOutside);
 
   return (
     <>
-      <BasketDrawer isOpen={isOpenPopup} handleToggle={handleTogglePopup} />
-      <Box
-        mt="5px"
-        ref={buttonRef}
-        sx={{ position: 'relative', right: '16px' }}
-      >
+      <BasketDrawer
+        isOpen={isOpenPopup}
+        handleToggle={handleTogglePopup}
+        isSwitched={isSwitched}
+      />
+      <Box ref={buttonRef} sx={{ position: 'relative', right: '16px' }}>
         <Tooltip mainText="Feature basket">
-          <Text sx={{ cursor: 'pointer' }} onClick={() => handleToggle()}>
-            {isSwitched ? svg.open : svg.close}
-          </Text>
+          {isSwitched ? (
+            <Flex sx={basketContainerStyles} onClick={handleTogglePopup}>
+              <Text sx={openBasketIconStyles}>{svg.open}</Text>
+              <Text sx={featureCountStyles}>{featureLength}</Text>
+            </Flex>
+          ) : (
+            <Text sx={basketContainerStyles} onClick={handleTogglePopup}>
+              {svg.close}
+            </Text>
+          )}
         </Tooltip>
-        {isOpen && (
-          <List
-            overflow="visible"
-            style={{ position: 'absolute', right: '-10px', top: '25px' }}
-          >
-            <ListItem onClick={() => dispatch.basket.switch(!isSwitched)}>
-              {isSwitched ? 'Hide markers' : 'Show markers'}
-            </ListItem>
-            <ListItem onClick={handleTogglePopup}>Open basket</ListItem>
-            <ListItem
-              backgroundColor="grayShade3"
-              color="gray"
-              style={{
-                borderTop: '1px solid gray',
-              }}
-            >
-              {featureLength} features selected
-              <Box ml="8px">
-                <Tooltip mainText="Use markers to add features to this basket and create a training dataset">
-                  <Icon icon="info-circle" size="sm" />
-                </Tooltip>
-              </Box>
-            </ListItem>
-          </List>
-        )}
       </Box>
     </>
   );

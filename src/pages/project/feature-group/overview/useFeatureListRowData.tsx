@@ -39,8 +39,7 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
         {
           children: isSwitch ? (
             <Flex>
-              {name}
-              <Box ml="5px">
+              <Box mr="15px">
                 <Symbol
                   handleClick={handleBasket([feature], fg)}
                   inBasket={isActiveFeature(feature, fg)}
@@ -51,6 +50,7 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
                   }
                 />
               </Box>
+              {name}
             </Flex>
           ) : (
             name

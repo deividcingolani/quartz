@@ -216,9 +216,10 @@ const FeatureGroupDataPreview: FC = () => {
           </Value>
           <Value>features displayed</Value>
           {isSwitch && (
-            <Box ml="5px">
+            <Box ml="5px" mt="-3px">
               <Symbol
                 mode={SymbolMode.bulk}
+                possible={filteredFeatures.length > 0}
                 tooltipMainText="Add all features to basket"
                 tooltipSecondaryText={`${filteredFeatures.length} features`}
                 handleClick={handleBasket(filteredFeatures, view)}

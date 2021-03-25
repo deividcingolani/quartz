@@ -53,7 +53,7 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
         <Flex alignItems="flex-end">
           <Subtitle>{name}</Subtitle>
           {isSwitch && dataType === ItemDrawerTypes.fg && (
-            <Box mb="2px" ml="10px">
+            <Box ml="10px">
               <Symbol
                 handleClick={handleBasket([data], parent as FeatureGroup)}
                 inBasket={isActiveFeature(data, parent as FeatureGroup)}
