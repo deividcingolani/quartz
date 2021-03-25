@@ -22,6 +22,7 @@ import { mapTags, validateSchema } from '../../feature-group/utils';
 import { name, shortText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
 // Selectors
+import { selectFeatureGroups } from '../../../../store/models/localManagement/basket.selectors';
 import { selectSchematisedTags } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
 import {
   Button,
@@ -132,10 +133,13 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     ({ storageConnectorType }) => storageConnectorType !== 'JDBC',
   );
 
+  const features  = useSelector(selectFeatureGroups)
+
   const onSubmit = useCallback(
     handleSubmit(async (data: TrainingDatasetFormData) => {
       let next = await validateSchema(data.tags, serverTags, setError);
 
+      data.features = features;
       const hasFeatures = !!data.features.length;
       if (!hasFeatures) {
         setError('features', { message: 'Join at least one feature' });

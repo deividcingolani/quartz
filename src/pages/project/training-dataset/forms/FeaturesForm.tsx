@@ -8,17 +8,18 @@ import {
   Labeling,
   Value,
   InputValidation,
+  usePopup,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
-import { useFormContext } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
+import routeNames from '../../../../routes/routeNames';
+
 
 // Types
 import { Dispatch, RootState } from '../../../../store';
 import { Feature } from '../../../../types/feature-group';
-import { FeatureGroupBasket } from '../../../../store/models/localManagement/basket.model';
 // Selectors
 import FeatureDrawer from '../../../../components/feature-drawer/FeatureDrawer';
 import {
@@ -27,6 +28,8 @@ import {
 } from '../../../../store/models/localManagement/basket.selectors';
 // Hooks
 import useDrawer from '../../../../hooks/useDrawer';
+import SearchPopup from '../../../../components/basket/BasketTutoPopup';
+import { useNavigate } from 'react-router-dom';
 
 export interface SelectedState {
   fgId: number;
@@ -35,10 +38,6 @@ export interface SelectedState {
 
 const FeaturesForm: FC = () => {
   const { id: projectId } = useParams();
-
-  const { setValue } = useFormContext();
-
-  const [isOpen, setOpen] = useState<boolean>();
 
   const { handleSelectItem, handleClose } = useDrawer();
 
@@ -54,83 +53,21 @@ const FeaturesForm: FC = () => {
 
   const dispatch = useDispatch<Dispatch>();
 
-  const basket = useSelector(selectFeatureGroups);
-
-  const [featureGroups, setFeatureGroups] = useState<FeatureGroupBasket[]>([]);
+  const featureGroups = useSelector(selectFeatureGroups);
 
   const [selectedFeature, setSelected] = useState<SelectedState>();
 
-  useEffect(() => {
-    setValue('features', featureGroups);
-  }, [featureGroups, setValue]);
+  const [isOpenSearchPopup, handleToggleSearchPopup] = usePopup(false);
 
-  const updateFeatures = useCallback(() => {
-    const copy = featureGroups.slice();
-    basket.forEach(({ features, fg, projectId }) => {
-      const fgIndex = copy.findIndex(({ fg: { id } }) => id === fg.id);
+  const navigate = useNavigate();
 
-      if (fgIndex < 0) {
-        copy.unshift({
-          fg,
-          projectId,
-          features,
-        });
-      } else {
-        const newFeatures = features.filter(
-          ({ name }) =>
-            !copy[fgIndex].features.find((feature) => feature.name === name),
-        );
-        copy[fgIndex].features = [...newFeatures, ...copy[fgIndex].features];
-      }
-    });
 
-    setFeatureGroups(copy);
-  }, [featureGroups, basket]);
-
-  const isNewFeatures = useCallback(() => {
-    return !!basket.find(({ features, fg }) => {
-      const fgIndex = featureGroups.findIndex(({ fg: { id } }) => id === fg.id);
-
-      if (fgIndex < 0) {
-        return true;
-      }
-
-      const prevFeatures = featureGroups[fgIndex].features;
-
-      return !!features.find(
-        ({ name }) => !prevFeatures.find((feature) => feature.name === name),
-      );
-    });
-  }, [featureGroups, basket]);
-
-  const handleWithdrawBasket = useCallback(
-    (clearBasket = false) => () => {
-      updateFeatures();
-
-      setOpen(true);
-
-      if (clearBasket) {
-        dispatch.basket.clear();
-      }
+  const handleGoToFG = useCallback(
+    () => () => {
+      dispatch.basket.switch(true)
+      navigate(`/p/${projectId}/${routeNames.featureGroup.list}`)
     },
-    [dispatch, updateFeatures],
-  );
-
-  const handleDelete = useCallback(
-    (index: number, featureName: string) => () => {
-      const copy = featureGroups.slice();
-
-      copy[index].features = copy[index].features.filter(
-        ({ name }) => name !== featureName,
-      );
-
-      if (!copy[index].features.length) {
-        copy.splice(index, 1);
-      }
-
-      setFeatureGroups(copy);
-    },
-    [featureGroups],
+    [dispatch.basket, navigate, projectId]
   );
 
   const handleOpenStatistics = useCallback(
@@ -149,6 +86,7 @@ const FeaturesForm: FC = () => {
 
   return (
     <>
+      <SearchPopup isOpen={isOpenSearchPopup} handleToggle={handleToggleSearchPopup} />
       {!!selectedFeature?.feature &&
         !!selectedFeature.fgId &&
         featureStoreData?.featurestoreId && (
@@ -166,21 +104,27 @@ const FeaturesForm: FC = () => {
         )}
       <CardSecondary title="Features" mb="100px">
         <Flex flexDirection="column">
-          <Value>Withdraw features from a basket</Value>
-          <Flex mt="10px">
-            <Button
+          <Value>Selected features</Value>
+          <Flex mt="8px">
+            {/* <Button
               mr="10px"
-              disabled={!basket.length || !isNewFeatures()}
-              onClick={handleWithdrawBasket()}
+              intent="secondary"
+              onClick={() => {}}
             >
-              Withdraw basket
+              Pick features using search
+            </Button> */}
+          </Flex>
+          <Flex mt="8px">
+            <Button
+              onClick={handleGoToFG()}
+            >
+              Pick features from the UI ↗
             </Button>
             <Button
-              intent="secondary"
-              disabled={!basket.length || !isNewFeatures()}
-              onClick={handleWithdrawBasket(true)}
+              intent="inline"
+              onClick={handleToggleSearchPopup}
             >
-              Withdraw and clear basket
+              How to pick features using from the UI?
             </Button>
           </Flex>
           <Box my="8px">
@@ -189,8 +133,8 @@ const FeaturesForm: FC = () => {
                 {featureLength} features in basket
               </InputValidation>
             ) : (
-              <InputValidation intent="warning">
-                Your basket is empty
+              <InputValidation>
+                You have not selected any feature
               </InputValidation>
             )}
           </Box>
@@ -209,8 +153,7 @@ const FeaturesForm: FC = () => {
             </Box>
           )}
         </Flex>
-        {isOpen && (
-          <Flex mt="5px" flexDirection="column">
+        <Flex mt="5px" flexDirection="column">
             {!featureGroups.length && (
               <Value mt="10px">No features selected</Value>
             )}
@@ -237,7 +180,9 @@ const FeaturesForm: FC = () => {
                   </Labeling>
                 </Flex>
                 <Flex mt="5px" flexDirection="column">
-                  {features.map(({ name, description, type }) => (
+                  {features.map((feature) => {
+                    let { name, description, type } = feature
+                    return(
                     <Flex
                       py="15px"
                       px="20px"
@@ -264,18 +209,22 @@ const FeaturesForm: FC = () => {
                           value={type}
                         />
                         <IconButton
-                          onClick={handleDelete(index, name)}
+                          onClick={ () =>
+                            dispatch.basket.deleteFeatures({
+                              projectId,
+                              featureGroup: fg,
+                              features: [feature],
+                            }) }
                           tooltip="Delete"
                           icon="trash-alt"
                         />
                       </Flex>
                     </Flex>
-                  ))}
+                  )})}
                 </Flex>
               </Flex>
             ))}
           </Flex>
-        )}
       </CardSecondary>
     </>
   );

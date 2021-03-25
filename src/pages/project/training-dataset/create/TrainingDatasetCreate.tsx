@@ -85,6 +85,8 @@ const TrainingDatasetCreate: FC = () => {
 
         if (id) {
           dispatch.trainingDatasets.clear();
+          dispatch.basket.switch(false);
+          dispatch.basket.clear();
           navigate(`/${id}`, 'p/:id/td/*');
         }
       }
