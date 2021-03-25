@@ -9,6 +9,7 @@ import useAppNavigation from './useAppNavigation';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import ErrorBoundary from '../../../components/error-boundary/ErrorBoundary';
 
 const map: { [key: string]: string } = {
   'p/:id/fg/:id/statistics/*': '/fg',
@@ -54,4 +55,10 @@ const AppNavigation: FC = () => {
   );
 };
 
-export default memo(AppNavigation);
+const withErrorBoundary = () => (
+  <ErrorBoundary>
+    <AppNavigation />
+  </ErrorBoundary>
+);
+
+export default memo(withErrorBoundary);

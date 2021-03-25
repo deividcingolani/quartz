@@ -19,6 +19,7 @@ import FeatureList from './FeatureList';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import CardBoundary from '../../../../components/error-boundary/CardBoundary';
 
 export interface ContentProps {
   data: FeatureGroup;
@@ -138,25 +139,33 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
       <Box mt="55px" width="100%">
         <SummaryData data={data} />
         <Anchor groupName="fgOverview" anchor={featureList}>
-          <FeatureList data={data} />
+          <CardBoundary mt="20px" title="Feature list">
+            <FeatureList data={data} />
+          </CardBoundary>
         </Anchor>
 
         <Anchor groupName="fgOverview" anchor={provenance}>
-          <Provenance data={data.provenance} />
+          <CardBoundary mt="20px" title="Provenance">
+            <Provenance data={data.provenance} />
+          </CardBoundary>
         </Anchor>
 
         <Anchor groupName="fgOverview" anchor={schematisedTags}>
-          <SchematisedTags data={data.tags} />
+          <CardBoundary mt="20px" title="Tags">
+            <SchematisedTags data={data.tags} />
+          </CardBoundary>
         </Anchor>
 
         <Anchor anchor={api} groupName="fgOverview">
-          <CodeCard
-            mt="20px"
-            mb="40px"
-            title="API"
-            actions={action}
-            content={apiCode}
-          />
+          <CardBoundary mt="20px" title="API">
+            <CodeCard
+              mt="20px"
+              mb="40px"
+              title="API"
+              actions={action}
+              content={apiCode}
+            />
+          </CardBoundary>
         </Anchor>
       </Box>
     </>

@@ -34,7 +34,7 @@ const SearchLayout: FC<SettingsLayoutProps> = ({
         >
           <Flex
             width="100%"
-            height="max-content"
+            height="100%"
             minHeight="100%"
             flexDirection="column"
           >

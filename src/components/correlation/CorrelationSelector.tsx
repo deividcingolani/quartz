@@ -174,7 +174,7 @@ const CorrelationSelector: FC<CorrelationSelectorProps> = ({
           value={search}
           labelProps={{ mt: '30px' }}
           placeholder="Find a feature..."
-          onChange={({ target }) => setSearch(target.value)}
+          onChange={({ target }: any) => setSearch(target.value)}
         />
         <Flex>
           <Button

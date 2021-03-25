@@ -41,12 +41,12 @@ const LeftMenu: FC<LeftMenuProps> = ({ isLoading }) => {
         value={search}
         variant="white"
         placeholder="search for..."
-        onKeyDown={(e) => {
+        onKeyDown={(e: any) => {
           if (e.key === 'Enter') {
             handleSearch();
           }
         }}
-        onChange={({ target }) => setSearch(target.value)}
+        onChange={({ target }: any) => setSearch(target.value)}
       />
       <Button
         mt="20px"

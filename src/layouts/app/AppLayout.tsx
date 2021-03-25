@@ -58,7 +58,7 @@ const AppLayout: FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
           <Flex
             width="100%"
             maxWidth="1274px"
-            height="max-content"
+            height="100%"
             minHeight="100%"
             flexDirection="column"
           >

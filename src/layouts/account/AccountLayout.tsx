@@ -34,8 +34,8 @@ const AccountLayout: FC<AccountLayoutProps> = ({ children }) => {
         >
           <Flex
             width="100%"
+            height="100%"
             maxWidth="1000px"
-            height="max-content"
             minHeight="100%"
             flexDirection="column"
           >

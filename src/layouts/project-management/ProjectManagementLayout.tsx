@@ -47,7 +47,7 @@ const ProjectManagementLayout: FC<ProjectManagementLayoutProps> = ({
           <Flex
             width="100%"
             maxWidth="1000px"
-            height="max-content"
+            height="100%"
             minHeight="100%"
             flexDirection="column"
           >

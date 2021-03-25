@@ -195,7 +195,7 @@ const RedshiftForm: FC<StorageConnectorFormProps> = ({
                 disabled={isDisabled}
                 placeholder="enter the key"
                 defaultValue={item.key}
-                ref={(ref) => register(ref)}
+                ref={(ref: any) => register(ref)}
                 {...getInputValidation('key', argumentsError)}
               />
               <IconButton

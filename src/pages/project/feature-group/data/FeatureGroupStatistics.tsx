@@ -21,6 +21,8 @@ import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
+const dateFormat = 'yyyy-MM-dd - HH:mm:ss';
+
 const FeatureGroupStatistics: FC = () => {
   const { id, fgId, featureName, commitTime } = useParams();
 
@@ -42,9 +44,7 @@ const FeatureGroupStatistics: FC = () => {
     () =>
       commits.map(
         (c) =>
-          `${format(+c, 'M.d.yyyy - HH:mm:ss')}${
-            c === lastCommit ? ' (latest)' : ''
-          }`,
+          `${format(+c, dateFormat)}${c === lastCommit ? ' (latest)' : ''}`,
       ),
     [commits, lastCommit],
   );
@@ -53,9 +53,9 @@ const FeatureGroupStatistics: FC = () => {
     let time = commitTime;
     if (lastCommit) {
       if (!time || time === lastCommit) {
-        time = `${format(+lastCommit, 'M.d.yyyy - HH:mm:ss')} (latest)`;
+        time = `${format(+lastCommit, dateFormat)} (latest)`;
       } else if (Number.isInteger(+time)) {
-        time = format(+time, 'M.d.yyyy - HH:mm:ss');
+        time = format(+time, dateFormat);
       }
     }
     return time;
@@ -95,11 +95,11 @@ const FeatureGroupStatistics: FC = () => {
       }
 
       const time = commits.find(
-        (c) => format(+c, 'M.d.yyyy - HH:mm:ss') === normalizedTime,
+        (c) => format(+c, dateFormat) === normalizedTime,
       );
 
       const currentTime = commits.find((c) => {
-        const formatted = format(+c, 'M.d.yyyy - HH:mm:ss');
+        const formatted = format(+c, dateFormat);
 
         return formatted === commit || `${formatted} (latest)` === commit;
       });

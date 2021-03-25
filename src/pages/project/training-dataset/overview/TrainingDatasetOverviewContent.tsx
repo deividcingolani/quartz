@@ -18,6 +18,7 @@ import Provenance from './Provenance';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import SplitGraph from './SplitGraph';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import CardBoundary from '../../../../components/error-boundary/CardBoundary';
 
 export interface TrainingDatasetContentProps {
   data: TrainingDataset;
@@ -131,25 +132,33 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
       <Box mb="20px" mt="55px" width="100%">
         <TrainingDatasetOverviewSummary data={data} />
         <Anchor groupName="tdOverview" anchor={featureList}>
-          <TrainingDatasetFeatureList data={data} />
+          <CardBoundary mt="20px" title="Feature list">
+            <TrainingDatasetFeatureList data={data} />
+          </CardBoundary>
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={provenance}>
-          <Provenance data={data.provenance} />
+          <CardBoundary mt="20px" title="Provenance">
+            <Provenance data={data.provenance} />
+          </CardBoundary>
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={schematisedTags}>
-          <SchematisedTags type={ItemDrawerTypes.td} data={data.tags} />
+          <CardBoundary mt="20px" title="Tags">
+            <SchematisedTags type={ItemDrawerTypes.td} data={data.tags} />
+          </CardBoundary>
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={api}>
-          <CodeCard
-            mb="20px"
-            mt="20px"
-            title="API"
-            actions={action}
-            content={apiCode}
-          />
+          <CardBoundary mt="20px" title="API">
+            <CodeCard
+              mb="20px"
+              mt="20px"
+              title="API"
+              actions={action}
+              content={apiCode}
+            />
+          </CardBoundary>
         </Anchor>
 
         <Anchor groupName="tdOverview" anchor={splitGraph}>

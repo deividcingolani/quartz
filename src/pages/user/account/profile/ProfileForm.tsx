@@ -28,6 +28,7 @@ import ProfileService from '../../../../services/ProfileService';
 
 import NotificationContent from '../../../../utils/notifications/notificationValue';
 import NotificationBadge from '../../../../utils/notifications/notificationBadge';
+import Loader from '../../../../components/loader/Loader';
 
 export const schema = yup.object().shape({
   firstname: shortRequiredText.label('First name'),
@@ -74,6 +75,10 @@ const ProfileForm: FC = () => {
     },
     [dispatch],
   );
+
+  if (!user.email) {
+    return <Loader />;
+  }
 
   return (
     <>
