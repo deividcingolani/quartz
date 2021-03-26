@@ -1,6 +1,7 @@
 import { DataEntity } from './index';
 import { TrainingDataset } from './training-dataset';
 import { User } from './user';
+import { Expectation, Validation } from './expectation';
 
 export enum FeatureType {
   stringUnknown = 'Unknown',
@@ -15,6 +16,7 @@ export enum ActivityType {
   commit = 'COMMIT',
   metadata = 'METADATA',
   statistics = 'STATISTICS',
+  validations = 'VALIDATIONS',
 }
 
 export interface ActivityItem {
@@ -53,6 +55,19 @@ export interface ActivityItemData {
     rowsDeleted: number;
     rowsInserted: number;
     rowsUpdated: number;
+  };
+  validations: {
+    expectationResults: {
+      expectation: Expectation;
+      results: {
+        feature: string;
+        message: string;
+        rule: any;
+        status: string;
+        value: string;
+      }[];
+      status: string;
+    }[];
   };
 }
 
@@ -137,6 +152,13 @@ export interface FeatureGroupProvenance {
   info: Entry;
 }
 
+export interface ExpectationRule {
+  level: string;
+  min?: number;
+  max?: number;
+  name: string;
+}
+
 export interface FeatureGroup extends DataEntity {
   defaultStorage: string;
   hudiEnabled: boolean;
@@ -151,6 +173,8 @@ export interface FeatureGroup extends DataEntity {
   name: string;
   matchText: string;
   commits: any[];
+  expectations: Expectation[];
+  lastValidation?: Validation[];
 }
 
 export interface HistogramItem {

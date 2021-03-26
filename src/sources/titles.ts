@@ -45,6 +45,9 @@ const titles = {
   api: 'API',
   createAPI: 'API new',
   editAPI: 'API edit',
+
+  expectationAttach: 'Attach an expectation',
+  expectationEdit: 'Edit an expectation',
 };
 
 export default titles;

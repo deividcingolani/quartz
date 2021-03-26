@@ -19,6 +19,7 @@ import FeatureList from './FeatureList';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import Expectations from './expectations/Expectations';
 import CardBoundary from '../../../../components/error-boundary/CardBoundary';
 
 export interface ContentProps {
@@ -48,6 +49,7 @@ const {
   provenance,
   schematisedTags,
   api,
+  expectations,
 } = routeNames.overviewAnchors;
 
 const OverviewContent: FC<ContentProps> = ({
@@ -148,6 +150,10 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
           <CardBoundary mt="20px" title="Provenance">
             <Provenance data={data.provenance} />
           </CardBoundary>
+        </Anchor>
+
+        <Anchor groupName="fgOverview" anchor={expectations}>
+          <Expectations data={data} />
         </Anchor>
 
         <Anchor groupName="fgOverview" anchor={schematisedTags}>

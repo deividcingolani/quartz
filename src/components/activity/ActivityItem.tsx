@@ -1,12 +1,16 @@
 import { Box } from 'rebass';
 import React, { FC } from 'react';
+import { format } from 'date-fns';
+import { Tooltip, TooltipPositions } from '@logicalclocks/quartz';
+
+// Items
 import Creation from './items/Creation';
 import JobExecution from './items/JobExecution';
 import DataIngestion from './items/DataIngestion';
 import NewStatistics from './items/NewStatistics';
+import DataValidation from './items/DataValidation';
+// Types
 import { ActivityItemData, ActivityType } from '../../types/feature-group';
-import { Tooltip, TooltipPositions } from '@logicalclocks/quartz';
-import { format } from 'date-fns';
 
 export interface ActivityItemProps {
   activities: ActivityItemData[];
@@ -14,6 +18,8 @@ export interface ActivityItemProps {
 }
 
 export const dateFormat = 'y-MM-dd hh:mm:ss';
+
+export const shortDateFormat = 'MM.dd.y hh:mm';
 
 export const getForm = (
   type: ActivityType,
@@ -23,15 +29,17 @@ export const getForm = (
 }> | null => {
   const forms = new Map<
     ActivityType,
-    FC<{ activity: ActivityItemData; onButtonClick?: () => void }>
+    FC<{ activity: ActivityItemData; onButtonClick?: (data?: any) => void }>
   >([
     [ActivityType.commit, DataIngestion],
     [ActivityType.job, JobExecution],
     [ActivityType.metadata, Creation],
     [ActivityType.statistics, NewStatistics],
+    [ActivityType.validations, DataValidation],
   ]);
 
   const form = forms.get(type);
+
   if (form) {
     return form;
   }

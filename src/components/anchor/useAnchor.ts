@@ -28,7 +28,7 @@ const useAnchor = (groupName: string): UseAnchor => {
 
     anchorsContainer.subscribe(groupName, setActive);
 
-    return (): void => {
+    return () => {
       anchorsContainer.unsubscribe(groupName, setActive);
     };
   }, [groupName, setActive]);

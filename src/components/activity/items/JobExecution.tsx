@@ -36,7 +36,7 @@ const JobExecution: FC<JobExecutionProps> = ({ activity }) => {
         <Labeling width="110px" bold ml="8px" gray>
           Job execution
         </Labeling>
-        <Box ml="20px" width="80px">
+        <Box ml="20px" width="110px">
           <Badge
             width="fit-content"
             value={isSuccess ? 'success' : 'error'}
@@ -47,7 +47,7 @@ const JobExecution: FC<JobExecutionProps> = ({ activity }) => {
         <Value ml="20px">{activity.job?.name}</Value>
       </Flex>
 
-      <Box mr="61px">
+      <Box mr="76px">
         <User
           photo={ProfileService.avatar(String(activity.user.email))}
           name={activity.user.firstname}

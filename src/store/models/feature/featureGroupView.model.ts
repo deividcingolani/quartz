@@ -2,11 +2,14 @@ import { createModel } from '@rematch/core';
 
 // Types
 import { ActivityItemData, FeatureGroup } from '../../../types/feature-group';
+import { ActivityTypeSortOptions } from '../../../pages/project/feature-group/activity/types';
 // Services
+import ExpectationService from '../../../services/project/ExpectationService';
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
-import { ActivityTypeSortOptions } from '../../../pages/project/feature-group/activity/types';
+import { Expectation } from '../../../types/expectation';
+import { getValidPromisesValues } from '../search/deep-search.model';
 
 export type FeatureGroupViewState = FeatureGroup | null;
 
@@ -22,21 +25,80 @@ const featureGroupView = createModel()({
       labels: payload,
     }),
     clear: () => null,
+    deleteExpectation: (
+      state: FeatureGroupViewState,
+      payload: string,
+    ): FeatureGroupViewState =>
+      ({
+        ...state,
+        expectations: state?.expectations
+          .slice()
+          .filter(({ name }) => name !== payload),
+      } as FeatureGroupViewState),
   },
   effects: (dispatch) => ({
     fetch: async ({
       projectId,
       featureStoreId,
       featureGroupId,
+      needMore = true,
+      needExpectation = false,
     }: {
       projectId: number;
       featureStoreId: number;
       featureGroupId: number;
+      needMore?: boolean;
+      needExpectation?: boolean;
     }): Promise<void> => {
       const data = await FeatureGroupsService.get(
         projectId,
         featureStoreId,
         featureGroupId,
+      );
+
+      let expectations: Expectation[] = [];
+      if (needExpectation) {
+        expectations = await ExpectationService.getList(
+          projectId,
+          featureStoreId,
+          featureGroupId,
+        );
+      }
+
+      const mapped = {
+        ...data,
+        provenance: [],
+        labels: [],
+        tags: [],
+        commits: [],
+        versions: [{ id: data.id, version: data.version }],
+        expectations,
+      };
+      dispatch.featureGroupView.setData(mapped);
+
+      if (needMore) {
+        dispatch.featureGroupView.loadRemainingData({
+          data: mapped,
+          projectId,
+          featureStoreId,
+          featureGroupId,
+          needExpectations: !needExpectation,
+        });
+      }
+    },
+    fetchByName: async ({
+      projectId,
+      featureStoreId,
+      featureGroupName,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      featureGroupName: string;
+    }): Promise<void> => {
+      const [data] = await FeatureGroupsService.getByName(
+        projectId,
+        featureStoreId,
+        featureGroupName,
       );
 
       dispatch.featureGroupView.setData({
@@ -46,13 +108,7 @@ const featureGroupView = createModel()({
         tags: [],
         commits: [],
         versions: [{ id: data.id, version: data.version }],
-      });
-
-      dispatch.featureGroupView.loadRemainingData({
-        data,
-        projectId,
-        featureStoreId,
-        featureGroupId,
+        expectations: [],
       });
     },
     loadRemainingData: async ({
@@ -60,11 +116,13 @@ const featureGroupView = createModel()({
       projectId,
       featureGroupId,
       featureStoreId,
+      needExpectations,
     }: {
       projectId: number;
       featureStoreId: number;
       featureGroupId: number;
       data: FeatureGroup;
+      needExpectations: boolean;
     }) => {
       let keywords: string[] = [];
       if (data.type === 'cachedFeaturegroupDTO') {
@@ -150,6 +208,37 @@ const featureGroupView = createModel()({
         100,
       );
 
+      let expectations = data.expectations;
+      if (needExpectations) {
+        const serverExpectations = await ExpectationService.getList(
+          projectId,
+          featureStoreId,
+          featureGroupId,
+        );
+
+        const promises = await Promise.allSettled(
+          serverExpectations.map(async (expectation) => {
+            const {
+              data: attachedFGs,
+            } = await ExpectationService.getAttachedFeatureGroups(
+              projectId,
+              featureStoreId,
+              expectation.name,
+            );
+
+            return { ...expectation, attachedFeatureGroups: attachedFGs || [] };
+          }),
+        );
+
+        expectations = getValidPromisesValues(promises);
+      }
+
+      const validation = await ExpectationService.getValidations(
+        projectId,
+        featureStoreId,
+        featureGroupId,
+      );
+
       dispatch.featureGroupView.setData({
         ...data,
         provenance: fgProvenances,
@@ -157,6 +246,8 @@ const featureGroupView = createModel()({
         commits: commits.items || [],
         tags: mappedTags || [],
         versions: fgsWithSameName.map(({ id, version }) => ({ id, version })),
+        expectations,
+        lastValidation: validation,
       });
     },
     updateLabels: ({ labels }: { labels: string[] }) => {

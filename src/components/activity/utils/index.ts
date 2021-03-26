@@ -1,3 +1,5 @@
+import { ActivityItemData } from '../../../types/feature-group';
+
 const maxOpacity = 1;
 const minOpacity = 0.1;
 
@@ -29,3 +31,27 @@ export const getTimeLineOpacity = (
     (maxDays - days) * ((maxOpacity - minOpacity) / (maxDays - minDays))
   );
 };
+
+export const getStatusCount = (
+  statusName: string,
+  activity: ActivityItemData,
+) =>
+  activity.validations?.expectationResults.reduce(
+    (acc, { status }) => (status === statusName ? acc + 1 : acc),
+    0,
+  );
+
+export const getStatusCountForActivity = (
+  statusName: string,
+  activity: ActivityItemData,
+) =>
+  activity.validations?.expectationResults?.reduce(
+    (acc, { results }) =>
+      acc +
+      results?.reduce(
+        (nestAcc, { status }) =>
+          status === statusName ? nestAcc + 1 : nestAcc,
+        0,
+      ),
+    0,
+  );

@@ -36,10 +36,15 @@ import featureGroupSchematisedTags from './feature/statistics/featureGroupSchema
 import featureGroupActivity from './feature/activity/featureGroupActivity.model';
 import members from './projects/members.model';
 import trainingDatasetActivity from './training-dataset/activity/trainingDatasetActivity.model';
+import expectations from './expectations/expectations.model';
+import rules from './rules/rules.model';
+import expectationView from './expectations/expectationView.model';
+import validators from './validators/validators.model';
 
 export interface RootModel extends Models<RootModel> {
   api: typeof api;
   auth: typeof auth;
+  rules: typeof rules;
   store: typeof store;
   scope: typeof scope;
   search: typeof search;
@@ -50,10 +55,13 @@ export interface RootModel extends Models<RootModel> {
   profile: typeof profile;
   databricks: typeof databricks;
   deepSearch: typeof deepSearch;
+  validators: typeof validators;
   projectsList: typeof projectsList;
+  expectations: typeof expectations;
   roleMappings: typeof roleMappings;
   featureGroups: typeof featureGroups;
   featureStores: typeof featureStores;
+  expectationView: typeof expectationView;
   schematisedTags: typeof schematisedTags;
   featureGroupView: typeof featureGroupView;
   featureGroupRows: typeof featureGroupRows;
@@ -79,6 +87,7 @@ const models: RootModel = {
   api,
   auth,
   scope,
+  rules,
   store,
   search,
   basket,
@@ -87,14 +96,17 @@ const models: RootModel = {
   project,
   members,
   deepSearch,
+  validators,
+  expectations,
   roleMappings,
   databricks,
   projectsList,
   featureGroups,
   featureStores,
+  schematisedTags,
+  expectationView,
   featureGroupView,
   featureGroupRows,
-  schematisedTags,
   featureGroupLabels,
   schematisedTagView,
   featureGroupActivity,

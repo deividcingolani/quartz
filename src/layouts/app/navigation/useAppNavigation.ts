@@ -11,7 +11,6 @@ import routeNames from '../../../routes/routeNames';
 // Hooks
 import useOS, { OSNames } from '../../../hooks/useOS';
 import useAnchor from '../../../components/anchor/useAnchor';
-import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 
 // Svg
@@ -20,6 +19,7 @@ import home from '../../../sources/home.json';
 import td from '../../../sources/TD_01 (1).json';
 import sources from '../../../sources/source_02rev.json';
 import oldui from '../../../sources/back_oldui.json';
+import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
@@ -31,7 +31,7 @@ const useAppNavigation = (): TreeNode[] => {
 
   const handleShortcut = useCallback(
     (e) => {
-      if (e.ctrlKey || (e.metaKey && ['0', '1', '2', '3'].includes(e.key))) {
+      if ((e.ctrlKey || e.metaKey) && ['0', '1', '2', '3'].includes(e.key)) {
         switch (e.key) {
           case '0': {
             navigate('/view', 'p/:id/*');
@@ -146,6 +146,7 @@ const useAppNavigation = (): TreeNode[] => {
     const {
       featureList,
       provenance,
+      expectations,
       schematisedTags,
       api,
       splitGraph,
@@ -200,7 +201,11 @@ const useAppNavigation = (): TreeNode[] => {
           routeNames.project.view,
         ),
         href: getHref(routeNames.featureGroup.list, routeNames.project.view),
-        isActive: isActive('/p/:id/fg'),
+        isActive: isActive([
+          '/p/:id/fg',
+          '/p/:id/expectation/attach/:fgId',
+          '/p/:id/expectation/:expId',
+        ]),
         children: [
           {
             id: 'fgOverview',
@@ -211,6 +216,11 @@ const useAppNavigation = (): TreeNode[] => {
             children: [
               createFgAnchorLink('Feature List', featureList, 'fgFeatures'),
               createFgAnchorLink('Provenance', provenance, 'fgProvenance'),
+              createFgAnchorLink(
+                'Expectations',
+                expectations,
+                'fgExpectations',
+              ),
               createFgAnchorLink('Tags', schematisedTags, 'fgTags'),
               createFgAnchorLink('API', api, 'fgApi'),
             ],

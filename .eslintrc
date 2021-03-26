@@ -4,6 +4,8 @@
 		"no-unused-vars": "off",
 		"@typescript-eslint/no-unused-vars": "off",
 		"@typescript-eslint/no-unused-vars-experimental": "error",
-		"react/jsx-props-no-spreading": 0
+		"react/jsx-props-no-spreading": 0,
+		"no-shadow": "off",
+		"react/jsx-boolean-value": "off"
 	}
 }

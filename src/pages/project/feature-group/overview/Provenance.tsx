@@ -30,7 +30,7 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
 
   if (isLoading) {
     return (
-      <Card mt="30px" title="Provenance">
+      <Card mt="20px" title="Provenance">
         <Box mt="20px" mx="-20px">
           <Flex height="50px" mt="30px" justifyContent="center">
             <Labeling fontSize="18px" gray>
@@ -44,7 +44,7 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
 
   if (!data?.length) {
     return (
-      <Card mt="30px" title="Provenance">
+      <Card mt="20px" title="Provenance">
         <Box mt="20px" mx="-20px">
           <Flex height="50px" mt="30px" justifyContent="center">
             <Labeling fontSize="18px" gray>
@@ -57,7 +57,7 @@ const Provenance: FC<FeatureListProps> = ({ data }) => {
   }
 
   return (
-    <Card mt="30px" title="Provenance">
+    <Card mt="20px" title="Provenance">
       <Flex mt="5px" mb="25x">
         <Value fontFamily="Inter" mr="5px">
           This feature group is used in

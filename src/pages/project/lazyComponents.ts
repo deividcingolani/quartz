@@ -68,3 +68,10 @@ export const ProjectDatabricks = React.lazy(
 export const ProjectSpark = React.lazy(
   () => import('./integrations/spark/Spark'),
 );
+
+export const ExpectationAttach = React.lazy(
+  () => import('../expectation/CreateExpectation'),
+);
+export const ExpectationEdit = React.lazy(
+  () => import('../expectation/EditExpectation'),
+);

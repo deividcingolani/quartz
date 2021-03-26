@@ -35,6 +35,8 @@ import {
   ProjectCode,
   ProjectDatabricks,
   ProjectSpark,
+  ExpectationAttach,
+  ExpectationEdit,
 } from './lazyComponents';
 
 const Project: FC = () => {
@@ -217,6 +219,16 @@ const Project: FC = () => {
       <Route path="/integrations/code" element={<ProjectCode />} />
       <Route path="/integrations/spark" element={<ProjectSpark />} />
       <Route path="/integrations/databricks" element={<ProjectDatabricks />} />
+
+      <Route
+        path={routeNames.expectation.attach}
+        element={<ExpectationAttach />}
+      />
+      <Route path={routeNames.expectation.edit} element={<ExpectationEdit />} />
+      <Route
+        path={routeNames.expectation.editWithFrom}
+        element={<ExpectationEdit />}
+      />
 
       <Route path="/" element={<Redirect to={`${location.pathname}/view`} />} />
       <Route path="*" element={<Error404 />} />

@@ -31,13 +31,13 @@ const Creation: FC<CreationProps> = ({ activity }) => {
             />
           </svg>
         </Box>
-        <Labeling width="110px" bold ml="8px" gray>
+        <Labeling width="120px" bold ml="8px" gray>
           Creation
         </Labeling>
-        <Value ml="120px">{activity.metadata}</Value>
+        <Value ml="140px">{activity.metadata}</Value>
       </Flex>
 
-      <Box mr="61px">
+      <Box mr="76px">
         <User
           photo={ProfileService.avatar(String(activity.user.email))}
           name={activity.user.firstname}

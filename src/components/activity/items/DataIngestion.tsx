@@ -35,7 +35,7 @@ const DataIngestion: FC<DataIngestionProps> = ({ activity }) => {
         Data ingestion
       </Labeling>
 
-      <Flex alignItems="center" width="100px">
+      <Flex alignItems="center" width="120px">
         <ActivityCircle
           rowsUpdated={rowsUpdated}
           rowsDeleted={rowsDeleted}

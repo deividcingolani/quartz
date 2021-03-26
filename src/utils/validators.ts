@@ -15,6 +15,14 @@ export const name = yup
     excludeEmptyString: false,
   });
 
+export const nameNotRequired = yup
+  .string()
+  .max(50)
+  .matches(/^[a-zA-Z0-9-_]*$/, {
+    message: 'Only alphanumeric characters, dash or underscore',
+    excludeEmptyString: false,
+  });
+
 export const password = yup
   .string()
   .min(6)

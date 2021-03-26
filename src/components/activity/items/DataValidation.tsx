@@ -1,28 +1,50 @@
-import React, { FC } from 'react';
-import { Box, BoxProps, Flex } from 'rebass';
-import { Value, Labeling, IconButton } from '@logicalclocks/quartz';
-import { iconStyles } from './NewStatistics';
+import { Box, Flex } from 'rebass';
+import React, { FC, useMemo } from 'react';
+import { Labeling, Tooltip, Value } from '@logicalclocks/quartz';
 
-interface CircleProps extends Omit<BoxProps, 'css'> {
-  color: string;
+import { ActivityItemData } from '../../../types/feature-group';
+import LastValidation from '../../../pages/project/feature-group/overview/expectations/LastValidation';
+import { getStatusCountForActivity } from '../utils';
+import icons from '../../../sources/icons';
+
+export interface DataValidationProps {
+  activity: ActivityItemData;
+  onButtonClick?: (activity: ActivityItemData) => void;
 }
 
-const Circle: FC<CircleProps> = ({ color, ...props }) => (
-  <Box
-    ml="20px"
-    sx={{
-      width: '10px',
-      height: '10px',
-      borderRadius: '50px',
-      backgroundColor: color,
-    }}
-    {...props}
-  />
-);
+const DataValidation: FC<DataValidationProps> = ({
+  activity,
+  onButtonClick,
+}) => {
+  const successCount = useMemo(
+    () => getStatusCountForActivity('SUCCESS', activity),
+    [activity],
+  );
 
-export interface DataValidationProps {}
+  const warningCount = useMemo(
+    () => getStatusCountForActivity('WARNING', activity),
+    [activity],
+  );
 
-const DataValidation: FC<DataValidationProps> = () => {
+  const alertCount = useMemo(
+    () => getStatusCountForActivity('FAILURE', activity),
+    [activity],
+  );
+
+  const message = useMemo(
+    () =>
+      `${activity.validations.expectationResults[0].expectation.features.join(
+        ', ',
+      )} ${
+        activity.validations.expectationResults[0].status === 'SUCCESS'
+          ? 'succeeded'
+          : activity.validations.expectationResults[0].status === 'FAILURE'
+          ? 'alerted'
+          : 'warned'
+      }`,
+    [activity],
+  );
+
   return (
     <Flex
       bg="white"
@@ -31,7 +53,7 @@ const DataValidation: FC<DataValidationProps> = () => {
       justifyContent="space-between"
     >
       <Flex>
-        <Box ml="20px">
+        <Box mt="5px" ml="20px">
           <svg
             width="16"
             height="17"
@@ -45,35 +67,50 @@ const DataValidation: FC<DataValidationProps> = () => {
             />
           </svg>
         </Box>
-        <Labeling width="110px" bold ml="8px" gray>
-          Data validation
+        <Labeling mt="5px" width="110px" bold ml="8px" gray>
+          Validation
         </Labeling>
 
-        <Flex width="100px">
-          <Circle color="primary" ml="20px" mt="3px" />
-          <Circle color="primary" ml="6px" mt="3px" />
-          <Circle color="labels.red" ml="6px" mt="3px" />
-        </Flex>
+        <LastValidation
+          ml="20px"
+          alert={alertCount}
+          success={successCount}
+          warning={warningCount}
+        />
 
-        <Labeling ml="20px">failures: rule</Labeling>
-        <Value ml="5px">#1 (feature_3)</Value>
+        <Value
+          ml="20px"
+          sx={{
+            lineHeight: '22px',
+          }}
+        >
+          {message}
+        </Value>
       </Flex>
 
-      <Box
-        sx={{
-          button: {
-            border: 'none',
-          },
-          svg: {
-            width: '10px !important',
-          },
-        }}
-        mr="20px"
-      >
-        <Box sx={iconStyles}>
-          <IconButton tooltip="search" icon="search" />
+      <Tooltip mr="20px" mainText="Open">
+        <Box
+          p="5px"
+          height="28px"
+          sx={{
+            cursor: 'pointer',
+            backgroundColor: '#ffffff',
+            transition: 'all .4s ease',
+
+            ':hover': {
+              backgroundColor: 'grayShade3',
+            },
+
+            svg: {
+              width: '20px',
+              height: '20px',
+            },
+          }}
+          onClick={() => onButtonClick && onButtonClick(activity)}
+        >
+          {icons.eye}
         </Box>
-      </Box>
+      </Tooltip>
     </Flex>
   );
 };

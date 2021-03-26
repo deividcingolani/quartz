@@ -86,9 +86,11 @@ const featureGroups = createModel()({
     fetch: async ({
       projectId,
       featureStoreId,
+      needMore = true,
     }: {
       projectId: number;
       featureStoreId: number;
+      needMore?: boolean;
     }): Promise<void> => {
       const data = await FeatureGroupsService.getList(
         projectId,
@@ -108,11 +110,13 @@ const featureGroups = createModel()({
         })),
       );
 
-      dispatch.featureGroups.fetchKeywordsAndLastUpdate({
-        data,
-        projectId,
-        featureStoreId,
-      });
+      if (needMore) {
+        dispatch.featureGroups.fetchKeywordsAndLastUpdate({
+          data,
+          projectId,
+          featureStoreId,
+        });
+      }
     },
     fetchKeywordsAndLastUpdate: async ({
       data,

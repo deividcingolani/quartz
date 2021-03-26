@@ -14,6 +14,7 @@ import TokenService from '../../../services/TokenService';
 // Types
 import { Dispatch } from '../../../store';
 import icons from '../../../sources/icons';
+import { pageToViewPathStorageName } from '../../../routes';
 
 const UserDropdown: FC = () => {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ const UserDropdown: FC = () => {
     dispatch.auth.clear();
     dispatch.projectsList.clear();
     dispatch.profile.clear();
+    dispatch.store.clear();
+    localStorage.removeItem(pageToViewPathStorageName);
   }, [dispatch]);
 
   const buttonRef = useRef(null);

@@ -28,7 +28,7 @@ export const getQueryParams = (onlineEnabled: boolean) => {
 };
 
 export const getExpandParam = (): string => {
-  return `expand=commits&expand=jobs&expand=users&expand=statistics&expand=executions`;
+  return `expand=commits&expand=jobs&expand=users&expand=statistics&expand=executions&expand=validations`;
 };
 
 export const getTimeParam = (timeProps?: {
@@ -66,6 +66,7 @@ export const getSortParam = (eventType: ActivityTypeSortOptions): string => {
     [ActivityTypeSortOptions.JOB, 'filter_by=type:JOB'],
     [ActivityTypeSortOptions.METADATA, 'filter_by=type:METADATA'],
     [ActivityTypeSortOptions.STATISTICS, 'filter_by=type:STATISTICS'],
+    [ActivityTypeSortOptions.VALIDATIONS, 'filter_by=type:VALIDATIONS'],
   ]);
 
   return sortMap.get(eventType) || '';
@@ -101,10 +102,12 @@ class FeatureGroupsService extends BaseApiService {
     projectId: number,
     featureStoreId: number,
     name: string,
-    version: number,
+    version?: number,
   ): Promise<FeatureGroup[]> => {
     const { data } = await this.request<FeatureGroup[]>({
-      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${name}?version=${version}`,
+      url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${name}${
+        !version ? '' : `?version=${version}`
+      }`,
       type: RequestType.get,
     });
 

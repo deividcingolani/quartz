@@ -10,18 +10,6 @@ export interface NewStatisticsProps {
   onButtonClick?: (commitTime?: number) => void;
 }
 
-export const iconStyles = {
-  button: {
-    border: 'none',
-    svg: {
-      width: '10px !important',
-    },
-  },
-  span: {
-    ml: '-7px',
-  },
-};
-
 const NewStatistics: FC<NewStatisticsProps> = ({ activity, onButtonClick }) => {
   return (
     <Flex
@@ -48,22 +36,29 @@ const NewStatistics: FC<NewStatisticsProps> = ({ activity, onButtonClick }) => {
         <Labeling width="110px" bold ml="8px" gray>
           New statistics
         </Labeling>
-        <Labeling ml="120px">commit</Labeling>
+        <Labeling ml="130px">commit</Labeling>
         <Value ml="5px">{activity.statistics.commitTime}</Value>
       </Flex>
 
       <Flex>
-        <Box mr="20px">
+        <Box mr="29px">
           <User
             photo={ProfileService.avatar(String(activity.user.email))}
             name={activity.user.firstname}
           />
         </Box>
-        <Tooltip mr="25px" mainText="open statistics">
+        <Tooltip mt="5px" mr="21px" mainText="open statistics">
           <Box
-            mt="10px"
+            p="5px"
+            height="28px"
             sx={{
               cursor: 'pointer',
+              backgroundColor: '#ffffff',
+              transition: 'all .4s ease',
+
+              ':hover': {
+                backgroundColor: 'grayShade3',
+              },
 
               svg: {
                 width: '16px',

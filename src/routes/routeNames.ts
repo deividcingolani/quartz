@@ -7,6 +7,12 @@ const routeNames = {
     recover: '/forgot',
   },
 
+  expectation: {
+    attach: '/expectation/attach/:fgId/*',
+    edit: '/expectation/:expName',
+    editWithFrom: '/expectation/:expName/:from',
+  },
+
   account: {
     view: '/account/*',
     api: {
@@ -38,6 +44,7 @@ const routeNames = {
     pipelineHistory: 'pipeline-history',
     api: 'api',
     splitGraph: 'split-graph',
+    expectations: 'expectations',
   },
 
   featureGroup: {

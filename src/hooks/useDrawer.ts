@@ -1,11 +1,11 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
 import { usePopup } from '@logicalclocks/quartz';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { ContentContext } from '../layouts/app/AppLayout';
 
-const useDrawer = () => {
-  const [isOpen, handleToggle] = usePopup(false);
+const useDrawer = <T = number>(initialState = false) => {
+  const [isOpen, handleToggle] = usePopup(initialState);
 
-  const [selectedId, setSelected] = useState<number | null>(null);
+  const [selectedId, setSelected] = useState<T | null>(null);
 
   const { current: content } = useContext(ContentContext);
 
@@ -24,7 +24,7 @@ const useDrawer = () => {
   }, [content]);
 
   const handleSelectItem = useCallback(
-    (id: number) => () => {
+    (id: T) => () => {
       setSelected(id);
       if (!selectedId) {
         handleToggle();
@@ -32,6 +32,7 @@ const useDrawer = () => {
 
       handleDisableScroll();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [handleToggle, selectedId, handleDisableScroll],
   );
 

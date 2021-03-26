@@ -1,8 +1,9 @@
 import { Box } from 'rebass';
 import { useLocation } from 'react-router-dom';
-import React, { FC, useCallback, useEffect, useRef } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useRef } from 'react';
 
 import useAnchor from './useAnchor';
+import { ContentContext } from '../../layouts/app/AppLayout';
 
 export interface AnchorProps {
   anchor: string;
@@ -19,36 +20,41 @@ const Anchor: FC<AnchorProps> = ({ anchor, children, groupName }) => {
   const { setActive } = useAnchor(groupName);
   const location = useLocation();
 
-  const handleScroll = useCallback(() => {
-    const element = document.querySelector('#content');
+  const timeout = useRef<number | null>(null);
 
+  const { current: content } = useContext(ContentContext);
+
+  const handleScroll = useCallback(() => {
     const position = containerRef.current?.getBoundingClientRect();
 
     if (
-      element &&
+      content &&
       position &&
       position.top > 0 &&
       position.bottom > 0 &&
-      !(position.top < element?.scrollTop) &&
-      !(position.top > element?.scrollTop + 100)
+      !(position.top < content?.scrollTop) &&
+      !(position.top > content?.scrollTop + 100)
     ) {
-      setActive(anchor);
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+        timeout.current = null;
+      }
+
+      setTimeout(() => setActive(anchor), 100);
     }
-  }, [anchor, setActive]);
+  }, [anchor, setActive, content]);
 
   useEffect(() => {
-    const element = document.querySelector('#content');
+    if (content) {
+      content.addEventListener('scroll', handleScroll);
 
-    if (element) {
-      element.addEventListener('scroll', handleScroll);
-
-      return (): void => {
-        element.addEventListener('scroll', handleScroll);
+      return () => {
+        content.addEventListener('scroll', handleScroll);
       };
     }
 
     return undefined;
-  }, [handleScroll]);
+  }, [handleScroll, content]);
 
   useEffect(() => {
     if (location.hash.includes(anchor)) {
