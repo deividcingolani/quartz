@@ -65,9 +65,9 @@ const ApiCreate: FC = () => {
         isOpen={isPopupOpen}
         onClose={handleToggle}
         closeOnBackdropClick={false}
-        secondaryText="Your APi key has been generated."
+        secondaryText="Your API key has been generated."
         secondaryButton={[
-          'I saved the APi key',
+          'I saved the API key',
           () => navigate(routeNames.account.api.list),
         ]}
       >
@@ -93,7 +93,7 @@ const ApiCreate: FC = () => {
         alignSelf="flex-start"
         onClick={() => navigate(routeNames.account.api.list)}
       >
-        &#8701; all APi keys
+        &#8701; all API keys
       </Button>
       <ApiForm isLoading={isSubmit} onSubmit={handleSubmit} />
     </>

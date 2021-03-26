@@ -63,7 +63,7 @@ const ApiEdit: FC = () => {
         alignSelf="flex-start"
         onClick={() => navigate(routeNames.account.api.list)}
       >
-        &#8701; all APi keys
+        &#8701; all API keys
       </Button>
       <ApiForm
         isEdit={true}
