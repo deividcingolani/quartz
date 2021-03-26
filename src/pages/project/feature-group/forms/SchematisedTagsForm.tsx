@@ -211,7 +211,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
         </Flex>
 
         <Callout
-          content="There are no tags defined"
+          content="There are no tags schemas"
           type={CalloutTypes.neutral}
           cta={
             <Button

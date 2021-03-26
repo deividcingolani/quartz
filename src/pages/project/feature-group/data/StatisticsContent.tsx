@@ -78,7 +78,6 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
     onToggleKey,
     onReset,
   } = useFeatureFilter(data.features, view);
-
   // Computed data
   const { data: paginatedData, totalPages } = useMemo((): Paginate<Feature> => {
     return paginate<Feature>(dataFiltered, page, pageLimits[pageLimit]);
@@ -128,7 +127,11 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
             ml="15px"
             variant="white"
             isMulti
-            value={typeFilters}
+            value={
+              typeFilters.length
+                ? typeFilters.filter((keyword) => keyword !== 'any')
+                : ['any']
+            }
             options={types}
             placeholder="type"
             onChange={onTypeFiltersChange}

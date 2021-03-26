@@ -65,9 +65,9 @@ const NewStatistics: FC<NewStatisticsProps> = ({ activity, onButtonClick }) => {
                 height: '16px',
               },
             }}
-            onClick={() =>
-              onButtonClick && onButtonClick(+activity.statistics.commitTime)
-            }
+            // onClick={() =>
+            //   onButtonClick && onButtonClick(+activity.statistics.commitTime)
+            // }
           >
             {icons.more_zoom}
           </Box>

@@ -14,6 +14,7 @@ export const chartsMap = new Map<FeatureType, FC<ChartProps>>([
   [FeatureType.stringUnknown, HorizontalBarChart],
   [FeatureType.boolean, DonutChart],
   [FeatureType.string, HorizontalBarChart],
+  [FeatureType.intFractional, VerticalBarChart],
 ]);
 
 const getChartNode = (type: FeatureType): FC<ChartProps> | null => {

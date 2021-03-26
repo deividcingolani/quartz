@@ -18,7 +18,6 @@ const StatisticsCharts: FC<StatisticsChartsProps> = ({
   dataType,
 }) => {
   const Node = getChartNode(type);
-
   if (Node) {
     return <Node dataType={dataType} data={data} />;
   }

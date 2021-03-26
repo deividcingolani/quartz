@@ -116,7 +116,7 @@ const FeatureDrawer: FC<FeatureDrawerProps> = ({
           )}
           {(!data.histogram || !data.dataType) && (
             <Labeling bold gray textAlign="center">
-              No Feature Histogram
+              No data overview
             </Labeling>
           )}
         </Flex>

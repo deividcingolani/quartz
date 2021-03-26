@@ -360,7 +360,9 @@ const useAppNavigation = (): TreeNode[] => {
         tooltipText: `Back to current Hopsworks`,
         href: '/hopsworks',
         isActive: false,
-        onClick: () => { window.location.href = "/hopsworks"; },
+        onClick: () => {
+          window.location.href = '/hopsworks';
+        },
       },
     ];
   }, [

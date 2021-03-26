@@ -123,7 +123,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               <CardLabels ml="5px" loading={loading} labels={data.labels} />
             </Flex>
 
-            {hasMatchText && <Badge value={data.matchText} />}
+            {hasMatchText && <Badge value={data.matchText} variant="success" />}
           </Flex>
           {data.description ? (
             <Labeling mt="15px" gray>

@@ -17,7 +17,7 @@ const Row = memo(QRow);
 
 const Provenance: FC<FeatureListProps> = ({ data }) => {
   const currentProject = useSelector((state: RootState) => state.project);
-
+  console.log(data);
   const [groupComponents, groupProps] = useProvenanceListRowData(
     data,
     currentProject,

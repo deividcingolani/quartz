@@ -122,7 +122,9 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
   const serverTags = useSelector(selectSchematisedTags);
 
   const errorsValue =
-    Object.keys(errors).length !== 0
+    Object.keys(errors).length === 1
+      ? `${Object.keys(errors).length.toString()} error`
+      : Object.keys(errors).length !== 0
       ? `${Object.keys(errors).length.toString()} errors`
       : '';
 

@@ -67,7 +67,7 @@ const Integrations: FC = () => {
             ml="20px"
             intent="secondary"
           >
-            Code integration
+            Connect with Python
           </Button>
         </Flex>
       </Box>

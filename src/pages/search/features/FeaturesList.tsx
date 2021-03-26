@@ -117,7 +117,12 @@ const FeaturesList: FC<FeaturesListProps> = ({ data }) => {
                 </Flex>
 
                 <Flex alignItems="center">
-                  <Badge mr="20px" height="fit-content" value={matchText} />
+                  <Badge
+                    mr="20px"
+                    height="fit-content"
+                    value={matchText}
+                    variant="success"
+                  />
                   <Box
                     sx={{
                       button: {

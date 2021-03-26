@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Feature, FeatureGroup } from '../../types/feature-group';
 import { Value, Badge, Text } from '@logicalclocks/quartz';
 import { useDispatch } from 'react-redux';

@@ -12,8 +12,11 @@ import { RootState } from '../../../store';
 import ErrorBoundary from '../../../components/error-boundary/ErrorBoundary';
 
 const map: { [key: string]: string } = {
-  'p/:id/fg/:id/statistics/*': '/fg',
+  'p/:id/fg/:id/*': '/fg',
   'p/:id/fg/:id/data-preview': '/fg',
+  'p/:id/fg/:id/statistics/*': '/fg',
+  'p/:id/fg/:id/correlation': '/fg',
+  'p/:id/fg/:id/activity': '/fg',
   'p/:id/integrations/*': '/',
 };
 
@@ -33,7 +36,6 @@ const AppNavigation: FC = () => {
     const [[, route] = []] = Object.entries(map).filter(([pattern]) =>
       matchPath(pattern, location.pathname),
     );
-
     if (route) {
       navigateRelative(route, 'p/:id/*');
     } else {

@@ -189,7 +189,6 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
         d3.select(this).style('stroke-width', 1);
         d3.select(`#vertical-${d.vertical}`).style('color', '#272727');
         d3.select(`#horizontal-${d.horizontal}`).style('color', '#272727');
-
         const value = tooltip.select('.value');
         value.html(d.value.toFixed(4));
         const name = tooltip.select('.name');
@@ -212,7 +211,11 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
 
         return tooltip.style('visibility', 'hidden');
       })
-      .on('click', (_, d) => {
+      .on('click', function (_, d) {
+        d3.select(this).style('stroke-width', 1);
+        d3.select(`#vertical-${d.vertical}`).style('color', '#e30303');
+        d3.select(`#horizontal-${d.horizontal}`).style('color', '#ff0a0a');
+        // d3.select(this).style('fill', 'red');
         onPickCorrelation(d);
       });
 

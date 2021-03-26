@@ -1,9 +1,9 @@
 import { Box } from 'rebass';
-import React, { FC } from 'react';
 import { format } from 'date-fns';
 import { Tooltip, TooltipPositions } from '@logicalclocks/quartz';
 
 // Items
+import React, { FC, useEffect } from 'react';
 import Creation from './items/Creation';
 import JobExecution from './items/JobExecution';
 import DataIngestion from './items/DataIngestion';
@@ -48,6 +48,13 @@ export const getForm = (
 };
 
 const ActivityDataItem: FC<ActivityItemProps> = ({ activities, actions }) => {
+  useEffect(() => {
+    const sortPriority = ['METADATA', 'JOB', 'STATISTICS', 'COMMIT'];
+    activities.sort(function (x, y) {
+      return sortPriority.indexOf(y.type) - sortPriority.indexOf(x.type);
+    });
+  }, [activities]);
+
   return (
     <Box mb="20px">
       {activities.map((activity, index) => {

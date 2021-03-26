@@ -126,7 +126,7 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, onClose }) => {
         <Select
           listWidth="100%"
           width="400px"
-          isMulti={true}
+          isMulti
           label="Members"
           hasPlaceholder={false}
           value={selectedEmails}

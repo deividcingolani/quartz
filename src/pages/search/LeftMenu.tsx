@@ -4,6 +4,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Input, Label, Button } from '@logicalclocks/quartz';
 import useTitle from '../../hooks/useTitle';
 import titles from '../../sources/titles';
+import useDebounce from '../../hooks/useDebounce';
 
 export interface LeftMenuProps {
   isLoading: boolean;
@@ -32,6 +33,13 @@ const LeftMenu: FC<LeftMenuProps> = ({ isLoading }) => {
 
     navigate(`${prevPath}/${search}`);
   }, [search, location.pathname, navigate]);
+
+  const debouncedRange = useDebounce(search, 500);
+
+  useEffect(() => {
+    handleSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedRange]);
 
   return (
     <Box p="20px" minWidth="220px">

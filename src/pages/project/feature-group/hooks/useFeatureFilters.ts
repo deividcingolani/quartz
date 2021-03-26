@@ -29,9 +29,7 @@ const useFeatureFilter = (
 ): UseFeatureFilters => {
   // State
   const [search, setSearch] = useState<string>(initialSearch);
-  const [typeFilters, onTypeFiltersChange] = useState<string[]>(
-    Array.from(new Set(data.map(({ type }) => type))),
-  );
+  const [typeFilters, onTypeFiltersChange] = useState<string[]>([]);
   const [keyFilter, setKeyFilter] = useState<KeyFilters>(KeyFilters.null);
 
   // Handlers
@@ -81,7 +79,6 @@ const useFeatureFilter = (
       typeFilters,
       'type',
     ).filter(({ name }) => name.toLowerCase().includes(search.toLowerCase()));
-
     return result;
   }, [data, search, keyFilter, typeFilters]);
 

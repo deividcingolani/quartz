@@ -96,7 +96,6 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
   } = methods;
 
   const serverTags = useSelector(selectSchematisedTags);
-
   const onSubmit = useCallback(
     handleSubmit(async (data: FeatureGroupFormData) => {
       const next = await validateSchema(data.tags, serverTags, setError);
@@ -117,7 +116,9 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
   const { features } = watch(['features']);
 
   const errorsValue =
-    Object.keys(errors).length !== 0
+    Object.keys(errors).length === 1
+      ? `${Object.keys(errors).length.toString()} error`
+      : Object.keys(errors).length !== 0
       ? `${Object.keys(errors).length.toString()} errors`
       : '';
 
@@ -145,7 +146,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
           />
           <Input
             disabled={isDisabled || isLoading}
-            label="Feature Group Description"
+            label="Description"
             name="description"
             placeholder="description"
             ref={register}

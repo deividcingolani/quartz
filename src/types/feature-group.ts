@@ -6,6 +6,7 @@ import { Expectation, Validation } from './expectation';
 export enum FeatureType {
   stringUnknown = 'Unknown',
   int = 'int',
+  intFractional = 'Fractional',
   bigInt = 'Integral',
   string = 'float',
   boolean = 'Boolean',
@@ -41,6 +42,7 @@ export interface ActivityItemData {
     executions: {
       href: string;
       finalStatus: string;
+      id: number;
     };
     href: string;
     name: string;

@@ -43,7 +43,7 @@ const JobExecution: FC<JobExecutionProps> = ({ activity }) => {
             variant={isSuccess ? 'success' : 'fail'}
           />
         </Box>
-        <Value ml="20px">execution_2</Value>
+        <Value ml="20px">#{activity.job?.executions.id}</Value>
         <Value ml="20px">{activity.job?.name}</Value>
       </Flex>
 

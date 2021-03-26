@@ -70,20 +70,22 @@ const ProjectCreate: FC = () => {
       const id = await getProjectId(data.projectName);
 
       if (id) {
-        const selectedMembers = data.membersEmails.map((email) => ({
-          projectTeamPK: {
-            projectId: id,
-            teamMember: email,
-          },
-          teamRole: Roles['Data scientist'],
-        }));
+        if (data.membersEmails.length) {
+          const selectedMembers = data.membersEmails.map((email) => ({
+            projectTeamPK: {
+              projectId: id,
+              teamMember: email,
+            },
+            teamRole: Roles['Data scientist'],
+          }));
 
-        await dispatch.members.add({
-          id: +id,
-          data: {
-            projectTeam: selectedMembers,
-          },
-        });
+          await dispatch.members.add({
+            id: +id,
+            data: {
+              projectTeam: selectedMembers,
+            },
+          });
+        }
 
         navigate(`/p/${id}/view`);
       } else {
