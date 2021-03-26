@@ -43,7 +43,7 @@ function download(filename: string, text: string) {
   const element = document.createElement('a');
   element.setAttribute(
     'href',
-    'data:multipart/form-data;charset=utf-8,' + encodeURIComponent(text),
+    `data:multipart/form-data;charset=utf-8,${encodeURIComponent(text)}`,
   );
   element.setAttribute('download', filename);
 
@@ -76,14 +76,19 @@ const Spark: FC = () => {
     const {
       data: { items },
     } = await new BaseApiService().request<{
-      items: { propertyName: string }[];
+      items: { propertyName: string; propertyValue: string }[];
     }>({
       url: `project/${id}/integrations/spark/client/configuration`,
       type: RequestType.get,
     });
 
     if (items) {
-      setConfigurations(items.map(({ propertyName }) => propertyName));
+      setConfigurations(
+        items.map(
+          ({ propertyName, propertyValue }) =>
+            `${propertyName} ${propertyValue}`,
+        ),
+      );
     }
   }, [id]);
 
@@ -274,7 +279,7 @@ const Spark: FC = () => {
           <Box m="-20px" mt="20px">
             <Code
               isColorSyntax={false}
-              copyButton={true}
+              copyButton
               content={certificate?.password || ''}
             />
           </Box>
@@ -353,8 +358,8 @@ const Spark: FC = () => {
             <Box width="100%" m="-20px">
               <Code
                 title="Spark configuration"
-                isColorSyntax={true}
-                copyButton={true}
+                isColorSyntax
+                copyButton
                 content={configurations.join('\n')}
               />
             </Box>
