@@ -34,9 +34,12 @@ import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
 import useBasket from '../../../../../hooks/useBasket';
 import useTitle from '../../../../../hooks/useTitle';
 import titles from '../../../../../sources/titles';
+import useFeatureGroupView from '../../hooks/useFeatureGroupView';
 
 const FeatureGroupDataPreview: FC = () => {
   const { id, fgId } = useParams();
+
+  const { data: featureGroupData } = useFeatureGroupView(+id, +fgId);
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
@@ -71,7 +74,7 @@ const FeatureGroupDataPreview: FC = () => {
           projectId: +id,
           featureStoreId: featureStoreData.featurestoreId,
           featureGroupId: +fgId,
-          storage: StorageConnectorType.offline,
+          storage: storageConnectorType,
         });
 
         setIsFirstLoad(false);
@@ -86,10 +89,10 @@ const FeatureGroupDataPreview: FC = () => {
         projectId: +id,
         featureStoreId: featureStoreData.featurestoreId,
         featureGroupId: +fgId,
-        storage: StorageConnectorType.offline,
+        storage: storageConnectorType,
       });
     }
-  }, [id, fgId, dispatch, featureStoreData]);
+  }, [id, fgId, dispatch, storageConnectorType, featureStoreData]);
 
   const view = useSelector<RootState, FeatureGroupViewState>(
     (state) => state.featureGroupView,
@@ -198,6 +201,9 @@ const FeatureGroupDataPreview: FC = () => {
         types={types}
         keyFilter={keyFilter}
         storageConnectorType={storageConnectorType}
+        enableStorageConnectorFilter={
+          featureGroupData ? featureGroupData.onlineEnabled : true
+        }
         setType={setType}
         sortKey={sortKey}
         setSortKey={setSortKey}

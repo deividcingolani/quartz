@@ -31,7 +31,7 @@ const featureGroupDataPreview = createModel()({
         projectId,
         featureStoreId,
         featureGroupId,
-        100,
+        50,
         storage,
       );
 

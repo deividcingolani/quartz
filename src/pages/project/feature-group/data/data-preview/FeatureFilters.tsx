@@ -26,6 +26,7 @@ export interface FeatureFiltersProps {
   onToggleKey: (key: KeyFilters) => () => void;
   keyFilter: KeyFilters;
   storageConnectorType: StorageConnectorType;
+  enableStorageConnectorFilter: boolean;
   setType: React.Dispatch<React.SetStateAction<StorageConnectorType>>;
   sortKey: string;
   setSortKey: React.Dispatch<React.SetStateAction<string[]>>;
@@ -40,6 +41,7 @@ const FeatureFilters: FC<FeatureFiltersProps> = ({
   onToggleKey,
   keyFilter,
   storageConnectorType,
+  enableStorageConnectorFilter,
   setType,
   sortKey,
   setSortKey,
@@ -155,15 +157,17 @@ const FeatureFilters: FC<FeatureFiltersProps> = ({
             Partition Keys Only
           </ToggleButton>
         </Box>
-        <Flex ml="20px" alignItems="center">
-          <RadioGroup
-            value={storageConnectorType}
-            options={Object.values(StorageConnectorType)}
-            onChange={(val) => setType(val as StorageConnectorType)}
-            flexDirection="row"
-            mr="10px"
-          />
-        </Flex>
+        {enableStorageConnectorFilter ? (
+          <Flex ml="20px" alignItems="center">
+            <RadioGroup
+              value={storageConnectorType}
+              options={Object.values(StorageConnectorType)}
+              onChange={(val) => setType(val as StorageConnectorType)}
+              flexDirection="row"
+              mr="10px"
+            />
+          </Flex>
+        ) : null}
         <Select
           width="max-content"
           variant="white"
