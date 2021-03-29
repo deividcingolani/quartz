@@ -87,6 +87,16 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   }, [error]);
 
   useEffect(() => {
+    if (globalError && globalError.config?.method !== 'get') {
+      NotificationsManager.create({
+        type: <NotificationTitle message={getErrorTitle(globalError)} />,
+        content: <NotificationContent {...getErrorContent(globalError)} />,
+      });
+    }
+    // eslint-disable-next-line
+  }, [globalError]);
+
+  useEffect(() => {
     if (error?.message === 'Network Error') {
       navigate('/');
     }
@@ -96,7 +106,7 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
     // eslint-disable-next-line
   }, [error]);
 
-  if (globalError) {
+  if (globalError && globalError.config?.method === 'get') {
     switch (globalError.status || globalError.response?.status) {
       case 404:
         return <Error404 />;

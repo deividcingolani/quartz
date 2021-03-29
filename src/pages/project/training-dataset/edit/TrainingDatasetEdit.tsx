@@ -50,7 +50,8 @@ const TrainingDatasetEdit: FC = () => {
     async (data: TrainingDatasetFormData) => {
       const {
         dataFormat,
-        features,
+        rowFilters,
+        joins,
         correlations,
         histograms,
         enabled,
@@ -97,8 +98,10 @@ const TrainingDatasetEdit: FC = () => {
         trainingDatasetId: +tdId,
       });
 
-      dispatch.trainingDatasets.clear();
-
+      dispatch.trainingDatasets.fetch({
+        projectId: +projectId,
+        featureStoreId: featureStoreData.featurestoreId,
+      });
       navigate('/td', 'p/:id/*');
     }
   }, [dispatch, featureStoreData, projectId, navigate, tdId, handleToggle]);

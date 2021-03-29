@@ -12,7 +12,6 @@ import { TrainingDatasetFormData } from '../types';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 // Components
-import FeaturesForm from './FeaturesForm';
 import Loader from '../../../../components/loader/Loader';
 import LabelsForm from '../../feature-group/forms/LabelsForm';
 import SchematisedTagsForm from '../../feature-group/forms/SchematisedTagsForm';
@@ -39,11 +38,12 @@ import {
 } from '@logicalclocks/quartz';
 import { RootState } from '../../../../store';
 import StatisticConfigurationForm from '../../feature-group/forms/StatisticsConfigurationForm';
-import { dataFormatMap } from '../utils';
+import { dataFormatMap, validateFilters, validateJoins } from '../utils';
 import StatisticsFeaturesForm from './StatisticsFeaturesForm';
 import { IStorageConnector } from '../../../../types/storage-connector';
 import { selectFeatureStoreStorageConnectors } from '../../../../store/models/feature/storageConnectors/selectors';
 import SplitsForm from './SplitsForm';
+import FeaturesForm from './Features/FeaturesForm';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -135,14 +135,14 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     ({ storageConnectorType }) => storageConnectorType !== 'JDBC',
   );
 
-  const features  = useSelector(selectFeatureGroups)
+  const features = useSelector(selectFeatureGroups);
 
   const onSubmit = useCallback(
     handleSubmit(async (data: TrainingDatasetFormData) => {
       let next = await validateSchema(data.tags, serverTags, setError);
 
+      const hasFeatures = !!data.joins.length;
       data.features = features;
-      const hasFeatures = !!data.features.length;
       if (!hasFeatures) {
         setError('features', { message: 'Join at least one feature' });
         next = false;
@@ -207,6 +207,18 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         }
       }
 
+      const validatedJoins = validateJoins(data.joins, setError);
+
+      if (!validatedJoins) {
+        return;
+      }
+
+      const validatedFilter = validateFilters(data.rowFilters, setError);
+
+      if (!validatedFilter) {
+        return;
+      }
+
       if (!next) {
         return;
       }
@@ -218,7 +230,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
 
   return (
     <FormProvider {...methods}>
-      <>
+      <Box>
         {!!errors.features && (
           <Box mb="10px">
             <Callout
@@ -343,7 +355,6 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                       </Button>
                     </Flex>
                     <Select
-                      label=""
                       mb="20px"
                       listWidth="100%"
                       width="100%"
@@ -443,11 +454,11 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             <LabelsForm isDisabled={isDisabled || isLoading} />
           </Box>
         </CardSecondary>
+        {!isEdit && <FeaturesForm isDisabled={isLoading || isDisabled} />}
         {!isEdit && <SplitsForm isDisabled={isLoading || isDisabled} />}
-        {!isEdit && <FeaturesForm />}
         {isEdit && <StatisticsFeaturesForm />}
         {isEdit && onDelete && (
-          <CardSecondary title="Danger zone">
+          <CardSecondary mb="100px" title="Danger zone">
             <Button
               intent="alert"
               onClick={onDelete}
@@ -465,7 +476,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
           type={ItemDrawerTypes.td}
           disabled={isLoading || isDisabled}
         />
-      </>
+      </Box>
     </FormProvider>
   );
 };

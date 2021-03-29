@@ -6,12 +6,13 @@ import React, { FC, memo, useCallback, useEffect } from 'react';
 import { TrainingDatasetFormData } from '../types';
 import { Dispatch, RootState } from '../../../../store';
 // Utils
-import { dataFormatMap, mapFeatures } from '../utils';
+import { dataFormatMap, mapFilters, mapJoins } from '../utils';
 // Components
 import TrainingDatasetForm from '../forms/TrainingDatasetForm';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
+
 import titles from '../../../../sources/titles';
 
 const TrainingDatasetCreate: FC = () => {
@@ -37,6 +38,11 @@ const TrainingDatasetCreate: FC = () => {
       dispatch.featureGroupLabels.fetch({
         projectId: +projectId,
       });
+      dispatch.featureGroups.fetch({
+        projectId: +projectId,
+        featureStoreId: +featureStoreData.featurestoreId,
+        needMore: false,
+      });
     }
   }, [dispatch, projectId, featureStoreData]);
 
@@ -44,11 +50,13 @@ const TrainingDatasetCreate: FC = () => {
     async (data: TrainingDatasetFormData) => {
       const {
         dataFormat,
-        features,
+        joins,
+        rowFilters,
         correlations,
         histograms,
         enabled,
         storage,
+        features,
         ...restData
       } = data;
 
@@ -71,11 +79,12 @@ const TrainingDatasetCreate: FC = () => {
             storageConnector: {
               id: storage.id,
             },
-            queryDTO: mapFeatures(features),
+            queryDTO: {
+              filter: mapFilters(rowFilters),
+              ...mapJoins(joins, features),
+            },
             statisticsConfig: {
-              columns: enabled
-                ? features[0].features.map(({ name }) => name)
-                : [],
+              columns: [],
               correlations,
               enabled,
               histograms,

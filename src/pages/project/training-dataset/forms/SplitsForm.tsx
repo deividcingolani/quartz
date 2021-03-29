@@ -72,14 +72,14 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
 
   if (!isActive) {
     return (
-      <CardSecondary title="Splits" mb="20px">
+      <CardSecondary title="Splits" mb="100px">
         <Button onClick={handleAddSplits}>Configure splits</Button>
       </CardSecondary>
     );
   }
 
   return (
-    <CardSecondary title="Splits" mb="20px">
+    <CardSecondary title="Splits" mb="40px">
       {!!error && (
         <Box mb="20px">
           <Callout content={error} type={CalloutTypes.error} />

@@ -109,7 +109,6 @@ const featureGroups = createModel()({
             .map(({ version, id }) => ({ id, version })),
         })),
       );
-
       if (needMore) {
         dispatch.featureGroups.fetchKeywordsAndLastUpdate({
           data,
@@ -134,6 +133,7 @@ const featureGroups = createModel()({
             featureStoreId,
             group.id,
           );
+
           let keywords: string[] = [];
           if (group.type === 'cachedFeaturegroupDTO') {
             keywords = await FeatureGroupLabelsService.getList(
@@ -150,6 +150,7 @@ const featureGroups = createModel()({
           };
         }),
       );
+
       const groups = getValidPromisesValues(promises);
 
       dispatch.featureGroups.setFeatureGroups(groups);

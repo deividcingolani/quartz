@@ -43,7 +43,7 @@ const AppNavigation: FC = () => {
     }
   }, [navigate, location.pathname, navigateRelative]);
 
-  if (globalError) {
+  if (globalError && globalError.config?.method === 'get') {
     return null;
   }
 
