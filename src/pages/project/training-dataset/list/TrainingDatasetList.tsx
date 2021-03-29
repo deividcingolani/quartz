@@ -60,16 +60,34 @@ const TrainingDatasetList: FC = () => {
       state.loading.effects.trainingDatasets.fetchKeywordsAndLastUpdate,
   );
 
+  const maxVersionsData = useMemo(
+    () =>
+      data.reduce((acc: TrainingDataset[], trainingDateset) => {
+        if (!acc.find(({ name }) => name === trainingDateset.name)) {
+          return [...acc, trainingDateset];
+        }
+        const index = acc.findIndex(
+          ({ name }) => name === trainingDateset.name,
+        );
+        if (acc[index].version < trainingDateset.version) {
+          acc[index] = trainingDateset;
+          return acc;
+        }
+        return acc;
+      }, []),
+    [data],
+  );
+
   const labels = useMemo(
     () =>
-      data.reduce(
+      maxVersionsData.reduce(
         (acc: string[], { labels: fgLabels = [] }: any) => [
           // @ts-ignore
           ...new Set([...acc, ...fgLabels]),
         ],
         [],
       ),
-    [data],
+    [maxVersionsData],
   );
 
   const isFilterDisabled =
@@ -110,8 +128,8 @@ const TrainingDatasetList: FC = () => {
       ),
       filterFn(filter, 'labels'),
       searchText(search),
-    )(data);
-  }, [data, sort, filter, search]);
+    )(maxVersionsData);
+  }, [maxVersionsData, sort, filter, search]);
 
   return (
     <Flex mb="40px" flexGrow={1} flexDirection="column">
@@ -121,7 +139,7 @@ const TrainingDatasetList: FC = () => {
           label=""
           value={search}
           width="180px"
-          disabled={!data.length}
+          disabled={!maxVersionsData.length}
           placeholder="Find a training dataset..."
           onChange={handleSearchChange}
         />
@@ -207,12 +225,12 @@ const TrainingDatasetList: FC = () => {
       {!isLoading && (
         <TrainingDatasetListContent
           data={dataResult}
+          isFiltered={maxVersionsData.length !== dataResult.length}
           loading={isKeywordsAndLastUpdateLoading}
-          isFiltered={data.length !== dataResult.length}
           onResetFilters={handleResetFilters}
         />
       )}
-      {!isLoading && !data.length && (
+      {!isLoading && !maxVersionsData.length && (
         <NoData
           mainText="No Training Dataset"
           secondaryText="Create one from feature groups"
