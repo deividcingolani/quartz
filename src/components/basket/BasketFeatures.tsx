@@ -7,6 +7,8 @@ import useFeaturesListRowData from './useFeaturesListRowData';
 
 import { remove } from '../../sources/basketSvg';
 
+import stickyStyles from './basket-features.styles';
+
 export interface BasketFeaturesProps {
   data: Feature[];
   projectId: number;
@@ -30,11 +32,8 @@ const BasketFeatures: FC<BasketFeaturesProps> = ({
 
   return (
     <Collapse
-      title={
-        <Labeling ml="8px" sx={{ position: 'sticky' }}>
-          {name}
-        </Labeling>
-      }
+      sx={stickyStyles}
+      title={<Labeling ml="8px">{name}</Labeling>}
       secondaryContent={
         <Text
           mr="11px"
