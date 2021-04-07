@@ -23,6 +23,7 @@ import Loader from '../../../../components/loader/Loader';
 import SchematisedTagsForm from './SchematisedTagsForm';
 // Types
 import {
+  ValidationType,
   FeatureGroupFormData,
   FeatureGroupFormProps,
   TimeTravelType,
@@ -63,6 +64,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
       keywords: [],
       features: [],
       timeTravelFormat: [TimeTravelType.none],
+      dataValidation: [ValidationType.strict],
       enabled: true,
       correlations: false,
       histograms: false,
@@ -71,6 +73,9 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
         name: initialData.name,
         timeTravelFormat: [
           uppercaseFirst(initialData.timeTravelFormat) || TimeTravelType.none,
+        ],
+        validationType: [
+          uppercaseFirst(initialData.validationType) || ValidationType.strict,
         ],
         description: initialData.description,
         onlineEnabled: initialData.onlineEnabled,
@@ -173,7 +178,6 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
             </Box>
           )}
         />
-
         <Controller
           control={control}
           name="timeTravelFormat"
@@ -196,6 +200,28 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
         <StatisticConfigurationForm isLoading={isLoading} />
 
         <Divider mb="15px" mt="-5px" />
+
+        <Controller
+          control={control}
+          name="validationType"
+          render={({ onChange, value }) => (
+            <Select
+              width="100%"
+              mb="20px"
+              placeholder=""
+              label="Data validation"
+              options={['Strict', 'Warning', 'All', 'None']}
+              additionalTexts={[
+                'Data validation is performed and data is ingested into feature group is updated only if validation status is "SUCCESS"',
+                'Data validation is performed and data is ingested into the feature group only if validation status is "WARNING" or "SUCCESS"',
+                'Data validation is performed and data is ingested into the feature group regardless of the validation status',
+                'Data validation not performed on feature group',
+              ]}
+              value={value}
+              onChange={(val) => onChange(val)}
+            />
+          )}
+        />
 
         <SchematisedTagsForm isDisabled={isDisabled} />
 

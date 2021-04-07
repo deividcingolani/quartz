@@ -63,6 +63,7 @@ const FeatureGroupEdit: FC = () => {
         onlineEnabled,
         tags,
         keywords,
+        validationType,
       } = data;
 
       if (featureStoreData?.featurestoreId) {
@@ -77,6 +78,7 @@ const FeatureGroupEdit: FC = () => {
             features: mapFeatures(features),
             onlineEnabled,
             tags,
+            validationType: validationType[0],
             prevTags: featureGroup?.tags.map(({ name }) => name),
             statisticsConfig: {
               columns: getEnabledStatistics(features),

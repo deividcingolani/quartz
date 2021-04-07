@@ -11,7 +11,10 @@ import {
 import { StorageConnectorType } from '../../types/feature-group-data-preview';
 import { ActivityTypeSortOptions } from '../../pages/project/feature-group/activity/types';
 
-export const getQueryParams = (onlineEnabled: boolean) => {
+export const getQueryParams = (
+  onlineEnabled: boolean,
+  validationType: string,
+) => {
   // [param name, is need to include in the query]
   const paramsMap = [
     ['updateMetadata=true', true],
@@ -19,8 +22,8 @@ export const getQueryParams = (onlineEnabled: boolean) => {
     ['enableOnline=true', onlineEnabled],
     ['disableOnline=true', !onlineEnabled],
     ['updateStatsSettings=true', true],
+    [`validationType=${validationType}`, validationType],
   ];
-
   return paramsMap.reduce(
     (acc, [param, isInclude]) => (isInclude ? `${acc}&${param}` : acc),
     '',
@@ -195,6 +198,7 @@ class FeatureGroupsService extends BaseApiService {
       type: RequestType.post,
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups?${getQueryParams(
         data.onlineEnabled,
+        data.validationType.toUpperCase(),
       )}`,
       data,
     });
@@ -209,6 +213,7 @@ class FeatureGroupsService extends BaseApiService {
       type: RequestType.put,
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${featureGroupId}?${getQueryParams(
         data.onlineEnabled,
+        data.validationType.toUpperCase(),
       )}`,
       data,
     });

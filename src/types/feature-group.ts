@@ -165,6 +165,7 @@ export interface FeatureGroup extends DataEntity {
   defaultStorage: string;
   statisticColumns: any;
   timeTravelFormat: string;
+  validationType: string;
   provenance: FeatureGroupProvenance[];
   features: Feature[];
   parentProjectId: number;

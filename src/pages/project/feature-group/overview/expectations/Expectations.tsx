@@ -29,9 +29,13 @@ import useExpectationsListRowData from './useExpectationsListRowData';
 import useGetHrefForRoute from '../../../../../hooks/useGetHrefForRoute';
 import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
 
+//styles
 import icons from '../../../../../sources/icons';
 import routeNames from '../../../../../routes/routeNames';
 import expectationListStyles from './expectationListStyles';
+
+//utils
+import { renderValidationType } from './utils';
 
 export interface ExpectationsProps {
   data: FeatureGroup;
@@ -191,8 +195,9 @@ const Expectations: FC<ExpectationsProps> = ({ data }) => {
         <Flex justifyContent="space-between" alignItems="center">
           <Flex>
             <Value primary>{data.expectations?.length}</Value>
-            <Labeling ml="5px" gray mr="5px">
+            <Labeling bold ml="5px" mr="5px">
               {data.expectations?.length > 1 ? 'expectations' : 'expectation'}
+              {renderValidationType(data.validationType)}
             </Labeling>
           </Flex>
           <Tooltip

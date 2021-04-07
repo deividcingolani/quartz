@@ -9,6 +9,13 @@ export enum TimeTravelType {
   'none' = 'None',
 }
 
+export enum ValidationType {
+  'strict' = 'Strict',
+  'warning' = 'Warning',
+  'all' = 'All',
+  'none' = 'None',
+}
+
 export interface FeatureGroupFormData {
   name: string;
   description: string;
@@ -20,6 +27,7 @@ export interface FeatureGroupFormData {
   correlations: boolean;
   enabled: boolean;
   histograms: boolean;
+  validationType: string[];
 }
 
 export interface FeatureFormProps {

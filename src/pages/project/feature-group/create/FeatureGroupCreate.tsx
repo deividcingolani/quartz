@@ -55,6 +55,7 @@ const FeatureGroupCreate: FC = () => {
             type: 'cachedFeaturegroupDTO',
             timeTravelFormat: restData.timeTravelFormat[0].toUpperCase(),
             descStatsEnabled: !!getEnabledStatistics(features).length,
+            validationType: restData.validationType[0].toUpperCase(),
             jobs: [],
             version: 1,
             statisticsConfig: {
