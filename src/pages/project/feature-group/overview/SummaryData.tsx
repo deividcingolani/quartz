@@ -1,5 +1,5 @@
 import React, { FC, memo, useCallback } from 'react';
-import { Flex } from 'rebass';
+import { Box, Flex } from 'rebass';
 import {
   Text,
   TextValueBadge,
@@ -7,6 +7,8 @@ import {
   Labeling,
   Microlabeling,
   Value,
+  CalloutTypes,
+  Callout,
 } from '@logicalclocks/quartz';
 
 // Services
@@ -78,6 +80,14 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           <Value primary>{data.onlineEnabled ? 'online' : 'offline'}</Value>
         </Flex>
       </Flex>
+      {!!data.timeTravelFormat && (
+        <Box my="20px">
+          <Callout
+            content="This feature group does not contain any data"
+            type={CalloutTypes.warning}
+          />
+        </Box>
+      )}
       <Flex mt="17px" alignItems="center">
         <TextValueBadge variant="gray" text="features" value={featureCount} />
         {/*<TextValueBadge variant="gray" ml="20px" text="rows" value="81M" />*/}

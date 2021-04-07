@@ -96,6 +96,10 @@ const TrainingDatasetCreate: FC = () => {
           dispatch.trainingDatasets.clear();
           dispatch.basket.switch(false);
           dispatch.basket.clear();
+          dispatch.search.fetchTd({
+            projectId: +projectId,
+            featureStoreId: featureStoreData.featurestoreId,
+          });
           navigate(`/${id}`, 'p/:id/td/*');
         }
       }

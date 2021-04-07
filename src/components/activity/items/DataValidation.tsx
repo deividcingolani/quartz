@@ -53,11 +53,15 @@ const DataValidation: FC<DataValidationProps> = ({
       justifyContent="space-between"
       onClick={() => onButtonClick && onButtonClick(activity)}
     >
-      <Flex>
-        <Box mt="5px" ml="20px">
+      <Flex
+        sx={{
+          alignItems: 'center',
+        }}
+      >
+        <Box mt="2px" ml="16px">
           {icons.validate}
         </Box>
-        <Labeling mt="5px" width="110px" bold ml="8px" gray>
+        <Labeling width="110px" ml="4px" bold gray>
           Validation
         </Labeling>
 

@@ -163,7 +163,6 @@ export interface ExpectationRule {
 
 export interface FeatureGroup extends DataEntity {
   defaultStorage: string;
-  hudiEnabled: boolean;
   statisticColumns: any;
   timeTravelFormat: string;
   provenance: FeatureGroupProvenance[];

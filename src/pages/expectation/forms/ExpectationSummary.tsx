@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFormContext } from 'react-hook-form';
 import { Button, StickySummary } from '@logicalclocks/quartz';
 import { ExpectationType } from './ExpectationForm';
+import useScreenWithScroll from '../../../hooks/useScreenWithScroll';
 
 export interface ExpectationSummaryProps {
   isEdit?: boolean;
@@ -10,6 +11,7 @@ export interface ExpectationSummaryProps {
   onSubmit: () => void;
   type: ExpectationType;
   disabledMainButton?: boolean;
+  errorsValue?: string;
 }
 
 const ExpectationSummary: FC<ExpectationSummaryProps> = ({
@@ -17,12 +19,13 @@ const ExpectationSummary: FC<ExpectationSummaryProps> = ({
   isEdit,
   disabled,
   onSubmit,
+  errorsValue,
   disabledMainButton,
 }) => {
   const { watch } = useFormContext();
 
   const navigate = useNavigate();
-
+  const hasScrollOnScreen = useScreenWithScroll();
   const { name } = watch(['name']);
 
   return (
@@ -52,6 +55,8 @@ const ExpectationSummary: FC<ExpectationSummaryProps> = ({
         </Button>
       }
       title={name}
+      hasScrollOnScreen={hasScrollOnScreen}
+      errorsValue={errorsValue}
     />
   );
 };

@@ -72,7 +72,6 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
   }, [data]);
 
   const [groupComponents, groupProps] = useSchematisedTagsListRowData(selected);
-
   const isLoadingTD = useSelector(
     (state: RootState) =>
       state.loading.effects.trainingDatasetView.loadRemainingData,

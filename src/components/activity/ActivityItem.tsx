@@ -49,7 +49,13 @@ export const getForm = (
 
 const ActivityDataItem: FC<ActivityItemProps> = ({ activities, actions }) => {
   useEffect(() => {
-    const sortPriority = ['METADATA', 'JOB', 'STATISTICS', 'COMMIT'];
+    const sortPriority = [
+      'METADATA',
+      'JOB',
+      'STATISTICS',
+      'COMMIT',
+      'VALIDATIONS',
+    ];
     activities.sort(function (x, y) {
       return sortPriority.indexOf(y.type) - sortPriority.indexOf(x.type);
     });

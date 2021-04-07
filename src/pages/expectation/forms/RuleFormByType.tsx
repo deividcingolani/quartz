@@ -66,14 +66,7 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
         hasPlaceholder={false}
         value={rule.datatype ? rule.datatype : []}
         onChange={(value) => onChange('datatype', value, index)}
-        options={[
-          'Null',
-          'Fractional',
-          'Integral',
-          'Boolean',
-          'String',
-          'Numeric',
-        ]}
+        options={['Null', 'Fractional', 'Integral', 'Boolean', 'String']}
       />
     );
   }

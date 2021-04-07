@@ -119,6 +119,13 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
     (state: RootState) => state.featureGroupView,
   );
 
+  const errorsValue =
+    Object.keys(errors).length === 1
+      ? `${Object.keys(errors).length.toString()} error`
+      : Object.keys(errors).length !== 0
+      ? `${Object.keys(errors).length.toString()} errors`
+      : '';
+
   const expectations = useSelector(selectExpectations);
 
   const isAttaching = useSelector(selectExpectationAttachLoading);
@@ -134,7 +141,7 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
     () =>
       Array.from(
         new Set(
-          featureGroups.reduce(
+          attachedFgs.reduce(
             (acc: string[], { features }) => [
               ...acc,
               ...features.map(({ name }) => name),
@@ -143,7 +150,7 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
           ),
         ),
       ),
-    [featureGroups],
+    [attachedFgs],
   );
 
   const isMatchingExpectation = useMemo(
@@ -183,7 +190,6 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
   const handleSubmitForm = useCallback(
     (data: ExpectationData) => {
       const { features, rules, name } = data;
-
       const isExists = !!expectations.find(
         (expectation) => expectation.name === name,
       );
@@ -243,12 +249,16 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
         features.map(({ name }) => name).includes(name),
       );
 
+      if (fgs.length === attachedFgs.length) {
+        return 'all';
+      }
+
       return fgs
         .map(({ name }) => name)
         .slice(0, 6)
         .join(', ');
     });
-  }, [fgId, allFeatures, featureGroups, featureGroup]);
+  }, [fgId, allFeatures, attachedFgs, featureGroup, featureGroups]);
 
   const onAttachFg = async () => {
     if (featureGroup && featureStoreData?.featurestoreId) {
@@ -278,259 +288,260 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
 
   return (
     <FormProvider {...methods}>
-      {!!errors.features && (
-        <Box mb="10px">
-          <Callout
-            // @ts-ignore
-            content={errors.features.message}
-            type={CalloutTypes.error}
-          />
-        </Box>
-      )}
-      <Box mb="100px">
-        <Card title={isEdit ? 'Edit expectation' : 'Attach an expectation'}>
-          {!isEdit && (
-            <>
-              <Flex>
-                <Label>Attach an expectation to</Label>
-                <Value primary ml="3px">
-                  {featureGroup?.name}
-                </Value>
-              </Flex>
-              <Box mt="20px" ml="-20px">
-                <RadioGroup
-                  ml="20px"
-                  value={expType}
-                  flexDirection="row"
-                  options={Object.values(ExpectationType)}
-                  onChange={(value) => setType(value as ExpectationType)}
-                  disabled={!expectations.length || isLoading || isDisabled}
-                />
-              </Box>
-            </>
-          )}
-
-          {expType === ExpectationType.new && (
-            <>
-              <Flex mt={isEdit ? 0 : '20px'}>
-                <Input
-                  name="name"
-                  ref={register}
-                  placeholder="name"
-                  label="Expectation name"
-                  disabled={isLoading || isDisabled}
-                  {...getInputValidation('name', errors)}
-                />
-                <Input
-                  optional={true}
-                  ref={register}
-                  name="description"
-                  label="Description"
-                  placeholder="description"
-                  disabled={isLoading || isDisabled}
-                  {...getInputValidation('description', errors)}
-                  labelProps={{
-                    flex: 1,
-                    ml: '20px',
-                  }}
-                />
-              </Flex>
-              {isNameAlreadyExists && !!fgId && (
-                <Box mt="20px">
-                  <Callout
-                    content="An expectation already has this name."
-                    type={CalloutTypes.warning}
+      <Box>
+        {!!errors.features && (
+          <Box mb="10px">
+            <Callout
+              // @ts-ignore
+              content={errors.features.message}
+              type={CalloutTypes.error}
+            />
+          </Box>
+        )}
+        <Box mb="100px">
+          <Card title={isEdit ? 'Edit expectation' : 'Attach an expectation'}>
+            {!isEdit && (
+              <>
+                <Flex>
+                  <Label>Attach an expectation to</Label>
+                  <Value primary ml="3px">
+                    {featureGroup?.name}
+                  </Value>
+                </Flex>
+                <Box mt="20px" ml="-20px">
+                  <RadioGroup
+                    ml="20px"
+                    value={expType}
+                    flexDirection="row"
+                    options={Object.values(ExpectationType)}
+                    onChange={(value) => setType(value as ExpectationType)}
+                    disabled={!expectations.length || isLoading || isDisabled}
                   />
                 </Box>
-              )}
-              {!!fromFeatureGroup &&
-                !attachedFgs?.find(({ name }) => name === fromFeatureGroup) &&
-                isEdit &&
-                isMatchingFromFg && (
-                  <Box
-                    sx={{
-                      div: {
-                        width: '100%',
-                        div: {
-                          width: '100%',
+              </>
+            )}
 
-                          pre: {
-                            width: '100%',
-                          },
-                          div: {
-                            width: 'initial',
-                          },
-                        },
-                      },
+            {expType === ExpectationType.new && (
+              <>
+                <Flex mt={isEdit ? 0 : '20px'}>
+                  <Input
+                    name="name"
+                    ref={register}
+                    placeholder="name"
+                    label="Expectation name"
+                    disabled={isLoading || isDisabled}
+                    {...getInputValidation('name', errors)}
+                  />
+                  <Input
+                    optional={true}
+                    ref={register}
+                    name="description"
+                    label="Description"
+                    placeholder="description"
+                    disabled={isLoading || isDisabled}
+                    {...getInputValidation('description', errors)}
+                    labelProps={{
+                      flex: 1,
+                      ml: '20px',
                     }}
-                    mt="20px"
-                  >
+                  />
+                </Flex>
+                {isNameAlreadyExists && !!fgId && (
+                  <Box mt="20px">
                     <Callout
+                      content="An expectation already has this name."
                       type={CalloutTypes.warning}
-                      content={
-                        <Flex
-                          alignItems="center"
-                          justifyContent="space-between"
-                        >
-                          <Value color="labels.orange">
-                            You were attaching this expectation to{' '}
-                            {fromFeatureGroup}. Do you still want to attach it
-                            to {fromFeatureGroup}?
-                          </Value>
-                          <Button
-                            intent="secondary"
-                            onClick={onAttachFg}
-                            disabled={isAttaching || isLoading || isDisabled}
-                          >
-                            Attach {fromFeatureGroup}
-                          </Button>
-                        </Flex>
-                      }
                     />
                   </Box>
                 )}
-              {!isEdit && (
-                <Box mt="20px">
-                  <Callout
-                    content="An expectation can be attached to multiple feature groups containing the same feature names."
-                    type={CalloutTypes.neutral}
+                {!!fromFeatureGroup &&
+                  !attachedFgs?.find(({ name }) => name === fromFeatureGroup) &&
+                  isEdit &&
+                  isMatchingFromFg && (
+                    <Box
+                      sx={{
+                        div: {
+                          width: '100%',
+                          div: {
+                            width: '100%',
+
+                            pre: {
+                              width: '100%',
+                            },
+                            div: {
+                              width: 'initial',
+                            },
+                          },
+                        },
+                      }}
+                      mt="20px"
+                    >
+                      <Callout
+                        type={CalloutTypes.warning}
+                        content={
+                          <Flex
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <Value color="labels.orange">
+                              You were attaching this expectation to{' '}
+                              {fromFeatureGroup}. Do you still want to attach it
+                              to {fromFeatureGroup}?
+                            </Value>
+                            <Button
+                              intent="secondary"
+                              onClick={onAttachFg}
+                              disabled={isAttaching || isLoading || isDisabled}
+                            >
+                              Attach {fromFeatureGroup}
+                            </Button>
+                          </Flex>
+                        }
+                      />
+                    </Box>
+                  )}
+                {!isEdit && (
+                  <Box mt="20px">
+                    <Callout
+                      content="An expectation can be attached to multiple feature groups containing the same feature names."
+                      type={CalloutTypes.neutral}
+                    />
+                  </Box>
+                )}
+                {isEdit && (
+                  <Controller
+                    control={control}
+                    name="featureGroups"
+                    render={({
+                      onChange,
+                      value,
+                    }: {
+                      value: FeatureGroup[];
+                      onChange: any;
+                    }) => (
+                      <Select
+                        mt="20px"
+                        width="100%"
+                        isMulti={true}
+                        listWidth="100%"
+                        maxListHeight="400px"
+                        hasPlaceholder={false}
+                        label="Attached feature groups"
+                        placeholder="pick a feature group"
+                        disabled={isLoading || isDisabled}
+                        value={value.map(({ name }) => name)}
+                        options={featureGroups.map(({ name }) => name)}
+                        onChange={(values) =>
+                          onChange(
+                            values.map((name) =>
+                              featureGroups.find(
+                                (featureGroup) => featureGroup.name === name,
+                              ),
+                            ),
+                          )
+                        }
+                      />
+                    )}
                   />
-                </Box>
-              )}
-              {isEdit && (
+                )}
                 <Controller
                   control={control}
-                  name="featureGroups"
-                  render={({
-                    onChange,
-                    value,
-                  }: {
-                    value: FeatureGroup[];
-                    onChange: any;
-                  }) => (
+                  name="features"
+                  render={({ onChange, value }) => (
                     <Select
                       mt="20px"
                       width="100%"
+                      value={value}
                       isMulti={true}
                       listWidth="100%"
+                      label="Features"
+                      hasSearch={true}
+                      onChange={onChange}
                       maxListHeight="400px"
                       hasPlaceholder={false}
-                      label="Attached feature groups"
-                      placeholder="pick a feature group"
+                      needSecondaryText={false}
                       disabled={isLoading || isDisabled}
-                      value={value.map(({ name }) => name)}
-                      options={featureGroups.map(({ name }) => name)}
-                      onChange={(values) =>
-                        onChange(
-                          values.map((name) =>
-                            featureGroups.find(
-                              (featureGroup) => featureGroup.name === name,
-                            ),
-                          ),
-                        )
+                      searchPlaceholder="Find a feature..."
+                      placeholder="pick concerned features"
+                      additionalTexts={featuresAdditionalTexts}
+                      options={
+                        !fgId
+                          ? allFeatures
+                          : featureGroup?.features.map(({ name }) => name) || []
                       }
                     />
                   )}
                 />
-              )}
-              <Controller
-                control={control}
-                name="features"
-                render={({ onChange, value }) => (
-                  <Select
-                    mt="20px"
-                    width="100%"
-                    value={value}
-                    isMulti={true}
-                    listWidth="100%"
-                    label="Features"
-                    hasSearch={true}
-                    onChange={onChange}
-                    maxListHeight="400px"
-                    hasPlaceholder={false}
-                    needSecondaryText={false}
-                    disabled={isLoading || isDisabled}
-                    searchPlaceholder="Find a feature..."
-                    placeholder="pick concerned features"
-                    additionalTexts={featuresAdditionalTexts}
-                    options={
-                      !fgId
-                        ? allFeatures
-                        : featureGroup?.features.map(({ name }) => name) || []
-                    }
+
+                {!isEdit &&
+                  expType === ExpectationType.new &&
+                  !isMatchingExpectationToAttachedFg && (
+                    <Box mt="20px">
+                      <Callout
+                        content="Attached feature group does not contain all the selected features."
+                        type={CalloutTypes.error}
+                      />
+                    </Box>
+                  )}
+
+                {isEdit && (
+                  <MatchingError
+                    features={features}
+                    featureGroups={attachedFgs || []}
                   />
                 )}
+              </>
+            )}
+
+            {expType === ExpectationType.existing && !isEdit && (
+              <SelectExistingExpectationForm />
+            )}
+          </Card>
+
+          {isEdit && (
+            <RulesForm isEdit={isEdit} isDisabled={isLoading || isDisabled} />
+          )}
+          {expType === ExpectationType.new && !isEdit && (
+            <RulesForm isEdit={isEdit} isDisabled={isLoading || isDisabled} />
+          )}
+          {expType === ExpectationType.existing &&
+            !!selectedExpectation &&
+            !!featureGroup && (
+              <ExpectationDetailsForm
+                featureGroup={featureGroup}
+                expectation={selectedExpectation}
               />
+            )}
 
-              {!isEdit &&
-                expType === ExpectationType.new &&
-                !isMatchingExpectationToAttachedFg && (
-                  <Box mt="20px">
-                    <Callout
-                      content="Attached feature group does not contain all the selected features."
-                      type={CalloutTypes.error}
-                    />
-                  </Box>
-                )}
-
-              {isEdit && (
-                <MatchingError
-                  features={features}
-                  featureGroups={attachedFgs || []}
-                />
-              )}
-            </>
+          {isEdit && !!onDelete && (
+            <CardSecondary mt="20px" title="Danger zone">
+              <Button
+                intent="alert"
+                onClick={onDelete}
+                disabled={isLoading || isDisabled}
+              >
+                Delete expectation
+              </Button>
+            </CardSecondary>
           )}
 
-          {expType === ExpectationType.existing && !isEdit && (
-            <SelectExistingExpectationForm />
-          )}
-        </Card>
-
-        {isEdit && (
-          <RulesForm isEdit={isEdit} isDisabled={isLoading || isDisabled} />
-        )}
-        {expType === ExpectationType.new && !isEdit && (
-          <RulesForm isEdit={isEdit} isDisabled={isLoading || isDisabled} />
-        )}
-        {expType === ExpectationType.existing &&
-          !!selectedExpectation &&
-          !!featureGroup && (
-            <ExpectationDetailsForm
-              featureGroup={featureGroup}
-              expectation={selectedExpectation}
-            />
-          )}
-
-        {isEdit && !!onDelete && (
-          <CardSecondary mt="20px" title="Danger zone">
-            <Button
-              intent="alert"
-              onClick={onDelete}
-              disabled={isLoading || isDisabled}
-            >
-              Delete expectation
-            </Button>
-          </CardSecondary>
-        )}
-
-        {isEdit && !!initialData && <UpdatesForm data={initialData} />}
-
-        <ExpectationSummary
-          type={expType}
-          isEdit={isEdit}
-          disabled={isLoading || isDisabled}
-          onSubmit={handleSubmit(handleSubmitForm)}
-          disabledMainButton={
-            (!isMatchingExpectation && expType === ExpectationType.existing) ||
-            !isMatchingFeatureGroups ||
-            (!isEdit &&
-              expType === ExpectationType.new &&
-              !isMatchingExpectationToAttachedFg)
-          }
-        />
+          {isEdit && !!initialData && <UpdatesForm data={initialData} />}
+        </Box>
       </Box>
-
+      <ExpectationSummary
+        type={expType}
+        isEdit={isEdit}
+        disabled={isLoading || isDisabled}
+        onSubmit={handleSubmit(handleSubmitForm)}
+        disabledMainButton={
+          (!isMatchingExpectation && expType === ExpectationType.existing) ||
+          !isMatchingFeatureGroups ||
+          (!isEdit &&
+            expType === ExpectationType.new &&
+            !isMatchingExpectationToAttachedFg)
+        }
+        errorsValue={errorsValue}
+      />
       {isLoading && <Loader />}
     </FormProvider>
   );

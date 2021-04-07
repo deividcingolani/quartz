@@ -80,7 +80,6 @@ const Login: FC = () => {
         setError(error);
       } else {
         dispatch.profile.getUser();
-
         const lastPath =
           history.slice().reverse()[1] ||
           localStorage.getItem(pageToViewPathStorageName);
@@ -89,7 +88,7 @@ const Login: FC = () => {
 
         if (lastPath && lastPath !== routeNames.auth.login) {
           setTimeout(() => {
-            navigate(lastPath);
+            navigate(lastPath?.split('/').slice(0, 3).join('/') + '/view');
           }, 1000);
         }
       }

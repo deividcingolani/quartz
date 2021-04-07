@@ -29,10 +29,7 @@ const ExpectationResult: FC<ExpectationResultProps> = ({
 
   const getHref = useGetHrefForRoute();
 
-  const rules = useMemo(
-    () => data.map(({ rule, value }) => ({ ...rule, value })),
-    [data],
-  );
+  const rules = useMemo(() => results[0].expectation.rules, [results]);
 
   const features = useMemo(
     () =>
@@ -137,22 +134,38 @@ const ExpectationResult: FC<ExpectationResultProps> = ({
               },
             }}
           >
-            <Row
-              middleColumn={0}
-              groupComponents={
-                warningsAndErrors.map(() => [
-                  Value,
-                  Value,
-                ]) as ComponentType<any>[][]
+            {results.map((el: any) => {
+              if (
+                !el.results.filter((el: any) => el.status === 'FAILURE').length
+              ) {
+                return null;
               }
-              groupProps={warningsAndErrors.map(({ value, status, rule }) => [
-                {
-                  children: rulesMapToShort.getByKey(rule.name),
-                  color: status === 'FAILURE' ? 'labels.red' : 'labels.orange',
-                },
-                { children: value },
-              ])}
-            />
+              return (
+                <>
+                  <Value my="8px">{el.expectation.features[0]}</Value>
+                  <Row
+                    middleColumn={0}
+                    groupComponents={
+                      el.results
+                        .filter((el: any) => el.status === 'FAILURE')
+                        .map(() => [Value, Value]) as ComponentType<any>[][]
+                    }
+                    groupProps={el.results
+                      .filter((el: any) => el.status === 'FAILURE')
+                      .map(({ rule, value }: any) => [
+                        {
+                          children: rulesMapToShort.getByKey(rule.name),
+                          color:
+                            rule.level === 'ERROR'
+                              ? 'labels.red'
+                              : 'labels.orange',
+                        },
+                        { children: value },
+                      ])}
+                  />
+                </>
+              );
+            })}
           </Box>
         </>
       )}

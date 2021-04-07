@@ -11,21 +11,20 @@ import {
 // eslint-disable-next-line import/no-unresolved
 import { ItemDrawerTypes } from '../drawer/ItemDrawer';
 import useBasket from '../../hooks/useBasket';
-import { FeatureGroup } from '../../types/feature-group';
 import icons from '../../sources/icons';
 
 export interface PanelProps {
   onClickEdit: () => void;
   onClickRefresh: () => void;
-  title: string;
-  id: number;
+  title?: string;
+  id?: number;
   hasCommitDropdown?: boolean;
   commitDropdown?: React.ReactElement;
   hasVersionDropdown?: boolean;
   versionDropdown?: React.ReactElement;
   idColor: string;
   type?: ItemDrawerTypes;
-  data?: FeatureGroup;
+  data?: any;
 }
 
 const panelStyles = {

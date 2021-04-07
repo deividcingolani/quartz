@@ -40,6 +40,7 @@ import { uppercaseFirst } from '../../../../utils/uppercaseFirst';
 import { useSelector } from 'react-redux';
 import { selectSchematisedTags } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
 import StatisticConfigurationForm from './StatisticsConfigurationForm';
+import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -99,7 +100,6 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
   const onSubmit = useCallback(
     handleSubmit(async (data: FeatureGroupFormData) => {
       const next = await validateSchema(data.tags, serverTags, setError);
-
       if (!next) {
         return;
       }
@@ -127,11 +127,14 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
     isUpdatedFunction,
   ]);
 
+  const hasScrollOnScreen = useScreenWithScroll();
+
   return (
     <FormProvider {...methods}>
       <Card
         title={isEdit ? 'Edit Feature Group' : 'Create New Feature Group'}
         mb="100px"
+        pb={hasScrollOnScreen ? '75px' : 0}
       >
         <Flex justifyContent="space-between" mb="20px">
           <Input

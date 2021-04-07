@@ -147,7 +147,7 @@ const Expectations: FC<ExpectationsProps> = ({ data }) => {
       <Card mt="20px" title={title} actions={action}>
         <Box mt="10px">
           <Flex flexDirection="column" alignItems="center">
-            <Labeling fontSize="18px" bold gray>
+            <Labeling fontSize="18px" gray>
               No expectation attached
             </Labeling>
             <Tooltip

@@ -4,7 +4,7 @@ import { Value } from '@logicalclocks/quartz';
 
 export interface NoDataProps {
   mainText?: string;
-  secondaryText: string;
+  secondaryText?: string;
   children?: React.ReactNode;
 }
 
@@ -16,13 +16,22 @@ const NoData: FC<NoDataProps> = ({
   return (
     <Flex flexDirection="column" alignItems="center" my="auto">
       {!!mainText && (
-        <Value fontFamily="Inter" fontSize="22px" mb="11px">
+        <Value
+          fontFamily="Inter"
+          fontSize="18px"
+          mb="11px"
+          sx={{
+            color: 'gray',
+          }}
+        >
           {mainText}
         </Value>
       )}
-      <Value fontFamily="Inter" mb="58px">
-        {secondaryText}
-      </Value>
+      {!!mainText && (
+        <Value fontFamily="Inter" mb="58px">
+          {secondaryText}
+        </Value>
+      )}
       <Flex>{children}</Flex>
     </Flex>
   );

@@ -141,6 +141,11 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     handleSubmit(async (data: TrainingDatasetFormData) => {
       let next = await validateSchema(data.tags, serverTags, setError);
 
+      if (!data.joins) {
+        setError('features', { message: 'Join at least one feature' });
+        return;
+      }
+
       const hasFeatures = !!data.joins.length;
       data.features = features;
       if (!hasFeatures) {

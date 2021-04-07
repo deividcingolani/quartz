@@ -6,14 +6,14 @@ import React, {
   useState,
 } from 'react';
 import {
+  Badge,
   Drawer,
+  Labeling,
   Microlabeling,
   Row,
   Select,
   TextValueBadge,
   Value,
-  Labeling,
-  Badge,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import { format, formatDistance } from 'date-fns';
@@ -304,15 +304,14 @@ const ItemDrawer = <T extends DataEntity>({
       onClose={handleToggle}
     >
       <Box maxHeight="calc(100vh - 350px)" overflowY="auto">
-        <Drawer.Section title="Activity" width="100%">
-          {type === ItemDrawerTypes.fg && isCommitsLoading && (
-            <Box width="100%" height="55px" sx={{ position: 'relative' }}>
-              <Loader />
-            </Box>
-          )}
-          {type === ItemDrawerTypes.fg &&
-            !isCommitsLoading &&
-            commits?.length > 0 && (
+        {type === ItemDrawerTypes.fg ? (
+          <Drawer.Section title="Activity" width="100%">
+            {isCommitsLoading && (
+              <Box width="100%" height="55px" sx={{ position: 'relative' }}>
+                <Loader />
+              </Box>
+            )}
+            {!isCommitsLoading && commits?.length > 0 && (
               <CommitGraph
                 values={commits.map((commit) => ({
                   date: format(commit.commitTime, 'M/d/yyyy-HH:mm'),
@@ -324,12 +323,35 @@ const ItemDrawer = <T extends DataEntity>({
                 keys={['added', 'deleted', 'modified']}
               />
             )}
-          {type === ItemDrawerTypes.fg &&
-            !isCommitsLoading &&
-            commits?.length === 0 && (
+            {!isCommitsLoading && commits?.length === 0 && (
               <Labeling gray>No recent activity</Labeling>
             )}
-        </Drawer.Section>
+          </Drawer.Section>
+        ) : null}
+        {type === ItemDrawerTypes.td ? (
+          <Drawer.Section title="Activity" width="100%">
+            {isCommitsLoading && (
+              <Box width="100%" height="55px" sx={{ position: 'relative' }}>
+                <Loader />
+              </Box>
+            )}
+            {!isCommitsLoading && commits?.length > 0 && (
+              <CommitGraph
+                values={commits.map((commit) => ({
+                  date: format(commit.commitTime, 'M/d/yyyy-HH:mm'),
+                  added: commit.rowsInserted,
+                  deleted: commit.rowsDeleted,
+                  modified: commit.rowsUpdated,
+                }))}
+                groupKey="date"
+                keys={['added', 'deleted', 'modified']}
+              />
+            )}
+            {!isCommitsLoading && commits?.length === 0 && (
+              <Labeling gray>No activity</Labeling>
+            )}
+          </Drawer.Section>
+        ) : null}
         <Drawer.Section title="Versions">
           <Select
             width="143px"
@@ -408,13 +430,23 @@ const ItemDrawer = <T extends DataEntity>({
             title="Last Training Job"
             action={['view all training jobs -->', () => ({})]}
           >
-            <Row
-              middleColumn={1}
-              groupComponents={
-                lastTrainingJobComponents as ComponentType<any>[][]
-              }
-              groupProps={lastTrainingJobProps}
-            />
+            {isJobsLoading && (
+              <Box width="100%" height="55px" sx={{ position: 'relative' }}>
+                <Loader />
+              </Box>
+            )}
+            {!isJobsLoading &&
+              (!!lastJobs.length && !!lastJobs[0].job ? (
+                <Row
+                  middleColumn={1}
+                  groupComponents={
+                    lastTrainingJobComponents as ComponentType<any>[][]
+                  }
+                  groupProps={lastTrainingJobProps}
+                />
+              ) : (
+                <Labeling gray>No ingestion</Labeling>
+              ))}
           </Drawer.Section>
         ) : null}
 

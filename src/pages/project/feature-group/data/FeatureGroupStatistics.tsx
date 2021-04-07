@@ -1,8 +1,7 @@
 import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Select } from '@logicalclocks/quartz';
-import routeNames from '../../../../routes/routeNames';
+import { Select } from '@logicalclocks/quartz';
 import NoData from '../../../../components/no-data/NoData';
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
 
@@ -183,39 +182,13 @@ const FeatureGroupStatistics: FC = () => {
     return <Loader />;
   }
 
-  if (!data?.features.length) {
-    return (
-      <NoData mainText="No Features" secondaryText="">
-        <Button
-          intent="secondary"
-          onClick={() => navigate(routeNames.featureGroup.list, 'p/:id/*')}
-        >
-          Feature Groups
-        </Button>
-      </NoData>
-    );
-  }
-
-  if (!statistics) {
-    return (
-      <NoData mainText="No Feature Statistics" secondaryText="">
-        <Button
-          intent="secondary"
-          onClick={() => navigate(routeNames.featureGroup.list, 'p/:id/*')}
-        >
-          Feature Groups
-        </Button>
-      </NoData>
-    );
-  }
-
   return (
     <>
       <Panel
         type={ItemDrawerTypes.fg}
         data={data}
-        title={data.name}
-        id={data.id}
+        title={data?.name}
+        id={data?.id}
         idColor="labels.orange"
         onClickEdit={() => navigate(`/edit`, 'p/:id/fg/:fgId/*')}
         onClickRefresh={handleRefreshData}
@@ -249,8 +222,8 @@ const FeatureGroupStatistics: FC = () => {
           />
         }
       />
-      {isStatisticsLoading ? (
-        <Loader />
+      {!data?.features.length || !statistics ? (
+        <NoData mainText="No data available" />
       ) : (
         <StatisticsContent
           data={data}

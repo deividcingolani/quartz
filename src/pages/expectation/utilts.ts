@@ -24,17 +24,14 @@ const getRestRuleData = (data: Omit<FormRule, 'severity'>) => {
         RuleTypes.HAS_MEAN,
         RuleTypes.HAS_SIZE,
         RuleTypes.HAS_ENTROPY,
-        RuleTypes.IS_LESS_THAN,
         RuleTypes.HAS_UNIQUENESS,
-        RuleTypes.IS_GREATER_THAN,
+        RuleTypes.HAS_INEQUALITIES,
         RuleTypes.HAS_CORRELATION,
         RuleTypes.HAS_COMPLETENESS,
         RuleTypes.HAS_DISTINCTNESS,
         RuleTypes.HAS_APPROX_QUANTILE,
         RuleTypes.HAS_STANDARD_DEVIATION,
-        RuleTypes.IS_LESS_THAN_OR_EQUAL_TO,
         RuleTypes.HAS_APPROX_COUNT_DISTINCT,
-        RuleTypes.IS_GREATER_THAN_OR_EQUAL_TO,
         RuleTypes.HAS_NUMBER_OF_DISTINCT_VALUES,
       ],
       fn: ({ max, match, exact, min }: Omit<FormRule, 'severity'>) => {
@@ -104,6 +101,14 @@ const getRestRuleData = (data: Omit<FormRule, 'severity'>) => {
       fn: ({ pattern }: Omit<FormRule, 'severity'>) => {
         return {
           pattern,
+        };
+      },
+    },
+    {
+      types: [RuleTypes.HAS_DATATYPE],
+      fn: ({ datatype }: Omit<FormRule, 'severity'>) => {
+        return {
+          acceptedType: datatype && datatype[0],
         };
       },
     },
@@ -245,6 +250,14 @@ export const mapRulesToForm = (rules: ServerRule[]) => {
       fn: ({ legalValues }: ServerRule) => {
         return {
           legalValues: legalValues?.join(' ; '),
+        };
+      },
+    },
+    {
+      types: [RuleTypes.HAS_DATATYPE],
+      fn: ({ acceptedType }: ServerRule) => {
+        return {
+          datatype: [acceptedType],
         };
       },
     },
@@ -476,7 +489,6 @@ export const validateRules = (
 export const getRuleDescription = (rule: FormRule, features: string[]) => {
   const isShowFeatures = features?.length === 2;
   const [firstFeature, secondFeature] = features;
-
   const descMap = new Map<RuleTypes, Function>([
     [
       RuleTypes.HAS_MEAN,
@@ -661,32 +673,15 @@ export const getRuleDescription = (rule: FormRule, features: string[]) => {
             }% of value are positive values.`,
     ],
     [
-      RuleTypes.IS_LESS_THAN,
-      () =>
-        isShowFeatures
-          ? `Assert on ${firstFeature} values being less than those of ${secondFeature}.`
-          : `Assert on feature A values being less than those of feature B.`,
-    ],
-    [
-      RuleTypes.IS_LESS_THAN_OR_EQUAL_TO,
-      () =>
-        isShowFeatures
-          ? `Assert on ${firstFeature} values being less or equal to those of ${secondFeature}.`
-          : `Assert on feature A values being less or equal to those of feature B.`,
-    ],
-    [
-      RuleTypes.IS_GREATER_THAN,
-      () =>
-        isShowFeatures
-          ? `Assert on ${firstFeature} values being greater than those of ${secondFeature}.`
-          : `Assert on feature A values being greater than those of feature B. `,
-    ],
-    [
-      RuleTypes.IS_GREATER_THAN_OR_EQUAL_TO,
-      () =>
-        isShowFeatures
-          ? `Assert on ${firstFeature} values being greater or equal to those of ${secondFeature}.`
-          : `Assert on feature A values being greater or equal to those of feature B.`,
+      RuleTypes.HAS_INEQUALITIES,
+      ({ match, inequality }: FormRule) =>
+        match && match[0] === MatchTypes.exactly && isShowFeatures
+          ? `Assert on ${firstFeature} values being ${
+              inequality || '-'
+            } those of ${secondFeature || '-'}.`
+          : `Assert on feature A values being ${
+              inequality || '-'
+            } those of feature B.`,
     ],
     [
       RuleTypes.IS_CONTAINED_IN,

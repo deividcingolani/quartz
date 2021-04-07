@@ -7,7 +7,7 @@ export enum ActivityTypeSortOptions {
   'COMMIT' = 'data ingestions',
   'METADATA' = 'metadata updates',
   'STATISTICS' = 'new statistics',
-  'VALIDATIONS' = 'data validation',
+  'VALIDATIONS' = 'data validations',
 }
 
 export interface FeatureGroupActivityContentProps {

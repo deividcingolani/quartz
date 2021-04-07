@@ -7,6 +7,7 @@ export interface ServerRule {
   max?: number;
   legalValues?: string[];
   pattern?: string;
+  acceptedType?: string;
 }
 
 export interface Expectation {

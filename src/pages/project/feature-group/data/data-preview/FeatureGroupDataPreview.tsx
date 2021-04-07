@@ -35,6 +35,7 @@ import useBasket from '../../../../../hooks/useBasket';
 import useTitle from '../../../../../hooks/useTitle';
 import titles from '../../../../../sources/titles';
 import useFeatureGroupView from '../../hooks/useFeatureGroupView';
+import NoData from '../../../../../components/no-data/NoData';
 
 const FeatureGroupDataPreview: FC = () => {
   const { id, fgId } = useParams();
@@ -168,6 +169,10 @@ const FeatureGroupDataPreview: FC = () => {
     [filteredFeatures, computedData],
   );
 
+  const statistics = useSelector(
+    (state: RootState) => state.featureGroupStatistics?.entities.statistics,
+  );
+
   const featuresLength = features.length;
   const displayFeaturesLength = filteredFeatures.length;
   const isFiltered = featuresLength !== displayFeaturesLength;
@@ -182,7 +187,7 @@ const FeatureGroupDataPreview: FC = () => {
     <Box
       display="grid"
       sx={{
-        gridTemplateRows: '130px 50px minmax(120px, max-content)',
+        gridTemplateRows: '130px 50px minmax(120px, 100%)',
         height: 'calc(100vh - 115px)',
       }}
     >
@@ -235,8 +240,8 @@ const FeatureGroupDataPreview: FC = () => {
           )}
         </Flex>
       )}
-      <Box mb="-23px" mr="-18px" maxWidth="100vw">
-        {!!filteredFeatures.length && !!filteredData.length && !isLoading && (
+      {!!filteredFeatures.length && !!filteredData.length && !isLoading && (
+        <Box mb="-23px" mr="-18px" maxWidth="100vw">
           <ReadOnlyTable
             staticColumn={staticColumn}
             onFreeze={handleChangeStaticColumn}
@@ -248,8 +253,12 @@ const FeatureGroupDataPreview: FC = () => {
               },
             ]}
           />
-        )}
-      </Box>
+        </Box>
+      )}
+      {(!filteredFeatures.length || !filteredData.length || !!statistics) && (
+        <NoData mainText="No data available" />
+      )}
+      {isLoading && <Loader />}
       {isFiltered && !filteredFeatures.length && !isLoading && (
         <Box mb="20px">
           <FilterResult
@@ -259,7 +268,6 @@ const FeatureGroupDataPreview: FC = () => {
           />
         </Box>
       )}
-      {isLoading && <Loader />}
     </Box>
   );
 };

@@ -65,7 +65,7 @@ const EditExpectation: FC = () => {
     async (data: ExpectationData) => {
       if (featureStoreData?.featurestoreId && expectation) {
         const { rules, featureGroups, ...restData } = data;
-
+        console.log(mapRules(rules));
         await dispatch.expectations.edit({
           projectId: +projectId,
           attachedFgs: featureGroups,

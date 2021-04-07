@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { Value } from '@logicalclocks/quartz';
+import { Labeling, Value } from '@logicalclocks/quartz';
 
 const useSchematisedTagsListRowData = (tag: { [key: string]: string }) => {
   const groupComponents = useMemo(() => {
-    return Object.entries(tag).map(() => [Value, Value]);
+    return Object.entries(tag).map(() => [Value, Labeling]);
   }, [tag]);
 
   const groupProps = useMemo(() => {
@@ -12,8 +12,8 @@ const useSchematisedTagsListRowData = (tag: { [key: string]: string }) => {
         children: key,
       },
       {
-        children: value,
-        primary: true,
+        children: Array.isArray(value) ? value.join(', ') : value.toString(),
+        gray: true,
       },
     ]);
   }, [tag]);
