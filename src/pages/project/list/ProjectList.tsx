@@ -12,7 +12,7 @@ import routeNames from '../../../routes/routeNames';
 // Components
 import Loader from '../../../components/loader/Loader';
 import ProjectListContent from './ProjectListContent';
-import NoData from '../../../components/no-data/NoData';
+import NoProjects from '../../../components/no-projects/NoProjects';
 import useTitle from '../../../hooks/useTitle';
 import titles from '../../../sources/titles';
 
@@ -44,13 +44,6 @@ const ProjectList: FC = () => {
   }, [dispatch]);
 
   // Handlers
-  const handleRouteChange = useCallback(
-    (url: string) => () => {
-      navigate(url, routeNames.project.view);
-    },
-    [navigate],
-  );
-
   const handleCreate = useCallback(() => {
     navigate(routeNames.project.create);
   }, [navigate]);
@@ -61,31 +54,21 @@ const ProjectList: FC = () => {
 
   return (
     <Flex mb="20px" flexGrow={1} flexDirection="column">
-      <Flex justifyContent="space-between" mt="20px" mb="20px">
-        <Flex>
-          <Value primary px="5px">
-            {projects.length}
-          </Value>
-          <Value px="5px">projects</Value>
-        </Flex>
-        <Button onClick={handleCreate}>Create new project</Button>
-      </Flex>
-      {!isLoading && <ProjectListContent data={projects} />}
-      {!isLoading && !projects.length && (
-        <NoData mainText="No Projects" secondaryText="">
-          <Button
-            intent="secondary"
-            onClick={handleRouteChange(routeNames.storageConnector.list)}
-            mr="14px"
-          >
-            All Storage Connectors
-          </Button>
-          <Button intent="secondary" onClick={handleRouteChange('')} mr="14px">
-            Feature Group Documentation
-          </Button>
-          <Button onClick={handleCreate}>New Feature Group</Button>
-        </NoData>
+      {!isLoading && projects.length > 0 && (
+        <>
+          <Flex justifyContent="space-between" mt="20px" mb="20px">
+            <Flex>
+              <Value primary px="5px">
+                {projects.length}
+              </Value>
+              <Value px="5px">projects</Value>
+            </Flex>
+            <Button onClick={handleCreate}>Create new project</Button>
+          </Flex>
+          <ProjectListContent data={projects} />
+        </>
       )}
+      {!isLoading && !projects.length && <NoProjects />}
     </Flex>
   );
 };
