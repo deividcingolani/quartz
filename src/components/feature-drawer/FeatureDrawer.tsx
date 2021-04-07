@@ -17,7 +17,7 @@ import { ItemDrawerTypes } from '../drawer/ItemDrawer';
 export interface FeatureDrawerProps {
   isOpen: boolean;
   handleToggle: () => void;
-  feature: Feature;
+  feature: Feature | any;
   fgId: number;
   projectId: number;
   featureStoreId: number;

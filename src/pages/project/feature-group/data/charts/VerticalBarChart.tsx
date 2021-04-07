@@ -120,7 +120,15 @@ const VerticalBarChart: FC<ChartProps> = ({ data }) => {
               );
             })}
           </Bar>
-          <Tooltip content={<ChartTooltip />} active cursor={false} />
+          <Tooltip
+            content={<ChartTooltip />}
+            active
+            cursor={false}
+            wrapperStyle={{
+              visibility: 'visible',
+              width: '100%',
+            }}
+          />
         </BarChart>
       </Flex>
       <Labeling bold mt="54px">

@@ -18,6 +18,7 @@ export interface CorrelationTableProps {
   changeMaxCount: (count: number) => void;
   correlation: { [key: string]: FeatureGroupStatistics };
   onPickCorrelation: (value: CorrelationValue) => void;
+  pickedCorrelations: CorrelationValue[];
 }
 
 const tooltipOffset = {
@@ -34,10 +35,10 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
   changeMaxCount,
   correlation,
   onPickCorrelation,
+  pickedCorrelations,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-
   const onResize = useCallback(() => {
     changeMaxCount(
       Math.floor(
@@ -75,7 +76,10 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
     const vertical = Object.keys(correlation).slice(0, maxCount);
     const horizontal = Object.keys(correlation).slice(0, maxCount);
 
-    const calcX = d3.scaleBand().range([0, width]).domain(horizontal);
+    const calcX = d3
+      .scaleBand()
+      .range([0, width + 6])
+      .domain(horizontal);
 
     svg
       .append('g')
@@ -95,7 +99,10 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
       .attr('color', '#A0A0A0')
       .style('text-anchor', 'end');
 
-    const calcY = d3.scaleBand().range([height, 0]).domain(vertical);
+    const calcY = d3
+      .scaleBand()
+      .range([height + 6, 0])
+      .domain(vertical);
 
     svg
       .append('g')
@@ -167,6 +174,7 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
       })
       .enter();
 
+    // @ts-ignore
     rects
       .append('rect')
       // @ts-ignore
@@ -182,13 +190,23 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
       .attr('id', (d) => {
         return `${d.vertical}-${d.horizontal}`;
       })
-      .style('stroke', '#272727')
-      .style('stroke-width', 0)
+      .style('stroke', (d): any => {
+        const isPicked = pickedCorrelations.find(({ vertical, horizontal }) => {
+          return (
+            (vertical === d.vertical && horizontal === d.horizontal) ||
+            (d.horizontal === vertical && d.vertical === horizontal)
+          );
+        });
+        return isPicked ? '#A0A0A0' : '#E5E6E6';
+      })
+      .style('stroke-width', 1)
       .style('fill', '#E5E6E6')
       .on('mouseover', function (event, d) {
+        d3.select(this).style('stroke', '#272727');
         d3.select(this).style('stroke-width', 1);
         d3.select(`#vertical-${d.vertical}`).style('color', '#272727');
         d3.select(`#horizontal-${d.horizontal}`).style('color', '#272727');
+
         const value = tooltip.select('.value');
         value.html(d.value.toFixed(4));
         const name = tooltip.select('.name');
@@ -203,7 +221,16 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
           );
       })
       .on('mouseout', function (_, d) {
-        d3.select(this).style('stroke-width', 0);
+        d3.select(this).style('stroke-width', () => {
+          const isPicked = pickedCorrelations.find(
+            ({ vertical, horizontal }) =>
+              (vertical === d.vertical && horizontal === d.horizontal) ||
+              (d.horizontal === vertical && d.vertical === horizontal),
+          );
+          return isPicked ? 1 : 0;
+        });
+        d3.select(this).style('stroke', '#A0A0A0');
+
         d3.select(`#vertical-${d.vertical}`).style('color', '#A0A0A0');
         d3.select(`#horizontal-${d.horizontal}`).style('color', '#A0A0A0');
 
@@ -212,10 +239,6 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
         return tooltip.style('visibility', 'hidden');
       })
       .on('click', function (_, d) {
-        d3.select(this).style('stroke-width', 1);
-        d3.select(`#vertical-${d.vertical}`).style('color', '#e30303');
-        d3.select(`#horizontal-${d.horizontal}`).style('color', '#ff0a0a');
-        // d3.select(this).style('fill', 'red');
         onPickCorrelation(d);
       });
 
@@ -241,6 +264,7 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
         return calcColor(d.value);
       })
       .on('mouseover', (_, d) => {
+        d3.select(`#${d.vertical}-${d.horizontal}`).style('stroke', '#272727');
         d3.select(`#${d.vertical}-${d.horizontal}`).style('stroke-width', 1);
         d3.select(`#vertical-${d.vertical}`).style('color', '#272727');
         d3.select(`#horizontal-${d.horizontal}`).style('color', '#272727');
@@ -259,7 +283,18 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
           );
       })
       .on('mouseout', (_, d) => {
-        d3.select(`#${d.vertical}-${d.horizontal}`).style('stroke-width', 0);
+        d3.select(`#${d.vertical}-${d.horizontal}`).style(
+          'stroke-width',
+          () => {
+            const isPicked = pickedCorrelations.find(
+              ({ vertical, horizontal }) =>
+                (vertical === d.vertical && horizontal === d.horizontal) ||
+                (d.horizontal === vertical && d.vertical === horizontal),
+            );
+            return isPicked ? 1 : 0;
+          },
+        );
+        d3.select(`#${d.vertical}-${d.horizontal}`).style('stroke', '#A0A0A0');
         d3.select(`#vertical-${d.vertical}`).style('color', '#A0A0A0');
         d3.select(`#horizontal-${d.horizontal}`).style('color', '#A0A0A0');
 
@@ -267,10 +302,10 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
 
         return tooltip.style('visibility', 'hidden');
       })
-      .on('click', (_, d) => {
+      .on('click', function (_, d) {
         onPickCorrelation(d);
       });
-  }, [correlation, onPickCorrelation, maxCount]);
+  }, [correlation, onPickCorrelation, maxCount, pickedCorrelations]);
 
   if (!Object.keys(correlation).length) {
     return <NoFeaturesSelected />;

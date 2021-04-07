@@ -42,7 +42,7 @@ const FeaturesList: FC<FeaturesListProps> = ({ data }) => {
   if (!data.length) {
     return <NoSearchData subject="features" />;
   }
-
+  console.log(selectedItem);
   return (
     <Flex
       height="calc(100vh - 175px)"

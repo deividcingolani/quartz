@@ -48,7 +48,6 @@ const PickedCorrelations: FC<PickedCorrelationsProps> = ({
       {},
     );
   }, [pickedCorrelations]);
-
   const {
     isActiveFeature,
     handleBasket,

@@ -13,7 +13,7 @@ import {
 } from 'recharts';
 // eslint-disable-next-line import/no-unresolved
 import { ITheme } from '@logicalclocks/quartz/dist/theme/types';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 // Utils
 import randomArrayString from '../../../../../utils/randomArrayString';
@@ -23,25 +23,30 @@ import { ChartProps } from './types';
 
 const renderCustomizedLabel = (count: number, theme: ITheme) => ({
   x = 0,
-  y,
+  y = 0,
   width = 0,
   height = 0,
   value = '',
   fill,
 }: LabelProps) => {
   const isFit = value.toString().length * 24 + 30 < width;
-
-  const dx = isFit ? width / 2 : x + width - 15;
-
   const formattedValue = Math.ceil((+value / count) * 1000) / 10;
 
+  const dx = (): number => {
+    if (width > 14) {
+      return width - 26;
+    } else {
+      return width + 26;
+    }
+  };
+
   return (
-    <g>
+    <g style={{}}>
       <text
         x={x}
         y={y}
         dy={height / 2 + 1}
-        dx={dx}
+        dx={dx()}
         fill={
           fill === theme.colors.black && isFit
             ? theme.colors.white
@@ -52,8 +57,26 @@ const renderCustomizedLabel = (count: number, theme: ITheme) => ({
         fontFamily="Inter"
         fontSize="12px"
       >
-        {`${value} (${formattedValue.toFixed(2)}%)`}
+        {`${value} (${formattedValue}%)`}
       </text>
+    </g>
+  );
+};
+
+const renderEndLine = () => ({ y = 0, width = 0, height = 0 }: LabelProps) => {
+  return (
+    <g>
+      <foreignObject x={width} y={y} width={66} height={23} dy={height / 2 + 1}>
+        <div
+          style={{
+            height: 23,
+            borderRightColor: 'black',
+            borderRightStyle: 'solid',
+            borderRightWidth: '1px',
+          }}
+        />
+      </foreignObject>
+      <Cell />
     </g>
   );
 };
@@ -69,22 +92,31 @@ const renderCustomizedTick = () => ({ x, y, payload: { value } }: any) => {
           return (
             // eslint-disable-next-line react/no-array-index-key
             <g key={ind}>
-              <text
-                x={x}
-                y={y}
-                dx={x - 109}
+              <foreignObject
+                width={52}
+                height={30}
+                x={x - 50}
+                y={y - 6}
                 dy={
                   partsLength > 1
                     ? ind * 10 - 4 * Math.ceil(partsLength / 2)
                     : 2
                 }
-                textAnchor="left"
-                dominantBaseline="middle"
-                fontFamily="Inter"
-                fontSize="10px"
               >
-                {value.substring(ind * maxLength, maxLength * (ind + 1))}
-              </text>
+                <div
+                  style={{
+                    height: 30,
+                    width: 52,
+                    fontFamily: 'Inter',
+                    fontSize: '10px',
+                    textAlign: 'end',
+                    wordWrap: 'break-word',
+                    overflowWrap: 'break-word',
+                  }}
+                >
+                  {value.substring(ind * maxLength, maxLength * (ind + 1))}
+                </div>
+              </foreignObject>
             </g>
           );
         })}
@@ -103,6 +135,24 @@ const HorizontalBarChart: FC<ChartProps> = ({ data }) => {
       })),
     [data],
   );
+
+  useEffect(() => {
+    mappedData.sort((firstValue: any, secondValue: any) => {
+      if (secondValue.count > firstValue.count) {
+        return 1;
+      }
+      if (secondValue.count < firstValue.count) {
+        return -1;
+      }
+      if (secondValue.value > firstValue.value) {
+        return 1;
+      }
+      if (secondValue.value < firstValue.value) {
+        return -1;
+      }
+      return 0;
+    });
+  }, [mappedData]);
 
   const keys = useMemo(() => randomArrayString(mappedData.length), [
     mappedData,
@@ -154,7 +204,7 @@ const HorizontalBarChart: FC<ChartProps> = ({ data }) => {
           <Bar
             isAnimationActive={false}
             dataKey="count"
-            fill={theme.colors.primary}
+            fill={theme.colors.grayShade1}
           >
             {mappedData.map((_, index) => {
               return (
@@ -162,15 +212,21 @@ const HorizontalBarChart: FC<ChartProps> = ({ data }) => {
                   key={keys[index]}
                   fill={
                     focusBar === index
-                      ? theme.colors.black
-                      : theme.colors.primary
+                      ? theme.colors.grayShade1
+                      : theme.colors.grayShade2
                   }
+                  height={23}
                 />
               );
             })}
             <LabelList
               dataKey="count"
               content={renderCustomizedLabel(sum, theme)}
+            />
+            <LabelList
+              dataKey="count"
+              position="insideTop"
+              content={renderEndLine()}
             />
           </Bar>
           <Tooltip content={() => null} active={false} cursor={false} />

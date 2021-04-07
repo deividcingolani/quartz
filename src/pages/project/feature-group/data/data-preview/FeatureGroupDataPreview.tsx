@@ -35,6 +35,8 @@ import useBasket from '../../../../../hooks/useBasket';
 import useTitle from '../../../../../hooks/useTitle';
 import titles from '../../../../../sources/titles';
 import useFeatureGroupView from '../../hooks/useFeatureGroupView';
+import FeatureDrawer from '../../../../../components/feature-drawer/FeatureDrawer';
+import useDrawer from '../../../../../hooks/useDrawer';
 import NoData from '../../../../../components/no-data/NoData';
 
 const FeatureGroupDataPreview: FC = () => {
@@ -99,6 +101,13 @@ const FeatureGroupDataPreview: FC = () => {
     (state) => state.featureGroupView,
   );
 
+  const {
+    isOpen,
+    selectedName,
+    handleSelectItemByName,
+    handleClose,
+  } = useDrawer();
+
   const data = useSelector((state: RootState) => state.featureGroupRows);
 
   const isLoading = useSelector(
@@ -119,21 +128,28 @@ const FeatureGroupDataPreview: FC = () => {
     [fgId, navigate],
   );
 
-  const handleNavigateToStats = useCallback(
-    (stateName: string) => {
-      navigate(
-        `${routeNames.featureGroup.statistics.replace(
-          ':fgId',
-          fgId,
-        )}/f/${stateName}`,
-        routeNames.project.view,
+  const [selectColumn, setSelectColumn] = useState(null);
+
+  const selectedItem = (selectedName: string, featureGroupData: any) => {
+    let item = JSON.parse(JSON.stringify(featureGroupData));
+    if (item) {
+      item.features = item.features.filter(
+        ({ name }: any) => name === selectedName,
       );
+      item.name = selectedName;
+    }
+    setSelectColumn(item);
+  };
+
+  const handleSelectItem = useCallback(
+    (selectedName) => {
+      handleSelectItemByName(selectedName);
+      selectedItem(selectedName, featureGroupData);
     },
-    [fgId, navigate],
+    [featureGroupData, handleSelectItemByName],
   );
 
   const features = view?.features || [];
-
   const sortedFeatures = useMemo(() => {
     const key = sortKeys[sortKey];
     if (key) {
@@ -184,91 +200,103 @@ const FeatureGroupDataPreview: FC = () => {
   }
 
   return (
-    <Box
-      display="grid"
-      sx={{
-        gridTemplateRows: '130px 50px minmax(120px, 100%)',
-        height: 'calc(100vh - 115px)',
-      }}
-    >
-      <Panel
-        type={ItemDrawerTypes.fg}
-        data={view}
-        title={view?.name}
-        id={view?.id}
-        idColor="labels.orange"
-        onClickEdit={handleNavigate(routeNames.featureGroup.edit)}
-        onClickRefresh={handleRefreshData}
-      />
-      <FeatureFilters
-        search={search}
-        typeFilters={typeFilters}
-        types={types}
-        keyFilter={keyFilter}
-        storageConnectorType={storageConnectorType}
-        enableStorageConnectorFilter={
-          featureGroupData ? featureGroupData.onlineEnabled : true
-        }
-        setType={setType}
-        sortKey={sortKey}
-        setSortKey={setSortKey}
-        onToggleKey={onToggleKey}
-        onSearchChange={onSearchChange}
-        onTypeFiltersChange={onTypeFiltersChange}
-      />
-      {!isLoading && (
-        <Flex>
-          <Value primary px="5px">
-            {displayFeaturesLength}
-          </Value>
-          <Value>out of</Value>
-          <Value primary px="5px">
-            {featuresLength}
-          </Value>
-          <Value>features displayed</Value>
-          {isSwitch && (
-            <Box ml="5px" mt="-3px">
-              <Symbol
-                mode={SymbolMode.bulk}
-                possible={filteredFeatures.length > 0}
-                tooltipMainText="Add all features to basket"
-                tooltipSecondaryText={`${filteredFeatures.length} features`}
-                handleClick={handleBasket(filteredFeatures, view)}
-                inBasket={isActiveFeatures(filteredFeatures, view)}
-              />
-            </Box>
-          )}
-        </Flex>
+    <>
+      {!!selectedName && !!selectColumn && featureGroupData && (
+        <FeatureDrawer
+          isOpen={isOpen}
+          fgId={featureGroupData.id}
+          feature={selectColumn}
+          handleToggle={handleClose}
+          projectId={+id}
+          featureStoreId={featureGroupData.featurestoreId}
+        />
       )}
-      {!!filteredFeatures.length && !!filteredData.length && !isLoading && (
+      <Box
+        display="grid"
+        sx={{
+          gridTemplateRows: '130px 50px minmax(120px, 100%)',
+          height: 'calc(100vh - 115px)',
+        }}
+      >
+        <Panel
+          type={ItemDrawerTypes.fg}
+          data={view}
+          title={view?.name}
+          id={view?.id}
+          idColor="labels.orange"
+          onClickEdit={handleNavigate(routeNames.featureGroup.edit)}
+          onClickRefresh={handleRefreshData}
+        />
+        <FeatureFilters
+          search={search}
+          typeFilters={typeFilters}
+          types={types}
+          keyFilter={keyFilter}
+          storageConnectorType={storageConnectorType}
+          enableStorageConnectorFilter={
+            featureGroupData ? featureGroupData.onlineEnabled : true
+          }
+          setType={setType}
+          sortKey={sortKey}
+          setSortKey={setSortKey}
+          onToggleKey={onToggleKey}
+          onSearchChange={onSearchChange}
+          onTypeFiltersChange={onTypeFiltersChange}
+        />
+        {!isLoading && (
+          <Flex>
+            <Value primary px="5px">
+              {displayFeaturesLength}
+            </Value>
+            <Value>out of</Value>
+            <Value primary px="5px">
+              {featuresLength}
+            </Value>
+            <Value>features displayed</Value>
+            {isSwitch && (
+              <Box ml="5px" mt="-3px">
+                <Symbol
+                  mode={SymbolMode.bulk}
+                  possible={filteredFeatures.length > 0}
+                  tooltipMainText="Add all features to basket"
+                  tooltipSecondaryText={`${filteredFeatures.length} features`}
+                  handleClick={handleBasket(filteredFeatures, view)}
+                  inBasket={isActiveFeatures(filteredFeatures, view)}
+                />
+              </Box>
+            )}
+          </Flex>
+        )}
+        {!!filteredFeatures.length && !!filteredData.length && !isLoading && (
         <Box mb="-23px" mr="-18px" maxWidth="100vw">
-          <ReadOnlyTable
-            staticColumn={staticColumn}
-            onFreeze={handleChangeStaticColumn}
-            values={filteredData}
-            actions={[
-              {
-                label: 'statistics',
-                handler: handleNavigateToStats,
-              },
-            ]}
-          />
+            <ReadOnlyTable
+              staticColumn={staticColumn}
+              onFreeze={handleChangeStaticColumn}
+              values={filteredData}
+              actions={[
+                {
+                  label: 'statistics',
+                  handler: handleSelectItem,
+                },
+              ]}
+            />
         </Box>
-      )}
-      {(!filteredFeatures.length || !filteredData.length || !!statistics) && (
-        <NoData mainText="No data available" />
-      )}
-      {isLoading && <Loader />}
-      {isFiltered && !filteredFeatures.length && !isLoading && (
-        <Box mb="20px">
-          <FilterResult
-            subject="features"
-            result={filteredFeatures.length}
-            onReset={onReset}
-          />
-        </Box>
-      )}
-    </Box>
+        )}
+        {(!filteredFeatures.length || !filteredData.length || !!statistics) && (
+          <NoData mainText="No data available" />
+        )}
+        {isLoading && <Loader />}
+        {isFiltered && !filteredFeatures.length && !isLoading && (
+          <Box mb="20px">
+            <FilterResult
+              subject="features"
+              result={filteredFeatures.length}
+              onReset={onReset}
+            />
+          </Box>
+        )}
+      </Box>
+    </>
   );
 };
 

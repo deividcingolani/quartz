@@ -6,6 +6,7 @@ const useDrawer = <T = number>(initialState = false) => {
   const [isOpen, handleToggle] = usePopup(initialState);
 
   const [selectedId, setSelected] = useState<T | null>(null);
+  const [selectedName, setSelectedName] = useState('');
 
   const { current: content } = useContext(ContentContext);
 
@@ -36,8 +37,18 @@ const useDrawer = <T = number>(initialState = false) => {
     [handleToggle, selectedId, handleDisableScroll],
   );
 
+  const handleSelectItemByName = (name: string) => {
+    setSelectedName(name);
+    if (!selectedName) {
+      handleToggle();
+    }
+
+    handleDisableScroll();
+  };
+
   const handleClose = useCallback(() => {
     setSelected(null);
+    setSelectedName('');
     handleToggle();
 
     handleEnableScroll();
@@ -52,8 +63,10 @@ const useDrawer = <T = number>(initialState = false) => {
   return {
     isOpen,
     selectedId,
+    selectedName,
     handleClose,
     handleSelectItem,
+    handleSelectItemByName,
   };
 };
 

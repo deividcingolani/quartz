@@ -1,9 +1,11 @@
 import React, {
   FC,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import * as d3 from 'd3';
 import { ScaleBand, ScaleLinear } from 'd3';
@@ -70,6 +72,25 @@ const BarChart: FC<BarChartProps> = ({
       }),
     [values, keys],
   );
+
+  const [sufix, setSufix] = useState(max);
+
+  useEffect(() => {
+    switch (true) {
+      case max > 1000 && max < 1000000:
+        setSufix(`${(max / 10000).toFixed(1)}K`);
+        break;
+      case max > 1000000 && max < 1000000000:
+        setSufix(`${(max / 10000000).toFixed(1)}M`);
+        break;
+      case max > 1000000000:
+        setSufix(`${(max / 10000000000).toFixed(1)}B`);
+        break;
+      default: {
+        setSufix(max);
+      }
+    }
+  }, [max]);
 
   const drawBarChart = useCallback(
     (data: CommitDetails[], containerEl: HTMLElement) => {
@@ -152,6 +173,20 @@ const BarChart: FC<BarChartProps> = ({
           d3.selectAll('rect').style('opacity', 0.3);
           // Set full opacity for hovered commit;
           d3.select(parentNode).selectChildren().style('opacity', 1);
+          d3.select(parentNode).selectChildren().style('fill', 'black');
+          // Don't change opacity for background and axis
+          d3.selectAll('.axis').style('opacity', 1);
+          d3.selectAll('.background').style('opacity', 1);
+        }
+      });
+
+      container.selectAll('g').on('mouseout', (event: MouseEvent) => {
+        const targetEl = event?.target as HTMLElement | undefined;
+        const parentNode = targetEl?.parentElement;
+
+        if (parentNode) {
+          onSelect(parseInt(parentNode.id, 10));
+          d3.select(parentNode).selectChildren().style('fill', '#21B182');
           // Don't change opacity for background and axis
           d3.selectAll('.axis').style('opacity', 1);
           d3.selectAll('.background').style('opacity', 1);
@@ -197,11 +232,12 @@ const BarChart: FC<BarChartProps> = ({
         .style('fill', theme.colors.gray)
         .attr('font-size', '12px')
         .attr('font-family', 'Inter')
-        .text(max);
+        .text(sufix);
 
       return container.node();
     },
     [
+      sufix,
       groupKey,
       keys,
       margin.bottom,

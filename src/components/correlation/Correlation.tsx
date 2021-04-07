@@ -55,7 +55,6 @@ const Correlation: FC<CorrelationProps> = ({
       defaultCorrelations,
     );
   }, [defaultCorrelations, debouncedRange]);
-
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(
     Object.keys(correlation),
   );
@@ -70,7 +69,6 @@ const Correlation: FC<CorrelationProps> = ({
   const onTypeChange = useCallback((value) => {
     setType(value);
   }, []);
-
   const onSortTypeChange = useCallback((value) => {
     setSortType(value);
   }, []);
@@ -78,11 +76,9 @@ const Correlation: FC<CorrelationProps> = ({
   const onPickCorrelation = useCallback(
     (value: CorrelationValue) => {
       const copy = pickedCorrelations.slice();
-
       const valueIndex = copy.findIndex((prevValue) =>
         compareCorrelationValues(prevValue, value),
       );
-
       if (valueIndex > -1) {
         copy.splice(valueIndex, 1);
       } else {
@@ -107,7 +103,6 @@ const Correlation: FC<CorrelationProps> = ({
   const matrixSelected = useMemo(() => {
     return filterCorrelations(selectedFeatures, defaultCorrelations);
   }, [selectedFeatures, defaultCorrelations]);
-
   return (
     <Flex mt="50px">
       <CorrelationSelector
@@ -132,6 +127,7 @@ const Correlation: FC<CorrelationProps> = ({
             correlation={matrixSelected}
             changeMaxCount={setMaxFeatures}
             onPickCorrelation={onPickCorrelation}
+            pickedCorrelations={pickedCorrelations}
           />
         ) : (
           <CorrelationList
