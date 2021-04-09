@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { Box, Flex } from 'rebass';
 import { useSelector } from 'react-redux';
-import React, { FC, memo, useCallback } from 'react';
+import React, { FC, memo, useCallback, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -44,6 +44,7 @@ import { IStorageConnector } from '../../../../types/storage-connector';
 import { selectFeatureStoreStorageConnectors } from '../../../../store/models/feature/storageConnectors/selectors';
 import SplitsForm from './SplitsForm';
 import FeaturesForm from './Features/FeaturesForm';
+import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -67,13 +68,15 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
   onDelete,
   initialData,
 }) => {
+  const infoTD: { [key: string]: string } | any = localStorage.getItem('info');
+
   const methods = useForm({
     defaultValues: {
       tags: {},
-      name: '',
+      name: infoTD ? JSON.parse(infoTD).name : '',
       storage: {} as IStorageConnector,
       keywords: [],
-      description: '',
+      description: infoTD ? JSON.parse(infoTD).description : '',
       features: [],
       location: '',
       dataFormat: ['CSV'],
@@ -113,13 +116,24 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     (state: RootState) => state.trainingDatasets,
   ).map(({ name }) => name);
 
-  const { storage, name, dataFormat } = watch([
+  const { storage, name, dataFormat, description } = watch([
     'storage',
     'name',
     'dataFormat',
+    'description',
   ]);
 
+  useEffect(() => {
+    if (!isEdit) {
+      const infoTD = { name, description };
+      localStorage.setItem('info', JSON.stringify(infoTD));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [description, name]);
+
   const serverTags = useSelector(selectSchematisedTags);
+
+  const hasScrollOnScreen = useScreenWithScroll();
 
   const errorsValue =
     Object.keys(errors).length === 1
@@ -141,16 +155,18 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     handleSubmit(async (data: TrainingDatasetFormData) => {
       let next = await validateSchema(data.tags, serverTags, setError);
 
-      if (!data.joins) {
-        setError('features', { message: 'Join at least one feature' });
-        return;
-      }
+      if (!isEdit) {
+        if (!data.joins) {
+          setError('features', { message: 'Join at least one feature' });
+          return;
+        }
 
-      const hasFeatures = !!data.joins.length;
-      data.features = features;
-      if (!hasFeatures) {
-        setError('features', { message: 'Join at least one feature' });
-        next = false;
+        const hasFeatures = !!data.joins.length;
+        data.features = features;
+        if (!hasFeatures) {
+          setError('features', { message: 'Join at least one feature' });
+          next = false;
+        }
       }
 
       const { storage } = data;
@@ -212,16 +228,18 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         }
       }
 
-      const validatedJoins = validateJoins(data.joins, setError);
+      if (!isEdit) {
+        const validatedJoins = validateJoins(data.joins, setError);
 
-      if (!validatedJoins) {
-        return;
-      }
+        if (!validatedJoins) {
+          return;
+        }
 
-      const validatedFilter = validateFilters(data.rowFilters, setError);
+        const validatedFilter = validateFilters(data.rowFilters, setError);
 
-      if (!validatedFilter) {
-        return;
+        if (!validatedFilter) {
+          return;
+        }
       }
 
       if (!next) {
@@ -229,6 +247,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
       }
 
       submitHandler(data);
+      localStorage.removeItem('info');
     }),
     [setError, serverTags, clearErrors],
   );
@@ -463,7 +482,10 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         {!isEdit && <SplitsForm isDisabled={isLoading || isDisabled} />}
         {isEdit && <StatisticsFeaturesForm />}
         {isEdit && onDelete && (
-          <CardSecondary mb="100px" title="Danger zone">
+          <CardSecondary
+            mb={hasScrollOnScreen ? '95px' : '95px'}
+            title="Danger zone"
+          >
             <Button
               intent="alert"
               onClick={onDelete}

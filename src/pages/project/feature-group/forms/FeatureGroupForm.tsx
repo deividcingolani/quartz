@@ -120,11 +120,13 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
 
   const { features } = watch(['features']);
 
+  const ErrorObjKeysLength = Object.keys(errors).length;
+
   const errorsValue =
-    Object.keys(errors).length === 1
-      ? `${Object.keys(errors).length.toString()} error`
-      : Object.keys(errors).length !== 0
-      ? `${Object.keys(errors).length.toString()} errors`
+    ErrorObjKeysLength === 1
+      ? `${ErrorObjKeysLength.toString()} error`
+      : ErrorObjKeysLength !== 0
+      ? `${ErrorObjKeysLength.toString()} errors`
       : '';
 
   const isUpdatedFeatures = useMemo(() => isUpdatedFunction(features), [
@@ -217,7 +219,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
                 'Data validation is performed and data is ingested into the feature group regardless of the validation status',
                 'Data validation not performed on feature group',
               ]}
-              value={value}
+              value={value || ['Strict']}
               onChange={(val) => onChange(val)}
             />
           )}

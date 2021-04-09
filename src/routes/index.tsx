@@ -72,7 +72,7 @@ const Routes: FC = () => {
       localStorage.setItem(pageToViewPathStorageName, location.pathname);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [token]);
 
   const dispatch = useDispatch<Dispatch>();
 

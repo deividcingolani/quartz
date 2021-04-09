@@ -15,6 +15,7 @@ import { argumentRowStyles } from '../../storage-connectors/forms/jdbc-form.styl
 
 import { progressBarStyles } from './split.styles';
 import getInputValidation from '../../../../utils/getInputValidation';
+import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
 
 export interface SplitsFormProps {
   isDisabled: boolean;
@@ -57,6 +58,8 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
 
   const splits = watch().splits;
 
+  const hasScrollOnScreen = useScreenWithScroll();
+
   const intent = useMemo(() => {
     const sum = splits.reduce(
       (acc: number, cur: { percentage: string }) => acc + +cur.percentage,
@@ -72,7 +75,7 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
 
   if (!isActive) {
     return (
-      <CardSecondary title="Splits" mb="100px">
+      <CardSecondary title="Splits" mb={hasScrollOnScreen ? '95px' : '100px'}>
         <Button onClick={handleAddSplits}>Configure splits</Button>
       </CardSecondary>
     );

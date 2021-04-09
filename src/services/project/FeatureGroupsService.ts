@@ -13,7 +13,7 @@ import { ActivityTypeSortOptions } from '../../pages/project/feature-group/activ
 
 export const getQueryParams = (
   onlineEnabled: boolean,
-  validationType: string,
+  validationType?: string,
 ) => {
   // [param name, is need to include in the query]
   const paramsMap = [
@@ -198,7 +198,6 @@ class FeatureGroupsService extends BaseApiService {
       type: RequestType.post,
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups?${getQueryParams(
         data.onlineEnabled,
-        data.validationType.toUpperCase(),
       )}`,
       data,
     });

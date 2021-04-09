@@ -98,6 +98,7 @@ const TrainingDatasetList: FC = () => {
   }
 
   function handleCreate(): void {
+    dispatch.basket.switch(true);
     navigate('/new', '/p/:id/td/');
   }
 

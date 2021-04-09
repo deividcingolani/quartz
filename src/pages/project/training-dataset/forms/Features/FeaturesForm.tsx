@@ -5,13 +5,13 @@ import {
   CardSecondary,
   Value,
   InputValidation,
-  Divider,
   usePopup,
+  Divider,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useState, useEffect } from 'react';
 
 // Types
 import { Dispatch, RootState } from '../../../../../store';
@@ -26,11 +26,14 @@ import {
 import useDrawer from '../../../../../hooks/useDrawer';
 // Components
 import RowFilters from './RowFilters';
+import SearchPopup from '../../../../../components/basket/BasketTutoPopup';
 import FeatureGroupJoinForm from './FeatureGroupJoinForm';
 import CollapsedFeaturesForm from './CollapsedFeaturesForm';
 import FeatureDrawer from '../../../../../components/feature-drawer/FeatureDrawer';
-import SearchPopup from '../../../../../components/basket/BasketTutoPopup';
 import { useFormContext } from 'react-hook-form';
+
+import { useNavigate } from 'react-router-dom';
+import routeNames from '../../../../../routes/routeNames';
 
 export interface SelectedState {
   fgId: number;
@@ -87,57 +90,58 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
     setFeatureGroups(copy);
   }, [featureGroups, basket]);
 
-  const isNewFeatures = useCallback(() => {
-    return !!basket.find(({ features, fg }) => {
-      const fgIndex = featureGroups.findIndex(({ fg: { id } }) => id === fg.id);
+  useEffect(() => {
+    updateFeatures();
+    setOpen(true);
+  }, [basket]);
 
-      if (fgIndex < 0) {
-        return true;
-      }
-
-      const prevFeatures = featureGroups[fgIndex].features;
-
-      return !!features.find(
-        ({ name }) => !prevFeatures.find((feature) => feature.name === name),
-      );
-    });
-  }, [featureGroups, basket]);
-
-  const handleWithdrawBasket = useCallback(
-    (clearBasket = false) => () => {
-      updateFeatures();
-
-      setOpen(true);
-
-      if (clearBasket) {
-        dispatch.basket.clear();
-      }
-    },
-    [dispatch, updateFeatures],
-  );
-
+  const navigate = useNavigate();
   const handleDeleteAllFg = useCallback(
     (index: number) => () => {
       const copy = featureGroups.slice();
-
+      dispatch.basket.deleteFeatures({
+        features: copy[index].features,
+        featureGroup: copy[index].fg,
+        projectId: +projectId,
+      });
       copy.splice(index, 1);
 
       setFeatureGroups(copy);
     },
-    [featureGroups],
+    [featureGroups, basket],
   );
 
   const handleDelete = useCallback(
     (index: number, featureName: string) => () => {
       const copy = featureGroups.slice();
 
+      dispatch.basket.deleteFeatures({
+        features: copy[index].features,
+        featureGroup: copy[index].fg,
+        projectId: +projectId,
+      });
+
       copy[index].features = copy[index].features.filter(
         ({ name }) => name !== featureName,
       );
 
+      dispatch.basket.addFeatures({
+        features: copy[index].features,
+        featureGroup: copy[index].fg,
+        projectId: +projectId,
+      });
+
       setFeatureGroups(copy);
     },
-    [featureGroups],
+    [featureGroups, basket],
+  );
+
+  const handleGoToFG = useCallback(
+    () => () => {
+      dispatch.basket.switch(true);
+      navigate(`/p/${projectId}/${routeNames.featureGroup.list}`);
+    },
+    [dispatch.basket, navigate, projectId],
   );
 
   const handleOpenStatistics = useCallback(
@@ -153,12 +157,6 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
     },
     [featureGroups, handleSelectItem],
   );
-
-  useEffect(() => {
-    if (!featureGroups.length) {
-      setOpen(false);
-    }
-  }, [featureGroups]);
 
   useEffect(() => {
     setValue('features', featureGroups);
@@ -188,48 +186,26 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
       <CardSecondary title="Features" mb="20px">
         <Flex flexDirection="column">
           <Value>Selected Features</Value>
-          {!!featureLength ? (
-            <Flex mt="8px">
-              <Button
-                mr="10px"
-                onClick={handleWithdrawBasket()}
-                disabled={!basket.length || !isNewFeatures() || isDisabled}
-              >
-                Pull out from basket
-              </Button>
-              <Button
-                intent="secondary"
-                onClick={handleWithdrawBasket(true)}
-                disabled={!basket.length || !isNewFeatures() || isDisabled}
-              >
-                Pull out and clear basket
-              </Button>
-            </Flex>
-          ) : (
-            <Flex mt="8px">
-              <Button
-                disabled={isDisabled}
-                onClick={() => window.open(`/p/${projectId}/fg`, '_blank')}
-              >
-                Select features ↗
-              </Button>
-              <Button
-                intent="inline"
-                disabled={isDisabled}
-                onClick={handleToggleSearchPopup}
-              >
-                How to select features using the basket?
-              </Button>
-            </Flex>
-          )}
+          <Flex mt="8px">
+            <Button onClick={handleGoToFG()}>
+              Pick features from the UI ↗
+            </Button>
+            <Button intent="inline" onClick={handleToggleSearchPopup}>
+              How to pick features using from the UI?
+            </Button>
+          </Flex>
           <Box my="8px">
-            {!!featureLength ? (
+            {!featureLength && (
               <InputValidation>
-                {featureLength} features in the basket
+                You have not selected any feature
               </InputValidation>
-            ) : (
-              <InputValidation>Your basket of feature is empty</InputValidation>
             )}
+          </Box>
+          <Box>
+            <Callout
+              type={CalloutTypes.neutral}
+              content="Joins will be performed on the maximum matching subset of feature group primary keys. Please use the SDK for advanced joining."
+            />
           </Box>
           {!!error && (
             <Box mt="20px">
