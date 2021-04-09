@@ -13,7 +13,7 @@ pipeline {
            steps {
               sh """
                 VERSION=`cat version.txt`
-                QUARTZ_BRANCH=$VERSION
+                QUARTZ_BRANCH=\$VERSION
                 if [[ \$VERSION =~ .*-SNAPSHOT ]]
                 then
                   QUARTZ_BRANCH="dev"
