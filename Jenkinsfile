@@ -18,7 +18,7 @@ pipeline {
                 then
                   QUARTZ_BRANCH="dev"
                 else
-                  QUARTZ_BRANCH="\${VERSION%.*}"
+                  QUARTZ_BRANCH="branch-\${VERSION%.*}"
                 fi
                 echo "\$QUARTZ_BRANCH"
                 
