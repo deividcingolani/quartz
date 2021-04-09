@@ -2,6 +2,7 @@ import { DataEntity } from './index';
 import { TrainingDataset } from './training-dataset';
 import { User } from './user';
 import { Expectation, Validation } from './expectation';
+import { IStorageConnector } from './storage-connector';
 
 export enum FeatureType {
   stringUnknown = 'Unknown',
@@ -162,7 +163,6 @@ export interface ExpectationRule {
 }
 
 export interface FeatureGroup extends DataEntity {
-  defaultStorage: string;
   statisticColumns: any;
   timeTravelFormat: string;
   validationType: string;
@@ -177,6 +177,7 @@ export interface FeatureGroup extends DataEntity {
   commits: any[];
   expectations: Expectation[];
   lastValidation?: Validation[];
+  storageConnector: IStorageConnector;
 }
 
 export interface HistogramItem {

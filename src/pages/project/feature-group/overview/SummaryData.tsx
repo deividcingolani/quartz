@@ -9,18 +9,22 @@ import {
   Value,
   CalloutTypes,
   Callout,
+  Button,
 } from '@logicalclocks/quartz';
 
 // Services
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import ProfileService from '../../../../services/ProfileService';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
 // Components
 import DateValue from '../list/DateValue';
 import KeywordsEditor from '../../../../components/keywords-editor/KeywordsEditor';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from '../../../../store';
+import routeNames from '../../../../routes/routeNames';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 export interface SummaryDataProps {
   data: FeatureGroup;
@@ -34,6 +38,8 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
   );
 
   const dispatch = useDispatch<Dispatch>();
+  const navigate = useNavigateRelative();
+  const getHref = useGetHrefForRoute();
 
   const featureCount = data.features.length;
 
@@ -56,6 +62,23 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
     [featureStoreData, dispatch, id, projectId],
   );
 
+  const handleNavigate = useCallback(
+    (connectorName: string, route: string) => (): void => {
+      navigate(
+        route.replace(':connectorName', connectorName),
+        routeNames.project.view,
+      );
+    },
+    [navigate],
+  );
+
+  const handleHref = (connectorName: string, route: string): string => {
+    return getHref(
+      route.replace(':connectorName', connectorName),
+      routeNames.project.view,
+    );
+  };
+
   return (
     <>
       <Flex>
@@ -77,8 +100,39 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           <Microlabeling mb="3px" gray>
             Mode
           </Microlabeling>
-          <Value primary>{data.onlineEnabled ? 'online' : 'offline'}</Value>
+          <Value primary>
+            {data.type === 'cachedFeaturegroupDTO' ? 'cached' : 'on-demand'}
+          </Value>
         </Flex>
+        {data.type === 'cachedFeaturegroupDTO' && (
+          <Flex ml="20px" flexDirection="column">
+            <Microlabeling mb="3px" gray>
+              Online
+            </Microlabeling>
+            <Value primary>{data.onlineEnabled ? 'true' : 'false'}</Value>
+          </Flex>
+        )}
+        {data.type === 'onDemandFeaturegroupDTO' && (
+          <Flex ml="20px" flexDirection="column">
+            <Microlabeling mb="3px" gray>
+              Storage Connector
+            </Microlabeling>
+            <Button
+              p={0}
+              intent="inline"
+              href={handleHref(
+                data.storageConnector.name,
+                routeNames.storageConnector.edit,
+              )}
+              onClick={handleNavigate(
+                data.storageConnector.name,
+                routeNames.storageConnector.edit,
+              )}
+            >
+              {data.storageConnector.name} ↗
+            </Button>
+          </Flex>
+        )}
       </Flex>
       {!!data.timeTravelFormat && (
         <Box my="20px">
@@ -90,7 +144,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
       )}
       <Flex mt="17px" alignItems="center">
         <TextValueBadge variant="gray" text="features" value={featureCount} />
-        {/*<TextValueBadge variant="gray" ml="20px" text="rows" value="81M" />*/}
+        {/* <TextValueBadge variant="gray" ml="20px" text="rows" value="81M" /> */}
         {isLoading ? (
           <Labeling ml="8px" gray>
             loading...
@@ -120,7 +174,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           />
         )}
       </Flex>
-      {!!data.description ? (
+      {data.description ? (
         <Text my="20px">{data?.description || '-'}</Text>
       ) : (
         <Labeling my="20px" gray>

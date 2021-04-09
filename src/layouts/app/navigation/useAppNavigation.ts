@@ -112,11 +112,15 @@ const useAppNavigation = (): TreeNode[] => {
     const tdCorrelationsDisabled =
       !tdConfig?.enabled || !tdConfig?.correlations;
 
+    const dataPreviewDisabled =
+      featureGroup?.type === 'onDemandFeaturegroupDTO';
+
     return {
       fgStatisticsDisabled,
       fgCorrelationsDisabled,
       tdStatisticsDisabled,
       tdCorrelationsDisabled,
+      dataPreviewDisabled,
     };
   }, [featureGroup, trainingDataset]);
 
@@ -229,6 +233,7 @@ const useAppNavigation = (): TreeNode[] => {
             id: 'fgDataPreview',
             title: 'Data preview',
             href: getHref('/data-preview', '/p/:id/fg/:fgId/*'),
+            disabled: disabledTabs.dataPreviewDisabled,
             isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
             onClick: handleNavigateRelative(
               '/data-preview',
