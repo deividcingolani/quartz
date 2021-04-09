@@ -12,13 +12,22 @@ pipeline {
 
            steps {
               sh """
-                export OLD_DIR=\$PWD
+                VERSION=`cat version.txt`
+                QUARTZ_BRANCH=$VERSION
+                if [[ \$VERSION =~ .*-SNAPSHOT ]]
+                then
+                  QUARTZ_BRANCH="dev"
+                else
+                  QUARTZ_BRANCH="\${VERSION%.*}"
+                fi
+                echo "\$QUARTZ_BRANCH"
                 
+                export OLD_DIR=\$PWD
                 cd /tmp
                 # Build Quartz
                 git clone https://github.com/logicalclocks/quartz
                 cd quartz
-                git checkout dev
+                git checkout \$QUARTZ_BRANCH
                 git log --max-count=1
                 
                 npm install
@@ -47,7 +56,7 @@ pipeline {
                 tar czf frontend.tgz *
                 
                 # Publish
-                cp frontend.tgz /repo/2.2.0-SNAPSHOT/
+                cp frontend.tgz /repo/\$VERSION/
               """
             }
         }
