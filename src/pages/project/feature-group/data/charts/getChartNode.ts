@@ -1,23 +1,23 @@
 import { FC } from 'react';
 
 // Types
-import { FeatureType } from '../../../../../types/feature-group';
+import { StatisticsFeatureType } from '../../../../../types/feature-group';
 import { ChartProps } from './types';
 // Components
 import DonutChart from './DonutChart';
 import VerticalBarChart from './VerticalBarChart';
 import HorizontalBarChart from './HorizontalBarChart';
 
-export const chartsMap = new Map<FeatureType, FC<ChartProps>>([
-  [FeatureType.int, VerticalBarChart],
-  [FeatureType.bigInt, VerticalBarChart],
-  [FeatureType.stringUnknown, HorizontalBarChart],
-  [FeatureType.boolean, DonutChart],
-  [FeatureType.string, HorizontalBarChart],
-  [FeatureType.intFractional, VerticalBarChart],
+export const chartsMap = new Map<StatisticsFeatureType, FC<ChartProps>>([
+  [StatisticsFeatureType.int, VerticalBarChart],
+  [StatisticsFeatureType.bigInt, VerticalBarChart],
+  [StatisticsFeatureType.stringUnknown, HorizontalBarChart],
+  [StatisticsFeatureType.boolean, DonutChart],
+  [StatisticsFeatureType.string, HorizontalBarChart],
+  [StatisticsFeatureType.intFractional, VerticalBarChart],
 ]);
 
-const getChartNode = (type: FeatureType): FC<ChartProps> | null => {
+const getChartNode = (type: StatisticsFeatureType): FC<ChartProps> | null => {
   return chartsMap.get(type) || null;
 };
 

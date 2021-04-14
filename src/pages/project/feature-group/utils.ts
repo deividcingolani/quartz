@@ -1,13 +1,14 @@
 import {
+  FGItem,
+  FGRow,
+} from '@logicalclocks/quartz/dist/components/table/type';
+import { format, isToday } from 'date-fns';
+import {
   ActivityItem,
   FeatureGroup,
   SchematisedTagEntity,
 } from '../../../types/feature-group';
 import labelValueMap from '../../../utils/labelValueBind';
-import {
-  FGItem,
-  FGRow,
-} from '@logicalclocks/quartz/dist/components/table/type';
 import {
   anyType,
   float,
@@ -19,7 +20,6 @@ import {
 } from '../../../utils/validators';
 import { uppercaseFirst } from '../../../utils/uppercaseFirst';
 import { DataEntity } from '../../../types';
-import { format, isToday } from 'date-fns';
 
 // Filter
 export const filterFG = (
@@ -91,7 +91,7 @@ export const featuresMap = labelValueMap<{ [key: string]: string }>({
 });
 
 const getColumnValue = (key: string, value: any) => {
-  if (key === 'type') {
+  if (key === 'type' || key === 'onlineType') {
     return [value];
   }
   if (value === null) {

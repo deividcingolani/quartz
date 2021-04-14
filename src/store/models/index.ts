@@ -40,6 +40,7 @@ import expectations from './expectations/expectations.model';
 import rules from './rules/rules.model';
 import expectationView from './expectations/expectationView.model';
 import validators from './validators/validators.model';
+import featureStoreSettings from './settings/featureStoreSettings.model';
 
 export interface RootModel extends Models<RootModel> {
   api: typeof api;
@@ -61,6 +62,7 @@ export interface RootModel extends Models<RootModel> {
   roleMappings: typeof roleMappings;
   featureGroups: typeof featureGroups;
   featureStores: typeof featureStores;
+  featureStoreSettings: typeof featureStoreSettings;
   expectationView: typeof expectationView;
   schematisedTags: typeof schematisedTags;
   featureGroupView: typeof featureGroupView;
@@ -103,6 +105,7 @@ const models: RootModel = {
   projectsList,
   featureGroups,
   featureStores,
+  featureStoreSettings,
   schematisedTags,
   expectationView,
   featureGroupView,

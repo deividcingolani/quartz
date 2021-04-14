@@ -57,12 +57,16 @@ const Project: FC = () => {
     dispatch.trainingDatasets.set([]);
     dispatch.featureStoreStorageConnectors.clear();
     dispatch.featureStores.setFeatureStores(null);
+    dispatch.featureStoreSettings.clear();
   }, [dispatch]);
 
   useEffect(() => {
     clearData();
 
     dispatch.featureStores.fetch({ projectId: +id });
+
+    // Fetch settings for the feature store
+    dispatch.featureStoreSettings.fetch({ projectId: +id });
   }, [dispatch, id, clearData]);
 
   if (!featureStoreData && isFSLoading) {
@@ -71,8 +75,8 @@ const Project: FC = () => {
 
   return (
     <Routes>
-      <Route path={'/view'} element={<ProjectView />} />
-      <Route path={'/edit'} element={<ProjectEdit />} />
+      <Route path="/view" element={<ProjectView />} />
+      <Route path="/edit" element={<ProjectEdit />} />
       <Route
         path={routeNames.featureGroup.edit}
         element={<FeatureGroupEdit />}

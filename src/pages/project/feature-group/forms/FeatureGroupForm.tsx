@@ -64,7 +64,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
       keywords: [],
       features: [],
       timeTravelFormat: [TimeTravelType.none],
-      dataValidation: [ValidationType.strict],
+      validationType: [ValidationType.strict],
       enabled: true,
       correlations: false,
       histograms: false,
@@ -214,12 +214,12 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
               label="Data validation"
               options={['Strict', 'Warning', 'All', 'None']}
               additionalTexts={[
-                'Data validation is performed and data is ingested into feature group is updated only if validation status is "SUCCESS"',
+                'Data validation is performed and data is ingested into the feature group only if validation status is "SUCCESS"',
                 'Data validation is performed and data is ingested into the feature group only if validation status is "WARNING" or "SUCCESS"',
                 'Data validation is performed and data is ingested into the feature group regardless of the validation status',
                 'Data validation not performed on feature group',
               ]}
-              value={value || ['Strict']}
+              value={value}
               onChange={(val) => onChange(val)}
             />
           )}

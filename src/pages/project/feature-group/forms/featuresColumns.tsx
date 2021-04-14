@@ -2,7 +2,11 @@ import React from 'react';
 import { BlurInput, Checkbox, Select } from '@logicalclocks/quartz';
 import { TableColumn } from '@logicalclocks/quartz/dist/components/table/editable';
 
-export const featuresColumns = (isEdit = false): TableColumn[] => {
+export const featuresColumns = (
+  isEdit = false,
+  offlineTypes: string[],
+  onlineTypes: string[],
+): TableColumn[] => {
   const columns: any[] = [
     {
       name: 'Name',
@@ -25,15 +29,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
           width="100%"
           value={value}
           onChange={onChange}
-          options={[
-            'INT',
-            'FLOAT',
-            'DOUBLE',
-            'BIGINT',
-            'STRING',
-            'BOOLEAN',
-            'VARCHAR(1000)',
-          ].map((option) => option.toLowerCase())}
+          options={offlineTypes}
           placeholder=""
         />
       ),
@@ -46,13 +42,7 @@ export const featuresColumns = (isEdit = false): TableColumn[] => {
           width="100%"
           value={value}
           onChange={onChange}
-          options={[
-            'INT',
-            'FLOAT',
-            'TEXT',
-            'DOUBLE',
-            'VARCHAR(1000)',
-          ].map((option) => option.toLowerCase())}
+          options={onlineTypes}
           placeholder=""
         />
       ),

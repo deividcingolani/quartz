@@ -10,6 +10,8 @@ import {
 } from '@logicalclocks/quartz';
 
 // Types
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   Feature,
   FeatureGroup,
@@ -22,13 +24,11 @@ import StatisticsTables from './StatisticsTables';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import useBasket from '../../../../hooks/useBasket';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 
 export interface StatisticsCardProps {
   data: Feature;
-  statistics?: FeatureGroupStatistics;
+  statistics: FeatureGroupStatistics;
   type: ItemDrawerTypes;
   parent: FeatureGroup | TrainingDataset;
 }
@@ -39,7 +39,7 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
   statistics,
   type: dataType,
 }) => {
-  const { name, type } = data;
+  const { name } = data;
 
   const { id, fgId } = useParams();
 
@@ -65,7 +65,7 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
               />
             </Box>
           )}
-          <Badge ml="20px" value={data.type} variant="bold" />
+          <Badge ml="20px" value={statistics.dataType} variant="bold" />
         </Flex>
       )}
 
@@ -74,10 +74,10 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
           <Flex flexDirection="column">
             <Flex>
               <Subtitle>{name}</Subtitle>
-              <Badge ml="20px" value={data.type} variant="bold" />
+              <Badge ml="20px" value={statistics.dataType} variant="bold" />
             </Flex>
             <Flex mt="5px">
-              {!!data.basefeaturegroup ? (
+              {data.basefeaturegroup ? (
                 <>
                   <Labeling gray>from</Labeling>
                   <Value ml="5px">{data?.basefeaturegroup?.name}</Value>
@@ -109,7 +109,7 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
               <StatisticsCharts
                 dataType={dataType}
                 data={statistics.histogram}
-                type={type}
+                type={statistics.dataType}
               />
             </Box>
           ) : (

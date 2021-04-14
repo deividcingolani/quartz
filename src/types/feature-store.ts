@@ -38,3 +38,8 @@ export interface FeatureStoreStorageConnector {
   accessKey?: string;
   secretKey?: string;
 }
+
+export interface FeatureStoreSettings {
+  suggestedMysqlFeatureTypes: string[];
+  suggestedHiveFeatureTypes: string[];
+}

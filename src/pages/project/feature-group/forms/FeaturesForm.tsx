@@ -4,16 +4,75 @@ import { Button, EditableTable, Label } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 
 // Types
+import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import { FeatureFormProps } from '../types';
 import { featuresColumns } from './featuresColumns';
-import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
+import { RootState } from '../../../../store';
 
 const FeaturesForm: FC<FeatureFormProps> = ({ isEdit, isDisabled }) => {
+  const { id } = useParams();
+
   const { getValues, setValue } = useFormContext();
 
   const [features, setFeatures] = useState<FGRow[]>(
     isEdit ? getValues().features : [],
   );
+
+  const fsSettings = useSelector(
+    (state: RootState) => state.featureStoreSettings,
+  );
+
+  // Default types (suggestedHiveFeatureTypes and suggestedMysqlFeatureTypes) are taken
+  // from the feature store settings. Additionally the feature group could contain custom
+  // types. These custom types are added to the list of types as well.
+  // we use a set to avoid duplicates
+  const offlineTypes = Array.from(
+    new Set(
+      (fsSettings?.suggestedHiveFeatureTypes
+        ? fsSettings.suggestedHiveFeatureTypes
+        : []
+      )
+        .concat(
+          features.flatMap(
+            (fgRow) =>
+              fgRow.row
+                .filter((field) => field.columnName === 'Offline type')
+                .map((field) => field.columnValue as string[])
+                .filter((offlineType) => offlineType.length !== 0)
+                .map((offlineType) => offlineType[0]),
+            // filter out empty arrays as in the case of a new feature group
+          ),
+        )
+        .map((offlineType: string) => offlineType.toLowerCase()),
+    ),
+  );
+
+  const onlineTypes = Array.from(
+    new Set(
+      (fsSettings?.suggestedMysqlFeatureTypes
+        ? fsSettings.suggestedMysqlFeatureTypes
+        : []
+      )
+        .concat(
+          features.flatMap((fgRow) =>
+            fgRow.row
+              .filter((field) => field.columnName === 'Online type')
+              // filter out empty arrays, meaning that the feature group
+              // doesn't have any online feature
+              .map((field) => field.columnValue as string[])
+              .filter((onlineType) => onlineType.length !== 0)
+              .map((onlineType) => onlineType[0]),
+          ),
+        )
+        .map((onlineType: string) => onlineType.toLowerCase()),
+    ),
+  );
+
+  useEffect(() => {
+    setValue('features', features);
+  }, [features, id, setValue]);
 
   const handleChangeData = useCallback(
     (
@@ -37,10 +96,6 @@ const FeaturesForm: FC<FeatureFormProps> = ({ isEdit, isDisabled }) => {
     },
     [],
   );
-
-  useEffect(() => {
-    setValue('features', features);
-  }, [features, setValue]);
 
   const handleRemoveRow = useCallback((ind: number) => {
     setFeatures((data) => {
@@ -103,11 +158,12 @@ const FeaturesForm: FC<FeatureFormProps> = ({ isEdit, isDisabled }) => {
         <EditableTable
           sx={{ table: { whiteSpace: 'nowrap' } }}
           minWidth="100%"
-          columns={featuresColumns(isEdit)}
+          columns={featuresColumns(isEdit, offlineTypes, onlineTypes)}
           values={features}
           onChangeData={handleChangeData}
           onDeleteRow={handleRemoveRow}
           actions={[]}
+          hasFreezeButton={false}
         />
       )}
     </Box>

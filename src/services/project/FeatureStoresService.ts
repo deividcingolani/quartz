@@ -1,6 +1,7 @@
 // Types
 import {
   FeatureStore,
+  FeatureStoreSettings,
   FeatureStoreStorageConnector,
 } from '../../types/feature-store';
 import BaseApiService, { RequestType } from '../BaseApiService';
@@ -52,6 +53,12 @@ class FeatureStoresService extends BaseApiService {
     this.request<FeatureStoreStorageConnector[]>({
       type: RequestType.delete,
       url: `${projectId}/featurestores/${featureStoreId}/storageconnectors/${connectorName}`,
+    });
+
+  settings = (projectId: number) =>
+    this.request<FeatureStoreSettings>({
+      type: RequestType.get,
+      url: `${projectId}/featurestores/settings`,
     });
 }
 

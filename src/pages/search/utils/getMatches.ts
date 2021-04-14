@@ -1,5 +1,5 @@
 import { DataEntity } from '../../../types';
-import { Feature, FeatureType } from '../../../types/feature-group';
+import { Feature, StatisticsFeatureType } from '../../../types/feature-group';
 
 const getMatchText = (item: any) => {
   delete item.highlights.otherXattrs;
@@ -13,7 +13,7 @@ export const getFeaturesMatches = (features: Feature[]) => {
     featureId: Math.ceil(Math.random() * 1000000),
     type:
       feature.features.find(({ name }) => name === feature.name)?.type ||
-      FeatureType.int,
+      StatisticsFeatureType.int,
   }));
 };
 

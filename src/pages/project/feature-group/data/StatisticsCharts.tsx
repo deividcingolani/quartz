@@ -1,14 +1,17 @@
 import React, { FC } from 'react';
 
 // Types
-import { FeatureType, HistogramItem } from '../../../../types/feature-group';
+import {
+  HistogramItem,
+  StatisticsFeatureType,
+} from '../../../../types/feature-group';
 // Utils
 import getChartNode from './charts/getChartNode';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 
 export interface StatisticsChartsProps {
   data: HistogramItem[];
-  type: FeatureType;
+  type: StatisticsFeatureType;
   dataType: ItemDrawerTypes;
 }
 

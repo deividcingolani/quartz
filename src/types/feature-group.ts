@@ -4,7 +4,10 @@ import { User } from './user';
 import { Expectation, Validation } from './expectation';
 import { IStorageConnector } from './storage-connector';
 
-export enum FeatureType {
+// These feature types are valid only for statistics
+// Deequ (the library we use to compute statistics)
+// groups the different types into the followings:
+export enum StatisticsFeatureType {
   stringUnknown = 'Unknown',
   int = 'int',
   intFractional = 'Fractional',
@@ -80,10 +83,10 @@ export interface Feature {
   name: string;
   id: number;
   features: Feature[];
-  partition: boolean;
   primary: boolean;
-  type: FeatureType;
-  onlineType?: FeatureType;
+  partition: boolean;
+  type: string;
+  onlineType?: string;
   label: boolean;
   index: number;
   featuregroup: FeatureGroup;
@@ -193,7 +196,7 @@ export interface CorrelationItem {
 
 export interface FeatureGroupStatistics {
   column: string;
-  dataType: FeatureType;
+  dataType: StatisticsFeatureType;
   isDataTypeInferred: boolean;
   completeness: number;
   distinctness: number;
