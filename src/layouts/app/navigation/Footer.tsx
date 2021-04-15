@@ -24,7 +24,7 @@ const Footer: FC = () => {
     return (
       <Box sx={boxOpenStyles}>
         <Logo />
-        <span>HFS</span>
+        <span>HSFS</span>
         <span>V {version}</span>
       </Box>
     );
