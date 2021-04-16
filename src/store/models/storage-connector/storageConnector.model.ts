@@ -9,6 +9,7 @@ import {
   ICreateREDSHIFTStorageConnector,
   IStorageConnector,
   StorageConnectorType,
+  ICreateSnowflakeConnector,
 } from '../../../types/storage-connector';
 import { AxiosResponse } from 'axios';
 
@@ -39,7 +40,8 @@ const create = () => async ({
     | ICreateAWSStorageConnector
     | ICreateJDBCStorageConnector
     | ICreateHOPSFSStorageConnector
-    | ICreateREDSHIFTStorageConnector;
+    | ICreateREDSHIFTStorageConnector
+    | ICreateSnowflakeConnector;
 }): Promise<AxiosResponse> => {
   if (storageConnector) {
     return StorageConnectorService.createStorageConnector(

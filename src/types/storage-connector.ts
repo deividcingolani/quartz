@@ -60,3 +60,22 @@ export interface ICreateADLSSource {
   accountName: string;
   containerName?: string;
 }
+
+export interface Options {
+  name: string;
+  value: string;
+}
+
+export interface ICreateSnowflakeConnector {
+  name: string;
+  url: string;
+  user: string;
+  password?: string;
+  token?: string;
+  database: string;
+  schema: string;
+  warehouse?: string;
+  role?: string;
+  table?: string;
+  sfOptions?: Options[];
+}

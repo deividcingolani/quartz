@@ -182,6 +182,7 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
         title={isEdit ? 'Edit storage connector' : 'Set up storage connector'}
         contentProps={{ overflow: 'visible' }}
         mb="100px"
+        pb={hasScrollOnScreen ? '75px' : 0}
       >
         <Flex sx={formStyles} flexDirection="column">
           {/* API Error Messages */}

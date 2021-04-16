@@ -61,6 +61,7 @@ export enum Descriptions {
   datasetName = 'datasetName', // HopsFS
   clusterIdentifier = 'clusterIdentifier', // Redshift
   directoryId = 'directoryId', // Azure
+  connectionURL = 'connectionURL', // Azure
 }
 
 export interface DescriptionsData {
@@ -69,4 +70,5 @@ export interface DescriptionsData {
   [Descriptions.datasetName]: string; // HopsFS
   [Descriptions.clusterIdentifier]: string; // Redshift
   [Descriptions.directoryId]: string; // Azure
+  [Descriptions.connectionURL]: string; // Snowflake
 }

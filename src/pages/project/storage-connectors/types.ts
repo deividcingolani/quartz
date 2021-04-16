@@ -4,4 +4,5 @@ export enum StorageConnectorProtocol {
   'hops' = 'hops',
   'redshift' = 'redshift',
   'azure' = 'azure',
+  'snowflake' = 'snowflake',
 }

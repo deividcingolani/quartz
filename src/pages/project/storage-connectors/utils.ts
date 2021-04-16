@@ -17,6 +17,9 @@ import JdbcForm, { schema as jdbcSchema } from './forms/JdbcForm';
 import HopsForm, { schema as hopsSchema } from './forms/HopsForm';
 import RedshiftForm, { schema as redshiftSchema } from './forms/RedshiftForm';
 import AzureForm, { schema as azureSchema } from './forms/AzureForm';
+import SnowflakeForm, {
+  schema as snowflakeSchema,
+} from './forms/SnowflakeForm';
 
 export const protocolOptions = labelValueMap<
   { [key in keyof typeof StorageConnectorProtocol]: string }
@@ -26,6 +29,7 @@ export const protocolOptions = labelValueMap<
   [StorageConnectorProtocol.hops]: 'HOPSFS',
   [StorageConnectorProtocol.redshift]: 'REDSHIFT',
   [StorageConnectorProtocol.azure]: 'ADLS',
+  [StorageConnectorProtocol.snowflake]: 'SNOWFLAKE',
 });
 
 export const protocolVisualOptions = labelValueMap<
@@ -36,6 +40,7 @@ export const protocolVisualOptions = labelValueMap<
   [StorageConnectorProtocol.hops]: 'HopsFS',
   [StorageConnectorProtocol.redshift]: 'Redshift',
   [StorageConnectorProtocol.azure]: 'Azure Data Lake',
+  [StorageConnectorProtocol.snowflake]: 'Snowflake',
 });
 
 export const getForm = (
@@ -47,6 +52,7 @@ export const getForm = (
     [StorageConnectorProtocol.hops]: HopsForm,
     [StorageConnectorProtocol.redshift]: RedshiftForm,
     [StorageConnectorProtocol.azure]: AzureForm,
+    [StorageConnectorProtocol.snowflake]: SnowflakeForm,
   };
 
   return memo(storageConnectorForms[protocol]);
@@ -61,6 +67,7 @@ export const getSchema = (commonSchema: Yup.ObjectSchema) => (
     [StorageConnectorProtocol.hops]: hopsSchema,
     [StorageConnectorProtocol.redshift]: redshiftSchema,
     [StorageConnectorProtocol.azure]: azureSchema,
+    [StorageConnectorProtocol.snowflake]: snowflakeSchema,
   };
 
   return commonSchema.concat(storageConnectorSchemas[protocol]);
@@ -75,6 +82,7 @@ export const getConnectorType = (
     [StorageConnectorProtocol.hops]: StorageConnectorType.hops,
     [StorageConnectorProtocol.redshift]: StorageConnectorType.redshift,
     [StorageConnectorProtocol.azure]: StorageConnectorType.azure,
+    [StorageConnectorProtocol.snowflake]: StorageConnectorType.azure,
   };
 
   return protocolsMap[protocol];
@@ -87,6 +95,7 @@ export const getDtoType = (protocol: StorageConnectorProtocol): string => {
     [StorageConnectorProtocol.hops]: 'featurestoreHopsfsConnectorDTO',
     [StorageConnectorProtocol.redshift]: 'featurestoreRedshiftConnectorDTO',
     [StorageConnectorProtocol.azure]: 'featurestoreADLSConnectorDTO',
+    [StorageConnectorProtocol.snowflake]: 'featurestoreSnowflakeConnectorDTO',
   };
 
   return dtosMap[protocol];
@@ -102,6 +111,7 @@ export const getDescription = (
     [StorageConnectorProtocol.hops]: Descriptions.datasetName, // HopsFS
     [StorageConnectorProtocol.redshift]: Descriptions.clusterIdentifier, // Redshift
     [StorageConnectorProtocol.azure]: Descriptions.directoryId, // Azure
+    [StorageConnectorProtocol.snowflake]: Descriptions.connectionURL, // Snowflake
   };
   return descriptions[descMap[protocol]];
 };

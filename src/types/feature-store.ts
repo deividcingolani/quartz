@@ -23,6 +23,7 @@ export enum StorageConnectorType {
   jdbc = 'JDBC',
   aws = 'S3',
   azure = 'ADLS',
+  snowflake = 'SNOWFLAKE',
 }
 
 export interface FeatureStoreStorageConnector {
