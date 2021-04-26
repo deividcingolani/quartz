@@ -75,7 +75,7 @@ const featureGroupView = createModel()({
         expectations,
       };
       dispatch.featureGroupView.setData(mapped);
-
+      needMore = data.timeTravelFormat !== 'NONE';
       if (needMore) {
         dispatch.featureGroupView.loadRemainingData({
           data: mapped,

@@ -268,7 +268,7 @@ const FeatureGroupDataPreview: FC = () => {
           </Flex>
         )}
         {!!filteredFeatures.length && !!filteredData.length && !isLoading && (
-        <Box mb="-23px" mr="-18px" maxWidth="100vw">
+          <Box mb="-23px" mr="-18px" maxWidth="100vw">
             <ReadOnlyTable
               staticColumn={staticColumn}
               onFreeze={handleChangeStaticColumn}
@@ -280,7 +280,7 @@ const FeatureGroupDataPreview: FC = () => {
                 },
               ]}
             />
-        </Box>
+          </Box>
         )}
         {(!filteredFeatures.length || !filteredData.length || !!statistics) && (
           <NoData mainText="No data available" />
