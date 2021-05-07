@@ -23,6 +23,10 @@ const ProjectCreate: FC = () => {
     (state: RootState) => state.loading.effects.project.create,
   );
 
+  const isSubmitDemo = useSelector(
+    (state: RootState) => state.loading.effects.project.createTour,
+  );
+
   const isAddingMembers = useSelector(selectIsAddingMember);
 
   const dispatch = useDispatch<Dispatch>();
@@ -96,15 +100,7 @@ const ProjectCreate: FC = () => {
   );
 
   const handleSubmitDemo = useCallback(async () => {
-    const project = await dispatch.project.create({
-      data: {
-        retentionPeriod: '',
-        services: [],
-        type: 'fs',
-        projectName: 'demo_starterProject',
-        description: 'demo project',
-      },
-    });
+    const project = await dispatch.project.createTour('fs');
 
     if (project) {
       navigate(`/p/${project.id}/view`);
@@ -126,6 +122,7 @@ const ProjectCreate: FC = () => {
                   onClick={handleSubmitDemo}
                   sx={{ position: 'absolute', right: '10px' }}
                   intent="secondary"
+                  disabled={isSubmit || isSubmitDemo}
                 >
                   Run a demo project
                 </Button>
@@ -135,7 +132,9 @@ const ProjectCreate: FC = () => {
         </Box>
       )}
       <ProjectForm
-        isLoading={isSubmit || isProjectsLoading || isAddingMembers}
+        isLoading={
+          isSubmit || isSubmitDemo || isProjectsLoading || isAddingMembers
+        }
         onSubmit={handleSubmit}
       />
     </>

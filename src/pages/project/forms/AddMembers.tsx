@@ -155,7 +155,7 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, onClose }) => {
             type={CalloutTypes.neutral}
             content={
               <Flex alignItems="center">
-                <Label>In order to add a new user, follow the steps here</Label>
+                <Label>In order to add a new user, follow the steps</Label>
                 <Button
                   pl="3px"
                   onClick={() =>

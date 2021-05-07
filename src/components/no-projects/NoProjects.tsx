@@ -1,10 +1,10 @@
 import { Box, Flex } from 'rebass';
 import React, { FC, useCallback } from 'react';
 import { Button, Value } from '@logicalclocks/quartz';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Types
-import { Dispatch } from '../../store';
+import { Dispatch, RootState } from '../../store';
 
 // Hooks
 import useNavigateRelative from '../../hooks/useNavigateRelative';
@@ -12,10 +12,15 @@ import useNavigateRelative from '../../hooks/useNavigateRelative';
 import routeNames from '../../routes/routeNames';
 
 import hopsworksIcon from './hopsworks-62x62';
+import Loader from '../loader/Loader';
 
 const NoData: FC = () => {
   const navigate = useNavigateRelative();
   const dispatch = useDispatch<Dispatch>();
+
+  const isCreatingTour = useSelector(
+    (state: RootState) => state.loading.effects.project.createTour,
+  );
 
   // Handlers
   const handleCreate = useCallback(() => {
@@ -23,20 +28,17 @@ const NoData: FC = () => {
   }, [navigate]);
 
   const handleSubmitDemo = useCallback(async () => {
-    const project = await dispatch.project.create({
-      data: {
-        retentionPeriod: '',
-        services: [],
-        type: 'fs',
-        projectName: 'demo_starterProject',
-        description: 'demo project',
-      },
-    });
+    const project = await dispatch.project.createTour('fs');
 
     if (project) {
       navigate(`/p/${project.id}/view`);
     }
   }, [dispatch, navigate]);
+
+  if (isCreatingTour) {
+    return <Loader />;
+  }
+
   return (
     <Flex flexDirection="column" alignItems="center" my="auto">
       <Box mb="30px">{hopsworksIcon}</Box>

@@ -46,6 +46,9 @@ const project = createModel()({
     delete: async ({ id }: { id: number }): Promise<any> => {
       return await ProjectsService.delete(id);
     },
+    createTour: async (tour: string): Promise<any> => {
+      return ProjectsService.createTour(tour);
+    },
   }),
 });
 

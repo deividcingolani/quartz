@@ -21,6 +21,7 @@ class ProjectsService extends BaseApiService {
 
     return data;
   };
+
   create = async (data: any): Promise<any> => {
     await this.request<any>({
       url: ``,
@@ -28,6 +29,7 @@ class ProjectsService extends BaseApiService {
       data,
     });
   };
+
   edit = async (id: number, data: any): Promise<any> => {
     await this.request<any>({
       url: `/${id}`,
@@ -35,11 +37,21 @@ class ProjectsService extends BaseApiService {
       data,
     });
   };
+
   delete = async (id: number): Promise<any> => {
     await this.request<any>({
       url: `/${id}/delete`,
       type: RequestType.post,
     });
+  };
+
+  createTour = async (tour: string): Promise<any> => {
+    const { data } = await this.request<any>({
+      url: `/starterProject/${tour}`,
+      type: RequestType.post,
+    });
+
+    return data;
   };
 
   addMembers = async (id: number, data: any): Promise<any> => {
