@@ -13,6 +13,9 @@ export const selectDeepSearchFeatureGroupsState = (state: RootState) =>
 export const selectDeepSearchTrainingDatasetsState = (state: RootState) =>
   state.deepSearch.trainingDatasets;
 
+export const selectDeepSearchCountState = (state: RootState) =>
+  state.deepSearch.searchCount;
+
 export const selectDeepSearchLoading = (state: RootState) => {
   const loadingEffects = state.loading.effects.deepSearch;
 

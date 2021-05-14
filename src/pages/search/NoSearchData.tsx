@@ -8,12 +8,7 @@ export interface FeatureGroupsListProps {
 
 const NoSearchData: FC<FeatureGroupsListProps> = ({ subject }) => {
   return (
-    <Flex
-      justifyContent="center"
-      height="calc(100vh - 195px)"
-      alignItems="center"
-      width="100%"
-    >
+    <Flex justifyContent="center" alignItems="center" width="100%">
       <Subtitle>{`0 ${subject} match with the filters`}</Subtitle>
     </Flex>
   );

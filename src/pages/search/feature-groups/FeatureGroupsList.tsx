@@ -10,29 +10,27 @@ import NoSearchData from '../NoSearchData';
 
 export interface FeatureGroupsListProps {
   data: FeatureGroup[];
+  loading?: boolean;
 }
 
-const FeatureGroupsList: FC<FeatureGroupsListProps> = ({ data }) => {
+const FeatureGroupsList: FC<FeatureGroupsListProps> = ({ data, loading }) => {
   if (!data.length) {
     return <NoSearchData subject="feature groups" />;
   }
 
   return (
     <Flex
-      height="calc(100vh - 195px)"
-      width="100%"
       margin="0 auto"
+      width="100%"
+      mx="150px"
       maxWidth="1200px"
       flexDirection="column"
     >
-      <Flex mb="20px">
-        <Value primary>{data.length}</Value>
-        <Value ml="5px">features groups match</Value>
-      </Flex>
       <Flex width="100%" margin="0 auto" flexDirection="column">
         <FeatureGroupListContent
           hasMatchText={true}
           data={data}
+          loading={loading}
           isFiltered={false}
           onResetFilters={() => {}}
         />

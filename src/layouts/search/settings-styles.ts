@@ -1,7 +1,9 @@
 export default {
-  position: 'relative',
-
-  bg: 'grayShade3',
-
-  overflow: 'auto',
+  top: 0,
+  position: 'sticky',
+  zIndex: 26,
+  paddingBottom: '10px',
+  paddingTop: '15px',
+  backgroundColor: 'white',
+  justifyContent: 'center',
 };

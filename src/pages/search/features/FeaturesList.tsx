@@ -44,17 +44,12 @@ const FeaturesList: FC<FeaturesListProps> = ({ data }) => {
   }
   return (
     <Flex
-      height="calc(100vh - 175px)"
       width="100%"
       margin="0 auto"
       maxWidth="1200px"
+      mx="150px"
       flexDirection="column"
     >
-      <Flex mb="20px">
-        <Value primary>{data.length}</Value>
-        <Value ml="5px">features match</Value>
-      </Flex>
-
       {!!selectedId && !!selectedItem && (
         <FeatureDrawer
           isOpen={isOpen}
@@ -120,7 +115,7 @@ const FeaturesList: FC<FeaturesListProps> = ({ data }) => {
                     mr="20px"
                     height="fit-content"
                     value={matchText}
-                    variant="success"
+                    variant="warning"
                   />
                   <Box
                     sx={{

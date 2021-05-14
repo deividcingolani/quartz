@@ -1,15 +1,17 @@
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { matchPath, useLocation } from 'react-router-dom';
 
 import routeNames from '../../../routes/routeNames';
 // Hooks
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
+import useSearchDataCount from '../../../pages/search/hooks/useSearchDataCount';
+import { Value } from '@logicalclocks/quartz';
 
 const useTabsNavigation = () => {
   const location = useLocation();
   const navigateRelative = useNavigateRelative();
 
-  const { projectId, searchText } = useMemo(() => {
+  const { projectId, searchText, query } = useMemo(() => {
     const [, , projectId] = location.pathname.match(/(p)\/(\d+)/) || [];
     const [, , searchText] =
       location.pathname.match(/(features|td|fg)\/(.*)/) || [];
@@ -17,8 +19,9 @@ const useTabsNavigation = () => {
     return {
       projectId: +projectId,
       searchText,
+      query: location.search,
     };
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   const handleNavigateRelative = useCallback(
     (to: string, relativeTo?: string) => (): void => {
@@ -41,17 +44,33 @@ const useTabsNavigation = () => {
   const getRedirectPath = useCallback(
     (name: string) => {
       if (searchText && projectId) {
-        return `search/p/${projectId}/${name}/${searchText}`;
+        return `search/p/${projectId}/${name}/${searchText}${query}`;
       }
       if (searchText) {
-        return `search/${name}/${searchText}`;
+        return `search/${name}/${searchText}${query}`;
       }
       if (projectId) {
-        return `search/p/${projectId}/${name}`;
+        return `search/p/${projectId}/${name}/${query}`;
       }
-      return `search/${name}`;
+      return `search/${name}/${query}`;
     },
-    [projectId, searchText],
+    [projectId, searchText, query],
+  );
+
+  const { data, isLoading } = useSearchDataCount(projectId, searchText);
+
+  const altContent = useCallback(
+    (count: number) =>
+      data && !isLoading ? (
+        <Value
+          as="span"
+          lineHeight="13px"
+          style={!count ? { color: 'gray' } : {}}
+        >
+          {count || 0}
+        </Value>
+      ) : null,
+    [data, isLoading],
   );
 
   const tabs = useMemo(() => {
@@ -65,6 +84,7 @@ const useTabsNavigation = () => {
           `search/${routeNames.search.searchOneProjectFeatureGroups}`,
         ]),
         onCLick: handleNavigateRelative(getRedirectPath('fg')),
+        altContent: altContent(data?.featureGroups || 0),
       },
       {
         title: 'Training Datasets',
@@ -75,6 +95,7 @@ const useTabsNavigation = () => {
           `search/${routeNames.search.searchOneProjectTrainingDatasets}`,
         ]),
         onCLick: handleNavigateRelative(getRedirectPath('td')),
+        altContent: altContent(data?.trainingDatasets || 0),
       },
       {
         title: 'Features',
@@ -85,9 +106,10 @@ const useTabsNavigation = () => {
           `search/${routeNames.search.searchOneProjectFeatures}`,
         ]),
         onCLick: handleNavigateRelative(getRedirectPath('features')),
+        altContent: altContent(data?.features || 0),
       },
     ];
-  }, [isActive, handleNavigateRelative, getRedirectPath]);
+  }, [isActive, handleNavigateRelative, getRedirectPath, altContent, data]);
 
   return {
     tabs,
