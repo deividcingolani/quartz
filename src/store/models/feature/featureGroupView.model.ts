@@ -75,7 +75,7 @@ const featureGroupView = createModel()({
         expectations,
       };
       dispatch.featureGroupView.setData(mapped);
-      needMore = data.timeTravelFormat !== 'NONE';
+
       if (needMore) {
         dispatch.featureGroupView.loadRemainingData({
           data: mapped,
@@ -124,6 +124,7 @@ const featureGroupView = createModel()({
       data: FeatureGroup;
       needExpectations: boolean;
     }) => {
+      /* KEYWORDS */
       let keywords: string[] = [];
       if (data.type === 'cachedFeaturegroupDTO') {
         keywords = await FeatureGroupLabelsService.getList(
@@ -132,7 +133,7 @@ const featureGroupView = createModel()({
           featureGroupId,
         );
       }
-
+      /* PROVENANCE */
       const { data: provenance } = await FeatureGroupsService.getProvenance(
         projectId,
         featureStoreId,
@@ -168,7 +169,7 @@ const featureGroupView = createModel()({
           return acc;
         }, []);
       }
-
+      /* TAGS */
       const { data: tags } = await FeatureGroupsService.getTags(
         projectId,
         featureStoreId,
@@ -194,20 +195,24 @@ const featureGroupView = createModel()({
           ),
         };
       });
-
+      /* SAME NAME */
       const fgsWithSameName = await FeatureGroupsService.getOneByName(
         projectId,
         featureStoreId,
         data.name,
       );
-
-      const { data: commits } = await FeatureGroupsService.getCommitsDetail(
-        projectId,
-        featureStoreId,
-        featureGroupId,
-        100,
-      );
-
+      /* COMMITS */
+      let commits: any = [];
+      if (data.timeTravelFormat !== 'NONE') {
+        const commitsData = await FeatureGroupsService.getCommitsDetail(
+          projectId,
+          featureStoreId,
+          featureGroupId,
+          100,
+        );
+        commits = commitsData.data;
+      }
+      /* EXPECTATIONS */
       let expectations = data.expectations;
       if (needExpectations) {
         const serverExpectations = await ExpectationService.getList(
