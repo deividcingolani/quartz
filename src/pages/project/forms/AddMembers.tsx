@@ -4,13 +4,15 @@ import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import {
   Label,
   Button,
-  Select,
   Callout,
   TinyPopup,
-  RadioGroup,
   CalloutTypes,
   Tooltip,
   NotificationsManager,
+  EditableSelect,
+  Select,
+  Labeling,
+  Divider,
 } from '@logicalclocks/quartz';
 
 import { User } from '../../../types/user';
@@ -41,26 +43,46 @@ export interface ProjectMember {
 const AddMembers: FC<AddMembersProps> = ({ members, isOpen, onClose }) => {
   const { id } = useParams();
 
-  const [role, setRole] = useState(Roles['Data scientist']);
   const [selectedMembers, setMembers] = useState<ProjectMember[]>([]);
 
-  const [selectedEmails, setEmails] = useState<string[]>([]);
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  const [roles, setRoles] = useState<Roles[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
-    const selected = selectedEmails.map((email) => ({
+    const selected = selectedEmails.map((email, idx) => ({
       projectTeamPK: {
         projectId: +id,
         teamMember: email,
       },
-      teamRole: role,
+      teamRole: roles[idx],
     }));
 
     setMembers(selected);
-  }, [selectedEmails, role, members, id]);
+  }, [selectedEmails, roles, members, id]);
+
+  const handleEmailsSelection = (value: string[]) => {
+    const deletedIdx = selectedEmails
+      .filter((x) => !value.includes(x))
+      .map((x) => selectedEmails.indexOf(x));
+
+    const newV = value.filter((x) => !selectedEmails.includes(x));
+    setSelectedEmails(value);
+    setRoles((roles) => [
+      ...roles.filter((_x, idx) => !deletedIdx.includes(idx)),
+      ...newV.map(() => Roles['Data owner']),
+    ]);
+  };
+
+  const handleRolesChange = (value: string[], idx: number) => {
+    setRoles(
+      (prev) =>
+        [...prev.slice(0, idx), ...value, ...prev.slice(idx + 1)] as Roles[],
+    );
+  };
 
   const handleAddMembers = useCallback(async () => {
     setIsLoading(true);
@@ -99,7 +121,7 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, onClose }) => {
 
     await dispatch.project.refetchProject(+id);
 
-    setEmails([]);
+    setSelectedEmails([]);
 
     setIsLoading(false);
 
@@ -123,33 +145,51 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, onClose }) => {
         mainText="All members of this cluster are part of this project"
         disabled={!!members.length}
       >
-        <Select
-          listWidth="100%"
+        <EditableSelect
           width="400px"
           isMulti
           label="Members"
-          hasPlaceholder={false}
+          type="searchable"
           value={selectedEmails}
           placeholder="pick members"
           noDataMessage="no members defined"
-          onChange={(value) => setEmails(value)}
+          onChange={handleEmailsSelection}
           disabled={!members.length || isLoading}
           options={members.map(({ email }) => email)}
         />
       </Tooltip>
 
-      <Box my="20px">
-        <RadioGroup
-          mr="20px"
-          value={role}
-          flexDirection="row"
-          options={Object.keys(Roles)}
-          disabled={!members.length || isLoading}
-          onChange={(value) => setRole(value as Roles)}
-        />
-      </Box>
+      {selectedEmails.length > 0 && (
+        <>
+          <Divider px="20px" />
+          {selectedEmails.map((email, idx) => {
+            const member = members.find((x) => x.email === email);
+            return (
+              <Flex
+                key={email}
+                flexDirection="row"
+                mb="20px"
+                justifyContent="space-between"
+              >
+                <Flex flexDirection="column">
+                  <Label mb="5px">{`${member?.firstname} ${member?.lastname}`}</Label>
+                  <Labeling>{email}</Labeling>
+                </Flex>
+                <Select
+                  mb="5px"
+                  value={[roles[idx]]}
+                  placeholder=""
+                  listWidth="100%"
+                  onChange={(val) => handleRolesChange(val, idx)}
+                  options={Object.keys(Roles)}
+                />
+              </Flex>
+            );
+          })}
+        </>
+      )}
 
-      <Box mb="20px">
+      <Box my="20px">
         {!!members.length ? (
           <Callout
             type={CalloutTypes.neutral}

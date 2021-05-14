@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import {
   Tooltip,
   Icon,
-  Select,
   Divider,
   TooltipPositions,
+  EditableSelect,
 } from '@logicalclocks/quartz';
 import { Controller } from 'react-hook-form';
 
@@ -32,14 +32,12 @@ const MembersForm: FC<MembersFormProps> = ({ control, isLoading }) => {
         control={control}
         name="membersEmails"
         render={({ onChange, value }) => (
-          <Select
-            hasPlaceholder={false}
+          <EditableSelect
+            isMulti
             width="100%"
             value={value}
-            isMulti={true}
             label="Members"
-            listWidth="100%"
-            disabled={isLoading || !membersToSelect.length}
+            type="searchable"
             labelAction={
               <Tooltip
                 ml="5px"
@@ -51,8 +49,9 @@ const MembersForm: FC<MembersFormProps> = ({ control, isLoading }) => {
             }
             placeholder="pick members"
             onChange={(val) => onChange(val)}
-            noDataMessage="No other member registred in this cluster"
+            disabled={isLoading || !membersToSelect.length}
             options={membersToSelect.map(({ email }) => email)}
+            noDataMessage="No other member registred in this cluster"
           />
         )}
       />

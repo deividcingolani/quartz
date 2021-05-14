@@ -1,22 +1,22 @@
 import { Box, Flex } from 'rebass';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
-  Select,
   Button,
   Badge,
   TinyPopup,
   Input,
   usePopup,
+  EditableSelect,
 } from '@logicalclocks/quartz';
-import CardLabels from '../../pages/project/feature-group/list/CardLabels';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dispatch, RootState } from '../../store';
 import * as yup from 'yup';
-import { name } from '../../utils/validators';
-import getInputValidation from '../../utils/getInputValidation';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Dispatch, RootState } from '../../store';
+import { name } from '../../utils/validators';
+import getInputValidation from '../../utils/getInputValidation';
+import CardLabels from '../../pages/project/feature-group/list/CardLabels';
 
 export interface KeywordsEditorProps {
   value: string[];
@@ -122,17 +122,14 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
     return (
       <>
         <Flex>
-          <Select
-            listWidth="100%"
+          <EditableSelect
             isMulti
             flex={1}
-            variant={selectVariant}
-            onChange={keywordsHandler}
             value={values}
             options={options}
             placeholder="keywords"
-            bottomActionHandler={() => handleToggle()}
-            bottomActionText="Add another keyword"
+            variant={selectVariant}
+            onChange={keywordsHandler}
             noDataMessage="No keywords defined"
           />
           <Flex ml="10px">

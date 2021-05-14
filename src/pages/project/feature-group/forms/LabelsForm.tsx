@@ -4,10 +4,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Input,
   Label,
-  Select,
   TinyPopup,
   usePopup,
   Labeling,
+  EditableSelect,
 } from '@logicalclocks/quartz';
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -113,18 +113,14 @@ const LabelsForm: FC<FeatureFormProps> = ({
             <Box mt="5px">
               <>
                 <Flex>
-                  <Select
-                    disabled={isDisabled}
-                    listWidth="100%"
+                  <EditableSelect
                     isMulti
                     flex={1}
-                    hasPlaceholder={false}
-                    onChange={onChange}
                     value={value}
                     options={options}
+                    onChange={onChange}
+                    disabled={isDisabled}
                     placeholder="keywords"
-                    bottomActionHandler={() => handleToggle()}
-                    bottomActionText="Add another keyword"
                     noDataMessage="No keywords defined"
                   />
                 </Flex>
