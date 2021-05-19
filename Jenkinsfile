@@ -40,7 +40,7 @@ pipeline {
                 rm -rf node_modules
 
                 # Install dependencies
-                yarn install
+                yarn install --network-concurrency 1
                 
                 rm -rf node_modules/@logicalclocks/quartz
                 npm link @logicalclocks/quartz
