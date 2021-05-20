@@ -41,10 +41,12 @@ const titles = {
   error401: '401 - Hopswork',
 
   accountSettings: 'Account settings',
-  accountAuth: 'Account auth',
-  api: 'API',
-  createAPI: 'API new',
-  editAPI: 'API edit',
+  accountAuth: 'Account authentication',
+  api: 'API keys',
+  createAPI: 'New API key',
+  editAPI: 'Edit API key',
+  secrets: 'Secrets',
+  createSecret: 'New secret',
 
   expectationAttach: 'Attach an expectation',
   expectationEdit: 'Edit an expectation',

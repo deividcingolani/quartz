@@ -24,6 +24,8 @@ import apiKeysListStyles from './apiKeysListStyles';
 import { Dispatch } from '../../../../../store';
 // Hooks
 import useApiListRowsData from './useApiListRowsData';
+import useTitle from '../../../../../hooks/useTitle';
+import titles from '../../../../../sources/titles';
 
 const Row = memo(QRow);
 
@@ -34,6 +36,8 @@ const ApiList: FC = () => {
   const apiKeys = useSelector(selectApiKeys).sort((keyA, keyB) =>
     keyA.name.localeCompare(keyB.name),
   );
+
+  useTitle(titles.api);
 
   const navigate = useNavigate();
 
@@ -52,7 +56,23 @@ const ApiList: FC = () => {
 
   if (!apiKeys.length) {
     return (
-      <Card title="API keys">
+      <Card
+        title="API keys"
+        actions={
+          <Button
+            onClick={() =>
+              window.open(
+                'https://docs.hopsworks.ai/latest/integrations/databricks/api_key/',
+                '_blank',
+              )
+            }
+            p={0}
+            intent="inline"
+          >
+            documentation↗
+          </Button>
+        }
+      >
         <Flex mb="25x">
           <Flex width="100%">
             <Value primary>0</Value>
@@ -78,11 +98,27 @@ const ApiList: FC = () => {
       width="1000px"
       title="API keys"
       contentProps={{ pb: 0, overflow: 'visible' }}
+      actions={
+        <Button
+          onClick={() =>
+            window.open(
+              'https://docs.hopsworks.ai/latest/integrations/databricks/api_key/',
+              '_blank',
+            )
+          }
+          p={0}
+          intent="inline"
+        >
+          documentation↗
+        </Button>
+      }
     >
       <Flex mb="25x">
         <Flex width="100%">
           <Value primary>{apiKeys.length}</Value>
-          <Value ml="5px">{3 > 1 ? ' API keys' : ' API key'}</Value>
+          <Value ml="5px">
+            {apiKeys.length > 1 ? ' API keys' : ' API key'}
+          </Value>
         </Flex>
         <Button minWidth="105px" onClick={() => navigate('/account/api/new')}>
           New API key

@@ -49,6 +49,12 @@ const ApiCreate = React.lazy(
   () => import('../pages/user/account/api/ApiCreate'),
 );
 const ApiEdit = React.lazy(() => import('../pages/user/account/api/ApiEdit'));
+const SecretsList = React.lazy(
+  () => import('../pages/user/account/secrets/list/SecretsList'),
+);
+const SecretsCreate = React.lazy(
+  () => import('../pages/user/account/secrets/SecretsCreate'),
+);
 // Settings
 const SchematisedTagsList = React.lazy(
   () => import('../pages/settings/schematised-tags/list/SchematisedTagsList'),
@@ -163,6 +169,14 @@ const Routes: FC = () => {
               <Route
                 path={routeNames.account.view}
                 element={<Redirect to={`/${routeNames.account.profile}`} />}
+              />
+              <Route
+                path={routeNames.account.secrets.list}
+                element={<SecretsList />}
+              />
+              <Route
+                path={routeNames.account.secrets.create}
+                element={<SecretsCreate />}
               />
             </RouterRoutes>
           </AccountLayout>

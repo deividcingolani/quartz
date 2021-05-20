@@ -19,7 +19,7 @@ export const schema = yup.object().shape({
 });
 
 const Profile: FC = () => {
-  useTitle(titles.accountAuth);
+  useTitle(titles.accountSettings);
 
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.profile.getUser,

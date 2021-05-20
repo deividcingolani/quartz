@@ -5,6 +5,7 @@ import api from './api/api.model';
 import auth from './auth/auth.model';
 import scope from './scope/scope.model';
 import search from './search/search.model';
+import secrets from './secrets/secrets.model';
 import profile from './profile/profile.model';
 import project from './projects/project.model';
 import dataset from './dataset/dataset.model';
@@ -50,6 +51,7 @@ export interface RootModel extends Models<RootModel> {
   scope: typeof scope;
   search: typeof search;
   basket: typeof basket;
+  secrets: typeof secrets;
   dataset: typeof dataset;
   members: typeof members;
   project: typeof project;
@@ -97,6 +99,7 @@ const models: RootModel = {
   profile,
   project,
   members,
+  secrets,
   deepSearch,
   validators,
   expectations,

@@ -17,6 +17,8 @@ import { selectScopesLoading } from '../../../../store/models/scope/scope.select
 
 import routeNames from '../../../../routes/routeNames';
 import Loader from '../../../../components/loader/Loader';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const ApiEdit: FC = () => {
   const { name: keyName } = useParams();
@@ -30,6 +32,8 @@ const ApiEdit: FC = () => {
   const navigate = useNavigate();
 
   const apiKeys = useSelector(selectApiKeys);
+
+  useTitle(titles.editAPI);
 
   const data = apiKeys.find(({ name }) => name === keyName);
 

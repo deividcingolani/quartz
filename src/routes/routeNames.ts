@@ -20,6 +20,10 @@ const routeNames = {
       create: '/account/api/new',
       edit: '/account/api/:name/edit',
     },
+    secrets: {
+      list: '/account/secrets',
+      create: '/account/secrets/new',
+    },
     profile: '/account/profile',
     auth: '/account/authentication',
   },

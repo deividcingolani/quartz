@@ -22,6 +22,8 @@ import Loader from '../../../../components/loader/Loader';
 import { Dispatch } from '../../../../store';
 
 import routeNames from '../../../../routes/routeNames';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const ApiCreate: FC = () => {
   const isSubmit = useSelector(selectApiKeysCreateLoading);
@@ -33,6 +35,8 @@ const ApiCreate: FC = () => {
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigate();
+
+  useTitle(titles.createAPI);
 
   useEffect(() => {
     dispatch.scope.fetch();

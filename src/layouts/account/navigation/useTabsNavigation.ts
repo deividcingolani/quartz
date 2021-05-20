@@ -48,6 +48,14 @@ const useTabsNavigation = () => {
         ]),
         onCLick: handleNavigateRelative(routeNames.account.api.list),
       },
+      {
+        title: 'Secrets',
+        isActive: isActive([
+          routeNames.account.secrets.create,
+          routeNames.account.secrets.list,
+        ]),
+        onCLick: handleNavigateRelative(routeNames.account.secrets.list),
+      },
     ],
     [isActive, handleNavigateRelative],
   );

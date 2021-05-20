@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from '../../../../store';
 import Loader from '../../../../components/loader/Loader';
 import PasswordForm from './PasswordForm';
+import useTitle from '../../../../hooks/useTitle';
+import titles from '../../../../sources/titles';
 
 const Authentication: FC = () => {
   const isLoading = useSelector(
@@ -12,6 +14,8 @@ const Authentication: FC = () => {
   );
 
   const dispatch = useDispatch<Dispatch>();
+
+  useTitle(titles.accountAuth);
 
   useEffect(() => {
     dispatch.profile.getUser();
