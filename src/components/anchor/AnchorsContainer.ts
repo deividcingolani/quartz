@@ -46,7 +46,7 @@ class AnchorsContainer {
     const subscribers = this.subscribers[group];
 
     if (subscribers && subscribers.includes(subscriber)) {
-      subscribers.filter((sub) => sub !== subscriber);
+      this.subscribers[group] = subscribers.filter((sub) => sub !== subscriber);
     }
   };
 
