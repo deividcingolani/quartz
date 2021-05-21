@@ -36,21 +36,8 @@ const useTokenApiInterceptor = () => {
           previousToken &&
           previousToken !== TokenService.get()
         ) {
-          return new Promise((resolve) =>
-            setTimeout(
-              () =>
-                resolve(
-                  axios.request({
-                    ...error.config,
-                    headers: {
-                      ...error.config.headers,
-                      Authorization: TokenService.get(),
-                    },
-                  }),
-                ),
-              5000,
-            ),
-          );
+          window.location.reload();
+          return Promise.reject(error);
         }
         return Promise.reject(error);
       },
