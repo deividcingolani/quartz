@@ -15,6 +15,7 @@ import {
 // Services
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { log } from 'util';
 import ProfileService from '../../../../services/ProfileService';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
@@ -25,7 +26,6 @@ import { Dispatch, RootState } from '../../../../store';
 import routeNames from '../../../../routes/routeNames';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
-import { log } from 'util';
 
 export interface SummaryDataProps {
   data: FeatureGroup;
@@ -135,7 +135,8 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           </Flex>
         )}
       </Flex>
-      {data.timeTravelFormat === 'NONE' ||
+      {data.timeTravelFormat === undefined ||
+        data.timeTravelFormat === 'NONE' ||
         (!isLoading && data.commits?.length === 0 && (
           <Box my="20px">
             <Callout

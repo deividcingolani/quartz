@@ -167,7 +167,7 @@ export interface ExpectationRule {
 
 export interface FeatureGroup extends DataEntity {
   statisticColumns: any;
-  timeTravelFormat: string;
+  timeTravelFormat?: string;
   validationType: string;
   provenance: FeatureGroupProvenance[];
   features: Feature[];

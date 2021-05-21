@@ -203,7 +203,10 @@ const featureGroupView = createModel()({
       );
       /* COMMITS */
       let commits: any = [];
-      if (data.timeTravelFormat !== 'NONE') {
+      if (
+        data.timeTravelFormat !== undefined &&
+        data.timeTravelFormat !== 'NONE'
+      ) {
         const commitsData = await FeatureGroupsService.getCommitsDetail(
           projectId,
           featureStoreId,
@@ -213,7 +216,7 @@ const featureGroupView = createModel()({
         commits = commitsData.data;
       }
       /* EXPECTATIONS */
-      let expectations = data.expectations;
+      let { expectations } = data;
       if (needExpectations) {
         const serverExpectations = await ExpectationService.getList(
           projectId,

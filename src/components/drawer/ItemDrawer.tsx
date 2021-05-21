@@ -165,7 +165,7 @@ const ItemDrawer = <T extends DataEntity>({
         });
       }
 
-      const loadJObs = async () => {
+      const loadJobs = async () => {
         const jobs = await dispatch.featureGroupView.fetchLastJobs({
           projectId: featureStoreData.projectId,
           featureStoreId: featureStoreData.featurestoreId,
@@ -175,26 +175,23 @@ const ItemDrawer = <T extends DataEntity>({
         setJobs(jobs);
       };
 
-      loadJObs();
+      loadJobs();
     }
     return () => {
       dispatch.featureGroupSchematisedTags.clear();
     };
   }, [dispatch, featureStoreData, item, type]);
 
-  const handleVersionChange = useCallback(
-    (values) => {
-      const newId = data?.find(
-        ({ version, name }) =>
-          version === +values[0].split(' ')[0] && name === item?.name,
-      )?.id;
+  const handleVersionChange = useCallback((values) => {
+    const newId = data?.find(
+      ({ version, name }) =>
+        version === +values[0].split(' ')[0] && name === item?.name,
+    )?.id;
 
-      if (newId) {
-        setId(newId);
-      }
-    },
-    [data, item],
-  );
+    if (newId) {
+      setId(newId);
+    }
+  }, []);
 
   const { latestVersion } = useLatestVersion<T>(item, data);
 
@@ -209,7 +206,7 @@ const ItemDrawer = <T extends DataEntity>({
           version.toString() === latestVersion ? '(latest)' : ''
         }`,
     );
-  }, [item, data, latestVersion]);
+  }, [data, latestVersion]);
 
   if (!item) {
     return (
@@ -278,10 +275,13 @@ const ItemDrawer = <T extends DataEntity>({
               />
             )}
             {type === ItemDrawerTypes.fg &&
-              !!((item as unknown) as FeatureGroup).timeTravelFormat && (
+              ((item as unknown) as FeatureGroup).timeTravelFormat && (
                 <TextValueBadge
                   text="time travel"
-                  value={((item as unknown) as FeatureGroup).timeTravelFormat.toLowerCase()}
+                  value={
+                    ((item as unknown) as FeatureGroup).timeTravelFormat?.toLowerCase() ??
+                    ''
+                  }
                 />
               )}
           </Flex>
@@ -457,7 +457,7 @@ const ItemDrawer = <T extends DataEntity>({
             </Box>
           )}
           {!isTagsLoading &&
-            (!!tags.length ? (
+            (tags.length ? (
               <Flex width="100%" flexDirection="column">
                 {tags.map((tag) => (
                   <SchematisedTagTable key={tag.name} tag={tag} />
