@@ -1,5 +1,5 @@
 import { Box } from 'rebass';
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 
 import SingleInnerJoinForm from './SingleInnerJoinForm';
 import { FeatureGroupJoin } from '../../types';
@@ -36,4 +36,4 @@ const InnerJoinForm: FC<InnerJoinFormProps> = ({
   );
 };
 
-export default InnerJoinForm;
+export default memo(InnerJoinForm);

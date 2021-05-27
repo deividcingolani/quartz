@@ -74,6 +74,11 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
     ExpectationType.existing,
   );
 
+  const tooltipMessages = {
+    [ExpectationType.existing]: 'No expectation defined',
+    [ExpectationType.new]: '',
+  };
+
   const methods = useForm({
     defaultValues: {
       name: '',
@@ -244,17 +249,18 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
       ? allFeatures
       : featureGroup?.features.map(({ name }) => name) || [];
 
-    return names.map((name) => {
+    return names.sort().map((name) => {
       const fgs = featureGroups.filter(({ features }) =>
         features.map(({ name }) => name).includes(name),
       );
-
       if (fgs.length === attachedFgs.length) {
         return 'all';
       }
+      const attaNames = attachedFgs.map(({ name }) => name);
 
       return fgs
         .map(({ name }) => name)
+        .filter((text) => attaNames.includes(text))
         .slice(0, 6)
         .join(', ');
     });
@@ -316,6 +322,7 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
                     options={Object.values(ExpectationType)}
                     onChange={(value) => setType(value as ExpectationType)}
                     disabled={!expectations.length || isLoading || isDisabled}
+                    tooltipMessages={tooltipMessages}
                   />
                 </Box>
               </>
@@ -426,6 +433,7 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
                         listWidth="100%"
                         maxListHeight="400px"
                         hasPlaceholder={false}
+                        hasSearch={true}
                         label="Attached feature groups"
                         placeholder="pick a feature group"
                         disabled={isLoading || isDisabled}

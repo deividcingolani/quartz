@@ -28,6 +28,7 @@ const ProjectCreate: FC = () => {
   );
 
   const isAddingMembers = useSelector(selectIsAddingMember);
+  const user = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();
@@ -120,7 +121,11 @@ const ProjectCreate: FC = () => {
                 </Value>
                 <Button
                   onClick={handleSubmitDemo}
-                  sx={{ position: 'absolute', right: '10px' }}
+                  sx={{
+                    position: 'absolute',
+                    right: '10px',
+                    borderRadius: '0px',
+                  }}
                   intent="secondary"
                   disabled={isSubmit || isSubmitDemo}
                 >

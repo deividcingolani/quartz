@@ -29,12 +29,13 @@ const useFeaturesListRowData = (
         sx: { cursor: 'pointer' },
         mt: '1px',
         mx: '10px',
-        onClick: () =>
-          dispatch.basket.deleteFeatures({
+        onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>{ 
+          return dispatch.basket.deleteFeatures({
             projectId,
             featureGroup: fg,
             features: [feature],
-          }),
+          })
+        },
         children: remove.feature,
       },
     ]);

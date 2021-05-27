@@ -60,26 +60,43 @@ const SchematisedTags: FC<FeatureFormProps> = ({
   const { getValues, setValue } = useFormContext();
 
   const baseOptions = useMemo(() => {
-    return tags.map(({ name, description }) =>
-      description ? `${name} - ${description}` : name,
-    );
+    return tags.reduce((accumulator, { name, description = '' }) => {
+      accumulator.set(name, description);
+      return accumulator;
+    }, new Map<string, string>());
+
+    // return tags.forEach(({ name, description }) =>
+
+    //   description ? `${name} - ${description}` : name,
+    // );
   }, [tags]);
 
-  const [listTags, setList] = useState<ListItem[]>([
-    { id: randomArrayString(10)[0], selected: ['none'] },
-  ]);
+  const initialTags = (): ListItem[] => {
+    if (type === ItemDrawerTypes.td) {
+      const infoTD = localStorage.getItem('info');
+      if (infoTD) {
+        return (
+          JSON.parse(infoTD).listTags || [
+            { id: randomArrayString(10)[0], selected: [] },
+          ]
+        );
+      }
+    }
+
+    return [{ id: randomArrayString(10)[0], selected: [] }];
+  };
+
+  const [listTags, setList] = useState<ListItem[]>(initialTags());
 
   const options = useMemo(() => {
-    const remainingOptions = baseOptions.filter((option) => {
-      const spaceIndex = option.indexOf(' ');
-      const name = spaceIndex > -1 ? option.slice(0, spaceIndex) : option;
+    const remainingOptions = new Map<string, string>();
+    baseOptions.forEach((description, name) => {
+      if (!listTags.find(({ tag }) => name === tag?.name)) {
+        return remainingOptions.set(name, description);
+      }
 
-      return !listTags.find(({ tag }) => name === tag?.name);
+      return;
     });
-
-    if (remainingOptions.length) {
-      remainingOptions.push('none');
-    }
 
     return remainingOptions;
   }, [baseOptions, listTags]);
@@ -92,12 +109,11 @@ const SchematisedTags: FC<FeatureFormProps> = ({
 
         if (index > -1) {
           copy[index].selected = selected;
-
-          if (selected[0] !== 'none') {
-            const spaceIndex = selected[0].indexOf(' ');
-            const tagName =
-              spaceIndex > -1 ? selected[0].slice(0, spaceIndex) : selected[0];
-            copy[index].tag = tags.find(({ name }) => name === tagName);
+          if (selected[0] !== '') {
+            // const spaceIndex = selected[0].indexOf(' ');
+            // const tagName =
+            // spaceIndex > -1 ? selected[0].slice(0, spaceIndex) : selected[0];
+            copy[index].tag = tags.find(({ name }) => name === selected[0]);
           } else {
             copy[index].tag = undefined;
           }
@@ -128,7 +144,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
   const handleAddTag = useCallback(() => {
     setList((list) => {
       const copy = list.slice();
-      copy.push({ id: randomArrayString(10)[0], selected: ['none'] });
+      copy.push({ id: randomArrayString(10)[0], selected: [] });
 
       return copy;
     });
@@ -157,6 +173,18 @@ const SchematisedTags: FC<FeatureFormProps> = ({
     },
     [setValue, getValues],
   );
+
+  useEffect(() => {
+    const infoTD: { [key: string]: string } | any = localStorage.getItem(
+      'info',
+    );
+    if (infoTD) {
+      const newInfoTD = Object.assign({}, JSON.parse(infoTD), {
+        listTags: listTags,
+      });
+      localStorage.setItem('info', JSON.stringify(newInfoTD));
+    }
+  }, [listTags, isLoadingServerTagsTD]);
 
   useEffect(() => {
     const serverTags =
@@ -237,7 +265,8 @@ const SchematisedTags: FC<FeatureFormProps> = ({
         <SingleTag
           item={item}
           key={item.id}
-          options={options}
+          options={Array.from(options.keys())}
+          descriptions={Array.from(options.values())}
           onAdd={handleAddTag}
           isFirstItem={!index}
           isDisabled={isDisabled}

@@ -60,6 +60,16 @@ export const sortOptions: SortParams = {
 
     return time1 < time2 ? 1 : -1;
   },
+  'first created': ({ created: c1 }, { created: c2 }) => {
+    const time1 = new Date(c1).getTime();
+    const time2 = new Date(c2).getTime();
+
+    if (time1 === time2) {
+      return 0;
+    }
+
+    return time1 > time2 ? 1 : -1;
+  },
   name: ({ name: n1 }, { name: n2 }) => n1.localeCompare(n2),
 };
 
@@ -232,9 +242,9 @@ export const getNormalizedValue = (value: any) => {
   if (value === '') {
     return null;
   }
-  if (!isNaN(value)) {
-    return +value;
-  }
+  // if (!isNaN(value)) {
+  //   return +value;
+  // }
   return value;
 };
 
@@ -257,7 +267,6 @@ export const validateSchema = async (
   setError: any,
 ) => {
   let next = true;
-
   if (tags) {
     await Promise.resolve(
       await Promise.allSettled(

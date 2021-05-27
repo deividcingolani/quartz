@@ -84,11 +84,15 @@ const LabelsForm: FC<FeatureFormProps> = ({
 
   const onSubmit = useCallback(
     handleSubmit(({ keyword }) => {
-      if (baseOptions.includes(keyword)) {
+
+      const lowerCaseKeyword = keyword.toLowerCase();
+
+      if (baseOptions.includes(lowerCaseKeyword)) {
         setError('keyword', { message: 'Keyword should be unique' });
         return;
       }
-      handleAdd(keyword);
+      
+      handleAdd(lowerCaseKeyword);
     }),
     [handleAdd, baseOptions],
   );
@@ -109,7 +113,8 @@ const LabelsForm: FC<FeatureFormProps> = ({
         <Controller
           control={control}
           name="keywords"
-          render={({ onChange, value }) => (
+          render={({ onChange, value }) => {
+            return (
             <Box mt="5px">
               <>
                 <Flex>
@@ -126,7 +131,7 @@ const LabelsForm: FC<FeatureFormProps> = ({
                 </Flex>
               </>
             </Box>
-          )}
+          )}}
         />
       </Box>
 

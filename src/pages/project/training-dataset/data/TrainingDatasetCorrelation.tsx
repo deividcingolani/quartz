@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Select } from '@logicalclocks/quartz';
 import routeNames from '../../../../routes/routeNames';
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
-
 // Types
 import { Dispatch, RootState } from '../../../../store';
 // Hooks
@@ -19,6 +18,8 @@ import { selectFeatureStoreData } from '../../../../store/models/feature/selecto
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+// Utils
+import { useVersionsSort } from '../utils';
 
 const TrainingDatasetCorrelation: FC = () => {
   const { id, tdId } = useParams();
@@ -75,18 +76,7 @@ const TrainingDatasetCorrelation: FC = () => {
     [data],
   );
 
-  const versions = useMemo(() => {
-    return (
-      data?.versions
-        ?.sort((versionA, versionB) =>
-          Math.sign(versionA.version - versionB.version),
-        )
-        .map(
-          ({ version }) =>
-            `${version} ${version === latestVersion ? '(latest)' : ''}`,
-        ) || []
-    );
-  }, [data, latestVersion]);
+  const versions = useVersionsSort(data, latestVersion);
 
   const handleVersionChange = useCallback(
     (values) => {

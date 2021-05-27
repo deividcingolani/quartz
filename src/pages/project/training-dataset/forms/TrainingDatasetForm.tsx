@@ -45,6 +45,7 @@ import { selectFeatureStoreStorageConnectors } from '../../../../store/models/fe
 import SplitsForm from './SplitsForm';
 import FeaturesForm from './Features/FeaturesForm';
 import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
+import trainingDatasetView from '../../../../store/models/training-dataset/trainingDatasetView.model';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -72,18 +73,18 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
 
   const methods = useForm({
     defaultValues: {
-      tags: {},
+      tags: infoTD ? JSON.parse(infoTD).tags : {},
       name: infoTD ? JSON.parse(infoTD).name : '',
-      storage: {} as IStorageConnector,
-      keywords: [],
+      storage: infoTD ? JSON.parse(infoTD).storage : ({} as IStorageConnector),
+      keywords: infoTD ? JSON.parse(infoTD).keywords : [],
       description: infoTD ? JSON.parse(infoTD).description : '',
       features: [],
       location: '',
-      dataFormat: ['CSV'],
-      correlations: false,
-      enabled: true,
+      dataFormat: infoTD ? [JSON.parse(infoTD).dataFormat] : ['CSV'],
+      correlations: infoTD ? JSON.parse(infoTD).correlations : false,
+      enabled: infoTD ? JSON.parse(infoTD).enabled : true,
       splits: [],
-      histograms: false,
+      histograms: infoTD ? JSON.parse(infoTD).histograms : false,
       ...(!!initialData && {
         name: initialData.name,
         tags: mapTags(initialData),
@@ -112,24 +113,64 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
     handleSubmit,
   } = methods;
 
-  const trainingDatasetsNames = useSelector(
-    (state: RootState) => state.trainingDatasets,
-  ).map(({ name }) => name);
+  const trainingDatasetsNames = useSelector((state: RootState) => {
+    return state.trainingDatasets;
+  }).map(({ name }) => name);
 
-  const { storage, name, dataFormat, description } = watch([
+  const {
+    storage,
+    name,
+    dataFormat,
+    description,
+    enabled,
+    histograms,
+    correlations,
+    tags,
+    keywords,
+  } = watch([
     'storage',
     'name',
     'dataFormat',
     'description',
+    'enabled',
+    'histograms',
+    'correlations',
+    'tags',
+    'keywords',
   ]);
 
   useEffect(() => {
     if (!isEdit) {
-      const infoTD = { name, description };
+      let infoTD = {
+        name,
+        description,
+        storage,
+        dataFormat,
+        enabled,
+        histograms,
+        correlations,
+        tags,
+        keywords,
+      };
+      const prevInfoTD = localStorage.getItem('info');
+
+      if (prevInfoTD) {
+        infoTD = Object.assign({}, JSON.parse(prevInfoTD), infoTD);
+      }
       localStorage.setItem('info', JSON.stringify(infoTD));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [description, name]);
+  }, [
+    description,
+    name,
+    storage,
+    dataFormat,
+    enabled,
+    histograms,
+    correlations,
+    tags,
+    keywords,
+  ]);
 
   const serverTags = useSelector(selectSchematisedTags);
 
@@ -255,24 +296,6 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
   return (
     <FormProvider {...methods}>
       <Box>
-        {!!errors.features && (
-          <Box mb="10px">
-            <Callout
-              type={CalloutTypes.error}
-              // @ts-ignore
-              content={errors.features.message}
-            />
-          </Box>
-        )}
-        {!!errors.storage && (
-          <Box mb="10px">
-            <Callout
-              type={CalloutTypes.error}
-              // @ts-ignore
-              content={errors.storage.message}
-            />
-          </Box>
-        )}
         <Card
           contentProps={{
             pb: 0,
@@ -282,6 +305,25 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             isEdit ? 'Edit training dataset' : 'Create New Training Dataset'
           }
         >
+          {!!errors.features && (
+            <Box mb="10px">
+              <Callout
+                type={CalloutTypes.error}
+                // @ts-ignore
+                content={errors.features.message}
+              />
+            </Box>
+          )}
+          {!!errors.storage && (
+            <Box mb="10px">
+              <Callout
+                type={CalloutTypes.error}
+                // @ts-ignore
+                content={errors.storage.message}
+              />
+            </Box>
+          )}
+
           {!isEdit && (
             <>
               <Flex justifyContent="space-between" mb="20px">

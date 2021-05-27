@@ -52,7 +52,7 @@ const FeatureGroupDataPreview: FC = () => {
     StorageConnectorType.offline,
   );
 
-  const [[sortKey], setSortKey] = useState<string[]>(['default order']);
+  const [[sortKey], setSortKey] = useState<string[]>(['name (A -> Z)']);
 
   const { featureName } = useParams();
 
@@ -153,9 +153,9 @@ const FeatureGroupDataPreview: FC = () => {
   const sortedFeatures = useMemo(() => {
     const key = sortKeys[sortKey];
     if (key) {
-      const [k, func] = key;
+      const [k, func, direction] = key;
 
-      return sort<Feature>(k, func)(features.slice());
+      return sort<Feature>(k, func, direction)(features.slice());
     }
 
     return features;

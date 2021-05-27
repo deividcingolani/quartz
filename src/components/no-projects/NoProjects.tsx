@@ -22,6 +22,8 @@ const NoData: FC = () => {
     (state: RootState) => state.loading.effects.project.createTour,
   );
 
+  const user = useSelector((state: RootState) => state.profile);
+
   // Handlers
   const handleCreate = useCallback(() => {
     navigate(routeNames.project.create);

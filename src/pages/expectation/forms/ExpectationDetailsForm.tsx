@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Box, Flex } from 'rebass';
 import React, { ComponentType, FC, useMemo, useState } from 'react';
 import {

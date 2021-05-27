@@ -13,6 +13,9 @@ const apiKeysListStyles = {
       fontSize: '14px',
     },
   },
+  '>table>tbody>tr:first-of-type': {
+    mb: '0px',
+  },
 };
 
 export default apiKeysListStyles;

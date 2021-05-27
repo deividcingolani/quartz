@@ -120,7 +120,7 @@ const FeatureGroupList: FC = () => {
   useTitle(titles.featureGroups);
 
   return (
-    <Flex mb="20px" flexGrow={1} flexDirection="column">
+    <Flex flexGrow={1} flexDirection="column">
       <Flex alignItems="center">
         <Input
           variant="white"

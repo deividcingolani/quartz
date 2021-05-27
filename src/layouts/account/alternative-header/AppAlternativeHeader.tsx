@@ -8,7 +8,7 @@ import ErrorBoundary from '../../../components/error-boundary/ErrorBoundary';
 const AppAlternativeHeader: FC = () => {
   const { tabs } = useTabsNavigation();
 
-  return <AlternativeHeader mt="5px" title="User settings" tabs={tabs} />;
+  return <AlternativeHeader title="User settings" tabs={tabs} />;
 };
 
 const withErrorBoundary = () => (

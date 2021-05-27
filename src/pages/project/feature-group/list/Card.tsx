@@ -75,7 +75,13 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               </Box>
               <HoverableText
                 fontFamily="Inter"
-                onClick={handleNavigate(data.id, '/fg/:fgId')}
+                onClick={() => {
+                  if (hasMatchText) {
+                    navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
+                  } else {
+                    handleNavigate(data.id, '/fg/:fgId')();
+                  }
+                }}
                 ml="20px"
                 fontSize="20px"
                 color={
@@ -148,7 +154,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
             />
             <Flex flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>
-                Latest version
+                Version
               </Microlabeling>
               <Value primary>{data.version}</Value>
             </Flex>

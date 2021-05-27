@@ -21,7 +21,7 @@ const AccountLayout: FC<AccountLayoutProps> = ({ children }) => {
 
       <AppAlternativeHeader />
 
-      <Flex width="100%" height="calc(100% - 70px)">
+      <Flex width="100%" height="calc(100% - 70px)" overflow="hidden">
         {/* Content */}
         <Flex
           flexGrow={1}

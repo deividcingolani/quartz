@@ -1,15 +1,29 @@
 import { Flex } from 'rebass';
-import React, { FC } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useReducer,
+  memo,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Labeling, Button, Popup, Text } from '@logicalclocks/quartz';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Dispatch } from '../../store';
 import BasketFeatures from './BasketFeatures';
+import { NavigateFunction } from 'react-router';
 import {
   selectBasketFeaturesLength,
   selectFeatureGroups,
 } from '../../store/models/localManagement/basket.selectors';
 import { placeholder } from '../../sources/basketSvg';
+import { FeatureGroupState } from '../../store/models/feature/featureGroups.model';
+import { FeatureGroupBasket } from '../../store/models/localManagement/basket.model';
+import Features from '../../pages/expectation/forms/Updates/Features';
+import { Feature, FeatureGroup } from '../../types/feature-group';
 
 export interface BasketDrawerProps {
   isOpen: boolean;
@@ -23,14 +37,75 @@ export enum Mode {
   direct = 'direct',
 }
 
+type FeatureGroupsItem = {
+  features: Feature[];
+  fg: FeatureGroup;
+  projectId: number;
+};
+
+type BasketFeaturesOptions = {
+  featureGroups: FeatureGroupBasket[];
+  navigate: NavigateFunction;
+  handleToggle: () => void;
+  projectId: number;
+  directMode: boolean;
+  dispatch: Dispatch;
+};
+
+const BasketEnabledFeaturesSelected: React.FC<any> = ({
+  featureGroups,
+  handleToggle,
+  navigate,
+  projectId,
+  directMode,
+  dispatch,
+}: BasketFeaturesOptions) => (
+  <>
+    <Flex p="10px" justifyContent="space-between">
+      <Button
+        intent="secondary"
+        disabled={!featureGroups.length}
+        onClick={() => {
+          handleToggle();
+          navigate(`/p/${projectId}/td/new`);
+        }}
+      >
+        {!localStorage.getItem('info')
+          ? 'New training dataset'
+          : 'Back to training dataset'}
+      </Button>
+      <Labeling
+        px="15px"
+        py="8px"
+        bold
+        style={{ cursor: 'pointer' }}
+        color="labels.red"
+        alignSelf="center"
+        onClick={dispatch.basket.clear}
+        disabled={!featureGroups.length}
+      >
+        empty basket
+      </Labeling>
+    </Flex>
+    {featureGroups.map(({ features, fg, projectId }: FeatureGroupsItem) => (
+      <BasketFeatures
+        key={fg.id}
+        parent={fg}
+        data={features}
+        projectId={projectId}
+      />
+    ))}
+  </>
+);
+
 const BasketDrawer: FC<BasketDrawerProps> = ({
   isOpen,
   mode = Mode.direct,
   isSwitched,
   handleToggle,
 }) => {
-  const featureGroups = useSelector(selectFeatureGroups);
   const featureLength = useSelector(selectBasketFeaturesLength);
+  const featureGroups = useSelector(selectFeatureGroups);
 
   const navigate = useNavigate();
   const { id: projectId } = useParams();
@@ -77,43 +152,6 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
     </>
   );
 
-  const BasketEnabledFeaturesSelected = () => (
-    <>
-      <Flex p="10px" justifyContent="space-between">
-        <Button
-          intent="secondary"
-          disabled={!featureGroups.length}
-          onClick={() => {
-            handleToggle();
-            navigate(`/p/${projectId}/td/new`);
-          }}
-        >
-          {directMode ? 'New training dataset' : 'Back to training dataset'}
-        </Button>
-        <Labeling
-          px="15px"
-          py="8px"
-          bold
-          style={{ cursor: 'pointer' }}
-          color="labels.red"
-          alignSelf="center"
-          onClick={dispatch.basket.clear}
-          disabled={!featureGroups.length}
-        >
-          empty basket
-        </Labeling>
-      </Flex>
-      {featureGroups.map(({ features, fg, projectId }) => (
-        <BasketFeatures
-          key={fg.id}
-          parent={fg}
-          data={features}
-          projectId={projectId}
-        />
-      ))}
-    </>
-  );
-
   return (
     <Popup
       onClose={handleToggle}
@@ -155,10 +193,19 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
       <Flex overflow="auto" flexDirection="column">
         {!isSwitched && <BasketDisabled />}
         {isSwitched && featureLength === 0 && <BasketEnabledNoFeatures />}
-        {isSwitched && featureLength > 0 && <BasketEnabledFeaturesSelected />}
+        {isSwitched && featureLength > 0 && (
+          <BasketEnabledFeaturesSelected
+            directMode={directMode}
+            dispatch={dispatch}
+            projectId={projectId}
+            handleToggle={handleToggle}
+            navigate={navigate}
+            featureGroups={featureGroups}
+          />
+        )}
       </Flex>
     </Popup>
   );
 };
 
-export default BasketDrawer;
+export default memo(BasketDrawer);

@@ -30,14 +30,17 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
   const {
     dataFiltered,
     types,
+    onlineTypes,
     search,
     typeFilters,
+    onlineTypeFilters,
     keyFilter,
     onTypeFiltersChange,
+    onOnlineTypeFiltersChange,
     onSearchChange,
     onToggleKey,
     onReset,
-  } = useFeatureFilter(data.features);
+  } = useFeatureFilter(data.features,'',data.onlineEnabled);
 
   const navigate = useNavigateRelative();
 
@@ -47,6 +50,11 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
     dataFiltered,
     data,
   );
+
+  const labels: string[] = data.onlineEnabled 
+            ? ["name", "offline type", "online type", 'description']
+            : ["name", "type", 'description']  
+
 
   if (!data.features.length) {
     return (
@@ -58,7 +66,7 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
             <Button
               p={0}
               intent="inline"
-              href={getHref('/statistics', '/p/:id/fg/:fgId/*')}
+              href={getHref('/statistics', 'data.onlineEnabled ? "offline type" : "type"/p/:id/fg/:fgId/*')}
               onClick={() => navigate('/statistics', '/p/:id/fg/:fgId/*')}
             >
               inspect data
@@ -113,9 +121,19 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           isMulti
           value={typeFilters}
           options={types}
-          placeholder="type"
+          placeholder={data.onlineEnabled ? "offline type" : "type"}
           onChange={onTypeFiltersChange}
         />
+        {data.onlineEnabled && <Select
+          maxWidth="180px"
+          width="max-content"
+          ml="15px"
+          isMulti
+          value={onlineTypeFilters}
+          options={onlineTypes}
+          placeholder="online type"
+          onChange={onOnlineTypeFiltersChange}
+        />}
         <ToggleButton
           ml="15px"
           sx={{
@@ -167,11 +185,11 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           Partition Keys Only
         </ToggleButton>
       </Flex>
-
       {!!dataFiltered.length ? (
         <Box mt="30px" mx="-19px" sx={featureListStyles}>
           <Row
-            middleColumn={2}
+            legend={labels}
+            middleColumn={labels.indexOf('description')}
             groupComponents={groupComponents as ComponentType<any>[][]}
             groupProps={groupProps}
           />

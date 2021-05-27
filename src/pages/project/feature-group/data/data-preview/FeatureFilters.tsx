@@ -9,12 +9,13 @@ import { StorageConnectorType } from '../../../../../types/feature-group-data-pr
 import { Feature } from '../../../../../types/feature-group';
 import sort, { SortFunc } from '../../../../../utils/sort';
 import icons from '../../../../../sources/icons';
+import { SortDirection as direction } from '../../../../../utils/sort';
 
 export const sortKeys: {
-  [key: string]: [keyof Feature, SortFunc<any>] | undefined;
+  [key: string]: [keyof Feature, SortFunc<any>, direction] | undefined;
 } = {
-  name: ['name', sort.string],
-  'default order': undefined,
+  "name (A -> Z)": ['name', sort.string, direction.asc],
+  "name (Z -> A)": ['name', sort.string, direction.desc],
 };
 
 export interface FeatureFiltersProps {

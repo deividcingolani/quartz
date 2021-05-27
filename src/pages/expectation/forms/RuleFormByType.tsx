@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { FC, memo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Input, Select } from '@logicalclocks/quartz';

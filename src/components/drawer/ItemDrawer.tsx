@@ -274,6 +274,7 @@ const ItemDrawer = <T extends DataEntity>({
                 value={item.splits.length}
               />
             )}
+            {console.log(item)}
             {type === ItemDrawerTypes.fg &&
               ((item as unknown) as FeatureGroup).timeTravelFormat && (
                 <TextValueBadge
@@ -284,15 +285,17 @@ const ItemDrawer = <T extends DataEntity>({
                   }
                 />
               )}
+            {type === ItemDrawerTypes.fg && (
+              <TextValueBadge
+                ml="8px"
+                text="data validation"
+                value={
+                  ((item as unknown) as FeatureGroup).validationType.toLowerCase() ??
+                  'none'
+                }
+              />
+            )}
           </Flex>
-          {type === ItemDrawerTypes.fg && (
-            <Box mt="30px">
-              <Microlabeling gray>Location</Microlabeling>
-              <Value sx={{ wordBreak: 'break-all' }} primary>
-                {item.location}
-              </Value>
-            </Box>
-          )}
         </Box>
       }
       bottomButton={[

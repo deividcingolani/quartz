@@ -42,6 +42,7 @@ const FeaturesList: FC<FeaturesListProps> = ({ data }) => {
   if (!data.length) {
     return <NoSearchData subject="features" />;
   }
+
   return (
     <Flex
       width="100%"

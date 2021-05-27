@@ -42,7 +42,8 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
   data = [],
   type = ItemDrawerTypes.fg,
 }) => {
-  const { fgId } = useParams();
+
+  const { [type + "Id"]: id } = useParams();
 
   const [selected, setSelected] = useState<Tag>(data[0]);
 
@@ -52,7 +53,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':fgId', String(id)), routeNames.project.view);
+      navigate(route.replace(`:${type}Id`, String(id)), routeNames.project.view);
     },
     [navigate],
   );
@@ -82,6 +83,8 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
       state.loading.effects.featureGroupView.loadRemainingData,
   );
 
+  const groupType = (type == 'fg') ? 'featureGroup' : "trainingDataset";
+
   if (isLoadingFG || isLoadingTD) {
     return (
       <Card
@@ -92,10 +95,10 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
             p={0}
             intent="inline"
             href={getHref(
-              routeNames.featureGroup.edit.replace(':fgId', String(+fgId)),
+              routeNames[groupType].edit.replace(`:${type}Id`, String(+id)),
               routeNames.project.view,
             )}
-            onClick={handleNavigate(+fgId, routeNames.featureGroup.edit)}
+            onClick={handleNavigate(+id, routeNames[groupType].edit)}
           >
             edit
           </Button>
@@ -120,11 +123,11 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
         <Button
           p={0}
           href={getHref(
-            routeNames.featureGroup.edit.replace(':fgId', String(+fgId)),
+            routeNames[groupType].edit.replace(`:${type}Id`, String(+id)),
             routeNames.project.view,
           )}
           intent="inline"
-          onClick={handleNavigate(+fgId, routeNames.featureGroup.edit)}
+          onClick={handleNavigate(+id, routeNames[groupType].edit)}
         >
           edit
         </Button>

@@ -12,7 +12,7 @@ export interface DataIngestionProps {
 
 const DataIngestion: FC<DataIngestionProps> = ({ activity }) => {
   const { commit } = activity;
-  const { rowsUpdated, rowsInserted, rowsDeleted, commitID } = commit;
+  const { rowsUpdated = 0, rowsInserted = 0, rowsDeleted = 0, commitID } = commit;
 
   const allRowsCount = rowsDeleted + rowsUpdated + rowsInserted;
 

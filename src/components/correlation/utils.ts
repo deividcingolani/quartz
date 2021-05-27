@@ -46,25 +46,23 @@ export const filterCorrelations = (
   selected: string[],
   correlation: { [key: string]: FeatureGroupStatistics },
 ) =>
-  Object.keys(correlation).reduce(
-    (acc, key) =>
-      selected.includes(key)
-        ? {
-            ...acc,
-            [key]: {
-              ...correlation[key],
-              correlations: correlation[key].correlations.reduce(
-                (nestedAcc: CorrelationItem[], correlation) =>
-                  selected.includes(correlation.column)
-                    ? [...nestedAcc, correlation]
-                    : nestedAcc,
-                [],
-              ),
-            },
-          }
-        : acc,
-    {},
-  );
+  Object.keys(correlation).reduce((acc, key) => {
+    return selected.includes(key)
+      ? {
+          ...acc,
+          [key]: {
+            ...correlation[key],
+            correlations: correlation[key].correlations.reduce(
+              (nestedAcc: CorrelationItem[], correlation) =>
+                selected.includes(correlation.column)
+                  ? [...nestedAcc, correlation]
+                  : nestedAcc,
+              [],
+            ),
+          },
+        }
+      : acc;
+  }, {});
 
 type SortFunc = (a: number, b: number) => number;
 

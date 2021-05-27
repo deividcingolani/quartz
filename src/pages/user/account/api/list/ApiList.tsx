@@ -94,51 +94,63 @@ const ApiList: FC = () => {
   }
 
   return (
-    <Card
-      width="1000px"
-      title="API keys"
-      contentProps={{ pb: 0, overflow: 'visible' }}
-      actions={
-        <Button
-          onClick={() =>
-            window.open(
-              'https://docs.hopsworks.ai/latest/integrations/databricks/api_key/',
-              '_blank',
-            )
-          }
-          p={0}
-          intent="inline"
-        >
-          documentation↗
-        </Button>
-      }
-    >
-      <Flex mb="25x">
-        <Flex width="100%">
-          <Value primary>{apiKeys.length}</Value>
-          <Value ml="5px">
-            {apiKeys.length > 1 ? ' API keys' : ' API key'}
-          </Value>
+    <>
+      <Card
+        width="1000px"
+        title="API keys"
+        contentProps={{ pb: 0, overflow: 'visible' }}
+        actions={
+          <Button
+            onClick={() =>
+              window.open(
+                'https://docs.hopsworks.ai/latest/integrations/databricks/api_key/',
+                '_blank',
+              )
+            }
+            p={0}
+            intent="inline"
+          >
+            documentation↗
+          </Button>
+        }
+      >
+        <Flex mb="25x">
+          <Flex width="100%">
+            <Value primary>{apiKeys.length}</Value>
+            <Value ml="5px">
+              {apiKeys.length > 1 ? ' API keys' : ' API key'}
+            </Value>
+          </Flex>
+          <Button minWidth="105px" onClick={() => navigate('/account/api/new')}>
+            New API key
+          </Button>
         </Flex>
-        <Button minWidth="105px" onClick={() => navigate('/account/api/new')}>
-          New API key
-        </Button>
-      </Flex>
-      <Box mt="20px" mx="-20px" sx={apiKeysListStyles}>
-        <Row
-          legend={[
-            'name',
-            'scope',
-            'API key prefix',
-            'creation',
-            'modification',
-          ]}
-          middleColumn={1}
-          groupComponents={groupComponents as ComponentType<any>[][]}
-          groupProps={groupProps}
-        />
+        <Box mt="20px" mx="-20px" sx={apiKeysListStyles}>
+          <Row
+            legend={[
+              'name',
+              'scope',
+              'API key prefix',
+              'creation',
+              'modification',
+            ]}
+            middleColumn={1}
+            groupComponents={groupComponents as ComponentType<any>[][]}
+            groupProps={groupProps}
+          />
+        </Box>
+      </Card>
+      <Box
+        sx={{
+          height: '20px',
+          width: '100%',
+          backgroundColor: '#F5F5F5',
+          opacity: 0,
+        }}
+      >
+        invisible block margin
       </Box>
-    </Card>
+    </>
   );
 };
 

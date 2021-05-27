@@ -138,140 +138,144 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
 
   return (
     <FormProvider {...methods}>
-      <Card
-        title={isEdit ? 'Edit Feature Group' : 'Create New Feature Group'}
-        mb="100px"
-        pb={hasScrollOnScreen ? '75px' : 0}
-      >
-        <Flex justifyContent="space-between" mb="20px">
-          <Input
-            disabled={isLoading || isDisabled}
-            readOnly={isEdit}
-            label="Feature Group Name"
-            name="name"
-            placeholder="name"
-            ref={register}
-            labelProps={{ width: '170px' }}
-            {...getInputValidation('name', errors)}
-          />
-          <Input
-            disabled={isDisabled || isLoading}
-            label="Description"
-            name="description"
-            placeholder="description"
-            ref={register}
-            labelProps={{ ml: '30px', flex: 1 }}
-            {...getInputValidation('description', errors)}
-          />
-        </Flex>
+      <Box>
+        <Card
+          title={isEdit ? 'Edit Feature Group' : 'Create New Feature Group'}
+          mb="100px"
+          pb={hasScrollOnScreen ? '15px' : 0}
+        >
+          <Flex justifyContent="space-between" mb="20px">
+            <Input
+              disabled={isLoading || isDisabled}
+              readOnly={isEdit}
+              label="Feature Group Name"
+              name="name"
+              placeholder="name"
+              ref={register}
+              labelProps={{ width: '170px' }}
+              {...getInputValidation('name', errors)}
+            />
+            <Input
+              disabled={isDisabled || isLoading}
+              label="Description"
+              name="description"
+              optional
+              placeholder="description"
+              ref={register}
+              labelProps={{ ml: '30px', flex: 1 }}
+              {...getInputValidation('description', errors)}
+            />
+          </Flex>
 
-        <Controller
-          control={control}
-          name="onlineEnabled"
-          render={({ onChange, value }) => (
-            <Box mb="20px">
-              <Checkbox
+          <Controller
+            control={control}
+            name="onlineEnabled"
+            render={({ onChange, value }) => (
+              <Flex mb="20px">
+                <Checkbox
+                  mb="20px"
+                  label="Enable Online Feature Serving for this Feature Group"
+                  checked={value}
+                  disabled={isDisabled || isLoading}
+                  onChange={() => onChange(!value)}
+                />
+              </Flex>
+            )}
+          />
+          <Controller
+            control={control}
+            name="timeTravelFormat"
+            render={({ onChange, value }) => (
+              <Select
+                disabled={isEdit}
+                width="fit-content"
                 mb="20px"
-                label="Enable Online Feature Serving for this Feature Group"
-                checked={value}
-                disabled={isDisabled || isLoading}
-                onChange={() => onChange(!value)}
+                placeholder=""
+                label="Time travel format"
+                options={['Hudi', 'None']}
+                value={value}
+                onChange={(val) => onChange(val)}
               />
-            </Box>
-          )}
-        />
-        <Controller
-          control={control}
-          name="timeTravelFormat"
-          render={({ onChange, value }) => (
-            <Select
-              disabled={isEdit}
-              width="fit-content"
-              mb="20px"
-              placeholder=""
-              label="Time travel format"
-              options={['Hudi', 'None']}
-              value={value}
-              onChange={(val) => onChange(val)}
-            />
-          )}
-        />
-
-        <Divider mb="15px" mt="-5px" />
-
-        <StatisticConfigurationForm isLoading={isLoading} />
-
-        <Divider mb="15px" mt="-5px" />
-
-        <Controller
-          control={control}
-          name="validationType"
-          render={({ onChange, value }) => (
-            <Select
-              width="100%"
-              mb="20px"
-              placeholder=""
-              label="Data validation"
-              options={['Strict', 'Warning', 'All', 'None']}
-              additionalTexts={[
-                'Data validation is performed and data is ingested into the feature group only if validation status is "SUCCESS"',
-                'Data validation is performed and data is ingested into the feature group only if validation status is "WARNING" or "SUCCESS"',
-                'Data validation is performed and data is ingested into the feature group regardless of the validation status',
-                'Data validation not performed on feature group',
-              ]}
-              value={value}
-              onChange={(val) => onChange(val)}
-            />
-          )}
-        />
-
-        <SchematisedTagsForm isDisabled={isDisabled} />
-
-        <LabelsForm isDisabled={isDisabled || isLoading} />
-
-        <FeaturesForm isEdit={isEdit} isDisabled={isDisabled || isLoading} />
-
-        {isEdit && (
-          <Callout
-            type={
-              isUpdatedFeatures ? CalloutTypes.warning : CalloutTypes.neutral
-            }
-            content={
-              isUpdatedFeatures
-                ? `Existing features have been updated or deleted, saving changes will create a new version, from ${
-                    initialData?.version
-                  } to ${
-                    (initialData?.version || 0) + 1
-                  }. It won’t affect current and previous versions.`
-                : `You are updating version ${initialData?.version} of this feature group. Updating or deleting existing features will create a new version.`
-            }
+            )}
           />
-        )}
 
-        {isEdit && onDelete && (
-          <>
-            <Divider mb="20px" ml="-20px" mt="20px" />
-            <Label text="Danger zone" width="fit-content">
-              <Button
-                intent="alert"
-                disabled={isLoading || isDisabled}
-                onClick={onDelete}
-              >
-                Delete feature group
-              </Button>
-            </Label>
-          </>
-        )}
+          <Divider mb="15px" mt="-5px" />
 
-        {isLoading && <Loader />}
-      </Card>
-      <FeatureStickySummary
-        isEdit={isEdit}
-        isUpdatedFeatures={isUpdatedFeatures}
-        onSubmit={onSubmit}
-        disabled={isLoading || isDisabled}
-        errorsValue={errorsValue}
-      />
+          <StatisticConfigurationForm isLoading={isLoading} />
+
+          <Divider mb="15px" mt="-5px" />
+
+          <Controller
+            control={control}
+            name="validationType"
+            render={({ onChange, value }) => (
+              <Select
+                width="100%"
+                listWidth="100%"
+                mb="20px"
+                placeholder=""
+                label="Data validation"
+                options={['Strict', 'Warning', 'All', 'None']}
+                additionalTexts={[
+                  'Data validation is performed and data is ingested into the feature group only if validation status is "SUCCESS"',
+                  'Data validation is performed and data is ingested into the feature group only if validation status is "WARNING" or "SUCCESS"',
+                  'Data validation is performed and data is ingested into the feature group regardless of the validation status',
+                  'Data validation not performed on feature group',
+                ]}
+                value={value}
+                onChange={(val) => onChange(val)}
+              />
+            )}
+          />
+
+          <SchematisedTagsForm isDisabled={isDisabled} />
+
+          <LabelsForm isDisabled={isDisabled || isLoading} />
+
+          <FeaturesForm isEdit={isEdit} isDisabled={isDisabled || isLoading} />
+
+          {isEdit && (
+            <Callout
+              type={
+                isUpdatedFeatures ? CalloutTypes.warning : CalloutTypes.neutral
+              }
+              content={
+                isUpdatedFeatures
+                  ? `Existing features have been updated or deleted, saving changes will create a new version, from ${
+                      initialData?.version
+                    } to ${
+                      (initialData?.version || 0) + 1
+                    }. It won’t affect current and previous versions.`
+                  : `You are updating version ${initialData?.version} of this feature group. Updating or deleting existing features will create a new version.`
+              }
+            />
+          )}
+
+          {isEdit && onDelete && (
+            <>
+              <Divider mb="20px" ml="-20px" mt="20px" />
+              <Label text="Danger zone" width="fit-content">
+                <Button
+                  intent="alert"
+                  disabled={isLoading || isDisabled}
+                  onClick={onDelete}
+                >
+                  Delete feature group
+                </Button>
+              </Label>
+            </>
+          )}
+
+          {isLoading && <Loader />}
+        </Card>
+        <FeatureStickySummary
+          isEdit={isEdit}
+          isUpdatedFeatures={isUpdatedFeatures}
+          onSubmit={onSubmit}
+          disabled={isLoading || isDisabled}
+          errorsValue={errorsValue}
+        />
+      </Box>
     </FormProvider>
   );
 };

@@ -162,7 +162,7 @@ const useAppNavigation = (): TreeNode[] => {
         title: 'Home',
         icon: home,
         hasDivider: true,
-        tooltipText: `Home | ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 0`,
+        tooltipText: `Home ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 0`,
         isActive: isActive('/p/:id/view'),
         href: getHref('/view', routeNames.project.view),
         onClick: handleNavigateRelative('/view', routeNames.project.view),
@@ -196,7 +196,7 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: 'fg',
         title: 'Feature Groups',
-        tooltipText: `Feature Groups | ${
+        tooltipText: `Feature Groups ${
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 1`,
         icon: fg,
@@ -282,7 +282,7 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: 'td',
         title: 'Training Datasets',
-        tooltipText: `Training Datasets | ${
+        tooltipText: `Training Datasets ${
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 2`,
         icon: td,
@@ -345,7 +345,7 @@ const useAppNavigation = (): TreeNode[] => {
         id: 'sc',
         title: 'Storage Connectors',
         icon: sources,
-        tooltipText: `Storage Connectors | ${
+        tooltipText: `Storage Connectors ${
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 3`,
         href: getHref(

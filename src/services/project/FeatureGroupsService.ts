@@ -233,12 +233,13 @@ class FeatureGroupsService extends BaseApiService {
     fgId: number,
     name: string,
     data: any,
-  ) =>
-    this.request<any>({
+  ) => {
+    return this.request<any>({
       type: RequestType.put,
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/tags/${name}`,
       data,
     });
+  };
 
   getActivity = (
     projectId: number,

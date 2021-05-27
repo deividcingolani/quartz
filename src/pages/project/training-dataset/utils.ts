@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import { FeatureGroupFilter, FeatureGroupJoin } from './types';
 import { Feature } from '../../../types/feature-group';
 import labelValueMap from '../../../utils/labelValueBind';
 import { FeatureGroupBasket } from '../../../store/models/localManagement/basket.model';
+import { TrainingDataset } from '../../../types/training-dataset';
 
 const mapFeaturesToName = (features: Feature[]) =>
   features.map(({ name }) => ({ name }));
@@ -181,4 +183,24 @@ export const validateFilters = (
   });
 
   return result;
+};
+
+export const useVersionsSort = <T extends TrainingDataset | null>(
+  data: T,
+  latestVersion: number,
+): string[] => {
+  const versions = useMemo(() => {
+    return (
+      data?.versions
+        ?.sort((versionA, versionB) => {
+          return Math.sign(versionA.version - versionB.version);
+        })
+        .map(
+          ({ version }) =>
+            `${version} ${version === latestVersion ? '(latest)' : ''}`,
+        ) || []
+    );
+  }, [data, latestVersion]);
+
+  return versions;
 };

@@ -176,6 +176,12 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
             value={data.timeTravelFormat?.toLowerCase()}
           />
         )}
+        <TextValueBadge
+              variant="gray"
+              ml="8px"
+              text="data validation"
+              value={data.validationType?.toLowerCase()}
+          />
       </Flex>
       {data.description ? (
         <Text my="20px">{data?.description || '-'}</Text>

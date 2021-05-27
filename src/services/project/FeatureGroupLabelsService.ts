@@ -33,14 +33,15 @@ class FeatureGroupLabelsService extends BaseApiService {
     featureStoreId: number,
     fgId: number,
     data: string[],
-  ) =>
-    this.request<any>({
+  ) => {
+    return this.request<any>({
       type: RequestType.post,
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${fgId}/keywords`,
       data: {
         keywords: data,
       },
     });
+  };
 
   getAllKeywords = async (projectId: number): Promise<string[] | undefined> => {
     const { data } = await this.request<any>({

@@ -173,7 +173,14 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, onClose }) => {
               >
                 <Flex flexDirection="column">
                   <Label mb="5px">{`${member?.firstname} ${member?.lastname}`}</Label>
-                  <Labeling>{email}</Labeling>
+                  <Labeling
+                    sx={{
+                      wordBreak: 'break-all',
+                      marginRight: '10px',
+                    }}
+                  >
+                    {email}
+                  </Labeling>
                 </Flex>
                 <Select
                   mb="5px"

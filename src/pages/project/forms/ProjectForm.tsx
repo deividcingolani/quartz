@@ -112,13 +112,16 @@ const ProjectForm: FC<ProjectFormProps> = ({
             </Label>
           )}
           <Label mt="10px">
-            Invite Collaborators
+            Invite new members
             <Box mt="5px">
               <Callout
                 type={CalloutTypes.neutral}
                 content={
                   <Flex alignItems="center">
-                    <Label>In order to add a new user, follow the steps</Label>
+                    <Label>
+                      In order to add a new member to Hopsworks, follow the
+                      steps
+                    </Label>
                     <Button
                       pl="3px"
                       my="-8px"

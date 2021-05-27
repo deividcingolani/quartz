@@ -145,7 +145,7 @@ const SecretsForm: FC<SecretsFormProps> = ({
                 disabled={isLoading}
                 value={value}
                 options={Object.values(SecretsVisibility)}
-                additionalTexts={['only you', 'users of the project']}
+                // additionalTexts={['only you', 'users of the project']}
                 onChange={onChange}
               />
             )}

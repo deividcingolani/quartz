@@ -50,14 +50,18 @@ const Correlation: FC<CorrelationProps> = ({
   );
 
   const correlation = useMemo(() => {
-    return filterCorrelationsByRange(
+    let a = filterCorrelationsByRange(
       JSON.parse(debouncedRange),
       defaultCorrelations,
     );
+    return a;
   }, [defaultCorrelations, debouncedRange]);
+
+
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(
     Object.keys(correlation),
   );
+  
   const [pickedCorrelations, setPickedCorrelations] = useState<
     CorrelationValue[]
   >([]);
@@ -91,7 +95,6 @@ const Correlation: FC<CorrelationProps> = ({
 
   useEffect(() => {
     const selectedByRangeFeatures = Object.keys(correlation);
-
     const filteredWithRangeFeatures = selectedFeatures
       .slice()
       .filter((feature) => selectedByRangeFeatures.includes(feature));

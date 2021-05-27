@@ -25,6 +25,8 @@ import { TrainingDataset } from '../../../../types/training-dataset';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useBasket from '../../../../hooks/useBasket';
 import icons from '../../../../sources/icons';
+import { SortDirection } from 'react-virtualized';
+import { SortDirection as direction } from '../../../../../src/utils/sort';
 
 export interface StatisticsContentProps {
   data: FeatureGroup | TrainingDataset;
@@ -42,10 +44,10 @@ const pageLimits = {
 };
 
 const sortKeys: {
-  [key: string]: [keyof Feature, SortFunc<any>] | undefined;
+  [key: string]: [keyof Feature, SortFunc<any>, direction] | undefined;
 } = {
-  name: ['name', sort.string],
-  'default order': undefined,
+  'name (A -> Z)': ['name', sort.string, direction.asc],
+  'name (Z -> A)': ['name', sort.string, direction.desc],
 };
 
 type PageLimitsType = typeof pageLimits;
@@ -59,7 +61,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
   const [[pageLimit], setPageLimit] = useState<[keyof PageLimitsType]>([
     '20 features',
   ]);
-  const [[sortKey], setSortKey] = useState<string[]>(['default order']);
+  const [[sortKey], setSortKey] = useState<string[]>(['name (A -> Z)']);
   const limit = pageLimits[pageLimit] || 1;
   const [page, setPage] = useState(1);
 
@@ -87,9 +89,9 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
     const key = sortKeys[sortKey];
 
     if (key) {
-      const [k, func] = key;
+      const [k, func, direction] = key;
 
-      return sort<Feature>(k, func)(paginatedData);
+      return sort<Feature>(k, func, direction)(paginatedData);
     }
 
     return paginatedData;
@@ -286,7 +288,13 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
         </Flex>
         <Box height="100%" width="100%">
           {sortedData.map((feature, index) => (
-            <Box mt={index ? '20px' : '40px'} key={feature.name}>
+            <Box
+              mt={index ? '20px' : '40px'}
+              key={feature.name}
+              sx={{
+                ':last-of-type': { pb: '20px' },
+              }}
+            >
               <StatisticsCard
                 type={type}
                 parent={data}
@@ -296,7 +304,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
             </Box>
           ))}
         </Box>
-        {sortedData.length > 1 && (
+        {sortedData.length > 10 && (
           <Label mt="65px" mb="40px" as="span" text="go to page" align="left">
             <Pagination
               variant="white"

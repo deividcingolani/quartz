@@ -20,7 +20,7 @@ import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
-const dateFormat = 'yyyy-MM-dd - HH:mm:ss';
+const dateFormat = 'yyyy-MM-dd HH:mm:ss';
 
 const FeatureGroupStatistics: FC = () => {
   const { id, fgId, featureName, commitTime } = useParams();

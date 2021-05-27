@@ -149,7 +149,7 @@ const FeaturesForm: FC<FeatureFormProps> = ({ isEdit, isDisabled }) => {
   };
 
   return (
-    <Box mt="20px" mb="10px">
+    <Box mt="20px" mb="-10px">
       <Label mb="20px">Features</Label>
       <Button disabled={isDisabled} mb="20px" onClick={handleAddRow}>
         Add a feature

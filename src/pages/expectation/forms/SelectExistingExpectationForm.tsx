@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Box, Flex } from 'rebass';
 import { useSelector } from 'react-redux';
 import { Controller, useFormContext } from 'react-hook-form';

@@ -15,7 +15,7 @@ const DateValue: FC<DateValueProps> = ({ label, date, ...props }) => {
       <Microlabeling mb="3px" gray>
         {label}
       </Microlabeling>
-      <Value primary>{format(date, 'yyyy.MM.dd. - HH:mm:ss')}</Value>
+      <Value primary>{format(date, 'yyyy-MM-dd HH:mm:ss')}</Value>
     </Flex>
   );
 };

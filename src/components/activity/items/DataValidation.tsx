@@ -59,7 +59,7 @@ const DataValidation: FC<DataValidationProps> = ({
         }}
       >
         <Box mt="2px" ml="16px">
-          {icons.validate}
+          {icons.data_validation}
         </Box>
         <Labeling width="110px" ml="4px" bold gray>
           Validation

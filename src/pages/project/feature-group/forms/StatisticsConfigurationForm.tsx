@@ -64,7 +64,7 @@ const StatisticConfigurationForm: FC<StatisticConfigurationFormProps> = ({
 
       <Controller
         control={control}
-        name="correlations"
+        name="correlations"       
         render={({ onChange, value }) => (
           <Box mb="20px">
             <Checkbox

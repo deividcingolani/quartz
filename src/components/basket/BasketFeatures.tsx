@@ -1,4 +1,4 @@
-import React, { ComponentType, FC } from 'react';
+import React, { ComponentType, FC, memo } from 'react';
 import { Row, Text, Collapse, Labeling } from '@logicalclocks/quartz';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from '../../store';
@@ -59,4 +59,4 @@ const BasketFeatures: FC<BasketFeaturesProps> = ({
   );
 };
 
-export default BasketFeatures;
+export default memo(BasketFeatures);

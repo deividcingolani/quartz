@@ -40,22 +40,48 @@ const CorrelationList: FC<CorrelationListProps> = ({
   defaultCorrelations,
 }) => {
   const mapped = useMemo(() => {
+    const a = Object.entries(correlation) // TODO del const a
+   .reduce(
+      (acc: (CorrelationItem & { key: string })[], next, index) => [ // TODO del const b
+        ...acc,
+        ...next[1].correlations
+          .map((data) => ({ ...data, key: next[0] })),
+      ],
+      [],
+    )
+    .filter(
+      (correlation, index, array) => correlation.key !== correlation.column &&
+        selectedFeatures.includes(correlation.key) &&
+        selectedFeatures.includes(correlation.column)
+    );
+   
+    const names: Set<string> = new Set();
+    const indexOfInsertedValues: Set<number> = new Set();
+
+    const res = a.reduce((acc: (CorrelationItem & { key: string })[], value, index) => {
+      if (indexOfInsertedValues.has(index)) return acc;
+
+      names.add(value.column);
+      names.add(value.key);
+
+      a.some((inner, innerIndex) => {
+        if ((value !== inner) && (names.has(inner.column) && names.has(inner.key))) {
+          indexOfInsertedValues.add(innerIndex);
+          return true;
+        }
+
+        return false;
+      });
+
+      acc.push(value);
+      names.clear();
+
+      return acc;
+    }, []);
+    
     return sortCorrelationsList(
       sortType,
-      Object.entries(correlation)
-        .reduce(
-          (acc: (CorrelationItem & { key: string })[], next, index) => [
-            ...acc,
-            ...next[1].correlations
-              .slice(index + 1)
-              .map((data) => ({ ...data, key: next[0] })),
-          ],
-          [],
-        )
-        .filter(
-          ({ key, column }) =>
-            selectedFeatures.includes(key) || selectedFeatures.includes(column),
-        ),
+      res,
     );
   }, [correlation, sortType, selectedFeatures]);
 

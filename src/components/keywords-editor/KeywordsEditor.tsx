@@ -109,11 +109,14 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
 
   const onSubmit = useCallback(
     handleSubmit(({ keyword }) => {
-      if (baseOptions.includes(keyword)) {
+      const lowerCaseKeyword = keyword.toLowerCase();
+
+      if (baseOptions.includes(lowerCaseKeyword)) {
         setError('keyword', { message: 'Keyword should be unique' });
         return;
       }
-      handleAdd(keyword);
+      
+      handleAdd(lowerCaseKeyword);
     }),
     [handleAdd, baseOptions],
   );

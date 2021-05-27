@@ -201,12 +201,6 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
               </InputValidation>
             )}
           </Box>
-          <Box>
-            <Callout
-              type={CalloutTypes.neutral}
-              content="Joins will be performed on the maximum matching subset of feature group primary keys. Please use the SDK for advanced joining."
-            />
-          </Box>
           {!!error && (
             <Box mt="20px">
               <Callout

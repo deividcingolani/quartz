@@ -21,7 +21,17 @@ const FeatureGroupJoinForm: FC<{
 }> = ({ featureGroups: basketFeatureGroups, isDisabled }) => {
   const { setValue } = useFormContext();
 
-  const [joins, setJoins] = useState<FeatureGroupJoin[]>([]);
+  const initialJoins = ():FeatureGroupJoin[] => {
+    const itemTD = localStorage.getItem('info');
+
+    if(itemTD){
+      return JSON.parse(itemTD).joins || [];
+    }
+
+    return [];
+  }
+
+  const [joins, setJoins] = useState<FeatureGroupJoin[]>(initialJoins());
 
   const featureGroups = useSelector(selectFeatureGroupsData).data;
 
@@ -63,6 +73,10 @@ const FeatureGroupJoinForm: FC<{
   );
 
   useEffect(() => {
+    if(localStorage.getItem('info')){
+      return;
+    }
+    
     if (mappedFeatureGroups.length >= 1) {
       const joinsFromFgs = new Array(mappedFeatureGroups.length - 1)
         .fill(0)
@@ -75,7 +89,7 @@ const FeatureGroupJoinForm: FC<{
             secondFg: mappedFeatureGroups[1],
           }),
         }));
-
+      
       setJoins(joinsFromFgs);
     }
   }, [mappedFeatureGroups]);
@@ -83,6 +97,16 @@ const FeatureGroupJoinForm: FC<{
   useEffect(() => {
     setValue('joins', joins);
   }, [joins, setValue]);
+
+
+  useEffect(()=>{
+    const infoTD: { [key: string]: string } | any = localStorage.getItem('info');
+
+    if(infoTD){
+      const newInfoTD = Object.assign({},JSON.parse(infoTD),{"joins": joins})
+      localStorage.setItem('info', JSON.stringify(newInfoTD));
+    }
+  },[joins]);
 
   return (
     <Box>

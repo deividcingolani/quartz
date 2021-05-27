@@ -15,7 +15,7 @@ const useNavigateRelative = (): UseProjectNavigate => {
   return useCallback(
     (to, relativeTo = '*') => {
       const match = matchPath(relativeTo, prevPathName.current);
-
+      
       if (match) {
         navigate(`${match.pathname}${to}`);
       }

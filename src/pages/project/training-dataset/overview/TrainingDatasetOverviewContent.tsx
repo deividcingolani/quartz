@@ -20,6 +20,9 @@ import SplitGraph from './SplitGraph';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import CardBoundary from '../../../../components/error-boundary/CardBoundary';
 
+// Utils
+import { useVersionsSort } from '../utils';
+
 export interface TrainingDatasetContentProps {
   data: TrainingDataset;
   onClickRefresh: () => void;
@@ -80,14 +83,7 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
     [data],
   );
 
-  const versions = useMemo(() => {
-    return (
-      data?.versions?.map(
-        ({ version }) =>
-          `${version} ${version === latestVersion ? '(latest)' : ''}`,
-      ) || []
-    );
-  }, [data, latestVersion]);
+  const versions = useVersionsSort(data, latestVersion);
 
   const handleVersionChange = useCallback(
     (values) => {

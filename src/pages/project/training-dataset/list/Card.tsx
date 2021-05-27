@@ -55,7 +55,15 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
           <Flex alignItems="center" justifyContent="space-between">
             <Flex>
               <HoverableText
-                onClick={handleNavigate(data.id, '/td/:tdId')}
+                onClick={() => {
+                  if (hasMatchText) {
+                    navigate(
+                      `/p/${data.parentProjectId}/td/${data.id}/`,
+                    );
+                  } else {
+                    handleNavigate(data.id, '/td/:tdId/')();
+                  }
+                }}
                 fontFamily="Inter"
                 fontSize="20px"
                 color={
@@ -112,7 +120,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
             />
             <Flex flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>
-                Latest version
+                Version
               </Microlabeling>
               <Value primary>{data.version}</Value>
             </Flex>
@@ -237,10 +245,10 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                   onClick={() => {
                     if (hasMatchText) {
                       navigate(
-                        `/p/${data.parentProjectId}/td/${data.id}/activity`,
+                        `/p/${data.parentProjectId}/td/${data.id}`,
                       );
                     } else {
-                      handleNavigate(data.id, '/td/:tdId/activity')();
+                      handleNavigate(data.id, '/td/:tdId')();
                     }
                   }}
                   justifyContent="center"
