@@ -83,7 +83,6 @@ const Login: FC = () => {
         const lastPath =
           history.slice().reverse()[1] ||
           localStorage.getItem(pageToViewPathStorageName);
-
         localStorage.removeItem(pageToViewPathStorageName);
 
         if (lastPath && lastPath !== routeNames.auth.login) {

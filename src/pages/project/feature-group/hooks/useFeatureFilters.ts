@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Feature } from '../../../../types/feature-group';
-import { formatGroups } from '../../storage-connectors/utils';
 import filterByAttribute from '../overview/utils';
 
 export enum KeyFilters {
@@ -67,16 +66,18 @@ const useFeatureFilter = (
     const offlineTypes = Array.from(new Set(data.map(({ type }) => type)));
     let onlineTypes: string[] = [];
 
-    if(onlineEnabled){
-      onlineTypes = Array.from(new Set(data.map(({ onlineType }) => onlineType))) as string[];
+    if (onlineEnabled) {
+      onlineTypes = Array.from(
+        new Set(data.map(({ onlineType }) => onlineType)),
+      ) as string[];
     }
 
     return {
       offlineTypes,
       onlineTypes,
-    }
-  }
-  ,[data]);
+    };
+    // eslint-disable-next-line
+  }, [data]);
 
   const dataFiltered = useMemo<Feature[]>(() => {
     let result = data;
@@ -93,15 +94,20 @@ const useFeatureFilter = (
       result = filterByAttribute<Feature>(result, true, 'label');
     }
 
-    result = filterByAttribute<Feature>(result,typeFilters,'type');
+    result = filterByAttribute<Feature>(result, typeFilters, 'type');
 
-    result = filterByAttribute<Feature>(result, onlineTypeFilters, 'onlineType');
+    result = filterByAttribute<Feature>(
+      result,
+      onlineTypeFilters,
+      'onlineType',
+    );
 
-    result.filter(({ name }) => name.toLowerCase().includes(search.toLowerCase()));
+    result.filter(({ name }) =>
+      name.toLowerCase().includes(search.toLowerCase()),
+    );
 
     return result;
   }, [data, search, keyFilter, typeFilters, onlineTypeFilters]);
-
 
   return useMemo(
     () => ({
@@ -119,13 +125,13 @@ const useFeatureFilter = (
       onToggleKey,
       onReset,
     }),
+    // eslint-disable-next-line
     [
       dataFiltered,
       typeFilterOptions,
       search,
       typeFilters,
       keyFilter,
-
       onTypeFiltersChange,
       onSearchChange,
       onToggleKey,

@@ -45,7 +45,6 @@ import { selectFeatureStoreStorageConnectors } from '../../../../store/models/fe
 import SplitsForm from './SplitsForm';
 import FeaturesForm from './Features/FeaturesForm';
 import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
-import trainingDatasetView from '../../../../store/models/training-dataset/trainingDatasetView.model';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -176,11 +175,13 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
 
   const hasScrollOnScreen = useScreenWithScroll();
 
+  const errorsLength = Object.keys(errors).length;
+
   const errorsValue =
-    Object.keys(errors).length === 1
-      ? `${Object.keys(errors).length.toString()} error`
-      : Object.keys(errors).length !== 0
-      ? `${Object.keys(errors).length.toString()} errors`
+    errorsLength === 1
+      ? `${errorsLength.toString()} error`
+      : errorsLength !== 0
+      ? `${errorsLength.toString()} errors`
       : '';
 
   const { id: projectId } = useParams();

@@ -49,6 +49,7 @@ const routeNames = {
     api: 'api',
     splitGraph: 'split-graph',
     expectations: 'expectations',
+    executions: 'executions',
   },
 
   featureGroup: {
@@ -93,6 +94,17 @@ const routeNames = {
     edit: '/storage-connectors/:connectorName/edit',
     importSample: '/storage-connectors/import-sample',
     createWithProtocol: '/storage-connectors/new/:protocol',
+  },
+
+  jobs: {
+    list: '/jobs',
+    overview: '/jobs/:jobId',
+    edit: '/jobs/:jobId/edit',
+    create: '/jobs/new',
+    executions: '/jobs/:jobId/executions',
+    executionsType: '/jobs/:jobId/executions/:type',
+    executionsFromAndTo: '/jobs/:jobId/executions/:from/:to',
+    executionsTypeAndFromAndTo: '/jobs/:jobId/executions/:type/:from/:to',
   },
 
   settings: {

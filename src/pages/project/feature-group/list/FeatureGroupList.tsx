@@ -110,7 +110,6 @@ const FeatureGroupList: FC = () => {
 
   const dataResult = useMemo(() => {
     const [sortKey] = sort;
-
     return sortFG(
       filterFG(searchFGText(maxVersionsData, search), filter),
       sortKey,

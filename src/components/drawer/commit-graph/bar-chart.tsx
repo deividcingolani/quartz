@@ -12,12 +12,13 @@ import { ScaleBand, ScaleLinear } from 'd3';
 import { useTheme } from 'emotion-theming';
 
 interface IObjectKeys {
-  [key: string]: string | number | null;
+  [key: string]: string | number | null | undefined;
 }
 
 export interface CommitDetails extends IObjectKeys {
   date: string;
-  added: number | null;
+  'executions by day'?: number | null;
+  added?: number | null;
   deleted: number | null;
   modified: number | null;
 }
@@ -33,6 +34,7 @@ export interface BarChartProps {
   keys: string[];
   colors: string[];
   backgroundColor: string;
+  type?: string;
   onSelect: (selected: number | null) => void;
 }
 
@@ -43,6 +45,7 @@ const BarChart: FC<BarChartProps> = ({
   colors,
   backgroundColor,
   onSelect,
+  type,
 }: BarChartProps) => {
   const theme = useTheme<any>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,6 +56,22 @@ const BarChart: FC<BarChartProps> = ({
     bottom: 10,
     left: 20,
   };
+
+  const typeForActivity = {
+    commits: 'commits',
+    executions: 'executions',
+  };
+
+  const [distanceValueOfActivity, setDistanceValueOfActivity] = useState(0);
+
+  useEffect(() => {
+    const count = values.length > 30 ? 5 : 10;
+    if (type === typeForActivity.executions) {
+      setDistanceValueOfActivity(count);
+    } else {
+      setDistanceValueOfActivity(30);
+    }
+  }, [values, type, typeForActivity.executions]);
 
   const [themedColors, themedBackground] = useMemo(() => {
     const themeColors = colors.map(
@@ -152,7 +171,9 @@ const BarChart: FC<BarChartProps> = ({
         .attr(
           'transform',
           (d: CommitDetails) =>
-            `translate(${(x0((d[groupKey] || 0).toString()) || 0) + 30},0)`,
+            `translate(${
+              (x0((d[groupKey] || 0).toString()) || 0) + distanceValueOfActivity
+            },0)`,
         )
         .selectAll('rect')
         .data((d: CommitDetails) => keys.map((key) => ({ key, value: d[key] })))
@@ -249,6 +270,7 @@ const BarChart: FC<BarChartProps> = ({
       onSelect,
       themedBackground,
       themedColors,
+      distanceValueOfActivity,
     ],
   );
 

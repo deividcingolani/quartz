@@ -37,6 +37,11 @@ const titles = {
   editTd: 'Edit',
   createTrainingDataset: 'New training dataset',
 
+  jobs: 'Jobs',
+  executions: 'Executions',
+  editJob: 'Edit',
+  createJob: 'New job',
+
   error404: '404 - Hopswork',
   error401: '401 - Hopswork',
 

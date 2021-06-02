@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import {
   Badge,
@@ -28,11 +28,6 @@ const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
   handleOpenStatistics,
   isDisabled,
 }) => {
-  
-  const [isOpen,setIsOpen] = useState<boolean>(false);
-  const handleSetIsOpen = ()=>{
-    setIsOpen(!isOpen);
-  }
   return (
     <>
       {featureGroups.length < 2 && (

@@ -15,7 +15,6 @@ import {
 // Services
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { log } from 'util';
 import ProfileService from '../../../../services/ProfileService';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
@@ -85,7 +84,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
       <Flex>
         <User
           photo={ProfileService.avatar(String(data.creator))}
-          name={data.creator}
+          name={'data.creator.firstName'}
         />
         <DateValue
           ml="23px"
@@ -177,11 +176,11 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           />
         )}
         <TextValueBadge
-              variant="gray"
-              ml="8px"
-              text="data validation"
-              value={data.validationType?.toLowerCase()}
-          />
+          variant="gray"
+          ml="8px"
+          text="data validation"
+          value={data.validationType?.toLowerCase()}
+        />
       </Flex>
       {data.description ? (
         <Text my="20px">{data?.description || '-'}</Text>

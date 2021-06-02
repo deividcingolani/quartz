@@ -21,7 +21,7 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
   );
 
   const groupComponents = useMemo(() => {
-    if(fg.onlineEnabled){
+    if (fg.onlineEnabled) {
       return features.map(({ partition, primary }) => [
         Value,
         Badge,
@@ -41,34 +41,43 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
       ...(primary ? [Badge] : [() => null]),
       Tooltip,
     ]);
+    // eslint-disable-next-line
   }, [features]);
 
   const groupProps = useMemo(() => {
     return features.map((feature) => {
-      const { description, partition, primary, type, name, onlineType } = feature;
+      const {
+        description,
+        partition,
+        primary,
+        type,
+        name,
+        onlineType,
+      } = feature;
 
-      const types = fg.onlineEnabled ? [
-        {
-            value: type,
-            variant: 'label',
-            marginLeft: 'auto',
-            width: 'max-content'
-        },
-        {
-          value: onlineType,
-          variant: 'bold',
-          marginLeft: '0',
-          width: 'max-content'
-        }
-
-      ]: [
-        {
-          value: type,
-          variant: 'bold',
-          marginLeft: 'auto',
-          width: 'max-content',
-        }
-      ]
+      const types = fg.onlineEnabled
+        ? [
+            {
+              value: type,
+              variant: 'label',
+              marginLeft: 'auto',
+              width: 'max-content',
+            },
+            {
+              value: onlineType,
+              variant: 'bold',
+              marginLeft: '0',
+              width: 'max-content',
+            },
+          ]
+        : [
+            {
+              value: type,
+              variant: 'bold',
+              marginLeft: 'auto',
+              width: 'max-content',
+            },
+          ];
 
       return [
         {

@@ -32,6 +32,11 @@ import {
   TrainingDatasetCreate,
   TrainingDatasetEdit,
   TrainingDatasetActivity,
+  JobsList,
+  JobsOverview,
+  JobsEdit,
+  JobsCreate,
+  JobsExecutions,
   ProjectCode,
   ProjectDatabricks,
   ProjectSpark,
@@ -211,6 +216,28 @@ const Project: FC = () => {
         path={routeNames.storageConnector.edit}
         element={<StorageConnectorsEdit />}
       />
+      <Route path={routeNames.jobs.list} element={<JobsList />} />
+      <Route path={routeNames.jobs.overview} element={<JobsOverview />} />
+      <Route path={routeNames.jobs.create} element={<JobsCreate />} />
+      <Route path={routeNames.jobs.edit} element={<JobsEdit />} />
+      <Route path={routeNames.jobs.executions} element={<JobsExecutions />} />
+      <Route
+        path={routeNames.jobs.executionsTypeAndFromAndTo}
+        element={<JobsExecutions />}
+      />
+      <Route
+        path={routeNames.jobs.executionsFromAndTo}
+        element={<JobsExecutions />}
+      />
+      <Route
+        path={routeNames.jobs.executionsType}
+        element={<JobsExecutions />}
+      />
+      <Route
+        path={routeNames.jobs.create}
+        element={<StorageConnectorsCreate />}
+      />
+      <Route path={routeNames.jobs.edit} element={<StorageConnectorsEdit />} />
       <Route
         path={routeNames.storageConnector.importSample}
         element={<StorageConnectorsImportSample />}

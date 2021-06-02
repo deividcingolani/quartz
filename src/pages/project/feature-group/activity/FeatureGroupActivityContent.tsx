@@ -134,7 +134,7 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
             <Box mr="20px">
               <DatePicker
                 showTimeSelect={true}
-                dateFormat="MMMM d, yyyy h:mm aa"
+                dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSSX"
                 selectProps={{
                   options: [],
                   placeholder: '',
@@ -171,7 +171,7 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
             </Box>
             <DatePicker
               showTimeSelect={true}
-              dateFormat="MMMM d, yyyy h:mm aa"
+              dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSSX"
               selectProps={{
                 options: [],
                 placeholder: '',

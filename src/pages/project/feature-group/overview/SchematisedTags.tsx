@@ -42,8 +42,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
   data = [],
   type = ItemDrawerTypes.fg,
 }) => {
-
-  const { [type + "Id"]: id } = useParams();
+  const { [type + 'Id']: id } = useParams();
 
   const [selected, setSelected] = useState<Tag>(data[0]);
 
@@ -53,8 +52,12 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(`:${type}Id`, String(id)), routeNames.project.view);
+      navigate(
+        route.replace(`:${type}Id`, String(id)),
+        routeNames.project.view,
+      );
     },
+    // eslint-disable-next-line
     [navigate],
   );
 
@@ -83,7 +86,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
       state.loading.effects.featureGroupView.loadRemainingData,
   );
 
-  const groupType = (type == 'fg') ? 'featureGroup' : "trainingDataset";
+  const groupType = type === 'fg' ? 'featureGroup' : 'trainingDataset';
 
   if (isLoadingFG || isLoadingTD) {
     return (

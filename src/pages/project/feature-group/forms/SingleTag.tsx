@@ -7,7 +7,6 @@ import routeNames from '../../../../routes/routeNames';
 import { ListItem } from './SchematisedTagsForm';
 import PrimitiveTypeForm from './PrimitiveTypeForm';
 import ArrayTypeForm from './ArrayTypeForm';
-import { margin } from '../../../../components/correlation/matrix/CorrelationTable';
 
 export interface SingleTagProps {
   item: ListItem;
@@ -20,7 +19,6 @@ export interface SingleTagProps {
   descriptions: string[];
   onRemove: () => void;
   onChange: (selected: string[]) => void;
-  
 }
 
 const SingleTag: FC<SingleTagProps> = ({
@@ -64,14 +62,20 @@ const SingleTag: FC<SingleTagProps> = ({
             width="100%"
             options={options}
             value={selected}
-            placeholder={selected.length ? "" : "pick a tag schema"}
+            placeholder={selected.length ? '' : 'pick a tag schema'}
             additionalTexts={descriptions}
             onChange={onChange}
             deletabled={true}
           />
         </Flex>
-        {!!tag && 
-          <Flex flexDirection = "column" mt = '0px' m = '20px' pl = '20px' style = {{borderLeft: '1px solid #E2E2E2'}}>
+        {!!tag && (
+          <Flex
+            flexDirection="column"
+            mt="0px"
+            m="20px"
+            pl="20px"
+            style={{ borderLeft: '1px solid #E2E2E2' }}
+          >
             {Object.keys(tag.properties).map((key) => {
               const type = tag.properties[key].type;
               if (type === 'array') {
@@ -96,14 +100,14 @@ const SingleTag: FC<SingleTagProps> = ({
               );
             })}
           </Flex>
-        }
+        )}
         {isLastItem && !!tag && !!options.length && (
           <Button
             mt="10px"
             disabled={isDisabled}
             alignSelf="flex-start"
             onClick={onAdd}
-            intent = 'secondary' 
+            intent="secondary"
           >
             Add another tag
           </Button>

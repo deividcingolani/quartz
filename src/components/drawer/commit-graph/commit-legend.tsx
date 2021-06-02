@@ -7,6 +7,7 @@ import { CommitDetails } from './bar-chart';
 
 export interface CommitLegendProps {
   values: CommitDetails | null;
+  type?: string;
   groupKey: string;
   keys: string[];
   amount: number;
@@ -19,6 +20,7 @@ const CommitLegend: FC<CommitLegendProps> = ({
   keys,
   amount,
   colors,
+  type,
   ...props
 }: CommitLegendProps) => (
   <Flex {...props} mt="10px" flexDirection="column">
@@ -26,18 +28,26 @@ const CommitLegend: FC<CommitLegendProps> = ({
       {keys.map((key: string, idx: number) => (
         <Flex key={`legend-${key}`} mr="12px">
           <Box mr="5px" mt="3px" sx={circleStyles(colors[idx])} />
-          <Labeling>{key}</Labeling>
-          <Label ml="5px">{values ? values[key] : ''}</Label>
+          <Label>{values ? values[key] : ''}</Label>
+          <Labeling ml="5px">{key}</Labeling>
         </Flex>
       ))}
     </Flex>
     <Flex key={`legend-${groupKey}`} mt="20px" justifyContent="space-between">
-      <Label>Commits over time</Label>
-      <Labeling mr="5px">
-        {values
-          ? values[groupKey]
-          : `${amount} last commit${amount === 1 ? '' : 's'}`}
-      </Labeling>
+      <Label>
+        {type === 'executions' ? 'Number of execution' : 'Commits over time'}
+      </Label>
+      {type === 'executions' ? (
+        <Labeling mr="5px">
+          {values ? values[groupKey] : `last 30 day${amount === 1 ? '' : 's'}`}
+        </Labeling>
+      ) : (
+        <Labeling mr="5px">
+          {values
+            ? values[groupKey]
+            : `${amount} last commit${amount === 1 ? '' : 's'}`}
+        </Labeling>
+      )}
     </Flex>
   </Flex>
 );

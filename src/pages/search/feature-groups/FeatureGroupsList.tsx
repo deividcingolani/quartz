@@ -1,6 +1,5 @@
 import { Flex } from 'rebass';
 import React, { FC } from 'react';
-import { Value } from '@logicalclocks/quartz';
 
 // Components
 import FeatureGroupListContent from '../../project/feature-group/list/FeatureGroupListContent';

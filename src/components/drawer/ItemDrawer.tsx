@@ -9,7 +9,6 @@ import {
   Badge,
   Drawer,
   Labeling,
-  Microlabeling,
   Row,
   Select,
   TextValueBadge,
@@ -33,6 +32,7 @@ import SchematisedTagTable from './SchematisedTagTable';
 export enum ItemDrawerTypes {
   fg = 'fg',
   td = 'td',
+  job = 'job',
 }
 
 const getVariant = (
@@ -191,6 +191,7 @@ const ItemDrawer = <T extends DataEntity>({
     if (newId) {
       setId(newId);
     }
+    // eslint-disable-next-line
   }, []);
 
   const { latestVersion } = useLatestVersion<T>(item, data);
@@ -206,6 +207,7 @@ const ItemDrawer = <T extends DataEntity>({
           version.toString() === latestVersion ? '(latest)' : ''
         }`,
     );
+    // eslint-disable-next-line
   }, [data, latestVersion]);
 
   if (!item) {
@@ -274,7 +276,6 @@ const ItemDrawer = <T extends DataEntity>({
                 value={item.splits.length}
               />
             )}
-            {console.log(item)}
             {type === ItemDrawerTypes.fg &&
               ((item as unknown) as FeatureGroup).timeTravelFormat && (
                 <TextValueBadge
@@ -350,6 +351,7 @@ const ItemDrawer = <T extends DataEntity>({
                 keys={['added', 'deleted', 'modified']}
               />
             )}
+
             {!isCommitsLoading && commits?.length === 0 && (
               <Labeling gray>No activity</Labeling>
             )}

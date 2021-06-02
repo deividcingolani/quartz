@@ -10,7 +10,6 @@ const useFirstLoad = <T>(data: T): T | undefined => {
       setFirstLoad(false);
     }
   }, [data, isFirstLoad]);
-
   return dataAfterLoad;
 };
 

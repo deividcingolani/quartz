@@ -28,7 +28,6 @@ const ProjectCreate: FC = () => {
   );
 
   const isAddingMembers = useSelector(selectIsAddingMember);
-  const user = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();

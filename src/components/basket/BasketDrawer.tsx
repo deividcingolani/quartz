@@ -1,14 +1,5 @@
 import { Flex } from 'rebass';
-import React, {
-  FC,
-  useCallback,
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-  useReducer,
-  memo,
-} from 'react';
+import React, { FC, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Labeling, Button, Popup, Text } from '@logicalclocks/quartz';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -20,9 +11,7 @@ import {
   selectFeatureGroups,
 } from '../../store/models/localManagement/basket.selectors';
 import { placeholder } from '../../sources/basketSvg';
-import { FeatureGroupState } from '../../store/models/feature/featureGroups.model';
 import { FeatureGroupBasket } from '../../store/models/localManagement/basket.model';
-import Features from '../../pages/expectation/forms/Updates/Features';
 import { Feature, FeatureGroup } from '../../types/feature-group';
 
 export interface BasketDrawerProps {
@@ -57,7 +46,6 @@ const BasketEnabledFeaturesSelected: React.FC<any> = ({
   handleToggle,
   navigate,
   projectId,
-  directMode,
   dispatch,
 }: BasketFeaturesOptions) => (
   <>

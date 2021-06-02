@@ -93,7 +93,7 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
   useEffect(() => {
     updateFeatures();
     setOpen(true);
-  }, [basket]);
+  }, [basket, updateFeatures]);
 
   const navigate = useNavigate();
   const handleDeleteAllFg = useCallback(
@@ -108,6 +108,7 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
 
       setFeatureGroups(copy);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [featureGroups, basket],
   );
 
@@ -133,7 +134,8 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
 
       setFeatureGroups(copy);
     },
-    [featureGroups, basket],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [featureGroups, basket, projectId],
   );
 
   const handleGoToFG = useCallback(

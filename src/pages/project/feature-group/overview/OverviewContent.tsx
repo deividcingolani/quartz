@@ -145,7 +145,6 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
             <FeatureList data={data} />
           </CardBoundary>
         </Anchor>
-
         <Anchor groupName="fgOverview" anchor={provenance}>
           <CardBoundary mt="20px" title="Provenance">
             <Provenance data={data.provenance} />

@@ -92,7 +92,6 @@ const FeatureGroupActivity: FC = () => {
       } = {},
     ) => {
       const { newEndDate, newStartDate, newEvent } = data;
-
       if (featureStoreData?.featurestoreId) {
         const count = await dispatch.featureGroupActivity.fetch({
           projectId: +id,

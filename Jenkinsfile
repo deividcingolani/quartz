@@ -21,7 +21,7 @@ pipeline {
                   QUARTZ_BRANCH="branch-\${VERSION%.*}"
                 fi
                 echo "\$QUARTZ_BRANCH"
-                
+
                 export OLD_DIR=\$PWD
                 cd /tmp
                 # Build Quartz
@@ -29,32 +29,32 @@ pipeline {
                 cd quartz
                 git checkout \$QUARTZ_BRANCH
                 git log --max-count=1
-                
+
                 npm install
                 npm link
                 rm -rf node_modules/rebass node_modules/react node_modules/emotion-theming
-               
-        
+
+
                 # Build Hopsworks-front
                 cd \$OLD_DIR
                 rm -rf node_modules
 
                 # Install dependencies
                 yarn install --network-concurrency 1
-                
+
                 rm -rf node_modules/@logicalclocks/quartz
                 npm link @logicalclocks/quartz
 
-                # Prepare environment file for production 
-                echo "REACT_APP_API_HOST=\"/hopsworks-api/api\"" > .env     
+                # Prepare environment file for production
+                echo "REACT_APP_API_HOST=\"/hopsworks-api/api\"" > .env
 
                 # Build artifact
                 yarn build
-                
+
                 # Generate build tgz
                 cd build
                 tar czf frontend.tgz *
-                
+
                 # Publish
                 cp frontend.tgz /repo/\$VERSION/
               """

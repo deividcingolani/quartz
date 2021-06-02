@@ -41,7 +41,13 @@ import expectations from './expectations/expectations.model';
 import rules from './rules/rules.model';
 import expectationView from './expectations/expectationView.model';
 import validators from './validators/validators.model';
+import jobs from './jobs/jobs.model';
+import jobsRows from './jobs/data/jobsDataPreview.model';
+import jobsView from './jobs/jobsView.model';
+import jobsExecutions from './jobs/executions/jobsExecutions.model';
 import featureStoreSettings from './settings/featureStoreSettings.model';
+import fileExplorerDataset from './file-explorer/fileExplorerDataset.model';
+import uploadFileData from './file-explorer/uploadFileData.model';
 
 export interface RootModel extends Models<RootModel> {
   api: typeof api;
@@ -85,6 +91,12 @@ export interface RootModel extends Models<RootModel> {
   trainingDatasetStatistics: typeof trainingDatasetStatistics;
   featureStoreStorageConnectors: typeof featureStoreStorageConnectors;
   trainingDatasetStatisticsCommits: typeof trainingDatasetStatisticsCommits;
+  jobs: typeof jobs;
+  jobsRows: typeof jobsRows;
+  jobsView: typeof jobsView;
+  jobsExecutions: typeof jobsExecutions;
+  fileExplorerDataset: typeof fileExplorerDataset;
+  uploadFileData: typeof uploadFileData;
 }
 
 const models: RootModel = {
@@ -129,6 +141,12 @@ const models: RootModel = {
   trainingDatasetStatisticsCommits,
   trainingDatasetLabels: trainingDatasetLabelModel,
   trainingDatasetQuery,
+  jobs,
+  jobsRows,
+  jobsView,
+  jobsExecutions,
+  fileExplorerDataset,
+  uploadFileData,
 };
 
 export default models;

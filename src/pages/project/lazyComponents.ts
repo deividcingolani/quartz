@@ -57,6 +57,16 @@ export const TrainingDatasetCreate = React.lazy(
 export const TrainingDatasetEdit = React.lazy(
   () => import('./training-dataset/edit/TrainingDatasetEdit'),
 );
+export const JobsList = React.lazy(() => import('./jobs/list/JobsList'));
+export const JobsOverview = React.lazy(
+  () => import('./jobs/overview/JobsOverview'),
+);
+export const JobsCreate = React.lazy(() => import('./jobs/create/JobsCreate'));
+export const JobsEdit = React.lazy(() => import('./jobs/edit/JobsEdit'));
+export const JobsExecutions = React.lazy(
+  () => import('./jobs/executions/JobsExecutions'),
+);
+
 export const TrainingDatasetActivity = React.lazy(
   () => import('./training-dataset/activity/TrainingDatasetActivity'),
 );

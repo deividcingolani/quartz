@@ -25,7 +25,6 @@ import { TrainingDataset } from '../../../../types/training-dataset';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useBasket from '../../../../hooks/useBasket';
 import icons from '../../../../sources/icons';
-import { SortDirection } from 'react-virtualized';
 import { SortDirection as direction } from '../../../../../src/utils/sort';
 
 export interface StatisticsContentProps {

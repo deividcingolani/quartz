@@ -14,12 +14,8 @@ import useAnchor from '../../../components/anchor/useAnchor';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 
 // Svg
-import fg from '../../../sources/FG_06.json';
-import home from '../../../sources/home.json';
-import td from '../../../sources/TD_01 (1).json';
-import sources from '../../../sources/source_02rev.json';
-import oldui from '../../../sources/back_oldui.json';
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
+import icons from '../../../sources/icons';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
@@ -31,7 +27,10 @@ const useAppNavigation = (): TreeNode[] => {
 
   const handleShortcut = useCallback(
     (e) => {
-      if ((e.ctrlKey || e.metaKey) && ['0', '1', '2', '3'].includes(e.key)) {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        ['0', '1', '2', '3', '4'].includes(e.key)
+      ) {
         switch (e.key) {
           case '0': {
             navigate('/view', 'p/:id/*');
@@ -47,6 +46,10 @@ const useAppNavigation = (): TreeNode[] => {
           }
           case '3': {
             navigate('/storage-connectors', 'p/:id/*');
+            break;
+          }
+          case '4': {
+            navigate('/jobs', 'p/:id/*');
             break;
           }
         }
@@ -100,9 +103,12 @@ const useAppNavigation = (): TreeNode[] => {
     (state: RootState) => state.trainingDatasetView,
   );
 
+  const jobs = useSelector((state: RootState) => state.jobsView);
+
   const disabledTabs = useMemo(() => {
     const fgConfig = featureGroup?.statisticsConfig;
     const tdConfig = trainingDataset?.statisticsConfig;
+    const jobsConfig = jobs?.statisticsConfig;
 
     const fgStatisticsDisabled = !fgConfig?.enabled;
     const fgCorrelationsDisabled =
@@ -115,14 +121,20 @@ const useAppNavigation = (): TreeNode[] => {
     const dataPreviewDisabled =
       featureGroup?.type === 'onDemandFeaturegroupDTO';
 
+    const jobStatisticsDisabled = !jobsConfig?.enabled;
+    const jobCorrelationsDisabled =
+      !jobsConfig?.enabled || !jobsConfig?.correlations;
+
     return {
       fgStatisticsDisabled,
       fgCorrelationsDisabled,
       tdStatisticsDisabled,
       tdCorrelationsDisabled,
       dataPreviewDisabled,
+      jobStatisticsDisabled,
+      jobCorrelationsDisabled,
     };
-  }, [featureGroup, trainingDataset]);
+  }, [featureGroup, trainingDataset, jobs]);
 
   const createFgAnchorLink = useCallback(
     (title: string, to: string, id: string) => ({
@@ -160,7 +172,7 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: 'home',
         title: 'Home',
-        icon: home,
+        icon: icons.home,
         hasDivider: true,
         tooltipText: `Home ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 0`,
         isActive: isActive('/p/:id/view'),
@@ -193,13 +205,14 @@ const useAppNavigation = (): TreeNode[] => {
           },
         ],
       },
+      { id: 'Features Store', title: 'Features Store' },
       {
         id: 'fg',
         title: 'Feature Groups',
         tooltipText: `Feature Groups ${
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 1`,
-        icon: fg,
+        icon: icons.fg,
         onClick: handleNavigateRelative(
           routeNames.featureGroup.list,
           routeNames.project.view,
@@ -285,7 +298,7 @@ const useAppNavigation = (): TreeNode[] => {
         tooltipText: `Training Datasets ${
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 2`,
-        icon: td,
+        icon: icons.td,
         isActive: isActive('/p/:id/td'),
         href: getHref(routeNames.trainingDataset.list, routeNames.project.view),
         onClick: handleNavigateRelative(
@@ -344,7 +357,7 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: 'sc',
         title: 'Storage Connectors',
-        icon: sources,
+        icon: icons.sc,
         tooltipText: `Storage Connectors ${
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 3`,
@@ -359,9 +372,44 @@ const useAppNavigation = (): TreeNode[] => {
         ),
       },
       {
+        id: 'Compute',
+        title: 'Compute',
+      },
+      {
+        id: 'job',
+        title: 'Jobs',
+        icon: icons.jobs,
+        tooltipText: `Jobs ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 4`,
+        href: getHref(routeNames.jobs.list, routeNames.project.view),
+        isActive: isActive('/p/:id/jobs'),
+        onClick: handleNavigateRelative(
+          routeNames.jobs.list,
+          routeNames.project.view,
+        ),
+        children: [
+          {
+            id: 'jobOverview',
+            title: 'Overview',
+            href: getHref('/', '/p/:id/jobs/:jobId/*'),
+            isActive: isActive('/p/:id/jobs/:jobId/', ['new']),
+            onClick: handleNavigateRelative('/', '/p/:id/jobs/:jobId/*'),
+          },
+          {
+            id: 'jobExecutions',
+            title: 'Executions',
+            href: getHref('/', '/p/:id/jobs/:jobId/executions'),
+            isActive: isActive('/p/:id/jobs/:jobId/executions', ['new']),
+            onClick: handleNavigateRelative(
+              '/executions',
+              '/p/:id/jobs/:jobId/',
+            ),
+          },
+        ],
+      },
+      {
         id: 'oldui',
         title: 'Back to current Hopsworks',
-        icon: oldui,
+        icon: icons.back,
         tooltipText: `Back to current Hopsworks`,
         href: '/hopsworks',
         isActive: false,

@@ -7,7 +7,6 @@ const useDrawer = <T = number>(initialState = false) => {
 
   const [selectedId, setSelected] = useState<T | null>(null);
   const [selectedName, setSelectedName] = useState('');
-
   const { current: content } = useContext(ContentContext);
 
   const handleDisableScroll = useCallback(() => {

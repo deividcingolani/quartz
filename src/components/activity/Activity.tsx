@@ -3,9 +3,10 @@ import React, { FC } from 'react';
 import ActivityDataItem from './ActivityItem';
 import ActivityTimeline from './ActivityTimeline';
 import { ActivityItem, ActivityType } from '../../types/feature-group';
+import { JobExecutions } from '../../types/jobs';
 
 export interface ActivityProps {
-  items: ActivityItem;
+  items: ActivityItem | JobExecutions;
   actions?: Map<ActivityType, (data?: any) => void>;
   hasData: {
     hasPrevious: boolean;

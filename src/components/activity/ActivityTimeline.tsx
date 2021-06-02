@@ -4,9 +4,10 @@ import { Value } from '@logicalclocks/quartz';
 
 import { getTimeLineOpacity } from './utils';
 import { ActivityItem } from '../../types/feature-group';
+import { JobExecutions } from '../../types/jobs';
 
 export interface ActivityTimelineProps {
-  items: ActivityItem;
+  items: ActivityItem | JobExecutions;
   hasData: {
     hasPrevious: boolean;
     hasFollowing: boolean;

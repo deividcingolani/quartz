@@ -28,11 +28,6 @@ const featureGroupStatisticsCommits = createModel()({
         featureGroupId,
       );
 
-      // const commits =
-      //   data?.items?.map((item) =>
-      //     parse(item.commitTime, 'yyyyMMddHHmmss', new Date()),
-      //   ) || [];
-
       const commits = data?.items?.map((item) => item.commitTime) || [];
 
       dispatch.featureGroupStatisticsCommits.setData(commits);

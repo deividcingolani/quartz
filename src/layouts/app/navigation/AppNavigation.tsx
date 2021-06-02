@@ -17,6 +17,8 @@ const map: { [key: string]: string } = {
   'p/:id/fg/:id/statistics/*': '/fg',
   'p/:id/fg/:id/correlation': '/fg',
   'p/:id/fg/:id/activity': '/fg',
+  'p/:id/jobs/:id': '/jobs',
+  'p/:id/jobs/:id/executions': '/jobs',
   'p/:id/integrations/*': '/',
 };
 

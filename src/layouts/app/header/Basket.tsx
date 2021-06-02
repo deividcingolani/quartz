@@ -1,11 +1,10 @@
 import { Box, Flex } from 'rebass';
 import { Text, Tooltip, usePopup } from '@logicalclocks/quartz';
-import React, { FC, useCallback, useRef, memo, useState, useReducer, useEffect } from 'react';
+import React, { FC, useRef, memo } from 'react';
 import svg from '../../../sources/basketSvg';
 import { useSelector } from 'react-redux';
 import {
   selectBasketFeaturesLength,
-  selectFeatureGroups,
   selectSwitch,
 } from '../../../store/models/localManagement/basket.selectors';
 import BasketDrawer from '../../../components/basket/BasketDrawer';
@@ -15,13 +14,9 @@ import {
   openBasketIconStyles,
   featureCountStyles,
 } from './basket.styles';
-import { FeatureGroupBasket } from '../../../store/models/localManagement/basket.model';
-
-
 
 const BasketMenu: FC = () => {
   const featureLength = useSelector(selectBasketFeaturesLength);
-  const featureGroups = useSelector(selectFeatureGroups);
   const isSwitched = useSelector(selectSwitch);
 
   const buttonRef = useRef(null);
