@@ -1,7 +1,8 @@
 import React from 'react';
-import { BlurInput, Checkbox, Select } from '@logicalclocks/quartz';
+import { BlurInput, Checkbox, EditableSelect } from '@logicalclocks/quartz';
 import { TableColumn } from '@logicalclocks/quartz/dist/components/table/editable';
 
+// eslint-disable-next-line import/prefer-default-export
 export const featuresColumns = (
   isEdit = false,
   offlineTypes: string[],
@@ -25,12 +26,12 @@ export const featuresColumns = (
       name: 'Offline type',
       // @ts-ignore
       render: ({ value, onChange }) => (
-        <Select
-          width="100%"
+        <EditableSelect
+          isMulti={false}
+          placeholder="pick a type"
           value={value}
           onChange={onChange}
           options={offlineTypes}
-          placeholder=""
         />
       ),
     },
@@ -38,12 +39,12 @@ export const featuresColumns = (
       name: 'Online type',
       // @ts-ignore
       render: ({ value, onChange }) => (
-        <Select
-          width="100%"
+        <EditableSelect
+          isMulti={false}
+          placeholder="pick a type"
           value={value}
           onChange={onChange}
           options={onlineTypes}
-          placeholder=""
         />
       ),
     },
