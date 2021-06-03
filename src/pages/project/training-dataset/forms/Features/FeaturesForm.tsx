@@ -93,7 +93,7 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
   useEffect(() => {
     updateFeatures();
     setOpen(true);
-  }, [basket, updateFeatures]);
+  }, [basket]);
 
   const navigate = useNavigate();
   const handleDeleteAllFg = useCallback(
