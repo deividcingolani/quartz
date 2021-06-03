@@ -84,7 +84,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
   const dispatch = useDispatch<Dispatch>();
 
   const membersToSelect = useMemo(() => {
-    return allMembers.filter(
+    return allMembers.data.filter(
       ({ email }) => !data.projectTeam.find(({ user }) => user.email === email),
     );
   }, [data, allMembers]);
@@ -278,6 +278,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
       <AddMembers
         isOpen={isAddMembers}
         members={membersToSelect}
+        isSearchEnabled={!(allMembers.error && allMembers.error.response?.data.errorCode === 160057)}
         onClose={() => setIsAddMembers(false)}
       />
       <Card

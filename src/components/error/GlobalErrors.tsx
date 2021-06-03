@@ -16,13 +16,15 @@ import NotificationTitle from '../../utils/notifications/notificationBadge';
 // Services
 import TokenService from '../../services/TokenService';
 import { useNavigate } from 'react-router-dom';
+import {AxiosError} from 'axios';
 
-const getErrorTitle = (error: any) => {
+const getErrorTitle = (error: AxiosError) => {
   if (error.message === 'Network Error') {
     return 'Network issue';
-  }
-  if (error.response?.status >= 500) {
+  } else if (error.response?.status && error.response.status >= 500) {
     return 'Server Error';
+  } else if (error.response?.status && error.response.status >= 400) {
+    return 'Client Error';
   }
   return 'Error';
 };
@@ -41,17 +43,19 @@ const ServerErrorContent: ReactElement = (
 );
 
 const getErrorContent = (
-  error: any,
+  error: AxiosError,
 ): { message?: string; element?: ReactElement } => {
   if (error.message === 'Network Error') {
     return {
       element: ServerErrorContent,
     };
-  }
-  if (error.response?.status >= 500) {
+  } else if (error.response?.status && error.response.status >= 500) {
     return {
       message: 'This page can not reach the server',
     };
+  } else if (error.response?.status && error.response.status >= 400) {
+    const msg = error.response.data?.usrMsg? error.response.data?.usrMsg : error.response.data?.errorMsg;
+    return {message: msg};
   }
   return {
     message: 'error occurred',

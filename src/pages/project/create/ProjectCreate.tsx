@@ -82,13 +82,16 @@ const ProjectCreate: FC = () => {
             },
             teamRole: Roles['Data scientist'],
           }));
-
-          await dispatch.members.add({
-            id: +id,
-            data: {
-              projectTeam: selectedMembers,
-            },
-          });
+          try {
+            await dispatch.members.add({
+              id: +id,
+              data: {
+                projectTeam: selectedMembers,
+              },
+            });
+          } catch(error) {
+            //nothing to do. Added so that it can continue with the rest of the code
+          }
         }
 
         navigate(`/p/${id}/view`);

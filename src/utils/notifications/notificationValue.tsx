@@ -8,7 +8,14 @@ const NotificationContent: FC<{
   if (element) {
     return element;
   }
-  return <Labeling>{message}</Labeling>;
+  return <Labeling style={{ maxWidth: 600, minWidth: 400 }}
+              sx={{
+                  whiteSpace: 'break-spaces',
+                  overflowX: 'hidden',
+                }}
+        >
+            {message}
+        </Labeling>;
 };
 
 export default NotificationContent;
