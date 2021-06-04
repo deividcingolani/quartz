@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -6,7 +7,6 @@ import TokenService from '../services/TokenService';
 import BaseApiService from '../services/BaseApiService';
 // Types
 import { Dispatch } from '../store';
-import axios from 'axios';
 
 export type UseProjectNavigate = (to: string, relativeTo?: string) => void;
 
@@ -29,7 +29,6 @@ const useTokenApiInterceptor = () => {
 
       (error) => {
         // If request failed with previous token repeat request
-
         const previousToken = error.config.headers.Authorization?.split(' ')[1];
         if (
           TokenService.get() &&
@@ -37,7 +36,17 @@ const useTokenApiInterceptor = () => {
           previousToken &&
           previousToken !== TokenService.get()
         ) {
-          return dispatch.profile.getUser();
+          return new Promise((resolve) => () =>
+            resolve(
+              axios.request({
+                ...error.config,
+                headers: {
+                  ...error.config.headers,
+                  Authorization: TokenService.get(),
+                },
+              }),
+            ),
+          );
         }
         return Promise.reject(error);
       },
