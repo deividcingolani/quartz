@@ -98,7 +98,7 @@ const TrainingDatasetList: FC = () => {
   }
 
   function handleCreate(): void {
-    localStorage.removeItem('info');
+    localStorage.removeItem('TdInfo');
     dispatch.basket.switch(true);
     navigate('/new', '/p/:id/td/');
   }

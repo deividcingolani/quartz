@@ -73,7 +73,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
 
   const initialTags = (): ListItem[] => {
     if (type === ItemDrawerTypes.td) {
-      const infoTD = localStorage.getItem('info');
+      const infoTD = localStorage.getItem('TdInfo');
       if (infoTD) {
         return (
           JSON.parse(infoTD).listTags || [
@@ -176,13 +176,13 @@ const SchematisedTags: FC<FeatureFormProps> = ({
 
   useEffect(() => {
     const infoTD: { [key: string]: string } | any = localStorage.getItem(
-      'info',
+      'TdInfo',
     );
     if (infoTD) {
       const newInfoTD = Object.assign({}, JSON.parse(infoTD), {
         listTags: listTags,
       });
-      localStorage.setItem('info', JSON.stringify(newInfoTD));
+      localStorage.setItem('TdInfo', JSON.stringify(newInfoTD));
     }
   }, [listTags, isLoadingServerTagsTD]);
 

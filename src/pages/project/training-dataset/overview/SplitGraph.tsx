@@ -23,7 +23,7 @@ const SplitGraph: FC<SplitGraphProps> = ({ graph }) => {
         <Box mt="20px" mx="-20px">
           <Flex height="50px" mt="30px" justifyContent="center">
             <Labeling fontSize="18px" gray>
-              This training dataset doesn't contains any splits
+              This training dataset is not splitted
             </Labeling>
           </Flex>
         </Box>

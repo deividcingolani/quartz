@@ -1,5 +1,8 @@
 import { createModel } from '@rematch/core';
-import { TrainingDataset } from '../../../types/training-dataset';
+import {
+  TrainingDataset,
+  TrainingDatasetComputeConf,
+} from '../../../types/training-dataset';
 import { getValidPromisesValues } from '../search/deep-search.model';
 import { TrainingDatasetLabelService } from '../../../services/project';
 import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
@@ -230,6 +233,24 @@ export const trainingDatasetModel = createModel()({
         projectId,
         featureStoreId,
         trainingDatasetId,
+      );
+    },
+    compute: async ({
+      projectId,
+      featureStoreId,
+      trainingDatasetId,
+      computeConf,
+    }: {
+      projectId: number;
+      featureStoreId: number;
+      trainingDatasetId: number;
+      computeConf: TrainingDatasetComputeConf;
+    }): Promise<any> => {
+      await TrainingDatasetService.compute(
+        projectId,
+        featureStoreId,
+        trainingDatasetId,
+        computeConf,
       );
     },
   }),

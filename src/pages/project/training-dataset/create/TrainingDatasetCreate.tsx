@@ -65,6 +65,11 @@ const TrainingDatasetCreate: FC = () => {
       });
 
       if (featureStoreData?.featurestoreId) {
+        const queryDTO = {
+          filter: mapFilters(rowFilters),
+          ...mapJoins(featureStoreData, joins, features),
+        };
+
         const id = await dispatch.trainingDatasets.create({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
@@ -72,16 +77,13 @@ const TrainingDatasetCreate: FC = () => {
             ...restData,
             dataFormat: dataFormatMap.getByKey(dataFormat[0]),
             trainingDatasetType:
-              storage.storageConnectorType === 'S3'
-                ? 'EXTERNAL_TRAINING_DATASET'
-                : 'HOPSFS_TRAINING_DATASET',
+              storage.storageConnectorType === 'HOPSFS'
+                ? 'HOPSFS_TRAINING_DATASET'
+                : 'EXTERNAL_TRAINING_DATASET',
             storageConnector: {
               id: storage.id,
             },
-            queryDTO: {
-              filter: mapFilters(rowFilters),
-              ...mapJoins(joins, features),
-            },
+            queryDTO,
             statisticsConfig: {
               columns: [],
               correlations,
@@ -92,6 +94,17 @@ const TrainingDatasetCreate: FC = () => {
         });
 
         if (id) {
+          // Submit the compute job
+          // TODO(Fabio): in the future, when we have the job configuration
+          // merged, we should redirect the user to configure the job
+          // settings.
+          dispatch.trainingDatasets.compute({
+            projectId: +projectId,
+            featureStoreId: featureStoreData?.featurestoreId,
+            trainingDatasetId: id,
+            computeConf: { query: queryDTO },
+          });
+
           dispatch.trainingDatasets.clear();
           dispatch.basket.switch(false);
           dispatch.basket.clear();

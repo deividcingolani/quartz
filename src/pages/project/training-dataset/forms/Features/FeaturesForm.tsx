@@ -9,11 +9,12 @@ import {
   Divider,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { FC, useCallback, useState, useEffect } from 'react';
 
 // Types
+import { useFormContext } from 'react-hook-form';
 import { Dispatch, RootState } from '../../../../../store';
 import { FeatureGroupBasket } from '../../../../../store/models/localManagement/basket.model';
 import { Feature } from '../../../../../types/feature-group';
@@ -30,9 +31,7 @@ import SearchPopup from '../../../../../components/basket/BasketTutoPopup';
 import FeatureGroupJoinForm from './FeatureGroupJoinForm';
 import CollapsedFeaturesForm from './CollapsedFeaturesForm';
 import FeatureDrawer from '../../../../../components/feature-drawer/FeatureDrawer';
-import { useFormContext } from 'react-hook-form';
 
-import { useNavigate } from 'react-router-dom';
 import routeNames from '../../../../../routes/routeNames';
 
 export interface SelectedState {
@@ -221,20 +220,12 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
               handleDeleteAllFg={handleDeleteAllFg}
               handleOpenStatistics={handleOpenStatistics}
             />
-            {featureGroups.length > 1 && (
-              <>
-                <Divider mt="0" ml="0" width="100%" />
-                <FeatureGroupJoinForm
-                  isDisabled={isDisabled}
-                  featureGroups={featureGroups}
-                />
-                <Divider ml="0" width="100%" />
-                <RowFilters
-                  isDisabled={isDisabled}
-                  featureGroups={featureGroups}
-                />
-              </>
-            )}
+            <FeatureGroupJoinForm
+              isDisabled={isDisabled}
+              featureGroups={featureGroups}
+            />
+            <Divider ml="0" width="100%" />
+            <RowFilters isDisabled={isDisabled} featureGroups={featureGroups} />
           </>
         )}
       </CardSecondary>

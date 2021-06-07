@@ -22,7 +22,7 @@ const featureGroupStatisticsCommits = createModel()({
       featureStoreId: number;
       featureGroupId: number;
     }): Promise<void> => {
-      const { data } = await FeatureGroupsService.getCommits(
+      const { data } = await FeatureGroupsService.getStatisticsCommits(
         projectId,
         featureStoreId,
         featureGroupId,

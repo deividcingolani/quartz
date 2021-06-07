@@ -1,5 +1,8 @@
 import { Flex } from 'rebass';
-import React, { FC, memo } from 'react';
+import React, {
+  FC,
+  memo,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Labeling, Button, Popup, Text } from '@logicalclocks/quartz';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -58,7 +61,7 @@ const BasketEnabledFeaturesSelected: React.FC<any> = ({
           navigate(`/p/${projectId}/td/new`);
         }}
       >
-        {!localStorage.getItem('info')
+        {!localStorage.getItem('TdInfo')
           ? 'New training dataset'
           : 'Back to training dataset'}
       </Button>

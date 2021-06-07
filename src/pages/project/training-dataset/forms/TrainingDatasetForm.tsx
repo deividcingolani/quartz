@@ -5,7 +5,20 @@ import React, { FC, memo, useCallback, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { CardSecondary } from '@logicalclocks/quartz';
+import {
+  CardSecondary,
+  Button,
+  Callout,
+  CalloutTypes,
+  Card,
+  Icon,
+  Input,
+  Labeling,
+  Microlabeling,
+  Select,
+  Tooltip,
+  Value,
+} from '@logicalclocks/quartz';
 
 // Types
 import { TrainingDatasetFormData } from '../types';
@@ -21,21 +34,8 @@ import { mapTags, validateSchema } from '../../feature-group/utils';
 import { name, shortText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
 // Selectors
-import { selectFeatureGroups } from '../../../../store/models/localManagement/basket.selectors';
 import { selectSchematisedTags } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
-import {
-  Button,
-  Callout,
-  CalloutTypes,
-  Card,
-  Icon,
-  Input,
-  Labeling,
-  Microlabeling,
-  Select,
-  Tooltip,
-  Value,
-} from '@logicalclocks/quartz';
+
 import { RootState } from '../../../../store';
 import StatisticConfigurationForm from '../../feature-group/forms/StatisticsConfigurationForm';
 import { dataFormatMap, validateFilters, validateJoins } from '../utils';
@@ -68,7 +68,9 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
   onDelete,
   initialData,
 }) => {
-  const infoTD: { [key: string]: string } | any = localStorage.getItem('info');
+  const infoTD: { [key: string]: string } | any = localStorage.getItem(
+    'TdInfo',
+  );
 
   const methods = useForm({
     defaultValues: {
@@ -151,12 +153,12 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         tags,
         keywords,
       };
-      const prevInfoTD = localStorage.getItem('info');
+      const prevInfoTD = localStorage.getItem('TdInfo');
 
       if (prevInfoTD) {
-        infoTD = Object.assign({}, JSON.parse(prevInfoTD), infoTD);
+        infoTD = { ...JSON.parse(prevInfoTD), ...infoTD };
       }
-      localStorage.setItem('info', JSON.stringify(infoTD));
+      localStorage.setItem('TdInfo', JSON.stringify(infoTD));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -188,28 +190,15 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
   const navigate = useNavigate();
 
   const storages = useSelector(selectFeatureStoreStorageConnectors).filter(
-    ({ storageConnectorType }) => storageConnectorType !== 'JDBC',
+    ({ storageConnectorType }) =>
+      storageConnectorType === 'HOPSFS' ||
+      storageConnectorType === 'S3' ||
+      storageConnectorType === 'ADLS',
   );
-
-  const features = useSelector(selectFeatureGroups);
 
   const onSubmit = useCallback(
     handleSubmit(async (data: TrainingDatasetFormData) => {
       let next = await validateSchema(data.tags, serverTags, setError);
-
-      if (!isEdit) {
-        if (!data.joins) {
-          setError('features', { message: 'Join at least one feature' });
-          return;
-        }
-
-        const hasFeatures = !!data.joins.length;
-        data.features = features;
-        if (!hasFeatures) {
-          setError('features', { message: 'Join at least one feature' });
-          next = false;
-        }
-      }
 
       const { storage } = data;
       if (!storage.id) {
@@ -270,18 +259,19 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         }
       }
 
-      if (!isEdit) {
-        const validatedJoins = validateJoins(data.joins, setError);
+      if (!isEdit && data.features.length === 0) {
+        setError('features', { message: 'Join at least one feature' });
+        return;
+      }
 
-        if (!validatedJoins) {
-          return;
-        }
-
-        const validatedFilter = validateFilters(data.rowFilters, setError);
-
-        if (!validatedFilter) {
-          return;
-        }
+      if (
+        !isEdit &&
+        !(
+          validateJoins(data.features, data.joins, setError) &&
+          validateFilters(data.rowFilters, setError)
+        )
+      ) {
+        return;
       }
 
       if (!next) {
@@ -289,7 +279,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
       }
 
       submitHandler(data);
-      localStorage.removeItem('info');
+      localStorage.removeItem('TdInfo');
     }),
     [setError, serverTags, clearErrors],
   );
@@ -418,7 +408,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                         }
                         intent="inline"
                       >
-                        Create a source
+                        Create a new storage connector ↗
                       </Button>
                     </Flex>
                     <Select
@@ -436,7 +426,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                         ({ name, storageConnectorType }) =>
                           `${name} (${storageConnectorType})`,
                       )}
-                      placeholder="pick a source"
+                      placeholder="pick a storage"
                       onChange={(val) => {
                         const storageName = val[0].slice(
                           0,
@@ -451,7 +441,8 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
                 )}
               />
 
-              {storage?.storageConnectorType === 'S3' && (
+              {(storage?.storageConnectorType === 'S3' ||
+                storage?.storageConnectorType === 'ADLS') && (
                 <Input
                   mb="20px"
                   width="100%"

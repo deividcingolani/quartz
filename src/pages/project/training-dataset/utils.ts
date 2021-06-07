@@ -3,6 +3,7 @@ import { FeatureGroupFilter, FeatureGroupJoin } from './types';
 import { Feature } from '../../../types/feature-group';
 import labelValueMap from '../../../utils/labelValueBind';
 import { FeatureGroupBasket } from '../../../store/models/localManagement/basket.model';
+import { FeatureStore } from '../../../types/feature-store';
 import { TrainingDataset } from '../../../types/training-dataset';
 
 const mapFeaturesToName = (features: Feature[]) =>
@@ -12,48 +13,53 @@ const mapFeatureNamesToName = (names: string[][]) =>
   names.map(([name]) => ({ name }));
 
 export const mapJoins = (
+  featureStore: FeatureStore,
   joins: FeatureGroupJoin[],
   features: FeatureGroupBasket[],
 ) => {
   const [first, ...rest] = joins;
+  // first exists as it has been validated before.
+
   const { firstFg, firstFgJoinKeys, secondFg, secondFgJoinKeys } = first;
 
-  if (firstFg && firstFgJoinKeys && secondFg && secondFgJoinKeys) {
-    return {
-      leftFeatureGroup: {
-        id: firstFg.id,
-      },
-      leftFeatures: mapFeaturesToName(
-        features.find(({ fg: { id } }) => id === firstFg.id)?.features || [],
-      ),
-      joins: [
-        {
-          query: {
-            leftFeatureGroup: { id: secondFg.id },
-            leftFeatures: mapFeaturesToName(
-              features.find(({ fg: { id } }) => id === secondFg.id)?.features ||
-                [],
-            ),
+  return {
+    featureStoreName: featureStore.featurestoreName,
+    featureStoreId: featureStore.featurestoreId,
+    leftFeatureGroup: {
+      id: firstFg?.id,
+    },
+    leftFeatures: mapFeaturesToName(
+      features.find(({ fg: { id } }) => id === firstFg?.id)?.features || [],
+    ),
+    joins: secondFg
+      ? [
+          {
+            query: {
+              leftFeatureGroup: { id: secondFg.id },
+              leftFeatures: mapFeaturesToName(
+                features.find(({ fg: { id } }) => id === secondFg.id)
+                  ?.features || [],
+              ),
+            },
+            leftOn: mapFeatureNamesToName(firstFgJoinKeys),
+            rightOn: mapFeatureNamesToName(secondFgJoinKeys),
+            type: 'INNER',
           },
-          leftOn: mapFeatureNamesToName(firstFgJoinKeys),
-          rightOn: mapFeatureNamesToName(secondFgJoinKeys),
-          type: 'INNER',
-        },
-        ...rest.map(({ firstFgJoinKeys, secondFgJoinKeys, secondFg }) => ({
-          query: {
-            leftFeatureGroup: { id: secondFg?.id },
-            leftFeatures: mapFeaturesToName(
-              features.find(({ fg: { id } }) => id === secondFg?.id)
-                ?.features || [],
-            ),
-          },
-          leftOn: mapFeatureNamesToName(firstFgJoinKeys),
-          rightOn: mapFeatureNamesToName(secondFgJoinKeys),
-          type: 'INNER',
-        })),
-      ],
-    };
-  }
+          ...rest.map(({ firstFgJoinKeys, secondFgJoinKeys, secondFg }) => ({
+            query: {
+              leftFeatureGroup: { id: secondFg?.id },
+              leftFeatures: mapFeaturesToName(
+                features.find(({ fg: { id } }) => id === secondFg?.id)
+                  ?.features || [],
+              ),
+            },
+            leftOn: mapFeatureNamesToName(firstFgJoinKeys),
+            rightOn: mapFeatureNamesToName(secondFgJoinKeys),
+            type: 'INNER',
+          })),
+        ]
+      : [],
+  };
 };
 
 const getFilterName = (operation: string) => {
@@ -122,8 +128,21 @@ export const dataFormatMap = labelValueMap<{ [key: string]: string }>({
   Avro: 'avro',
 });
 
-export const validateJoins = (joins: FeatureGroupJoin[], setError: any) => {
+export const validateJoins = (
+  featureGroups: FeatureGroupBasket[],
+  joins: FeatureGroupJoin[],
+  setError: any,
+) => {
   let result = true;
+
+  const featureGroupCount = new Set(featureGroups.map(({ fg }) => fg.id)).size;
+
+  if (featureGroupCount === 1) {
+    // nothing to validate in this case as there is a single
+    // feature group in the join.
+    // In this case users cannot change the behavior of the join
+    return true;
+  }
 
   joins.forEach(
     ({ firstFgJoinKeys, firstFg, secondFgJoinKeys, secondFg }, index) => {
@@ -176,8 +195,8 @@ export const validateFilters = (
       setError(`filters[${index}].features`, { message: 'Select feature' });
       result = false;
     }
-    if (!value || Number.isNaN(+value)) {
-      setError(`filters[${index}].value`, { message: 'Float expected' });
+    if (!value) {
+      setError(`filters[${index}].value`, { message: 'Value expected' });
       result = false;
     }
   });

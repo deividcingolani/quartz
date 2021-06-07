@@ -60,3 +60,7 @@ export interface TrainingDatasetQuery {
   name: string;
   matchText: string;
 }
+
+export interface TrainingDatasetComputeConf {
+  query: any;
+}

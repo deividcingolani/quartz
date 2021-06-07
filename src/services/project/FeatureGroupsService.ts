@@ -132,7 +132,7 @@ class FeatureGroupsService extends BaseApiService {
       type: RequestType.get,
     });
 
-  getCommits = (
+  getStatisticsCommits = (
     projectId: number,
     featureStoreId: number,
     featureGroupId: number,

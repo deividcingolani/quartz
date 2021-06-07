@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import {
   Badge,
@@ -12,6 +12,7 @@ import {
 } from '@logicalclocks/quartz';
 import icons from '../../../../../sources/icons';
 import { FeatureGroupBasket } from '../../../../../store/models/localManagement/basket.model';
+import FeatureGroupsService from '../../../../../services/project/FeatureGroupsService';
 
 export interface CollapsedFeaturesFormProps {
   isDisabled: boolean;
@@ -21,6 +22,11 @@ export interface CollapsedFeaturesFormProps {
   handleOpenStatistics: (index: number, name: string) => () => void;
 }
 
+export interface FgCommitCount {
+  fgId: number;
+  numCommits: number;
+}
+
 const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
   handleDelete,
   featureGroups,
@@ -28,21 +34,60 @@ const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
   handleOpenStatistics,
   isDisabled,
 }) => {
+  // For each feature in the basket, if Hudi, check if they have at least one commit
+  const [fgCommits, setFgCommits] = useState<Map<number, number>>();
+
+  const fetchCommits = useCallback(async () => {
+    const fgCommitCounts = await Promise.all(
+      featureGroups.map(
+        ({ fg, projectId }): Promise<FgCommitCount> => {
+          return new Promise((resolve) => {
+            if (fg.timeTravelFormat === 'HUDI') {
+              FeatureGroupsService.getCommitsDetail(
+                projectId,
+                fg.featurestoreId,
+                fg.id,
+                1,
+              ).then(({ data }) => {
+                resolve({
+                  fgId: fg.id,
+                  numCommits: data?.count || 0,
+                });
+              });
+            } else {
+              resolve({
+                fgId: fg.id,
+                numCommits: 0,
+              });
+            }
+          });
+        },
+      ),
+    );
+
+    const fgCommits = new Map<number, number>();
+    fgCommitCounts.forEach(({ fgId, numCommits }) => {
+      fgCommits.set(fgId, numCommits);
+    });
+    setFgCommits(fgCommits);
+  }, [featureGroups]);
+
+  useEffect(() => {
+    fetchCommits();
+  }, [featureGroups, fetchCommits]);
+
+  const [isOpen,setIsOpen] = useState<boolean>(false);
+  const handleSetIsOpen = ()=>{
+    setIsOpen(!isOpen);
+  }
+
   return (
     <>
-      {featureGroups.length < 2 && (
-        <Box>
-          <Callout
-            content="At least 2 feature groups are required to create a training dataset"
-            type={CalloutTypes.warning}
-          />
-        </Box>
-      )}
-      <Flex flexDirection="column">
+      <Flex mt="20px" flexDirection="column">
         {!featureGroups.length && <Value mt="10px">No features selected</Value>}
-        {featureGroups.map(({ fg, features, projectId }, index) => (
+        {featureGroups.map(({ fg, features }, index) => (
           <Box key={index}>
-            {fg.timeTravelFormat === 'HUDI' && (
+            {fg.timeTravelFormat === 'HUDI' && fgCommits?.get(fg.id) === 0 && (
               <Box mb="10px" mt="-10px">
                 <Callout
                   content={`${fg.name} does not contain any data, it can't be joined`}

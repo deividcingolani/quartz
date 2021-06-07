@@ -1,8 +1,7 @@
 import { Box } from 'rebass';
-import { useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Value } from '@logicalclocks/quartz';
+import { Divider, Value } from '@logicalclocks/quartz';
 
 // Components
 import JoinsMessage from './JoinsMessage';
@@ -10,7 +9,6 @@ import InnerJoinForm from './InnerJoinForm';
 // Types
 import { FeatureGroupJoin } from '../../types';
 import { FeatureGroup } from '../../../../../types/feature-group';
-import { selectFeatureGroupsData } from '../../../../../store/models/feature/selectors';
 import { FeatureGroupBasket } from '../../../../../store/models/localManagement/basket.model';
 // Utils
 import randomString from '../../../../../utils/randomString';
@@ -21,28 +19,27 @@ const FeatureGroupJoinForm: FC<{
 }> = ({ featureGroups: basketFeatureGroups, isDisabled }) => {
   const { setValue } = useFormContext();
 
-  const initialJoins = ():FeatureGroupJoin[] => {
-    const itemTD = localStorage.getItem('info');
+  const initialJoins = (): FeatureGroupJoin[] => {
+    const itemTD = localStorage.getItem('TdInfo');
 
-    if(itemTD){
+    if (itemTD) {
       return JSON.parse(itemTD).joins || [];
     }
 
     return [];
-  }
+  };
 
   const [joins, setJoins] = useState<FeatureGroupJoin[]>(initialJoins());
-
-  const featureGroups = useSelector(selectFeatureGroupsData).data;
 
   const mappedFeatureGroups = useMemo(
     () =>
       basketFeatureGroups.reduce((acc: FeatureGroup[], { fg }) => {
-        const featureGroup = featureGroups.find(({ id }) => id === fg.id);
-
-        return featureGroup ? [...acc, featureGroup] : acc;
+        if (!acc.find(({ id }) => id === fg.id)) {
+          return [...acc, fg];
+        }
+        return acc;
       }, []),
-    [featureGroups, basketFeatureGroups],
+    [basketFeatureGroups],
   );
 
   const options = useMemo(() => {
@@ -73,23 +70,29 @@ const FeatureGroupJoinForm: FC<{
   );
 
   useEffect(() => {
-    if(localStorage.getItem('info')){
+    if (localStorage.getItem('TdInfo')) {
       return;
     }
-    
+
     if (mappedFeatureGroups.length >= 1) {
-      const joinsFromFgs = new Array(mappedFeatureGroups.length - 1)
+      const joinsFromFgs = new Array(
+        // For single feature groups we need at least
+        // a join object to work (with only the firstFg populated)
+        Math.max(mappedFeatureGroups.length - 1, 1),
+      )
         .fill(0)
         .map(() => ({
           id: randomString(),
           firstFgJoinKeys: [[]],
           secondFgJoinKeys: [[]],
+          ...(mappedFeatureGroups.length === 1 && {
+            firstFg: mappedFeatureGroups[0],
+          }),
           ...(mappedFeatureGroups.length === 2 && {
             firstFg: mappedFeatureGroups[0],
             secondFg: mappedFeatureGroups[1],
           }),
         }));
-      
       setJoins(joinsFromFgs);
     }
   }, [mappedFeatureGroups]);
@@ -98,29 +101,38 @@ const FeatureGroupJoinForm: FC<{
     setValue('joins', joins);
   }, [joins, setValue]);
 
+  useEffect(() => {
+    const infoTD: { [key: string]: string } | any = localStorage.getItem(
+      'TdInfo',
+    );
 
-  useEffect(()=>{
-    const infoTD: { [key: string]: string } | any = localStorage.getItem('info');
-
-    if(infoTD){
-      const newInfoTD = Object.assign({},JSON.parse(infoTD),{"joins": joins})
-      localStorage.setItem('info', JSON.stringify(newInfoTD));
+    if (infoTD) {
+      const newInfoTD = { ...JSON.parse(infoTD), joins };
+      localStorage.setItem('TdInfo', JSON.stringify(newInfoTD));
     }
-  },[joins]);
+  }, [joins]);
 
   return (
-    <Box>
-      <Value>Feature group joins</Value>
+    <>
+      {mappedFeatureGroups.length > 1 && (
+        <>
+          <Divider mt="0" ml="0" width="100%" />
 
-      {joins.length > 1 && <JoinsMessage joins={joins} />}
+          <Box>
+            <Value>Feature group joins</Value>
 
-      <InnerJoinForm
-        items={joins}
-        options={options}
-        isDisabled={isDisabled}
-        handleChange={handleChange}
-      />
-    </Box>
+            <JoinsMessage joins={joins} />
+
+            <InnerJoinForm
+              items={joins}
+              options={options}
+              isDisabled={isDisabled}
+              handleChange={handleChange}
+            />
+          </Box>
+        </>
+      )}
+    </>
   );
 };
 

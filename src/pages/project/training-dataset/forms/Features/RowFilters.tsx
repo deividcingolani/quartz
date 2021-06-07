@@ -84,7 +84,7 @@ const RowFilters: FC<{
         <Tooltip
           ml="8px"
           mb="-4px"
-          mainText="Filters let you drop rows which does not fit your requirements"
+          mainText="Filters let you include only the rows that match your requirements"
         >
           <Box
             sx={{

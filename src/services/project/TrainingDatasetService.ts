@@ -1,6 +1,7 @@
 import BaseApiService, { RequestType } from '../BaseApiService';
 import {
   TrainingDataset,
+  TrainingDatasetComputeConf,
   TrainingDatasetQuery,
 } from '../../types/training-dataset';
 
@@ -229,6 +230,19 @@ class TrainingDatasetService extends BaseApiService {
         offsetOptions,
       )}&sort_by=TIMESTAMP:${sortType}`,
     });
+
+  compute = (
+    projectId: number,
+    featureStoreId: number,
+    tdId: number,
+    data: TrainingDatasetComputeConf,
+  ) => {
+    this.request<any>({
+      type: RequestType.post,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${tdId}/compute`,
+      data,
+    });
+  };
 }
 
 export default new TrainingDatasetService('/project');
