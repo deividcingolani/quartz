@@ -142,7 +142,6 @@ const FeatureGroupStatistics: FC = () => {
     }
 
     return () => {
-      dispatch.featureGroupStatistics.clear();
       dispatch.featureGroupRows.clear();
     };
   }, [id, fgId, dispatch, featureStoreData, commitTime]);

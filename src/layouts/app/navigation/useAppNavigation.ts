@@ -99,6 +99,11 @@ const useAppNavigation = (): TreeNode[] => {
   const featureGroup = useSelector(
     (state: RootState) => state.featureGroupView,
   );
+
+  const featureGroupStatistics = useSelector(
+    (state: RootState) => state.featureGroupStatistics,
+  );
+
   const trainingDataset = useSelector(
     (state: RootState) => state.trainingDatasetView,
   );
@@ -110,7 +115,8 @@ const useAppNavigation = (): TreeNode[] => {
     const tdConfig = trainingDataset?.statisticsConfig;
     const jobsConfig = jobs?.statisticsConfig;
 
-    const fgStatisticsDisabled = !fgConfig?.enabled;
+    const fgStatisticsDisabled = !featureGroupStatistics;
+
     const fgCorrelationsDisabled =
       !fgConfig?.enabled || !fgConfig?.correlations;
 
@@ -134,7 +140,7 @@ const useAppNavigation = (): TreeNode[] => {
       jobStatisticsDisabled,
       jobCorrelationsDisabled,
     };
-  }, [featureGroup, trainingDataset, jobs]);
+  }, [featureGroup, trainingDataset, featureGroupStatistics, jobs]);
 
   const createFgAnchorLink = useCallback(
     (title: string, to: string, id: string) => ({

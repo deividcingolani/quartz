@@ -6,6 +6,7 @@ import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 // Selectors
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import { useParams } from 'react-router-dom';
 
 export interface UseFeatureGroupView {
   data: FeatureGroupViewState;
@@ -17,6 +18,7 @@ const useFeatureGroupView = (
   projectId: number,
   fgId: number,
 ): UseFeatureGroupView => {
+  const { commitTime } = useParams();
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.featureGroupView.fetch,
@@ -29,8 +31,16 @@ const useFeatureGroupView = (
   const dispatch = useDispatch<Dispatch>();
 
   const fetchData = useCallback(() => {
+    dispatch.featureGroupStatistics.clear();
     if (featureStoreData?.featurestoreId && !isLoading) {
-      dispatch.featureGroupView.fetch({
+      dispatch.featureGroupStatistics.fetch({
+        projectId: +projectId,
+        featureStoreId: featureStoreData.featurestoreId,
+        featureGroupId: +fgId,
+        timeCommit: commitTime,
+      });
+
+      return dispatch.featureGroupView.fetch({
         projectId,
         featureStoreId: featureStoreData.featurestoreId,
         featureGroupId: fgId,
