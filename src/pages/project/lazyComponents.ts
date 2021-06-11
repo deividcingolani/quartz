@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const ProjectView = React.lazy(() => import('./view/ProjectView'));
+export const Settings = React.lazy(() => import('./settings/Settings'));
 export const ProjectEdit = React.lazy(() => import('./edit/ProjectEdit'));
 export const FeatureGroupList = React.lazy(
   () => import('./feature-group/list/FeatureGroupList'),

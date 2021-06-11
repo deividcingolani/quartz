@@ -8,15 +8,24 @@ export interface ErrorProps {
   errorTitle: string;
   errorMessage: ReactNode;
   actions?: ReactNode;
+  children?: ReactNode;
 }
 
-const Error: FC<ErrorProps> = ({ errorTitle, errorMessage, actions }) => {
+const Error: FC<ErrorProps> = ({
+  errorTitle,
+  errorMessage,
+  actions,
+  children,
+}) => {
   return (
     <Flex flexDirection="column" alignItems="center" my="auto">
-      <Value fontSize="22px" mb="11px">
+      <Value fontSize="48px" mb="8px" sx={{ color: 'gray' }}>
         {errorTitle}
       </Value>
-      {errorMessage}
+      <Value fontSize="24px" mb="34px" sx={{ color: 'gray' }}>
+        {errorMessage}
+      </Value>
+      {children && <Flex mb="34px">{children}</Flex>}
       <Flex>
         <ErrorProjectsContent actions={actions} />
       </Flex>

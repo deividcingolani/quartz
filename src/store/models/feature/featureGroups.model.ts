@@ -7,6 +7,7 @@ import { FeatureGroup } from '../../../types/feature-group';
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
 import { getValidPromisesValues } from '../search/deep-search.model';
+import ShortcutsService from '../../../services/project/ShortcutsService';
 
 export type FeatureGroupState = FeatureGroup[];
 
@@ -238,6 +239,7 @@ const featureGroups = createModel()({
         featureStoreId,
         featureGroupId,
       );
+      ShortcutsService.delete(projectId, featureGroupId);
     },
   }),
 });

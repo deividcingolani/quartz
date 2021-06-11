@@ -9,6 +9,7 @@ import { NotificationsManager } from '@logicalclocks/quartz';
 import { Dispatch, RootState } from '../../store';
 // Components
 import Error404 from '../../pages/error/404Error';
+import Error403 from '../../pages/error/403Error';
 import ConnectionError from '../../pages/error/ConnectionError';
 // Utils
 import NotificationContent from '../../utils/notifications/notificationValue';
@@ -80,7 +81,11 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (error && error.response?.status !== 401) {
+    if (
+      error &&
+      error.response?.status !== 401 &&
+      error.response?.status !== 403
+    ) {
       NotificationsManager.create({
         type: <NotificationTitle message={getErrorTitle(error)} />,
         content: <NotificationContent {...getErrorContent(error)} />,
@@ -114,6 +119,8 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
     switch (globalError.status || globalError.response?.status) {
       case 404:
         return <Error404 />;
+      case 403:
+        return <Error403 />;
       default:
         return <ConnectionError />;
     }

@@ -36,3 +36,20 @@ export interface Project {
   featureGroupsCount?: number;
   trainingDatasetsCount?: number;
 }
+
+export interface CrossUserProject {
+  archived: boolean;
+  created: string;
+  description: string;
+  dockerImage: string;
+  id: number;
+  inode: any;
+  kafkaMaxNumTopics: number;
+  lastQuotaUpdate: string;
+  logs: boolean;
+  name: string;
+  owner: any;
+  paymentType: string;
+  pythonEnvironment: any;
+  retentionPeriod: string;
+}

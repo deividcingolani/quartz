@@ -35,7 +35,9 @@ const ErrorProjectsContent: FC<ErrorProjectsContentProps> = ({ actions }) => {
 
   return (
     <>
-      <Button onClick={() => navigate('/')}>back to project list</Button>
+      <Button intent="ghost" onClick={() => navigate('/')}>
+        See all projects
+      </Button>
       {actions}
     </>
   );

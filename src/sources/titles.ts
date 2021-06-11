@@ -3,6 +3,8 @@ const titles = {
   createProject: 'Create a project',
   editProject: 'Edit',
 
+  projectSettings: 'Project settings',
+
   login: 'Login',
   register: 'Register',
   forgotPassword: 'Forgot password',

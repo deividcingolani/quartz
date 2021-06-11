@@ -25,6 +25,7 @@ import {
   FeatureGroupOverview,
   TrainingDatasetList,
   ProjectView,
+  Settings,
   ProjectEdit,
   TrainingDatasetOverview,
   TrainingDatasetStatistics,
@@ -82,6 +83,7 @@ const Project: FC = () => {
     <Routes>
       <Route path="/view" element={<ProjectView />} />
       <Route path="/edit" element={<ProjectEdit />} />
+      <Route path="/settings" element={<Settings />} />
       <Route
         path={routeNames.featureGroup.edit}
         element={<FeatureGroupEdit />}
@@ -247,9 +249,9 @@ const Project: FC = () => {
         element={<StorageConnectorsCreate />}
       />
 
-      <Route path="/integrations/code" element={<ProjectCode />} />
-      <Route path="/integrations/spark" element={<ProjectSpark />} />
-      <Route path="/integrations/databricks" element={<ProjectDatabricks />} />
+      <Route path="/settings/integrations/code" element={<ProjectCode />} />
+      <Route path="/settings/integrations/spark" element={<ProjectSpark />} />
+      <Route path="/settings/integrations/databricks" element={<ProjectDatabricks />} />
 
       <Route
         path={routeNames.expectation.attach}

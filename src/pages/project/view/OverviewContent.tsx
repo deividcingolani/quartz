@@ -1,63 +1,137 @@
-import { Flex } from 'rebass';
-import React, { FC, memo, useCallback } from 'react';
+import { Box, Flex } from 'rebass';
+import React, { FC, memo, useMemo } from 'react';
 import {
   Button,
   Card,
   FreshnessBar,
+  Input,
   Labeling,
   Microlabeling,
+  TinyPopup,
+  usePopup,
   Value,
 } from '@logicalclocks/quartz';
-import { useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
+// Hooks
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+// Utils
 import { formatDistance } from 'date-fns';
+import getInputValidation from '../../../utils/getInputValidation';
 // Types
+import { User } from '../../../types/user';
 import { Project } from '../../../types/project';
+import { RootState } from '../../../store';
 // Components
 import DateValue from '../feature-group/list/DateValue';
 import ProjectMembers from './ProjectMembers';
-import Integrations from './Integrations';
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
+import Shortcuts from './Shortcuts';
+import { shortText } from '../../../utils/validators';
 
 export interface ContentProps {
   data: Project;
+  currentUser: User;
+  onUpdateDescription: (data: { description: string }) => void;
   onClickEdit: () => void;
 }
 
-const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
-  const navigate = useNavigate();
-
-  const handleNavigate = useCallback(() => {
-    navigate(`/p/${data.projectId}/edit`);
-  }, [data, navigate]);
+const OverviewContent: FC<ContentProps> = ({
+  data,
+  currentUser,
+  onClickEdit,
+  onUpdateDescription,
+}) => {
+  const [isOpen, handleToggle] = usePopup();
 
   const getHref = useGetHrefForRoute();
 
+  const userRole = useMemo(() => {
+    const userInTeam = data.projectTeam?.find(
+      ({ user }) => user.username === currentUser.username,
+    );
+    return userInTeam?.teamRole;
+  }, [currentUser.username, data.projectTeam]);
+
+  const schema = yup.object().shape({
+    description: shortText.label('Description'),
+  });
+
+  const { errors, register, handleSubmit } = useForm({
+    defaultValues: { description: data?.description },
+    resolver: yupResolver(schema),
+    shouldUnregister: false,
+  });
+
+  const isSubmitting = useSelector(
+    (state: RootState) => state.loading.effects.project.edit,
+  );
+
   return (
     <>
+      <TinyPopup
+        width="440px"
+        isOpen={isOpen}
+        onClose={handleToggle}
+        disabledMainButton={isSubmitting}
+        disabledSecondaryButton={isSubmitting}
+        closeOnBackdropClick={!isSubmitting}
+        secondaryButton={['Back', handleToggle]}
+        mainButton={['Save', handleSubmit(onUpdateDescription)]}
+        title="Edit description"
+        secondaryText=""
+      >
+        <Input
+          label="Description"
+          name="description"
+          width="100%"
+          ref={register}
+          placeholder="Enter project name to delete it"
+          {...getInputValidation('description', errors)}
+        />
+        <Box mb="20px" />
+      </TinyPopup>
       <Card
         actions={
           <Button
-            href={getHref(`/p/${data.projectId}/edit`)}
+            href={getHref(`/p/${data.projectId}/settings`)}
             mr="-10px"
             intent="inline"
             onClick={onClickEdit}
           >
-            edit
+            Project Settings
           </Button>
         }
         title="Project overview"
       >
+        <Box>
+          <Flex
+            alignItems="center"
+            p="10px"
+            sx={{ border: '1px solid', borderColor: 'grayShade2' }}
+          >
+            <Value>On this project, your access role is</Value>
+            &nbsp;
+            <Value color="labels.green">{userRole}</Value>
+          </Flex>
+        </Box>
         <Flex flexDirection="column">
-          {data.description ? (
-            <Labeling mt="15px" gray>
+          <Flex flexDirection="row" alignItems="baseline">
+            <Labeling mt="20px" gray>
               {data.description}
             </Labeling>
-          ) : (
-            <Button variant="inline" p="0" mt="15px" onClick={handleNavigate}>
-              + add a description
-            </Button>
-          )}
 
+            <Button
+              ml="5px"
+              variant="inline"
+              p="0"
+              mt="15px"
+              onClick={handleToggle}
+            >
+              {data.description ? 'edit description' : '+ add a description'}
+            </Button>
+          </Flex>
           <Flex mt="25px" alignItems="center">
             {!!data.created && (
               <>
@@ -79,12 +153,6 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
                 />
               </>
             )}
-            {/*<Flex flexDirection="column">*/}
-            {/*  <Microlabeling mb="3px" gray>*/}
-            {/*    Storage Connectors*/}
-            {/*  </Microlabeling>*/}
-            {/*  <Value primary>{data.projectId}</Value>*/}
-            {/*</Flex>*/}
             <Flex flexDirection="column" ml="30px">
               <Microlabeling mb="3px" gray>
                 Feature Groups
@@ -98,10 +166,10 @@ const OverviewContent: FC<ContentProps> = ({ data, onClickEdit }) => {
               <Value primary>{data.trainingDatasetsCount}</Value>
             </Flex>
           </Flex>
+          {!!data.projectTeam && <ProjectMembers data={data} />}
         </Flex>
       </Card>
-      {!!data.projectTeam && <ProjectMembers data={data} />}
-      <Integrations />
+      <Shortcuts userId={currentUser.id} />
     </>
   );
 };

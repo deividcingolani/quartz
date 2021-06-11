@@ -48,6 +48,7 @@ import jobsExecutions from './jobs/executions/jobsExecutions.model';
 import featureStoreSettings from './settings/featureStoreSettings.model';
 import fileExplorerDataset from './file-explorer/fileExplorerDataset.model';
 import uploadFileData from './file-explorer/uploadFileData.model';
+import crossProject from './projects/crossProject.model';
 
 export interface RootModel extends Models<RootModel> {
   api: typeof api;
@@ -97,6 +98,7 @@ export interface RootModel extends Models<RootModel> {
   jobsExecutions: typeof jobsExecutions;
   fileExplorerDataset: typeof fileExplorerDataset;
   uploadFileData: typeof uploadFileData;
+  crossProject: typeof crossProject;
 }
 
 const models: RootModel = {
@@ -147,6 +149,7 @@ const models: RootModel = {
   jobsExecutions,
   fileExplorerDataset,
   uploadFileData,
+  crossProject,
 };
 
 export default models;

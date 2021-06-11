@@ -30,11 +30,6 @@ const routeNames = {
 
   project: {
     view: 'p/:id/*',
-    integrations: {
-      code: 'p/:id/integrations/code',
-      databricks: 'p/:id/integrations/databricks',
-      spark: 'p/:id/integrations/spark',
-    },
     viewHome: 'p/:id/view',
     list: '/',
     edit: 'p/:id/edit',
@@ -109,6 +104,11 @@ const routeNames = {
 
   settings: {
     view: 'settings/*',
+    integrations: {
+      code: 'p/:id/settings/integrations/code',
+      databricks: 'p/:id/settings/integrations/databricks',
+      spark: 'p/:id/settings/integrations/spark',
+    },
     schematisedTags: {
       list: 'settings/schematised-tags',
       create: 'settings/schematised-tags/new',
