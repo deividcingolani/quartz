@@ -205,13 +205,14 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                         mx="8px"
                         px="7.5px"
                         intent="ghost"
+                        disabled={!execution.monitoring}
                         href={`
-                            // ${process.env.REACT_APP_API_HOST_EXEC}
+                           ${process.env.REACT_APP_API_HOST_EXEC}/${execution.monitoring?.sparkUrl}
                         `}
                         onClick={() =>
                           window.open(
                             `
-                          ${process.env.REACT_APP_API_HOST_EXEC}
+                          ${process.env.REACT_APP_API_HOST_EXEC}/${execution.monitoring?.sparkUrl}
                         `,
                             '_blank',
                           )
@@ -231,13 +232,14 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                         mx="8px"
                         px="7.5px"
                         intent="ghost"
+                        disabled={!execution.monitoring}
                         href={`
-                          ${process.env.REACT_APP_API_HOST_EXEC}
+                          ${process.env.REACT_APP_API_HOST_EXEC}/${execution.monitoring?.yarnUrl}
                         `}
                         onClick={() =>
                           window.open(
                             `
-                          ${process.env.REACT_APP_API_HOST_EXEC}
+                          ${process.env.REACT_APP_API_HOST_EXEC}/${execution.monitoring?.yarnUrl}
                         `,
                             '_blank',
                           )
@@ -257,13 +259,14 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                         mx="8px"
                         px="7.5px"
                         intent="ghost"
+                        disabled={!execution.monitoring}
                         href={`
-                          ${process.env.REACT_APP_API_HOST_EXEC}
+                          ${process.env.REACT_APP_API_HOST_EXEC}/${execution.monitoring?.grafanaUrl}
                         `}
                         onClick={() =>
                           window.open(
                             `
-                          ${process.env.REACT_APP_API_HOST_EXEC}
+                          ${process.env.REACT_APP_API_HOST_EXEC}/${execution.monitoring?.grafanaUrl}
                         `,
                             '_blank',
                           )
@@ -283,13 +286,14 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                         mx="8px"
                         px="7.5px"
                         intent="ghost"
+                        disabled={!execution.monitoring}
                         href={`
-                          ${process.env.REACT_APP_API_DOMAIN}
+                          ${process.env.REACT_APP_API_DOMAIN}${kibanaUrl}${execution.monitoring?.kibanaUrl}
                         `}
                         onClick={() =>
                           window.open(
                             `
-                          ${process.env.REACT_APP_API_DOMAIN}
+                          ${process.env.REACT_APP_API_DOMAIN}${kibanaUrl}${execution.monitoring?.kibanaUrl}
                         `,
                             '_blank',
                           )
