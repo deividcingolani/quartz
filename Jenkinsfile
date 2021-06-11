@@ -47,6 +47,8 @@ pipeline {
 
                 # Prepare environment file for production
                 echo "REACT_APP_API_HOST=\"/hopsworks-api/api\"" > .env
+                echo "REACT_APP_API_HOST_EXEC=\"/hopsworks-api\"" >> .env
+                echo "REACT_APP_API_DOMAIN=\"\"" >> .env
 
                 # Build artifact
                 yarn build
