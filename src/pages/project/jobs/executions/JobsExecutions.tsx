@@ -2,6 +2,7 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { parse } from 'date-fns';
 import JobsExecutionsContent from './JobsExecutionsContent';
 import { RootState } from '../../../../store';
 import { JobsViewExecutions } from '../../../../store/models/jobs/executions/jobsExecutions.model';
@@ -65,19 +66,21 @@ const JobsExecutions: FC = () => {
   }, [executionData]);
 
   const [fromDate, setFromDate] = useState(() => {
-    return !!from
+    return from
       ? new Date(+from)
-      : !!fromTestDate
+      : fromTestDate
       ? new Date(fromTestDate)
       : new Date();
   });
-  const [toDate, setToDate] = useState(!!to ? new Date(+to) : new Date());
+  const [toDate, setToDate] = useState(to ? new Date(+to) : new Date());
 
   useEffect(() => {
     if (executionData) {
-      const dd = executionData ? Object.keys(executionData).pop() : new Date();
+      const dd = Object.keys(executionData).pop();
       if (dd && !from) {
-        setFromDate(new Date(dd));
+        setFromDate(parse(dd, 'dd MMM. y', new Date()));
+      } else if (!from) {
+        setFromDate(new Date());
       }
     }
   }, [executionData, from]);
@@ -103,7 +106,7 @@ const JobsExecutions: FC = () => {
   };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [twentyEventDate, setDateOfTwentyEvent] = useState(
-    //@ts-ignore
+    // @ts-ignore
     new Date(fromTestDate),
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -134,7 +137,7 @@ const JobsExecutions: FC = () => {
         const count = await dispatch.jobsExecutions.fetch({
           projectId: +id,
           jobsName: item.name,
-          eventType: newEvent ? newEvent : event,
+          eventType: newEvent || event,
           offsetOptions: {
             offset: 0,
             limit: batchSize,
@@ -178,7 +181,7 @@ const JobsExecutions: FC = () => {
       handleRefreshData(data);
 
       navigate(
-        `/${!!type ? `${type}/` : ''}${
+        `/${type ? `${type}/` : ''}${
           data.newStartDate ? +data.newStartDate : +fromDate - 1
         }/${data.newEndDate ? +data.newEndDate : +toDate + 1}`,
         'p/:id/jobs/:jobId/executions/*',
@@ -207,9 +210,7 @@ const JobsExecutions: FC = () => {
 
       if (newType && newType[0]) {
         navigate(
-          `/${newType[0]}/${!!from ? from : +twentyEventDate}/${
-            !!to ? to : +new Date()
-          }`,
+          `/${newType[0]}/${from || +twentyEventDate}/${to || +new Date()}`,
           'p/:id/jobs/:jobId/executions/*',
         );
       }

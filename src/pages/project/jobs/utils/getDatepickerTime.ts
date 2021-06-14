@@ -32,5 +32,5 @@ export const getDatePickerTime = (
     }
   }
 
-  return format(time, 'dd MMM. y ha');
+  return format(time, 'dd MMM. y H:mm a');
 };
