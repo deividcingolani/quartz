@@ -9,14 +9,19 @@ import {
   NotificationsManager,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
-import { format, fromUnixTime } from 'date-fns';
+import {
+  format,
+  formatDuration,
+  fromUnixTime,
+  intervalToDuration,
+} from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 import Loader from '../../../../components/loader/Loader';
 import { DataEntity } from '../../../../types';
 import { Dispatch, RootState } from '../../../../store';
-import CommitGraph from './../../../../components/drawer/commit-graph';
+import CommitGraph from '../../../../components/drawer/commit-graph';
 import icons from '../../../../sources/icons';
 import { setStatus } from '../utils/setStatus';
 import { setTypeOfJob } from '../utils/setTypeOfJob';
@@ -27,6 +32,7 @@ import { getPathAndFileName } from '../utils/getPathAndFileName';
 import ExecutionDropdown from './ExecutionDropdown';
 import NotificationBadge from '../../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../../utils/notifications/notificationValue';
+import executionDurationLocale from '../utils/durationLocale';
 
 export interface JobsDrawerProps<T extends DataEntity> {
   itemId: number;
@@ -72,16 +78,16 @@ const JobDrawer = <T extends DataEntity>({
 
   const dispatch = useDispatch<Dispatch>();
 
-  const item: any = useMemo(() => data.find(({ id }) => id === itemId), [
-    itemId,
-    data,
-  ]);
+  const item: any = useMemo(
+    () => data.find(({ id }) => id === itemId),
+    [itemId, data],
+  );
 
   useEffect(() => {
     if (projectId && item) {
-      dispatch.jobsView.fetch({ projectId: projectId, jobsName: item.name });
+      dispatch.jobsView.fetch({ projectId, jobsName: item.name });
       dispatch.jobsExecutions.fetch({
-        projectId: projectId,
+        projectId,
         jobsName: item.name,
         eventType: ExecutionsTypeSortOptions.ALL,
         isSorting: false,
@@ -114,7 +120,7 @@ const JobDrawer = <T extends DataEntity>({
   useEffect(() => {
     if (projectId && item) {
       dispatch.jobsView.fetch({
-        projectId: projectId,
+        projectId,
         jobsName: item.name,
       });
     }
@@ -355,10 +361,23 @@ const JobDrawer = <T extends DataEntity>({
                                 mt: '4px',
                               }}
                             >
-                              {format(
-                                new Date(fromUnixTime(ex.duration)),
-                                "h'h' mm'm' ss's'",
-                              )}
+                              {ex.duration
+                                ? formatDuration(
+                                    intervalToDuration({
+                                      start: 0,
+                                      end: ex.duration,
+                                    }),
+                                    {
+                                      format: [
+                                        'days',
+                                        'hours',
+                                        'minutes',
+                                        'seconds',
+                                      ],
+                                      locale: executionDurationLocale,
+                                    },
+                                  )
+                                : '-'}
                             </Value>
                           </Flex>
                         </Flex>
@@ -421,7 +440,7 @@ const JobDrawer = <T extends DataEntity>({
             )}
             {!isJobsLoading &&
               !isJobsExecutionsLoading &&
-              (!!jobsItem ? (
+              (jobsItem ? (
                 <Flex width="100%" flexDirection="column">
                   <Flex flexDirection="column" mt="0px">
                     <Labeling

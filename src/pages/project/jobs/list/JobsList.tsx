@@ -543,9 +543,9 @@ const JobsList: FC = () => {
                         'Author',
                         'Type',
                         'Last run',
-                        'Duration',
-                        'State',
-                        'Status',
+                        'Last run duration',
+                        'Last run state',
+                        'Last run status',
                       ]}
                       middleColumn={8}
                       groupComponents={

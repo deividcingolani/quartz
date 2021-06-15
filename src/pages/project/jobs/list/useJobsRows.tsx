@@ -1,29 +1,27 @@
 import React, { useCallback, useMemo } from 'react';
 import { Value, Badge, Tooltip, User } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
+import {
+  formatDuration,
+  intervalToDuration,
+} from 'date-fns';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { formatDistance } from 'date-fns/esm';
 import icons from '../../../../sources/icons';
 import ProfileService from '../../../../services/ProfileService';
-import { format, fromUnixTime } from 'date-fns';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 
-//utils
+// utils
 import { setStatus } from '../utils/setStatus';
 import { setTypeOfJob } from '../utils/setTypeOfJob';
-import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import executionDurationLocale from '../utils/durationLocale';
 
 const useJobsListRowData = (jobs: any) => {
   const navigate = useNavigateRelative();
   const dispatch = useDispatch();
   const { id } = useParams();
-
-  const calculateLastRun = (date: string) => {
-    const toDay = new Date().getTime();
-    const lastRun = new Date(date).getTime();
-
-    return Math.ceil(Math.abs(toDay - lastRun) / (1000 * 3600 * 24));
-  };
 
   const handleNavigate = useCallback(
     (jobId: number, route: string) => (): void => {
@@ -78,18 +76,25 @@ const useJobsListRowData = (jobs: any) => {
       {
         children:
           job.executions.count !== 0
-            ? `${calculateLastRun(
-                job.executions.items[0].submissionTime,
-              )} days ago`
+            ? formatDistance(
+                new Date(job.executions.items[0].submissionTime),
+                new Date(),
+              )
             : 'never started',
         primary: true,
       },
       {
         children:
-          job.executions.count !== 0
-            ? format(
-                new Date(fromUnixTime(job.executions.items[0].duration)),
-                "h'h' mm'm' ss's'",
+          job.executions.count !== 0 && job.executions.items[0].duration
+            ? formatDuration(
+                intervalToDuration({
+                  start: 0,
+                  end: job.executions.items[0].duration,
+                }),
+                {
+                  format: ['days', 'hours', 'minutes', 'seconds'],
+                  locale: executionDurationLocale,
+                },
               )
             : '-',
         primary: true,

@@ -15,11 +15,11 @@ import {
   User,
   Value,
 } from '@logicalclocks/quartz';
-import ProfileService from '../../services/ProfileService';
-import { format, fromUnixTime } from 'date-fns';
-import { setStatus } from '../../pages/project/jobs/utils/setStatus';
+import { format, formatDuration, intervalToDuration } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { setStatus } from '../../pages/project/jobs/utils/setStatus';
+import ProfileService from '../../services/ProfileService';
 import useNavigateRelative from '../../hooks/useNavigateRelative';
 import icons from '../../sources/icons';
 import JobsExecutionsPopup from '../../pages/project/jobs/executions/JobsExecutionsPopup';
@@ -27,6 +27,7 @@ import { RootState } from '../../store';
 import BaseApiService, { RequestType } from '../../services/BaseApiService';
 import NotificationBadge from '../../utils/notifications/notificationBadge';
 import NotificationContent from '../../utils/notifications/notificationValue';
+import executionDurationLocale from '../../pages/project/jobs/utils/durationLocale';
 
 export interface ExecutionsItemProps {
   executionsList: any;
@@ -113,7 +114,7 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
         url: `/elastic/jwt/${id} `,
         type: RequestType.get,
       });
-      //@ts-ignore
+      // @ts-ignore
       setKibanaUrl(res.data.kibanaUrl);
     };
 
@@ -360,10 +361,18 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                           mt: '4px',
                         }}
                       >
-                        {format(
-                          new Date(fromUnixTime(execution.duration)),
-                          'dd-MM-yyyy HH:mm:ss',
-                        ) || '-'}
+                        {execution.duration
+                          ? formatDuration(
+                              intervalToDuration({
+                                start: 0,
+                                end: execution.duration,
+                              }),
+                              {
+                                format: ['days', 'hours', 'minutes', 'seconds'],
+                                locale: executionDurationLocale,
+                              },
+                            )
+                          : '-'}
                       </Value>
                     </Flex>
                     <Flex flexDirection="column" mr="20px">

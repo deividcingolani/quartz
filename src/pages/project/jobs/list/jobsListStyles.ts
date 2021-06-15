@@ -38,7 +38,7 @@ export const jobsListStyles = (selectedRow: number, isOpen?: boolean) => ({
   },
   'tr:first-of-type>td': {
     fontWeight: 'bold',
-    paddingLeft: '12px',
+    paddingLeft: '10px',
   },
   'tr>td>div': {
     div: {
@@ -47,14 +47,14 @@ export const jobsListStyles = (selectedRow: number, isOpen?: boolean) => ({
   },
   'tr>td:first-of-type': {
     minWidth: '0px',
-    paddingLeft: '12px',
+    paddingLeft: '10px',
   },
   'tr>td:nth-last-of-type(1)': {
     minWidth: '200px',
     paddingRight: '14px',
   },
   'tr>td:nth-last-of-type(3)': {
-    minWidth: '105px',
+    minWidth: '125px',
   },
   'tr>td:nth-last-of-type(4)': {
     minWidth: '115px',
