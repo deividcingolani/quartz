@@ -43,7 +43,7 @@ const schema = yup.object().shape({
   name: name.label('Name'),
 });
 
-const defaultScope = ['FEATURESTORE', 'PROJECT', 'JOB', 'DATASET_CREATE'];
+const defaultScope = ['FEATURESTORE', 'PROJECT', 'JOB', 'DATASET_CREATE', 'KAFKA'];
 
 const ApiForm: FC<ApiFormProps> = ({
   isEdit = false,
