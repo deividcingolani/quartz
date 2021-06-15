@@ -121,13 +121,13 @@ const ItemDrawer = <T extends DataEntity>({
 
   const [itemId, setId] = useState(id);
 
-  const item = useMemo(() => data.find(({ id }) => id === itemId), [
-    itemId,
-    data,
-  ]);
+  const item = useMemo(
+    () => data.find(({ id }) => id === itemId),
+    [itemId, data],
+  );
 
   useEffect(() => {
-    const it = (item as unknown) as FeatureGroup;
+    const it = item as unknown as FeatureGroup;
     if (
       it?.timeTravelFormat === 'HUDI' &&
       featureStoreData?.projectId &&
@@ -157,11 +157,11 @@ const ItemDrawer = <T extends DataEntity>({
         featureStoreId: featureStoreData.featurestoreId,
         featureGroupId: item.id,
       });
-      if (((item as unknown) as FeatureGroup).timeTravelFormat !== 'HUDI') {
+      if ((item as unknown as FeatureGroup).timeTravelFormat !== 'HUDI') {
         dispatch.featureGroupCommitsDetail.fetchTD({
           projectId: featureStoreData.projectId,
           featureStoreId: featureStoreData.featurestoreId,
-          featureGroup: (item as unknown) as FeatureGroup,
+          featureGroup: item as unknown as FeatureGroup,
         });
       }
 
@@ -276,26 +276,30 @@ const ItemDrawer = <T extends DataEntity>({
                 value={item.splits.length}
               />
             )}
+          </Flex>
+          <Flex mt="8px">
             {type === ItemDrawerTypes.fg &&
-              ((item as unknown) as FeatureGroup).timeTravelFormat && (
-                <TextValueBadge
-                  text="time travel"
-                  value={
-                    ((item as unknown) as FeatureGroup).timeTravelFormat?.toLowerCase() ??
-                    ''
-                  }
-                />
+              (item as unknown as FeatureGroup).timeTravelFormat && (
+                <>
+                  <TextValueBadge
+                    text="time travel"
+                    value={
+                      (
+                        item as unknown as FeatureGroup
+                      ).timeTravelFormat?.toLowerCase() ?? ''
+                    }
+                  />
+                  <TextValueBadge
+                    ml="8px"
+                    text="data validation"
+                    value={
+                      (
+                        item as unknown as FeatureGroup
+                      ).validationType?.toLowerCase() ?? 'none'
+                    }
+                  />
+                </>
               )}
-            {type === ItemDrawerTypes.fg && (
-              <TextValueBadge
-                ml="8px"
-                text="data validation"
-                value={
-                  ((item as unknown) as FeatureGroup).validationType.toLowerCase() ??
-                  'none'
-                }
-              />
-            )}
           </Flex>
         </Box>
       }

@@ -1,7 +1,7 @@
 import { Value } from '@logicalclocks/quartz';
 import React from 'react';
 
-export const renderValidationType = (type: string) => {
+export const renderValidationType = (type: string | undefined) => {
   const validationType = {
     none: 'none',
     all: 'all',

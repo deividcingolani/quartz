@@ -84,7 +84,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
       <Flex>
         <User
           photo={ProfileService.avatar(String(data.creator))}
-          name={'data.creator.firstName'}
+          name="data.creator.firstName"
         />
         <DateValue
           ml="23px"
@@ -179,7 +179,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           variant="gray"
           ml="8px"
           text="data validation"
-          value={data.validationType?.toLowerCase()}
+          value={data.validationType?.toLowerCase() ?? 'none'}
         />
       </Flex>
       {data.description ? (

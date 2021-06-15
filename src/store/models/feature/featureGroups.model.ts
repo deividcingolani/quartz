@@ -135,14 +135,11 @@ const featureGroups = createModel()({
             group.id,
           );
 
-          let keywords: string[] = [];
-          if (group.type === 'cachedFeaturegroupDTO') {
-            keywords = await FeatureGroupLabelsService.getList(
-              projectId,
-              featureStoreId,
-              group.id,
-            );
-          }
+          const keywords = await FeatureGroupLabelsService.getList(
+            projectId,
+            featureStoreId,
+            group.id,
+          );
 
           return {
             ...group,

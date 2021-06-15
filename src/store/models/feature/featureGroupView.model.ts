@@ -125,14 +125,12 @@ const featureGroupView = createModel()({
       needExpectations: boolean;
     }) => {
       /* KEYWORDS */
-      let keywords: string[] = [];
-      if (data.type === 'cachedFeaturegroupDTO') {
-        keywords = await FeatureGroupLabelsService.getList(
-          projectId,
-          featureStoreId,
-          featureGroupId,
-        );
-      }
+      const keywords = await FeatureGroupLabelsService.getList(
+        projectId,
+        featureStoreId,
+        featureGroupId,
+      );
+
       /* PROVENANCE */
       const { data: provenance } = await FeatureGroupsService.getProvenance(
         projectId,
@@ -226,13 +224,12 @@ const featureGroupView = createModel()({
 
         const promises = await Promise.allSettled(
           serverExpectations.map(async (expectation) => {
-            const {
-              data: attachedFGs,
-            } = await ExpectationService.getAttachedFeatureGroups(
-              projectId,
-              featureStoreId,
-              expectation.name,
-            );
+            const { data: attachedFGs } =
+              await ExpectationService.getAttachedFeatureGroups(
+                projectId,
+                featureStoreId,
+                expectation.name,
+              );
 
             return { ...expectation, attachedFeatureGroups: attachedFGs || [] };
           }),
