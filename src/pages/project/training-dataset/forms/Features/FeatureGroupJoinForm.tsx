@@ -70,7 +70,8 @@ const FeatureGroupJoinForm: FC<{
   );
 
   useEffect(() => {
-    if (localStorage.getItem('TdInfo')) {
+    const tdInfo = localStorage.getItem('TdInfo');
+    if (tdInfo && JSON.parse(tdInfo).joins) {
       return;
     }
 
