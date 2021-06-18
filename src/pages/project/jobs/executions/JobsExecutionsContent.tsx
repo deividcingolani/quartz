@@ -139,7 +139,7 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
                   ],
                 }}
                 selected={startDate}
-                onChange={(date) => {
+                onChange={(date: Date) => {
                   const withHours = date as Date;
                   if (withHours.getSeconds() !== 0) {
                     withHours.setHours(0);
@@ -177,7 +177,7 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
               minDate={startDate}
               maxDate={new Date()}
               disabledKeyboardNavigation={true}
-              onChange={(date) => {
+              onChange={(date: Date) => {
                 const withHours = date as Date;
 
                 if (withHours.getSeconds() !== 0) {

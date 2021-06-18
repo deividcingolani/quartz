@@ -86,7 +86,7 @@ const SingleFilter: FC<SingleFilterProps> = ({
           height="fit-content"
           value={filter.value}
           disabled={isDisabled}
-          onChange={({ target }) =>
+          onChange={({ target }: any) =>
             changeProperty(index, 'value', target.value)
           }
           {...getInputValidation('value', errorFilter)}

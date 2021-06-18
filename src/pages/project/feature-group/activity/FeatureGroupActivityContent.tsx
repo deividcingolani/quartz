@@ -149,7 +149,7 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
                   ],
                 }}
                 selected={startDate}
-                onChange={(date) => {
+                onChange={(date: Date) => {
                   const withHours = date as Date;
 
                   if (withHours.getSeconds() !== 0) {
@@ -187,7 +187,7 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
               minDate={startDate}
               maxDate={new Date()}
               disabledKeyboardNavigation={true}
-              onChange={(date) => {
+              onChange={(date: Date) => {
                 const withHours = date as Date;
 
                 if (withHours.getSeconds() !== 0) {

@@ -181,7 +181,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
                     height="100%"
                     labelProps={{ width: '100%' }}
                     value={value}
-                    onChange={(value) => onChange(value)}
+                    onChange={(value: any) => onChange(value)}
                   />
                 )}
               />
@@ -225,7 +225,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
                   label="Name of the new job"
                   labelProps={{ width: '100%', mb: '20px' }}
                   value={value}
-                  onChange={(value) => onChange(value)}
+                  onChange={(value: any) => onChange(value)}
                   {...getInputValidation('appName', errors)}
                 />
               )}

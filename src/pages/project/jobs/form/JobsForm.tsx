@@ -1198,7 +1198,7 @@ const JobsForm: FC<JobsFormProps> = ({
                 labelProps={{ width: '100%' }}
                 disabled={isLoading}
                 value={value}
-                onChange={(value) => onChange(value)}
+                onChange={(value: any) => onChange(value)}
               />
             )}
           />
