@@ -13,6 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from './project-button.styles';
 // Types
 import { Dispatch, RootState } from '../../../store';
+import { pageToViewPathStorageName } from '../../../routes';
 
 const ProjectsDropdown: FC = () => {
   const projects = useSelector((state: RootState) => state.projectsList);
@@ -29,17 +30,17 @@ const ProjectsDropdown: FC = () => {
   const [isOpen, handleToggle, handleClickOutside] = useDropdown();
   useOnClickOutside(buttonRef, handleClickOutside);
 
-  const project = useMemo(() => projects.find((p) => p.id === +projectId), [
-    projectId,
-    projects,
-  ]);
+  const project = useMemo(
+    () => projects.find((p) => p.id === +projectId),
+    [projectId, projects],
+  );
 
   const title = useMemo(() => {
     if (isLoading) {
       return 'loading...';
     }
 
-    return !!project?.name ? project.name : 'no project';
+    return project?.name ? project.name : 'no project';
   }, [project, isLoading]);
 
   return (
@@ -61,7 +62,17 @@ const ProjectsDropdown: FC = () => {
               {name}
             </ListItem>
           ))}
-          <ListItem onClick={() => navigate('/')}>All Projects</ListItem>
+          <ListItem
+            onClick={() => {
+              // We need to remove the last page viewed here
+              // otherwise the / will redirect users to the project
+              // they are coming from
+              localStorage.removeItem(pageToViewPathStorageName);
+              navigate('/');
+            }}
+          >
+            All Projects
+          </ListItem>
         </List>
       )}
       <svg

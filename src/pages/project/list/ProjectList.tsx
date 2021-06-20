@@ -15,13 +15,14 @@ import ProjectListContent from './ProjectListContent';
 import NoProjects from '../../../components/no-projects/NoProjects';
 import useTitle from '../../../hooks/useTitle';
 import titles from '../../../sources/titles';
+import { pageToViewPathStorageName } from '../../../routes';
 
 const ProjectList: FC = () => {
   useTitle(titles.projectList);
 
-  const projects = useSelector(
-    (state: RootState) => state.projectsList,
-  ).sort((p1, p2) => p1.name.localeCompare(p2.name));
+  const projects = useSelector((state: RootState) => state.projectsList).sort(
+    (p1, p2) => p1.name.localeCompare(p2.name),
+  );
 
   const isGetProjects = useSelector(
     (state: RootState) => state.loading.effects.projectsList.getProjects,
@@ -31,16 +32,23 @@ const ProjectList: FC = () => {
     (state: RootState) => state.loading.effects.project.delete,
   );
 
-  const isLoading = useMemo(() => isGetProjects || isDeleting, [
-    isGetProjects,
-    isDeleting,
-  ]);
+  const isLoading = useMemo(
+    () => isGetProjects || isDeleting,
+    [isGetProjects, isDeleting],
+  );
 
   const navigate = useNavigateRelative();
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
     dispatch.projectsList.getProjects();
+    const lastPath = localStorage.getItem(pageToViewPathStorageName);
+
+    if (lastPath && lastPath.startsWith("/p")) {
+      // The last page the user visited was a within a project,
+      // redirect them there.
+      navigate(`${lastPath.split('/').slice(0, 3).join('/')}/view`);
+    }
   }, [dispatch]);
 
   // Handlers

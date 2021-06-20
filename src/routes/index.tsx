@@ -74,11 +74,14 @@ const Routes: FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!token) {
+    if (
+      location.pathname !== routeNames.home &&
+      location.pathname !== routeNames.auth.login
+    ) {
       localStorage.setItem(pageToViewPathStorageName, location.pathname);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  });
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -201,7 +204,7 @@ const Routes: FC = () => {
   }
   return (
     <RouterRoutes>
-      {/*Auth routes*/}
+      {/* Auth routes */}
       <Route>
         <AuthLayout>
           <RouterRoutes>
