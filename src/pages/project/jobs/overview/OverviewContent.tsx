@@ -1,20 +1,20 @@
 import { Box, Flex } from 'rebass';
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { Button, Card, Labeling, usePopup, Value } from '@logicalclocks/quartz';
+import { useParams } from 'react-router-dom';
 import Panel from '../../../../components/panel/Panel';
 import { Jobs } from '../../../../types/jobs';
 import SummaryData from './SummaryData';
-import { Button, Card, Labeling, usePopup, Value } from '@logicalclocks/quartz';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import icons from '../../../../sources/icons';
 import { setTypeOfJob } from '../utils/setTypeOfJob';
-import BaseApiService, {
-  RequestType,
-} from '../../../../services/BaseApiService';
-import { useParams } from 'react-router-dom';
 import JobsExecutionsPopup from '../executions/JobsExecutionsPopup';
 import { saveToFile } from '../../../../utils/downloadConfig';
 import { getPathAndFileName } from '../utils/getPathAndFileName';
+import DatasetService, {
+  DatasetType,
+} from '../../../../services/project/DatasetService';
 
 export interface ContentProps {
   data: Jobs;
@@ -30,39 +30,39 @@ const OverviewContent: FC<ContentProps> = ({
   const { id } = useParams();
   const navigate = useNavigateRelative();
   const getHref = useGetHrefForRoute();
-  const [dataToken, setDataToken] = useState<string>();
   const { fileName, path } = getPathAndFileName(data.config.appPath);
-
-  const handleDownloadJob = useCallback(() => {
-    window.open(
-      `${
-        process.env.REACT_APP_API_HOST
-      }/project/${id}/dataset/download/with_token/${encodeURIComponent(
-        `${path}/${fileName}`,
-      )}?token=${dataToken}&type=DATASET`,
-      '_blank',
-    );
-  }, [id, dataToken, fileName, path]);
+  const [jobDownloadable, setJobDownlodable] = useState<boolean>(true);
 
   useEffect(() => {
-    const loadToken = async () => {
-      const res = await new BaseApiService().request<{
-        data: any;
-      }>({
-        url: `project/${id}/dataset/download/token/${encodeURIComponent(
-          `${path}/${fileName}`,
-        )}?type=DATASET`,
-        type: RequestType.get,
+    DatasetService.getDownloadToken(
+      +id,
+      `${path}/${fileName}`,
+      DatasetType.DATASET,
+    )
+      .then(() => {
+        setJobDownlodable(true);
+      })
+      .catch(() => {
+        setJobDownlodable(false);
       });
-      if (res) {
-        setDataToken(res.data.data.value);
-      }
-    };
+  }, [setJobDownlodable]);
 
-    if (path !== '-') {
-      loadToken();
-    }
-  }, [fileName, id, path]);
+  const handleDownloadJob = useCallback(async () => {
+    DatasetService.getDownloadToken(
+      +id,
+      `${path}/${fileName}`,
+      DatasetType.DATASET,
+    ).then(({ data }) => {
+      window.open(
+        `${
+          process.env.REACT_APP_API_HOST
+        }/project/${id}/dataset/download/with_token/${encodeURIComponent(
+          `${path}/${fileName}`,
+        )}?token=${data.data.value}&type=${DatasetType.DATASET}`,
+        '_blank',
+      );
+    });
+  }, [id, fileName, path]);
 
   const [isOpenPopupForRun, handleTogglePopupForRun] = usePopup();
   const [isOpenPopupForCopy, handleTogglePopupForCopy] = usePopup();
@@ -228,7 +228,11 @@ const OverviewContent: FC<ContentProps> = ({
               </Flex>
             </Flex>
             {path !== '-' && (
-              <Button intent="secondary" onClick={handleDownloadJob}>
+              <Button
+                intent="secondary"
+                onClick={handleDownloadJob}
+                disabled={!jobDownloadable}
+              >
                 <Flex alignItems="center" justifyContent="center">
                   <Flex
                     sx={{

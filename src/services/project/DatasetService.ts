@@ -7,9 +7,33 @@ class DatasetService extends BaseApiService {
       url: `${projectId}/dataset`,
       type: RequestType.get,
     });
+
+  getDownloadToken = (projectId: number, path: string, type: DatasetType) =>
+    this.request<DownloadToken>({
+      url: `${projectId}/dataset/download/token/${encodeURIComponent(
+        path,
+      )}?type=${type}`,
+      type: RequestType.get,
+    });
 }
 
 export default new DatasetService('/project');
+
+export enum DatasetType {
+  DATASET = 'DATASET',
+  FEATURESTORE = 'FEATURESTORE',
+  HIVE = 'HIVE',
+}
+
+export interface DownloadTokenValue {
+  type: string;
+  value: string;
+}
+
+export interface DownloadToken {
+  data: DownloadTokenValue;
+  type: string;
+}
 
 export interface GetDatasets {
   count: number;

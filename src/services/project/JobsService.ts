@@ -195,22 +195,6 @@ class JobsService extends BaseApiService {
     });
     return res;
   };
-  // downloadFile = async (projectId: number): Promise<JobsDownloadFile> => {
-  //   const token = TokenService.get();
-  //
-  //   const { data } = await this.request<JobsDownloadFile>({
-  //     url: `${projectId}/jobs/dataset/download/token/${encodeURIComponent(token)}&type=DATASET`,
-  //     type: RequestType.get,
-  //   });
-  //   return data;
-  // };
 }
 
 export default new JobsService('/project');
-
-export interface GetStatisticsData {
-  items?: {
-    content: string;
-    commitTime: number;
-  }[];
-}

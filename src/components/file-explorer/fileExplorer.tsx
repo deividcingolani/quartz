@@ -1,12 +1,20 @@
 import React, { FC, useEffect } from 'react';
-import { FileSystemExplorer } from '@logicalclocks/quartz';
-import { FileExplorerMode, FileExplorerProps } from './types';
+import {
+  FileSystemExplorer,
+  NotificationsManager,
+} from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { FileExplorerMode, FileExplorerProps } from './types';
 import { RootState } from '../../store';
 import Loader from '../loader/Loader';
 import { getPathAndFileName } from '../../pages/project/jobs/utils/getPathAndFileName';
 import BaseApiService, { RequestType } from '../../services/BaseApiService';
+import DatasetService, {
+  DatasetType,
+} from '../../services/project/DatasetService';
+import NotificationTitle from '../../utils/notifications/notificationBadge';
+import NotificationContent from '../../utils/notifications/notificationValue';
 
 const FileExplorer: FC<FileExplorerProps> = ({
   handleCloseExplorer,
@@ -45,24 +53,28 @@ const FileExplorer: FC<FileExplorerProps> = ({
   const handleDownloadFile = async (file: any) => {
     const { fileName, path } = getPathAndFileName(file.attributes.path);
 
-    const res = await new BaseApiService().request<{
-      data: any;
-    }>({
-      url: `project/${id}/dataset/download/token/${encodeURIComponent(
-        `${path}/${fileName}`,
-      )}?type=DATASET`,
-      type: RequestType.get,
-    });
-    if (res) {
-      window.open(
-        `${
-          process.env.REACT_APP_API_HOST
-        }/project/${id}/dataset/download/with_token/${encodeURIComponent(
-          `${path}/${fileName}`,
-        )}?token=${res.data.data.value}&type=DATASET`,
-        '_blank',
-      );
-    }
+    DatasetService.getDownloadToken(
+      +id,
+      `${path}/${fileName}`,
+      DatasetType.DATASET,
+    )
+      .then(({ data }) => {
+        window.open(
+          `${
+            process.env.REACT_APP_API_HOST
+          }/project/${id}/dataset/download/with_token/${encodeURIComponent(
+            `${path}/${fileName}`,
+          )}?token=${data.data.value}&type=${DatasetType.DATASET}`,
+          '_blank',
+        );
+      })
+      .catch(({ response }) => {
+        NotificationsManager.create({
+          isError: true,
+          type: <NotificationTitle message="Error downloading the file" />,
+          content: <NotificationContent message={response.data.errorMsg} />,
+        });
+      });
   };
 
   if (isLoading) {
