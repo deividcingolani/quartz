@@ -1,7 +1,7 @@
-import { TrainingDataset } from '../../../../types/training-dataset';
 import { useMemo } from 'react';
+import { TrainingDataset } from '../../../../types/training-dataset';
 
-export const versionsSort = <T extends TrainingDataset | null>(
+const useVersionsSort = <T extends TrainingDataset | null>(
   data: T,
   latestVersion: number,
 ): any => {
@@ -20,3 +20,5 @@ export const versionsSort = <T extends TrainingDataset | null>(
 
   return { versions };
 };
+
+export default useVersionsSort;

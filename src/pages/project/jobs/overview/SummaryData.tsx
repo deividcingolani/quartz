@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo } from 'react';
 import { Flex } from 'rebass';
 import {
@@ -12,15 +13,15 @@ import ProfileService from '../../../../services/ProfileService';
 
 // Components
 import DateValue from '../../list/DateValue';
-import { getAVGtime } from '../utils/getAVGtime';
-import { setTypeOfJob } from '../utils/setTypeOfJob';
+import getAVGtime from '../utils/getAVGtime';
+import setTypeOfJob from '../utils/setTypeOfJob';
 
 export interface SummaryDataProps {
   data: any;
 }
 
 const SummaryData: FC<SummaryDataProps> = ({ data }) => {
-  const expectationCount = !!data.executions.count
+  const expectationCount = data.executions.count
     ? data.executions.items.length
     : 0;
 
@@ -70,7 +71,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
             variant="gray"
             text="avg execution time"
             value={
-              !!data.executions.count ? getAVGtime(data.executions.items) : '-'
+              data.executions.count ? getAVGtime(data.executions.items) : '-'
             }
           />
         )}

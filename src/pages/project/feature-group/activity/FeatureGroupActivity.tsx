@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, {
   FC,
   useCallback,
@@ -64,10 +65,8 @@ const FeatureGroupActivity: FC = () => {
 
   const [twentyEventDate, setDateOfTwentyEvent] = useState(new Date());
 
-  const [fromDate, setFromDate] = useState(
-    !!from ? new Date(+from) : new Date(),
-  );
-  const [toDate, setToDate] = useState(!!to ? new Date(+to) : new Date());
+  const [fromDate, setFromDate] = useState(from ? new Date(+from) : new Date());
+  const [toDate, setToDate] = useState(to ? new Date(+to) : new Date());
 
   const eventType = Object.keys(ActivityTypeSortOptions).includes(type)
     ? ActivityTypeSortOptions[type as keyof typeof ActivityTypeSortOptions]
@@ -97,7 +96,7 @@ const FeatureGroupActivity: FC = () => {
           projectId: +id,
           featureGroupId: +fgId,
           featureStoreId: featureStoreData.featurestoreId,
-          eventType: newEvent ? newEvent : event,
+          eventType: newEvent || event,
           offsetOptions: {
             offset: 0,
             limit: batchSize,
@@ -130,22 +129,20 @@ const FeatureGroupActivity: FC = () => {
 
   const handleLoadPreviousData = useCallback(async () => {
     if (featureStoreData?.featurestoreId) {
-      const {
-        count,
-        startDate,
-      } = await dispatch.featureGroupActivity.fetchPrevious({
-        projectId: +id,
-        featureGroupId: +fgId,
-        featureStoreId: featureStoreData.featurestoreId,
-        eventType: event,
-        offsetOptions: {
-          limit: batchSize,
-          offset: 0,
-        },
-        timeOptions: {
-          to: minDate - 1,
-        },
-      });
+      const { count, startDate } =
+        await dispatch.featureGroupActivity.fetchPrevious({
+          projectId: +id,
+          featureGroupId: +fgId,
+          featureStoreId: featureStoreData.featurestoreId,
+          eventType: event,
+          offsetOptions: {
+            limit: batchSize,
+            offset: 0,
+          },
+          timeOptions: {
+            to: minDate - 1,
+          },
+        });
 
       if (count < batchSize) {
         setHasData({
@@ -178,23 +175,21 @@ const FeatureGroupActivity: FC = () => {
 
   const handleLoadFollowingData = useCallback(async () => {
     if (featureStoreData?.featurestoreId) {
-      const {
-        count,
-        endDate,
-      } = await dispatch.featureGroupActivity.fetchFollowing({
-        projectId: +id,
-        featureGroupId: +fgId,
-        featureStoreId: featureStoreData.featurestoreId,
-        eventType: event,
-        offsetOptions: {
-          limit: batchSize,
-          offset: 0,
-        },
-        timeOptions: {
-          from: maxDate + 1,
-        },
-        sortType: 'asc',
-      });
+      const { count, endDate } =
+        await dispatch.featureGroupActivity.fetchFollowing({
+          projectId: +id,
+          featureGroupId: +fgId,
+          featureStoreId: featureStoreData.featurestoreId,
+          eventType: event,
+          offsetOptions: {
+            limit: batchSize,
+            offset: 0,
+          },
+          timeOptions: {
+            from: maxDate + 1,
+          },
+          sortType: 'asc',
+        });
 
       if (count < batchSize) {
         setHasData({
@@ -265,23 +260,21 @@ const FeatureGroupActivity: FC = () => {
 
   const handleLoadFirst = useCallback(async () => {
     if (featureStoreData?.featurestoreId && hasData.hasMore) {
-      const {
-        count,
-        startDate,
-      } = await dispatch.featureGroupActivity.fetchFirst({
-        projectId: +id,
-        featureGroupId: +fgId,
-        featureStoreId: featureStoreData.featurestoreId,
-        eventType: event,
-        offsetOptions: {
-          limit: batchSize,
-          offset: 0,
-        },
-        timeOptions: {
-          to: +toDate,
-        },
-        sortType: 'desc',
-      });
+      const { count, startDate } =
+        await dispatch.featureGroupActivity.fetchFirst({
+          projectId: +id,
+          featureGroupId: +fgId,
+          featureStoreId: featureStoreData.featurestoreId,
+          eventType: event,
+          offsetOptions: {
+            limit: batchSize,
+            offset: 0,
+          },
+          timeOptions: {
+            to: +toDate,
+          },
+          sortType: 'desc',
+        });
 
       if (startDate > 0) {
         setFromDate(new Date(startDate - 1));
@@ -335,7 +328,7 @@ const FeatureGroupActivity: FC = () => {
       handleRefreshData(data);
 
       navigate(
-        `/${!!type ? `${type}/` : ''}${
+        `/${type ? `${type}/` : ''}${
           data.newStartDate ? +data.newStartDate : +fromDate - 1
         }/${data.newEndDate ? +data.newEndDate : +toDate + 1}`,
         'p/:id/fg/:fgId/activity/*',
@@ -363,7 +356,7 @@ const FeatureGroupActivity: FC = () => {
     });
 
     navigate(
-      `/${!!type ? `${type}/` : ''}${+(!!from && creationDate
+      `/${type ? `${type}/` : ''}${+(!!from && creationDate
         ? new Date(creationDate)
         : twentyEventDate)}/${+new Date()}`,
       'p/:id/fg/:fgId/activity/*',
@@ -390,9 +383,7 @@ const FeatureGroupActivity: FC = () => {
 
       if (newType && newType[0]) {
         navigate(
-          `/${newType[0]}/${!!from ? from : +twentyEventDate}/${
-            !!to ? to : +new Date()
-          }`,
+          `/${newType[0]}/${from || +twentyEventDate}/${to || +new Date()}`,
           'p/:id/fg/:fgId/activity/*',
         );
       }

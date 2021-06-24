@@ -1,5 +1,5 @@
-import { Api } from '../../../types/api';
 import { createModel } from '@rematch/core';
+import { Api } from '../../../types/api';
 import APIService from '../../../services/APIService';
 
 export type ApiState = Api[];

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback } from 'react';
 import {
   Value,
@@ -57,9 +58,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
               <HoverableText
                 onClick={() => {
                   if (hasMatchText) {
-                    navigate(
-                      `/p/${data.parentProjectId}/td/${data.id}/`,
-                    );
+                    navigate(`/p/${data.parentProjectId}/td/${data.id}/`);
                   } else {
                     handleNavigate(data.id, '/td/:tdId/')();
                   }
@@ -206,12 +205,10 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                       navigate(
                         `/p/${data.parentProjectId}/td/${data.id}/statistics`,
                       );
+                    } else if (data.statisticsConfig.enabled) {
+                      handleNavigate(data.id, '/td/:tdId/statistics')();
                     } else {
-                      if (data.statisticsConfig.enabled) {
-                        handleNavigate(data.id, '/td/:tdId/statistics')();
-                      } else {
-                        e.stopPropagation();
-                      }
+                      e.stopPropagation();
                     }
                   }}
                   justifyContent="center"
@@ -244,9 +241,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                 <Flex
                   onClick={() => {
                     if (hasMatchText) {
-                      navigate(
-                        `/p/${data.parentProjectId}/td/${data.id}`,
-                      );
+                      navigate(`/p/${data.parentProjectId}/td/${data.id}`);
                     } else {
                       handleNavigate(data.id, '/td/:tdId')();
                     }

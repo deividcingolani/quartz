@@ -1,6 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useMemo } from 'react';
 import { Button, Microlabeling, User } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
-import React, { FC, useCallback, useMemo } from 'react';
+
 // Hooks
 import { useNavigate } from 'react-router-dom';
 // Types

@@ -1,12 +1,13 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType, FC, memo } from 'react';
+import { Box, Flex } from 'rebass';
 import { Row as QRow, Card, Value, Labeling } from '@logicalclocks/quartz';
 
 // Types
-import { FeatureGroupProvenance } from '../../../../types/feature-group';
+import { useSelector } from 'react-redux';
+import { FeatureGroupProvenance } from '../../../../types/featur-group-provenance';
 import useProvenanceListRowData from './useProvenanceListRowData';
 import provenanceListStyles from './provenance-list-styles';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 
 export interface FeatureListProps {

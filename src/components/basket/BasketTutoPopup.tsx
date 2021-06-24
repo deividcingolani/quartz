@@ -1,5 +1,6 @@
-import { Flex, Box } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
+import { Flex, Box } from 'rebass';
 import { Label, Button, Popup, Labeling, Divider } from '@logicalclocks/quartz';
 
 import baskeTutoImage1 from './basket_tuto_images/basket_tuto_1.png';

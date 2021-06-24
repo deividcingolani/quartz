@@ -30,7 +30,7 @@ class TrainingDatasetService extends BaseApiService {
 
   getProvenance = (
     projectId: number,
-    featureStoreId: number,
+    _featureStoreId: number,
     trainingDataset: TrainingDataset,
   ) => {
     const { name, version } = trainingDataset;

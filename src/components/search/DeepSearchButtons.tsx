@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback } from 'react';
 import { Box, Flex } from 'rebass';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Text } from '@logicalclocks/quartz';
-import React, { FC, useCallback } from 'react';
 
 const DeepSearchButtons: FC<{ search: string; activeIndex: number }> = ({
   search,
@@ -11,13 +12,14 @@ const DeepSearchButtons: FC<{ search: string; activeIndex: number }> = ({
   const { id: projectId } = useParams();
 
   const handleNavigate = useCallback(
-    (isAllProjects = false) => () => {
-      if (!isAllProjects && projectId) {
-        navigate(`/search/p/${projectId}/features/${search}`);
-      } else {
-        navigate(`/search/features/${search}`);
-      }
-    },
+    (isAllProjects = false) =>
+      () => {
+        if (!isAllProjects && projectId) {
+          navigate(`/search/p/${projectId}/features/${search}`);
+        } else {
+          navigate(`/search/features/${search}`);
+        }
+      },
     [navigate, projectId, search],
   );
 

@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo } from 'react';
 import { Box, Flex } from 'rebass';
 import {
   Card,
@@ -12,7 +14,6 @@ import {
 } from '@logicalclocks/quartz';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import React, { FC, memo } from 'react';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';

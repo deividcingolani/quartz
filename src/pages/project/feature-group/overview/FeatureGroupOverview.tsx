@@ -1,7 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect } from 'react';
 import { Subtitle } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
-import React, { FC, memo, useCallback, useEffect } from 'react';
 
+import { useDispatch } from 'react-redux';
 import routeNames from '../../../../routes/routeNames';
 import useFeatureGroupView from '../hooks/useFeatureGroupView';
 
@@ -13,7 +15,6 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
 import useTitle from '../../../../hooks/useTitle';
-import { useDispatch } from 'react-redux';
 import { Dispatch } from '../../../../store';
 
 const FeatureGroupOverview: FC = () => {

@@ -1,6 +1,6 @@
-export const setStatus = (status: string, items: any[] = []) => {
+const setStatus = (status: string, items: any[] = []) => {
   const runningCount = items.filter((item) => item.state === 'RUNNING').length;
-  if (!!runningCount) {
+  if (runningCount) {
     return {
       width: 'fit-content',
       value: `${runningCount} ${
@@ -45,5 +45,14 @@ export const setStatus = (status: string, items: any[] = []) => {
         variant: 'label',
       };
     }
+    default: {
+      return {
+        width: 'fit-content',
+        value: 'undefined',
+        variant: 'label',
+      };
+    }
   }
 };
+
+export default setStatus;

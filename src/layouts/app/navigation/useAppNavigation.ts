@@ -52,6 +52,8 @@ const useAppNavigation = (): TreeNode[] => {
             navigate('/jobs', 'p/:id/*');
             break;
           }
+          default:
+          // Do nothing
         }
 
         e.preventDefault();
@@ -404,21 +406,30 @@ const useAppNavigation = (): TreeNode[] => {
             title: 'Databricks',
             isActive: isActive(routeNames.settings.integrations.databricks),
             href: getHref('/settings/integrations/databricks', '/p/:id/*'),
-            onClick: handleNavigateRelative('/settings/integrations/databricks', '/p/:id/*'),
+            onClick: handleNavigateRelative(
+              '/settings/integrations/databricks',
+              '/p/:id/*',
+            ),
           },
           {
             id: 'projectSpark',
             title: 'Spark',
             href: getHref('/settings/integrations/spark', '/p/:id/*'),
             isActive: isActive(routeNames.settings.integrations.spark),
-            onClick: handleNavigateRelative('/settings/integrations/spark', '/p/:id/*'),
+            onClick: handleNavigateRelative(
+              '/settings/integrations/spark',
+              '/p/:id/*',
+            ),
           },
           {
             id: 'projectCode',
             href: getHref('/settings/integrations/code', '/p/:id/*'),
             title: 'Connect to Feature Store',
             isActive: isActive(routeNames.settings.integrations.code),
-            onClick: handleNavigateRelative('/settings/integrations/code', '/p/:id/*'),
+            onClick: handleNavigateRelative(
+              '/settings/integrations/code',
+              '/p/:id/*',
+            ),
           },
         ],
       },

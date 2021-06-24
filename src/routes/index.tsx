@@ -22,6 +22,7 @@ import useTokenApiInterceptor from '../hooks/useTokenApiInterceptor';
 import routeNames from './routeNames';
 import useCloseNotifications from '../hooks/useCloseNotifications';
 import useLoadAfterOther from '../hooks/useLoadAfterOther';
+import pageToViewPathStorageName from './storageName';
 
 // Pages
 const DeepSearch = React.lazy(() => import('../pages/search/DeepSearch'));
@@ -63,8 +64,6 @@ const SchematisedTagCreate = React.lazy(
   () =>
     import('../pages/settings/schematised-tags/create/SchematisedTagsCreate'),
 );
-
-export const pageToViewPathStorageName = 'last_page_path';
 
 const Routes: FC = () => {
   useTokenApiInterceptor();

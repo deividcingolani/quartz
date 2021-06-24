@@ -1,11 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useMemo } from 'react';
 
 // Types
+import { Flex } from 'rebass';
 import StatsTable, {
   StatsTableItem,
 } from '../../../../components/stats-table/StatsTable';
 import { FeatureGroupStatistics } from '../../../../types/feature-group';
-import { Flex } from 'rebass';
 
 export interface StatisticsTablesProps {
   data: FeatureGroupStatistics;

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +15,7 @@ import {
 } from '@logicalclocks/quartz';
 
 // Components
+import { Box, Flex } from 'rebass';
 import BasketMenu from './Basket';
 import ProjectsDropdown from './ProjectsDropdown';
 import HelpDropdown from './HelpDropdown';
@@ -23,11 +25,10 @@ import { Dispatch, RootState } from '../../../store';
 // Services
 import ProfileService from '../../../services/ProfileService';
 // Selectors
-import { selectProjectId } from '../../../store/models/localManagement/store.selectors';
+import selectProjectId from '../../../store/models/localManagement/store.selectors';
 import Search from '../../../components/search/Search';
 import TokenService from '../../../services/TokenService';
-import { pageToViewPathStorageName } from '../../../routes';
-import { Box, Flex } from 'rebass';
+import pageToViewPathStorageName from '../../../routes/storageName';
 
 export interface AppHeaderProps {
   showList?: boolean;
@@ -80,7 +81,7 @@ const AppHeader: FC<AppHeaderProps> = ({
       menuAction={<UserDropdown />}
       user={
         <>
-          {!!(firstname && email && lastname) ? (
+          {firstname && email && lastname ? (
             <Flex
               onClick={() => handleToggle()}
               ref={buttonRef}
@@ -131,7 +132,7 @@ const AppHeader: FC<AppHeaderProps> = ({
           primary
           onClick={handleNavigate}
         >
-          &#8701; back to {!!name ? name : 'project list'}
+          &#8701; back to {name || 'project list'}
         </Value>
       )}
     </Header>

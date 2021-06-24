@@ -10,4 +10,14 @@ export interface UseUploadFile {
   flowTotalSize: number;
 }
 
-export const useUploadFile = ({}) => {};
+export const useUploadFile = (): UseUploadFile => ({
+  file: '',
+  flowChunkNumber: 0,
+  flowChunkSize: 0,
+  flowCurrentChunkSize: 0,
+  flowFilename: '',
+  flowIdentifier: '',
+  flowRelativePath: '',
+  flowTotalChunks: 0,
+  flowTotalSize: 0,
+});

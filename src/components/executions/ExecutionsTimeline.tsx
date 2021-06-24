@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import { Value } from '@logicalclocks/quartz';
@@ -18,6 +19,7 @@ const lineHeight = 35;
 
 const ExecutionsTimeline: FC<ExecutionsTimelineProps> = ({
   items,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   hasData,
 }) => {
   return (

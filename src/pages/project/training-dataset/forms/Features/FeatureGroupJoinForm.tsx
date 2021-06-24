@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from 'rebass';
 import { useFormContext } from 'react-hook-form';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Divider, Value } from '@logicalclocks/quartz';
 
 // Components
@@ -61,6 +62,7 @@ const FeatureGroupJoinForm: FC<{
     (index: number, field: string, value: any) => {
       const copy = joins.slice();
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       copy[index][field] = value;
 
@@ -103,9 +105,8 @@ const FeatureGroupJoinForm: FC<{
   }, [joins, setValue]);
 
   useEffect(() => {
-    const infoTD: { [key: string]: string } | any = localStorage.getItem(
-      'TdInfo',
-    );
+    const infoTD: { [key: string]: string } | any =
+      localStorage.getItem('TdInfo');
 
     if (infoTD) {
       const newInfoTD = { ...JSON.parse(infoTD), joins };

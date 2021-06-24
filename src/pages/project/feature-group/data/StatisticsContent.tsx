@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
   Input,
   Value,
@@ -8,24 +10,25 @@ import {
   Symbol,
   SymbolMode,
 } from '@logicalclocks/quartz';
-import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 
 import FilterResult from '../../../../components/filter-result/FilterResult';
 import {
-  Feature,
   FeatureGroup,
   FeatureGroupStatistics,
 } from '../../../../types/feature-group';
 import paginate, { Paginate } from '../../../../utils/paginate';
-import sort, { SortFunc } from '../../../../utils/sort';
+import sort, {
+  SortFunc,
+  SortDirection as direction,
+} from '../../../../utils/sort';
 import useFeatureFilter, { KeyFilters } from '../hooks/useFeatureFilters';
 import StatisticsCard from './StatisticsCard';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useBasket from '../../../../hooks/useBasket';
 import icons from '../../../../sources/icons';
-import { SortDirection as direction } from '../../../../../src/utils/sort';
+import { Feature } from '../../../../types/feature';
 
 export interface StatisticsContentProps {
   data: FeatureGroup | TrainingDataset;

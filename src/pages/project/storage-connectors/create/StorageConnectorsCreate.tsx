@@ -1,11 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback } from 'react';
 
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
-import { StorageConnectorProtocol } from '../types';
+import StorageConnectorProtocol from '../types';
 import { StorageConnectorsFormData } from '../forms/types';
 import { Dispatch, RootState } from '../../../../store';
 // Components
@@ -77,9 +78,8 @@ const StorageConnectorsCreate: FC = () => {
               databaseGroup: formatGroups(args),
             }),
             type: getDtoType(storageConnectorType),
-            storageConnectorType: protocolOptions.getByKey(
-              storageConnectorType,
-            ),
+            storageConnectorType:
+              protocolOptions.getByKey(storageConnectorType),
             ...restData,
           },
         });

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { Labeling, Tooltip, Value } from '@logicalclocks/quartz';
@@ -38,9 +39,7 @@ const ShortCutItem: FC<ShortcutItemProps> = ({
     e.stopPropagation();
     if (pinned) {
       if (handleUnPin) handleUnPin(item);
-    } else {
-      if (handlePin) handlePin(item);
-    }
+    } else if (handlePin) handlePin(item);
   };
 
   const color = useMemo(
@@ -80,10 +79,7 @@ const ShortCutItem: FC<ShortcutItemProps> = ({
         </Box>
         <Flex ml="4px">
           <Labeling bold>{item.name}</Labeling>
-          <Value
-            ml="5px"
-            sx={{ color: color }}
-          >
+          <Value ml="5px" sx={{ color }}>
             #{item.id}
           </Value>
         </Flex>

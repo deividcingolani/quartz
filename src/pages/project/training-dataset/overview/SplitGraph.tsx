@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useMemo } from 'react';
 import { Card, Labeling, SplitGraph as Splits } from '@logicalclocks/quartz';
-import { Split } from '../../../../types/training-dataset';
 import { Box, Flex } from 'rebass';
+import { Split } from '../../../../types/split';
 
 export interface SplitGraphProps {
   graph: Split[];

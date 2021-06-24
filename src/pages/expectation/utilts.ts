@@ -341,13 +341,11 @@ export const validateRules = (
             setError(`rules[${index}].max`, { message: 'Number expected' });
             result = false;
           }
-        } else {
-          if (!isNumber(exact)) {
-            setError(`rules[${index}].exact`, {
-              message: 'Number expected',
-            });
-            result = false;
-          }
+        } else if (!isNumber(exact)) {
+          setError(`rules[${index}].exact`, {
+            message: 'Number expected',
+          });
+          result = false;
         }
       }
       if ([RuleTypes.HAS_CORRELATION].includes(rule.type as RuleTypes)) {
@@ -372,18 +370,16 @@ export const validateRules = (
             });
             result = false;
           }
-        } else {
-          if (!isNumber(exact)) {
-            setError(`rules[${index}].exact`, {
-              message: 'Number expected',
-            });
-            result = false;
-          } else if (exact && (+exact > 1 || +exact < -1)) {
-            setError(`rules[${index}].exact`, {
-              message: 'A pearson correlation is contained between -1 and 1',
-            });
-            result = false;
-          }
+        } else if (!isNumber(exact)) {
+          setError(`rules[${index}].exact`, {
+            message: 'Number expected',
+          });
+          result = false;
+        } else if (exact && (+exact > 1 || +exact < -1)) {
+          setError(`rules[${index}].exact`, {
+            message: 'A pearson correlation is contained between -1 and 1',
+          });
+          result = false;
         }
       }
       if ([RuleTypes.HAS_PATTERN].includes(rule.type as RuleTypes)) {
@@ -466,18 +462,16 @@ export const validateRules = (
             });
             result = false;
           }
-        } else {
-          if (!isNumber(exact)) {
-            setError(`rules[${index}].exact`, {
-              message: 'Number expected',
-            });
-            result = false;
-          } else if (exact && (+exact > 100 || +exact < 0)) {
-            setError(`rules[${index}].exact`, {
-              message: 'Values are expected to be between 0 and 100',
-            });
-            result = false;
-          }
+        } else if (!isNumber(exact)) {
+          setError(`rules[${index}].exact`, {
+            message: 'Number expected',
+          });
+          result = false;
+        } else if (exact && (+exact > 100 || +exact < 0)) {
+          setError(`rules[${index}].exact`, {
+            message: 'Values are expected to be between 0 and 100',
+          });
+          result = false;
         }
       }
     }
@@ -489,6 +483,7 @@ export const validateRules = (
 export const getRuleDescription = (rule: FormRule, features: string[]) => {
   const isShowFeatures = features?.length === 2;
   const [firstFeature, secondFeature] = features;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const descMap = new Map<RuleTypes, Function>([
     [
       RuleTypes.HAS_MEAN,
@@ -695,6 +690,7 @@ export const getRuleDescription = (rule: FormRule, features: string[]) => {
   if (matchFunction) {
     return matchFunction(rule);
   }
+  return undefined;
 };
 
 export const getNewRuleProps = (type: RuleTypes) => {
@@ -820,6 +816,7 @@ export const getShortRuleValue = (rule: ServerRule) => {
 
   const { level, name, ...rest } = rule;
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return rest[Object.keys(rest)[0]];
 };

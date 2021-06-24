@@ -1,7 +1,10 @@
 import { FeatureGroup } from '../../types/feature-group';
-import { ExpectationType } from './forms/ExpectationForm';
-
 import labelValueMap from '../../utils/labelValueBind';
+
+export enum ExpectationType {
+  existing = 'Pick an existing expectation',
+  new = 'Create a new expectation',
+}
 
 export const rulesMap = labelValueMap<{ [key: string]: string }>({
   HAS_SUM: 'Sum',

@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback } from 'react';
 import * as yup from 'yup';
 import {
   Button,
@@ -11,7 +13,6 @@ import {
   usePopup,
   Value,
 } from '@logicalclocks/quartz';
-import React, { FC, useCallback } from 'react';
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +44,13 @@ const schema = yup.object().shape({
   name: name.label('Name'),
 });
 
-const defaultScope = ['FEATURESTORE', 'PROJECT', 'JOB', 'DATASET_CREATE', 'KAFKA'];
+const defaultScope = [
+  'FEATURESTORE',
+  'PROJECT',
+  'JOB',
+  'DATASET_CREATE',
+  'KAFKA',
+];
 
 const ApiForm: FC<ApiFormProps> = ({
   isEdit = false,

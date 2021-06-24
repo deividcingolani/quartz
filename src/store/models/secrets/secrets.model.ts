@@ -17,13 +17,11 @@ const api = createModel()({
       dispatch.secrets.setState(items);
 
       const enriched = await Promise.all(
-        items.map(
-          async (item: Secret): Promise<Secret> => {
-            const response = await SecretsService.get(item.name);
-            const { items } = response.data;
-            return { ...item, ...items[0] };
-          },
-        ),
+        items.map(async (item: Secret): Promise<Secret> => {
+          const response = await SecretsService.get(item.name);
+          const { items } = response.data;
+          return { ...item, ...items[0] };
+        }),
       );
       dispatch.secrets.setState(enriched);
     },

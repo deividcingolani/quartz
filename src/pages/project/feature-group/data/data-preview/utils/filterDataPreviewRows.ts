@@ -1,4 +1,4 @@
-import { Feature } from '../../../../../../types/feature-group';
+import { Feature } from '../../../../../../types/feature';
 import { ComputedData } from '../../../../../../types/feature-group-data-preview';
 
 const filterDataPreviewRows = (

@@ -1,5 +1,6 @@
-import { Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
+import { Flex } from 'rebass';
 import ActivityDataItem from './ActivityItem';
 import ActivityTimeline from './ActivityTimeline';
 import { ActivityItem, ActivityType } from '../../types/feature-group';

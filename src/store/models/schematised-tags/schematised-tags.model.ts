@@ -27,9 +27,9 @@ const schematisedTags = createModel()({
 
         return {
           ...item,
-          description: description,
-          properties: properties,
-          required: required,
+          description,
+          properties,
+          required,
         };
       });
 

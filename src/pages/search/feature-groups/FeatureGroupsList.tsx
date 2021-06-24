@@ -1,5 +1,6 @@
-import { Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
+import { Flex } from 'rebass';
 
 // Components
 import FeatureGroupListContent from '../../project/feature-group/list/FeatureGroupListContent';
@@ -31,7 +32,9 @@ const FeatureGroupsList: FC<FeatureGroupsListProps> = ({ data, loading }) => {
           data={data}
           loading={loading}
           isFiltered={false}
-          onResetFilters={() => {}}
+          onResetFilters={() => {
+            // Do nothing
+          }}
         />
       </Flex>
     </Flex>

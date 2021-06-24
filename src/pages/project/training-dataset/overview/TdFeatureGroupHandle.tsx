@@ -1,5 +1,6 @@
-import { Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo } from 'react';
+import { Flex } from 'rebass';
 import { Button, Labeling } from '@logicalclocks/quartz';
 
 import { FeatureGroup } from '../../../../types/feature-group';

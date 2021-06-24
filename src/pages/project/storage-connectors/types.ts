@@ -1,4 +1,4 @@
-export enum StorageConnectorProtocol {
+enum StorageConnectorProtocol {
   'jdbc' = 'jdbc',
   'aws' = 'aws',
   'hops' = 'hops',
@@ -6,3 +6,5 @@ export enum StorageConnectorProtocol {
   'azure' = 'azure',
   'snowflake' = 'snowflake',
 }
+
+export default StorageConnectorProtocol;

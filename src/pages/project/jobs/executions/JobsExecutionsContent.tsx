@@ -1,15 +1,16 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useEffect, useState } from 'react';
-import { JobsExecutionContentProps, ExecutionsTypeSortOptions } from './types';
-import Panel from '../../../../components/panel/Panel';
 import { Box, Flex } from 'rebass';
 import { Button, DatePicker, Select, usePopup } from '@logicalclocks/quartz';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { JobsExecutionContentProps, ExecutionsTypeSortOptions } from './types';
+import Panel from '../../../../components/panel/Panel';
 import { RootState } from '../../../../store';
 import Executions from '../../../../components/executions/Executions';
-import { getDatePickerTime } from '../utils/getDatepickerTime';
+import getDatePickerTime from '../utils/getDatepickerTime';
 import JobsExecutionsPopup from './JobsExecutionsPopup';
 import NoData from '../../../../components/no-data/NoData';
-import { useNavigate } from 'react-router-dom';
 import { JobsViewExecutions } from '../../../../store/models/jobs/executions/jobsExecutions.model';
 
 const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
@@ -41,7 +42,8 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
     if (executions && !isLoading) {
       const executionsLength = JSON.parse(JSON.stringify(executions));
       const test = Object.keys(executionsLength)[0];
-      //@ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const count = executions[test].length;
       if (count < batchSize) {
         setHasData((prevState) => ({
@@ -71,7 +73,7 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
   const resetFilter = () => {
     setEvent(ExecutionsTypeSortOptions.ALL);
     const resetData = executionData && Object.keys(executionData).pop();
-    resetData && setStartDate(new Date(resetData));
+    if (resetData) setStartDate(new Date(resetData));
     loadPrimaryExecutionsData();
     navigate('/p/119/jobs/38/executions');
   };
@@ -130,7 +132,9 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
                   placeholder: '',
                   width: 'auto',
                   variant: 'white',
-                  onChange: () => {},
+                  onChange: () => {
+                    // Do nothing
+                  },
                   noDataMessage: 'from',
                   value: [
                     getDatePickerTime(startDate as Date, true, {
@@ -165,7 +169,9 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
                 placeholder: '',
                 width: 'auto',
                 variant: 'white',
-                onChange: () => {},
+                onChange: () => {
+                  // Do nothing
+                },
                 noDataMessage: 'to',
                 value: [
                   getDatePickerTime(endDate as Date, false, {

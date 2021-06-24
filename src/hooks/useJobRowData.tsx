@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Value, Badge } from '@logicalclocks/quartz';
-
-import { Job } from '../types/feature-group';
+import { Job } from '../types/job';
 
 const useJobRowData = (jobs: Job[]) => {
   const groupComponents = useMemo(() => {

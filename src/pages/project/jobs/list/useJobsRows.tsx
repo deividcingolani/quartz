@@ -1,10 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { useCallback, useMemo } from 'react';
 import { Value, Badge, Tooltip, User } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
-import {
-  formatDuration,
-  intervalToDuration,
-} from 'date-fns';
+import { formatDuration, intervalToDuration } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { formatDistance } from 'date-fns/esm';
@@ -14,8 +12,8 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 
 // utils
-import { setStatus } from '../utils/setStatus';
-import { setTypeOfJob } from '../utils/setTypeOfJob';
+import setStatus from '../utils/setStatus';
+import setTypeOfJob from '../utils/setTypeOfJob';
 import executionDurationLocale from '../utils/durationLocale';
 
 const useJobsListRowData = (jobs: any) => {
@@ -198,7 +196,7 @@ const useJobsListRowData = (jobs: any) => {
         ),
       },
     ]);
-  }, [jobs, id, handleNavigate, navigate]);
+  }, [jobs, handleNavigate, dispatch.jobsExecutions, navigate, id]);
 
   return useMemo(() => {
     return [jobsComponents, jobsProps];

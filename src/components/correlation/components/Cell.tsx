@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Box } from 'rebass';
-import React, { FC, useEffect, useRef } from 'react';
 
 import { Colors } from '../types';
 
@@ -20,8 +21,10 @@ const Cell: FC<CellProps> = ({ value }) => {
 
     const calcColor = d3
       .scaleLinear()
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .domain([-1, 0, 1])
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .range([
         Colors.gradientBeginColor,

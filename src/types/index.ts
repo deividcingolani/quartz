@@ -1,5 +1,7 @@
-import { Feature, Job } from './feature-group';
-import { Split } from './training-dataset';
+/* eslint-disable import/no-cycle */
+import { Feature } from './feature';
+import { Job } from './job';
+import { Split } from './split';
 
 export interface Tag {
   name: string;

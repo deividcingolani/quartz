@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import { Label } from '@logicalclocks/quartz';

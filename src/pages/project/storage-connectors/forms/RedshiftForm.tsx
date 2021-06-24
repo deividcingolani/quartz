@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 import {
   Checkbox,
@@ -38,8 +39,9 @@ export const schema = yup.object().shape({
     is: false,
     then: shortText.required().label('Database username'),
   }),
-  arguments: yup.array(
-    yup.object({
+  // TODO: check if this has the desired outcome.
+  arguments: yup.array().of(
+    yup.object().shape({
       key: shortText.required().label('Key'),
     }),
   ),

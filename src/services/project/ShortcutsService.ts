@@ -98,12 +98,20 @@ class ShortcutsService {
       const userData = all[+userId];
       acc[userId] = Object.keys(userData).reduce((acc0, pId: string) => {
         const project = userData[+pId];
-        acc0[pId] = +pId === projectId ? {
-          recent:
-            project.recent?.filter((x: LSDataEntity) => x.id !== itemId) || [],
-          pinned:
-            project.pinned?.filter((x: LSDataEntity) => x.id !== itemId) || [],
-        } : acc0[pId];
+        // eslint-disable-next-line no-param-reassign
+        acc0[pId] =
+          +pId === projectId
+            ? {
+                recent:
+                  project.recent?.filter(
+                    (x: LSDataEntity) => x.id !== itemId,
+                  ) || [],
+                pinned:
+                  project.pinned?.filter(
+                    (x: LSDataEntity) => x.id !== itemId,
+                  ) || [],
+              }
+            : acc0[pId];
         return acc0;
       }, {} as any);
       return acc;

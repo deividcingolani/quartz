@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Box, Flex } from 'rebass';
 import { Card } from '@logicalclocks/quartz';
-import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
 
 // Types
 import { CorrelationValue } from '../types';
@@ -71,7 +72,7 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
     const vertical = Object.keys(correlation).slice(0, maxCount);
     const horizontal = Object.keys(correlation).slice(0, maxCount);
@@ -83,7 +84,7 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
 
     svg
       .append('g')
-      .attr('transform', 'translate(0,' + height + ')')
+      .attr('transform', `translate(0,${height})`)
       .call(d3.axisBottom(calcX))
       .selectAll('text')
       .attr('id', function () {
@@ -169,18 +170,22 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
     const rects = svg
       .selectAll()
       .data(data, (d) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return d.horizontal + ':' + d.vertical;
+        return `${d.horizontal}:${d.vertical}`;
       })
       .enter();
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     rects
       .append('rect')
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .attr('x', (d) => {
         return calcX(d.horizontal);
       })
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .attr('y', (d) => {
         return calcY(d.vertical);
@@ -201,7 +206,7 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
       })
       .style('stroke-width', 1)
       .style('fill', '#E5E6E6')
-      .on('mouseover', function (event, d) {
+      .on('mouseover', function (_event, d) {
         d3.select(this).style('stroke', '#272727');
         d3.select(this).style('stroke-width', 1);
         d3.select(`#vertical-${d.vertical}`).style('color', '#272727');
@@ -214,10 +219,10 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
 
         tooltip.style('visibility', 'visible');
         tooltip
-          .style('top', (calcY(d.vertical) || 0) + tooltipOffset.y + 'px')
+          .style('top', `${(calcY(d.vertical) || 0) + tooltipOffset.y}px`)
           .style(
             'left',
-            (calcX(d.horizontal) || 0) + tooltipOffset.x + margin.left + 'px',
+            `${(calcX(d.horizontal) || 0) + tooltipOffset.x + margin.left}px`,
           );
       })
       .on('mouseout', function (_, d) {
@@ -245,10 +250,12 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
     rects
       .append('rect')
       .attr('x', (d) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return calcX(d.horizontal) + (25 - Math.abs(d.value) * 21) / 2;
       })
       .attr('y', (d) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return calcY(d.vertical) + (25 - Math.abs(d.value) * 21) / 2;
       })
@@ -260,6 +267,7 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
       })
       .style('opacity', (d) => 0.2 + Math.abs(d.value) * 0.8)
       .style('fill', (d) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return calcColor(d.value);
       })
@@ -276,10 +284,10 @@ const CorrelationTable: FC<CorrelationTableProps> = ({
 
         tooltip.style('visibility', 'visible');
         return tooltip
-          .style('top', (calcY(d.vertical) || 0) + tooltipOffset.y + 'px')
+          .style('top', `${(calcY(d.vertical) || 0) + tooltipOffset.y}px`)
           .style(
             'left',
-            (calcX(d.horizontal) || 0) + tooltipOffset.x + margin.left + 'px',
+            `${(calcX(d.horizontal) || 0) + tooltipOffset.x + margin.left}px`,
           );
       })
       .on('mouseout', (_, d) => {

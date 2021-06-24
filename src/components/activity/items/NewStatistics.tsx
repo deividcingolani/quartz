@@ -1,8 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
+import { Tooltip, Labeling, User, Value } from '@logicalclocks/quartz';
 import ProfileService from '../../../services/ProfileService';
 import { ActivityItemData } from '../../../types/feature-group';
-import { Tooltip, Labeling, User, Value } from '@logicalclocks/quartz';
 import icons from '../../../sources/icons';
 
 export interface NewStatisticsProps {

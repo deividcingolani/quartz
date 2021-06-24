@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { useCallback, useEffect } from 'react';
 import { Box } from 'rebass';
 import { useParams } from 'react-router-dom';
@@ -27,7 +28,7 @@ const JobsOverview = () => {
   useEffect(() => {
     const item = data.find((jobs) => jobs.id === +jobId);
     if (projectId && item) {
-      dispatch.jobsView.fetch({ projectId: projectId, jobsName: item.name });
+      dispatch.jobsView.fetch({ projectId, jobsName: item.name });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
@@ -37,7 +38,7 @@ const JobsOverview = () => {
 
   const handleRefresh = useCallback(() => {
     if (jobData) {
-      dispatch.jobsView.fetch({ projectId: projectId, jobsName: jobData.name });
+      dispatch.jobsView.fetch({ projectId, jobsName: jobData.name });
     }
   }, [dispatch, projectId, jobData]);
 

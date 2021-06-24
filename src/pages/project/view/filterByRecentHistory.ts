@@ -10,7 +10,7 @@ const filterByRecentHistory = (
   history: string[],
 ): LSDataEntity[] => {
   const reversed = history.slice().reverse();
-  let matchItems = reversed.reduce((acc: LSDataEntity[], path) => {
+  const matchItems = reversed.reduce((acc: LSDataEntity[], path) => {
     const [, , pId, type, id] = path.match(/(p)\/(\d+)\/(fg|td)\/(\d+)/) || [];
 
     let item;

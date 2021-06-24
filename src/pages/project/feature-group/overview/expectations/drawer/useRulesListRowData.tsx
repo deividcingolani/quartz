@@ -1,5 +1,6 @@
-import { Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { useMemo } from 'react';
+import { Flex } from 'rebass';
 import { Value } from '@logicalclocks/quartz';
 
 import { Expectation } from '../../../../../../types/expectation';
@@ -47,6 +48,7 @@ const useRulesListRowData = (data: Expectation) => {
                     </Value>
                   ) : (
                     rule.legalValues?.map((value, index) => (
+                      // eslint-disable-next-line react/no-array-index-key
                       <Value mb="4px" key={`${value}-${index}`}>
                         {value}
                       </Value>

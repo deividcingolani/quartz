@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useMemo } from 'react';
+import { Box, Flex } from 'rebass';
 import { Labeling, Tooltip, Value } from '@logicalclocks/quartz';
 
 import { ActivityItemData } from '../../../types/feature-group';
@@ -31,17 +32,22 @@ const DataValidation: FC<DataValidationProps> = ({
     [activity],
   );
 
+  const toMsg = (status: string): string => {
+    switch (status) {
+      case 'SUCCESS':
+        return 'succeeded';
+      case 'FAILURE':
+        return 'alerted';
+      default:
+        return 'warned';
+    }
+  };
+
   const message = useMemo(
     () =>
       `${activity.validations.expectationResults[0].expectation.features.join(
         ', ',
-      )} ${
-        activity.validations.expectationResults[0].status === 'SUCCESS'
-          ? 'succeeded'
-          : activity.validations.expectationResults[0].status === 'FAILURE'
-          ? 'alerted'
-          : 'warned'
-      }`,
+      )} ${toMsg(activity.validations.expectationResults[0].status)}`,
     [activity],
   );
 

@@ -1,9 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useEffect } from 'react';
 import { Box } from 'rebass';
 import { format } from 'date-fns';
 import { Tooltip, TooltipPositions } from '@logicalclocks/quartz';
 
-// Items
-import React, { FC, useEffect } from 'react';
+// Items;
 import Creation from './items/Creation';
 import JobExecution from './items/JobExecution';
 import DataIngestion from './items/DataIngestion';
@@ -70,6 +71,7 @@ const ActivityDataItem: FC<ActivityItemProps> = ({ activities, actions }) => {
         return (
           <Tooltip
             position={TooltipPositions.left}
+            // eslint-disable-next-line react/no-array-index-key
             key={`${activity.timestamp}-${index}`}
             mainText={format(activity.timestamp, dateFormat)}
           >

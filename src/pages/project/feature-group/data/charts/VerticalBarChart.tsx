@@ -1,10 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Flex } from 'rebass';
 import { useTheme } from 'emotion-theming';
 import { Labeling } from '@logicalclocks/quartz';
 import { Bar, BarChart, Cell, Tooltip } from 'recharts';
 // eslint-disable-next-line import/no-unresolved
 import { ITheme } from '@logicalclocks/quartz/dist/theme/types';
-import React, { FC, useCallback, useMemo, useState } from 'react';
 
 // Utils
 import randomArrayString from '../../../../../utils/randomArrayString';
@@ -60,9 +61,10 @@ const VerticalBarChart: FC<ChartProps> = ({ data }) => {
     [data],
   );
 
-  const keys = useMemo(() => randomArrayString(mappedData.length), [
-    mappedData,
-  ]);
+  const keys = useMemo(
+    () => randomArrayString(mappedData.length),
+    [mappedData],
+  );
   const [focusBar, setFocusBar] = useState(null);
 
   const maxValue = useMemo(

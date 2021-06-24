@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import {
@@ -39,30 +40,28 @@ const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
 
   const fetchCommits = useCallback(async () => {
     const fgCommitCounts = await Promise.all(
-      featureGroups.map(
-        ({ fg, projectId }): Promise<FgCommitCount> => {
-          return new Promise((resolve) => {
-            if (fg.timeTravelFormat === 'HUDI') {
-              FeatureGroupsService.getCommitsDetail(
-                projectId,
-                fg.featurestoreId,
-                fg.id,
-                1,
-              ).then(({ data }) => {
-                resolve({
-                  fgId: fg.id,
-                  numCommits: data?.count || 0,
-                });
-              });
-            } else {
+      featureGroups.map(({ fg, projectId }): Promise<FgCommitCount> => {
+        return new Promise((resolve) => {
+          if (fg.timeTravelFormat === 'HUDI') {
+            FeatureGroupsService.getCommitsDetail(
+              projectId,
+              fg.featurestoreId,
+              fg.id,
+              1,
+            ).then(({ data }) => {
               resolve({
                 fgId: fg.id,
-                numCommits: 0,
+                numCommits: data?.count || 0,
               });
-            }
-          });
-        },
-      ),
+            });
+          } else {
+            resolve({
+              fgId: fg.id,
+              numCommits: 0,
+            });
+          }
+        });
+      }),
     );
 
     const fgCommits = new Map<number, number>();
@@ -76,16 +75,17 @@ const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
     fetchCommits();
   }, [featureGroups, fetchCommits]);
 
-  const [isOpen,setIsOpen] = useState<boolean>(false);
-  const handleSetIsOpen = ()=>{
-    setIsOpen(!isOpen);
-  }
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const handleSetIsOpen = () => {
+  //  setIsOpen(!isOpen);
+  // };
 
   return (
     <>
       <Flex mt="20px" flexDirection="column">
         {!featureGroups.length && <Value mt="10px">No features selected</Value>}
         {featureGroups.map(({ fg, features }, index) => (
+          // eslint-disable-next-line react/no-array-index-key
           <Box key={index}>
             {fg.timeTravelFormat === 'HUDI' && fgCommits?.get(fg.id) === 0 && (
               <Box mb="10px" mt="-10px">

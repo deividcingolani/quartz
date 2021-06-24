@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC } from 'react';
 import {
   Card,
   Value,
@@ -6,7 +8,6 @@ import {
   CalloutTypes,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
-import React, { FC } from 'react';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 
@@ -47,7 +48,9 @@ const Integrations: FC = () => {
 
         <Flex mt="20px">
           <Button
-            onClick={() => navigate('/settings/integrations/databricks', 'p/:id/*')}
+            onClick={() =>
+              navigate('/settings/integrations/databricks', 'p/:id/*')
+            }
             href={getHref('/settings/integrations/databricks', 'p/:id/*')}
             intent="secondary"
           >

@@ -1,8 +1,4 @@
-export const filterByAttribute = <T>(
-  data: T[],
-  filter: any,
-  key: keyof T,
-): T[] => {
+const filterByAttribute = <T>(data: T[], filter: any, key: keyof T): T[] => {
   return data.filter(({ [key]: value }) => {
     if (Array.isArray(filter)) {
       return filter.length ? filter.includes(value) : data;
@@ -10,3 +6,5 @@ export const filterByAttribute = <T>(
     return filter === value;
   });
 };
+
+export default filterByAttribute;

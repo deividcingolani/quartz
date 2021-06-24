@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, {
   useCallback,
   FC,
@@ -15,17 +16,17 @@ import {
   Tooltip,
 } from '@logicalclocks/quartz';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { ArgumentsForRun, JobFormData } from '../types';
 import { Flex, Text, Box } from 'rebass';
 import { useDispatch } from 'react-redux';
+import { format } from 'date-fns';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { ArgumentsForRun, JobFormData } from '../types';
 import icons from '../../../../sources/icons';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { format } from 'date-fns';
 import NotificationBadge from '../../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../../utils/notifications/notificationValue';
-import * as yup from 'yup';
 import { name } from '../../../../utils/validators';
-import { yupResolver } from '@hookform/resolvers/yup';
 import getInputValidation from '../../../../utils/getInputValidation';
 
 export interface JobsExecutionsPopupProps {
@@ -75,6 +76,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
 
   const { control, handleSubmit, errors } = methods;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSubmit = useCallback(
     handleSubmit(async (data: ArgumentsForRun) => {
       setDisabledQuickRunButton(true);
@@ -98,6 +100,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
     [handleSubmit, projectId],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onHandleCopy = useCallback(
     handleSubmit(async (data: JobFormData) => {
       const req = {
@@ -105,6 +108,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
         appName: data.appName,
         mainClass: item.config.mainClass,
       };
+      // eslint-disable-next-line no-param-reassign
       delete item.spark;
       handleTogglePopup(!isOpenPopup);
       const id = await dispatch.jobs.copy({
@@ -154,7 +158,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
           width="440px"
           isOpen={isOpenPopup}
           onClose={() => handleTogglePopup(!isOpenPopup)}
-          title={`Run job`}
+          title="Run job"
           secondaryText=""
           disabledMainButton={disabledQuickRunButton}
           secondaryButton={['Cancel', () => handleTogglePopup(!isOpenPopup)]}
@@ -194,7 +198,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
           width="440px"
           isOpen={isOpenPopup}
           onClose={() => handleTogglePopup(!isOpenPopup)}
-          title={`Make a copy`}
+          title="Make a copy"
           mainButton={['Create copy', onHandleCopy]}
           secondaryText=""
           secondaryButton={['Cancel', handleCancelCopy]}
@@ -214,7 +218,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
             </Flex>
             <Controller
               control={control}
-              defaultValue={item.name + `${format(new Date(), 'dd-MM-yyyy')}`}
+              defaultValue={`${item.name}${format(new Date(), 'dd-MM-yyyy')}`}
               name="appName"
               render={({ onChange, value }) => (
                 <Input
@@ -240,7 +244,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
           height="calc(100vh - 40px)"
           isOpen={isOpenPopup}
           onClose={() => handleTogglePopup(!isOpenPopup)}
-          title={``}
+          title=""
           secondaryText=""
         >
           <Box sx={{ mt: '-40px', position: 'relative' }}>
@@ -271,7 +275,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
                 {icons.cross}
               </Box>
             </Tooltip>
-            <AlternativeHeader title={`Logs`} tabs={tabs} />
+            <AlternativeHeader title="Logs" tabs={tabs} />
           </Box>
           <Code
             title={format(new Date(), 'yyyy-MM-dd hh:mm:ss')}
@@ -289,7 +293,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
           width="440px"
           isOpen={isOpenPopup}
           onClose={() => handleTogglePopup(!isOpenPopup)}
-          title={`Stop execution`}
+          title="Stop execution"
           secondaryText="Are you sure that you want to stop this execution?"
           mainButton={['Stop execution', () => handleStopExecutions]}
           secondaryButton={['Back', handleCancelStop]}

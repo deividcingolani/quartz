@@ -1,5 +1,6 @@
-import { User, Value } from '@logicalclocks/quartz';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useEffect } from 'react';
+import { User, Value } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
 // Hooks
 import { useParams } from 'react-router-dom';

@@ -1,7 +1,7 @@
-export const getPathAndFileName = (appPath: string) => {
+const getPathAndFileName = (appPath: string) => {
   let fileName: string | undefined = '-';
-  let path: string = '-';
-  if (!!appPath) {
+  let path = '-';
+  if (appPath) {
     const splitPath: string[] = appPath.split('/');
     fileName = splitPath.pop();
     path = splitPath.slice(3).join('/');
@@ -9,3 +9,5 @@ export const getPathAndFileName = (appPath: string) => {
 
   return { fileName, path };
 };
+
+export default getPathAndFileName;

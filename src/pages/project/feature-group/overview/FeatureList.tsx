@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType, FC, memo } from 'react';
+import { Box, Flex } from 'rebass';
 import {
   Row,
   Card,
@@ -40,7 +41,7 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
     onSearchChange,
     onToggleKey,
     onReset,
-  } = useFeatureFilter(data.features,'',data.onlineEnabled);
+  } = useFeatureFilter(data.features, '', data.onlineEnabled);
 
   const navigate = useNavigateRelative();
 
@@ -51,10 +52,9 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
     data,
   );
 
-  const labels: string[] = data.onlineEnabled 
-            ? ["name", "offline type", "online type", 'description']
-            : ["name", "type", 'description']  
-
+  const labels: string[] = data.onlineEnabled
+    ? ['name', 'offline type', 'online type', 'description']
+    : ['name', 'type', 'description'];
 
   if (!data.features.length) {
     return (
@@ -66,7 +66,10 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
             <Button
               p={0}
               intent="inline"
-              href={getHref('/statistics', 'data.onlineEnabled ? "offline type" : "type"/p/:id/fg/:fgId/*')}
+              href={getHref(
+                '/statistics',
+                'data.onlineEnabled ? "offline type" : "type"/p/:id/fg/:fgId/*',
+              )}
               onClick={() => navigate('/statistics', '/p/:id/fg/:fgId/*')}
             >
               inspect data
@@ -121,19 +124,21 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           isMulti
           value={typeFilters}
           options={types}
-          placeholder={data.onlineEnabled ? "offline type" : "type"}
+          placeholder={data.onlineEnabled ? 'offline type' : 'type'}
           onChange={onTypeFiltersChange}
         />
-        {data.onlineEnabled && <Select
-          maxWidth="180px"
-          width="max-content"
-          ml="15px"
-          isMulti
-          value={onlineTypeFilters}
-          options={onlineTypes}
-          placeholder="online type"
-          onChange={onOnlineTypeFiltersChange}
-        />}
+        {data.onlineEnabled && (
+          <Select
+            maxWidth="180px"
+            width="max-content"
+            ml="15px"
+            isMulti
+            value={onlineTypeFilters}
+            options={onlineTypes}
+            placeholder="online type"
+            onChange={onOnlineTypeFiltersChange}
+          />
+        )}
         <ToggleButton
           ml="15px"
           sx={{
@@ -185,7 +190,7 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           Partition Keys Only
         </ToggleButton>
       </Flex>
-      {!!dataFiltered.length ? (
+      {dataFiltered.length ? (
         <Box mt="30px" mx="-19px" sx={featureListStyles}>
           <Row
             legend={labels}

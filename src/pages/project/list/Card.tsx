@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useMemo } from 'react';
 import {
   Value,
   Button,
@@ -12,18 +14,17 @@ import {
   User,
   Badge,
 } from '@logicalclocks/quartz';
-import React, { FC, memo, useCallback, useMemo } from 'react';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex } from 'rebass';
 
 // Types
+import { useDispatch } from 'react-redux';
 import { Project } from '../../../types/project';
 // Hooks
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 
 import routeNames from '../../../routes/routeNames';
 import ProfileService from '../../../services/ProfileService';
-import { useDispatch } from 'react-redux';
 import { Dispatch } from '../../../store';
 
 export interface CardProps {
@@ -133,7 +134,7 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               secondaryText="author"
             >
               <User
-                name={''}
+                name=""
                 isTooltipActive={false}
                 photo={ProfileService.avatar(data.user.email)}
               />

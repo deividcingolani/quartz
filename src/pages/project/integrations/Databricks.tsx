@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useState, useEffect, useCallback } from 'react';
 import {
   Card,
@@ -79,6 +80,7 @@ const ProjectDatabricks: FC = () => {
     [databricks],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSubmit = useCallback(
     handleSubmit(async ({ name, key }) => {
       await dispatch.databricks

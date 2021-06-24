@@ -1,21 +1,20 @@
 import { Flex } from 'rebass';
-import React, {
-  FC,
-  memo,
-} from 'react';
+import React, { FC, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Labeling, Button, Popup, Text } from '@logicalclocks/quartz';
 import { useNavigate, useParams } from 'react-router-dom';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { NavigateFunction } from 'react-router';
 import { Dispatch } from '../../store';
 import BasketFeatures from './BasketFeatures';
-import { NavigateFunction } from 'react-router';
 import {
   selectBasketFeaturesLength,
   selectFeatureGroups,
 } from '../../store/models/localManagement/basket.selectors';
 import { placeholder } from '../../sources/basketSvg';
 import { FeatureGroupBasket } from '../../store/models/localManagement/basket.model';
-import { Feature, FeatureGroup } from '../../types/feature-group';
+import { FeatureGroup } from '../../types/feature-group';
+import { Feature } from '../../types/feature';
 
 export interface BasketDrawerProps {
   isOpen: boolean;
@@ -30,7 +29,9 @@ export enum Mode {
 }
 
 type FeatureGroupsItem = {
+  // eslint-disable-next-line react/no-unused-prop-types
   features: Feature[];
+  // eslint-disable-next-line react/no-unused-prop-types
   fg: FeatureGroup;
   projectId: number;
 };
@@ -40,6 +41,7 @@ type BasketFeaturesOptions = {
   navigate: NavigateFunction;
   handleToggle: () => void;
   projectId: number;
+  // eslint-disable-next-line react/no-unused-prop-types
   directMode: boolean;
   dispatch: Dispatch;
 };

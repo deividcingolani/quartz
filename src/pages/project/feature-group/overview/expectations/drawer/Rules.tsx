@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { ComponentType, FC } from 'react';
 import { Box } from 'rebass';
 import { Row } from '@logicalclocks/quartz';
-import React, { ComponentType, FC } from 'react';
 import useRulesListRowData from './useRulesListRowData';
 import { Expectation } from '../../../../../../types/expectation';
 

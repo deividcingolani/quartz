@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { Controller, useForm, useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,7 +11,6 @@ import {
   Labeling,
   EditableSelect,
 } from '@logicalclocks/quartz';
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 // Types
 import { FeatureFormProps } from '../types';
@@ -82,16 +83,16 @@ const LabelsForm: FC<FeatureFormProps> = ({
     [handleToggle, setValue, getValues],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSubmit = useCallback(
     handleSubmit(({ keyword }) => {
-
       const lowerCaseKeyword = keyword.toLowerCase();
 
       if (baseOptions.includes(lowerCaseKeyword)) {
         setError('keyword', { message: 'Keyword should be unique' });
         return;
       }
-      
+
       handleAdd(lowerCaseKeyword);
     }),
     [handleAdd, baseOptions],
@@ -115,23 +116,24 @@ const LabelsForm: FC<FeatureFormProps> = ({
           name="keywords"
           render={({ onChange, value }) => {
             return (
-            <Box mt="5px">
-              <>
-                <Flex>
-                  <EditableSelect
-                    isMulti
-                    flex={1}
-                    value={value}
-                    options={options}
-                    onChange={onChange}
-                    disabled={isDisabled}
-                    placeholder="keywords"
-                    noDataMessage="No keywords defined"
-                  />
-                </Flex>
-              </>
-            </Box>
-          )}}
+              <Box mt="5px">
+                <>
+                  <Flex>
+                    <EditableSelect
+                      isMulti
+                      flex={1}
+                      value={value}
+                      options={options}
+                      onChange={onChange}
+                      disabled={isDisabled}
+                      placeholder="keywords"
+                      noDataMessage="No keywords defined"
+                    />
+                  </Flex>
+                </>
+              </Box>
+            );
+          }}
         />
       </Box>
 

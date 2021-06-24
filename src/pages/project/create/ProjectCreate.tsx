@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { Button, Callout, CalloutTypes, Value } from '@logicalclocks/quartz';
 // Types
 import { Roles } from '../forms/AddMembers';
@@ -89,8 +90,8 @@ const ProjectCreate: FC = () => {
                 projectTeam: selectedMembers,
               },
             });
-          } catch(error) {
-            //nothing to do. Added so that it can continue with the rest of the code
+          } catch (error) {
+            // nothing to do. Added so that it can continue with the rest of the code
           }
         }
 

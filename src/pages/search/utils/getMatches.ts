@@ -1,5 +1,6 @@
 import { DataEntity } from '../../../types';
-import { Feature, StatisticsFeatureType } from '../../../types/feature-group';
+import { Feature } from '../../../types/feature';
+import { StatisticsFeatureType } from '../../../types/feature-group';
 
 const getMatchText = (item: any) => {
   return `${Object.keys(item.highlights).join(', ')}`;
@@ -36,7 +37,9 @@ const prepareHighlights = (item: any) => {
       {},
     );
   }
+  // eslint-disable-next-line no-param-reassign
   delete item.highlights.otherXattrs;
+  // eslint-disable-next-line no-param-reassign
   item.highlights = { ...item.highlights, ...otherXattrs };
   return item;
 };

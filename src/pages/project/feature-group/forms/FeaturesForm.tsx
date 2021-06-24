@@ -1,11 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { Box } from 'rebass';
 import { useFormContext } from 'react-hook-form';
 import { Button, EditableTable, Label } from '@logicalclocks/quartz';
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 
 // Types
+// eslint-disable-next-line import/no-unresolved
 import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
 import { useSelector } from 'react-redux';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { useParams } from 'react-router';
 import { FeatureFormProps } from '../types';
 import { featuresColumns } from './featuresColumns';

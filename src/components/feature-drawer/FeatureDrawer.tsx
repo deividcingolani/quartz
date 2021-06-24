@@ -1,5 +1,6 @@
-import { Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useEffect } from 'react';
+import { Flex } from 'rebass';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, Labeling, Value } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,9 +11,9 @@ import StatisticsRows from '../../pages/project/feature-group/data/StatisticsRow
 import StatisticsCharts from '../../pages/project/feature-group/data/StatisticsCharts';
 import StatisticsTables from '../../pages/project/feature-group/data/StatisticsTables';
 // Types
-import { Feature } from '../../types/feature-group';
 import { Dispatch, RootState } from '../../store';
 import { ItemDrawerTypes } from '../drawer/ItemDrawer';
+import { Feature } from '../../types/feature';
 
 export interface FeatureDrawerProps {
   isOpen: boolean;

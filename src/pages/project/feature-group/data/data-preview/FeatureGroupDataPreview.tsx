@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +9,6 @@ import {
   SymbolMode,
   Value,
 } from '@logicalclocks/quartz';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import routeNames from '../../../../../routes/routeNames';
 
@@ -17,7 +18,7 @@ import Panel from '../../../../../components/panel/Panel';
 import FeatureFilters, { sortKeys } from './FeatureFilters';
 // Types
 import { Dispatch, RootState } from '../../../../../store';
-import { Feature } from '../../../../../types/feature-group';
+import { Feature } from '../../../../../types/feature';
 import { StorageConnectorType } from '../../../../../types/feature-group-data-preview';
 import { FeatureGroupViewState } from '../../../../../store/models/feature/featureGroupView.model';
 // Hooks
@@ -101,12 +102,8 @@ const FeatureGroupDataPreview: FC = () => {
     (state) => state.featureGroupView,
   );
 
-  const {
-    isOpen,
-    selectedName,
-    handleSelectItemByName,
-    handleClose,
-  } = useDrawer();
+  const { isOpen, selectedName, handleSelectItemByName, handleClose } =
+    useDrawer();
 
   const data = useSelector((state: RootState) => state.featureGroupRows);
 
@@ -131,7 +128,7 @@ const FeatureGroupDataPreview: FC = () => {
   const [selectColumn, setSelectColumn] = useState(null);
 
   const selectedItem = (selectedName: string, featureGroupData: any) => {
-    let item = JSON.parse(JSON.stringify(featureGroupData));
+    const item = JSON.parse(JSON.stringify(featureGroupData));
     if (item) {
       item.features = item.features.filter(
         ({ name }: any) => name === selectedName,
@@ -149,7 +146,7 @@ const FeatureGroupDataPreview: FC = () => {
     [featureGroupData, handleSelectItemByName],
   );
 
-  const features = view?.features || [];
+  const features = useMemo(() => view?.features || [], [view]);
   const sortedFeatures = useMemo(() => {
     const key = sortKeys[sortKey];
     if (key) {

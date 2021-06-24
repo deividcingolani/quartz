@@ -1,12 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import { Input, Select, Tooltip } from '@logicalclocks/quartz';
 
+import { useFormContext } from 'react-hook-form';
 import { FeatureGroupFilter } from '../../types';
 import { FeatureGroup } from '../../../../../types/feature-group';
 
 import icons from '../../../../../sources/icons';
-import { useFormContext } from 'react-hook-form';
 import getInputValidation from '../../../../../utils/getInputValidation';
 
 export interface SingleFilterProps {

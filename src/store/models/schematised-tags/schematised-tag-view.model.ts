@@ -23,9 +23,9 @@ const schematisedTagView = createModel()({
       const { description, properties, required } = JSON.parse(data.value);
       const mapped = {
         ...data,
-        description: description,
-        properties: properties,
-        required: required,
+        description,
+        properties,
+        required,
       };
 
       dispatch.schematisedTagView.setData(mapped);

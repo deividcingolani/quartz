@@ -1,6 +1,7 @@
-import { memo } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { memo, FC, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
-import React, { FC, useMemo } from 'react';
+
 import {
   Card,
   Button,
@@ -15,7 +16,8 @@ import { CorrelationValue } from './types';
 import { ItemDrawerTypes } from '../drawer/ItemDrawer';
 import { DataEntity } from '../../types';
 import useBasket from '../../hooks/useBasket';
-import { Feature, FeatureGroup } from '../../types/feature-group';
+import { FeatureGroup } from '../../types/feature-group';
+import { Feature } from '../../types/feature';
 
 export interface PickedCorrelationsProps {
   pickedCorrelations: CorrelationValue[];
@@ -40,26 +42,22 @@ const PickedCorrelations: FC<PickedCorrelationsProps> = ({
           acc[picked.vertical] = 0;
         }
 
-        acc[picked.vertical]++;
-        acc[picked.horizontal]++;
+        acc[picked.vertical] += 1;
+        acc[picked.horizontal] += 1;
 
         return acc;
       },
       {},
     );
   }, [pickedCorrelations]);
-  const {
-    isActiveFeature,
-    handleBasket,
-    isSwitch,
-    isActiveFeatures,
-  } = useBasket();
+  const { isActiveFeature, handleBasket, isSwitch, isActiveFeatures } =
+    useBasket();
 
   const pickedFeatures = useMemo(() => {
     return Object.keys(featuresOccurrences).reduce((acc: Feature[], name) => {
       const feature = item.features.find((feature) => feature.name === name);
 
-      return !!feature ? [...acc, feature] : acc;
+      return feature ? [...acc, feature] : acc;
     }, []);
   }, [item, featuresOccurrences]);
 

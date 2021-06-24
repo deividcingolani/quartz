@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Box } from 'rebass';
 import { useSelector } from 'react-redux';
@@ -40,13 +41,8 @@ const action = (
   </Button>
 );
 
-const {
-  featureList,
-  provenance,
-  schematisedTags,
-  splitGraph,
-  api,
-} = routeNames.overviewAnchors;
+const { featureList, provenance, schematisedTags, splitGraph, api } =
+  routeNames.overviewAnchors;
 
 const TrainingDatasetOverviewContent: FC<TrainingDatasetContentProps> = ({
   data,

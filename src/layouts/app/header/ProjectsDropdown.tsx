@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -13,7 +14,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from './project-button.styles';
 // Types
 import { Dispatch, RootState } from '../../../store';
-import { pageToViewPathStorageName } from '../../../routes';
+import pageToViewPathStorageName from '../../../routes/storageName';
 
 const ProjectsDropdown: FC = () => {
   const projects = useSelector((state: RootState) => state.projectsList);

@@ -1,5 +1,6 @@
-import { Box } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useMemo } from 'react';
+import { Box } from 'rebass';
 import { Button, Select } from '@logicalclocks/quartz';
 
 // Components
@@ -44,13 +45,8 @@ const action = (
   </Button>
 );
 
-const {
-  featureList,
-  provenance,
-  schematisedTags,
-  api,
-  expectations,
-} = routeNames.overviewAnchors;
+const { featureList, provenance, schematisedTags, api, expectations } =
+  routeNames.overviewAnchors;
 
 const OverviewContent: FC<ContentProps> = ({
   data,

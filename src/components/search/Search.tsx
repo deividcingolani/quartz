@@ -1,7 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { Input } from '@logicalclocks/quartz';
 import { useLocation } from 'react-router-dom';
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+
 // Hooks
 import useSearchData from './useSearchData';
 import useOS, { OSNames } from '../../hooks/useOS';

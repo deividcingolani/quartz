@@ -10,7 +10,7 @@ import {
   StorageConnectorFormProps,
   StorageConnectorsFormDataArgument,
 } from './forms/types';
-import { StorageConnectorProtocol } from './types';
+import StorageConnectorProtocol from './types';
 // Forms
 import AwsForm, { schema as awsSchema } from './forms/AwsForm';
 import JdbcForm, { schema as jdbcSchema } from './forms/JdbcForm';
@@ -58,20 +58,20 @@ export const getForm = (
   return memo(storageConnectorForms[protocol]);
 };
 
-export const getSchema = (commonSchema: Yup.ObjectSchema) => (
-  protocol: StorageConnectorProtocol,
-): Yup.ObjectSchema => {
-  const storageConnectorSchemas = {
-    [StorageConnectorProtocol.aws]: awsSchema,
-    [StorageConnectorProtocol.jdbc]: jdbcSchema,
-    [StorageConnectorProtocol.hops]: hopsSchema,
-    [StorageConnectorProtocol.redshift]: redshiftSchema,
-    [StorageConnectorProtocol.azure]: azureSchema,
-    [StorageConnectorProtocol.snowflake]: snowflakeSchema,
-  };
+export const getSchema =
+  (commonSchema: Yup.ObjectSchema) =>
+  (protocol: StorageConnectorProtocol): Yup.ObjectSchema => {
+    const storageConnectorSchemas = {
+      [StorageConnectorProtocol.aws]: awsSchema,
+      [StorageConnectorProtocol.jdbc]: jdbcSchema,
+      [StorageConnectorProtocol.hops]: hopsSchema,
+      [StorageConnectorProtocol.redshift]: redshiftSchema,
+      [StorageConnectorProtocol.azure]: azureSchema,
+      [StorageConnectorProtocol.snowflake]: snowflakeSchema,
+    };
 
-  return commonSchema.concat(storageConnectorSchemas[protocol]);
-};
+    return commonSchema.concat(storageConnectorSchemas[protocol]);
+  };
 
 export const getConnectorType = (
   protocol: StorageConnectorProtocol,

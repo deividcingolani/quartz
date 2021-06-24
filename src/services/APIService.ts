@@ -16,6 +16,7 @@ class APIService extends BaseApiService {
       type: RequestType.post,
     });
   };
+
   edit = async ({ name, scope }: any): Promise<any> => {
     return this.request<any>({
       url: `?action=update&&name=${name}${scope
@@ -24,6 +25,7 @@ class APIService extends BaseApiService {
       type: RequestType.put,
     });
   };
+
   delete = async (name: string): Promise<any> => {
     return this.request<any>({
       url: `${name}`,

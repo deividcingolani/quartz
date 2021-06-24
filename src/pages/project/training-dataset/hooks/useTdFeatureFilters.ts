@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import filterByAttribute from '../../feature-group/overview/utils';
-import { Feature } from '../../../../types/feature-group';
+import { Feature } from '../../../../types/feature';
 
 export enum TdKeyFilters {
   'label',

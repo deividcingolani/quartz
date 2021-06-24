@@ -7,7 +7,7 @@ import {
 import { ActivityTypeSortOptions } from '../../../../pages/project/training-dataset/activity/types';
 import TrainingDatasetService from '../../../../services/project/TrainingDatasetService';
 
-export interface TrainingDatasetActivityState extends ActivityItem {}
+export type TrainingDatasetActivityState = ActivityItem;
 
 export interface ActivityFetchParams {
   projectId: number;

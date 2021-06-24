@@ -1,7 +1,8 @@
 import BaseApiService, { RequestType } from '../BaseApiService';
 import { TrainingDataset } from '../../types/training-dataset';
-import { SearchTypes } from '../../pages/search/types';
-import { Feature, FeatureGroup } from '../../types/feature-group';
+import SearchTypes from '../../pages/search/types';
+import { FeatureGroup } from '../../types/feature-group';
+import { Feature } from '../../types/feature';
 
 class SearchService extends BaseApiService {
   getAll = async (searchTerm: string): Promise<ServerResponseData> => {

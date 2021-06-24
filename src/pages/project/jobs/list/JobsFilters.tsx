@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
-import icons from '../../../../sources/icons';
 import { Input, Select, ToggleButton, Tooltip } from '@logicalclocks/quartz';
+import icons from '../../../../sources/icons';
 import { JobType } from '../types';
 
 export enum KeyFilters {

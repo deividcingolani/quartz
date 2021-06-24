@@ -1,16 +1,17 @@
 import { useMemo } from 'react';
-import { Feature, FeatureGroup } from '../../types/feature-group';
 import { Value, Badge, Text } from '@logicalclocks/quartz';
 import { useDispatch } from 'react-redux';
+import { FeatureGroup } from '../../types/feature-group';
 import { Dispatch } from '../../store';
 
 import { remove } from '../../sources/basketSvg';
+import { Feature } from '../../types/feature';
 
 const useFeaturesListRowData = (
   features: Feature[],
   fg: FeatureGroup,
   projectId: number,
-) => {
+): any => {
   const dispatch = useDispatch<Dispatch>();
 
   const groupComponents = useMemo(() => {
@@ -29,12 +30,12 @@ const useFeaturesListRowData = (
         sx: { cursor: 'pointer' },
         mt: '1px',
         mx: '10px',
-        onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>{ 
+        onClick: (_e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           return dispatch.basket.deleteFeatures({
             projectId,
             featureGroup: fg,
             features: [feature],
-          })
+          });
         },
         children: remove.feature,
       },

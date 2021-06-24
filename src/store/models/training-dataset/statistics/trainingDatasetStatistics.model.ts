@@ -10,15 +10,14 @@ export type TrainingDatasetStatisticsState = {
   result: string[];
 } | null;
 
-const trainingDatasetStatisticsEntity = new schema.Entity<
-  FeatureGroupStatistics
->(
-  'statistics',
-  {},
-  {
-    idAttribute: 'column',
-  },
-);
+const trainingDatasetStatisticsEntity =
+  new schema.Entity<FeatureGroupStatistics>(
+    'statistics',
+    {},
+    {
+      idAttribute: 'column',
+    },
+  );
 
 const trainingDatasetStatistics = createModel()({
   state: null as TrainingDatasetStatisticsState,

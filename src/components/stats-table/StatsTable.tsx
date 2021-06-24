@@ -1,5 +1,6 @@
-import { Value } from '@logicalclocks/quartz';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
+import { Value } from '@logicalclocks/quartz';
 import { Flex, FlexProps } from 'rebass';
 
 export interface StatsTableItem {

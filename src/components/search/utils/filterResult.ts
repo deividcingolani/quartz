@@ -17,7 +17,7 @@ const filterByRecentHistory = (
 ): DataEntity[] => {
   const reversed = history.slice().reverse();
 
-  let matchItems = reversed.reduce((acc: DataEntity[], path) => {
+  const matchItems = reversed.reduce((acc: DataEntity[], path) => {
     const [, type, id] = path.match(/(fg|td)\/(\d+)/) || [];
 
     let item;

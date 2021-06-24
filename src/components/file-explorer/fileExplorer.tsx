@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useEffect } from 'react';
 import {
   FileSystemExplorer,
@@ -8,8 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FileExplorerMode, FileExplorerProps } from './types';
 import { RootState } from '../../store';
 import Loader from '../loader/Loader';
-import { getPathAndFileName } from '../../pages/project/jobs/utils/getPathAndFileName';
-import BaseApiService, { RequestType } from '../../services/BaseApiService';
+import getPathAndFileName from '../../pages/project/jobs/utils/getPathAndFileName';
 import DatasetService, {
   DatasetType,
 } from '../../services/project/DatasetService';
@@ -20,6 +20,7 @@ const FileExplorer: FC<FileExplorerProps> = ({
   handleCloseExplorer,
   handleSelectFile,
   mode = FileExplorerMode.oneFile,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   activeFile,
   title,
 }) => {

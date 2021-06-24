@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useMemo } from 'react';
 import { Flex } from 'rebass';
 import { useTheme } from 'emotion-theming';
-import React, { FC, useCallback, useMemo } from 'react';
 import { Labeling } from '@logicalclocks/quartz';
 import { Cell, Legend, Pie, PieChart } from 'recharts';
 // eslint-disable-next-line import/no-unresolved

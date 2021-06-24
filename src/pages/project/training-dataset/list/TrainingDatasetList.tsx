@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useMemo, useState, ChangeEvent } from 'react';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useMemo, useState, ChangeEvent } from 'react';
 import { Button, Input, Tooltip, Select, Value } from '@logicalclocks/quartz';
 
 // Types
@@ -82,6 +83,7 @@ const TrainingDatasetList: FC = () => {
     () =>
       maxVersionsData.reduce(
         (acc: string[], { labels: fgLabels = [] }: any) => [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           ...new Set([...acc, ...fgLabels]),
         ],
@@ -97,6 +99,8 @@ const TrainingDatasetList: FC = () => {
     dispatch.trainingDatasets.set([]);
   }
 
+  const navigate = useNavigateRelative();
+
   function handleCreate(): void {
     localStorage.removeItem('TdInfo');
     dispatch.basket.switch(true);
@@ -107,8 +111,6 @@ const TrainingDatasetList: FC = () => {
     setFilter([]);
     setSearch('');
   }
-
-  const navigate = useNavigateRelative();
 
   function handleSearchChange(ev: ChangeEvent<HTMLInputElement>): void {
     setSearch(ev.target.value);

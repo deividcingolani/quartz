@@ -1,6 +1,7 @@
 import {
   FGItem,
   FGRow,
+  // eslint-disable-next-line import/no-unresolved
 } from '@logicalclocks/quartz/dist/components/table/type';
 import { format, isToday } from 'date-fns';
 import {
@@ -18,7 +19,7 @@ import {
   string,
   stringRequired,
 } from '../../../utils/validators';
-import { uppercaseFirst } from '../../../utils/uppercaseFirst';
+import uppercaseFirst from '../../../utils/uppercaseFirst';
 import { DataEntity } from '../../../types';
 
 // Filter
@@ -111,12 +112,24 @@ const getColumnValue = (key: string, value: any) => {
   return value;
 };
 
-export const isUpdated = <T extends FGRow[]>(prev: T) => (next: T) => {
-  const nextItems = next.filter(({ row }: FGRow) =>
-    row.find(({ readOnly }) => readOnly),
-  );
-  return JSON.stringify(prev) !== JSON.stringify(nextItems);
+const getArrayColumnValue = (columnValue: any, columnName: string) => {
+  if (Array.isArray(columnValue)) {
+    if (columnName === 'Offline type' || columnName === 'Online type') {
+      return columnValue[0]?.toUpperCase() || 'INT';
+    }
+    return columnValue[0];
+  }
+  return columnValue;
 };
+
+export const isUpdated =
+  <T extends FGRow[]>(prev: T) =>
+  (next: T) => {
+    const nextItems = next.filter(({ row }: FGRow) =>
+      row.find(({ readOnly }) => readOnly),
+    );
+    return JSON.stringify(prev) !== JSON.stringify(nextItems);
+  };
 
 export const mapFeatures = (features: FGRow[]) =>
   features.map(({ row }) =>
@@ -128,11 +141,10 @@ export const mapFeatures = (features: FGRow[]) =>
           columnName !== 'Default Value',
       )
       .map(({ columnValue, columnName }) => ({
-        [featuresMap.getByKey(columnName)]: Array.isArray(columnValue)
-          ? columnName === 'Offline type' || columnName === 'Online type'
-            ? columnValue[0]?.toUpperCase() || 'INT'
-            : columnValue[0]
-          : columnValue,
+        [featuresMap.getByKey(columnName)]: getArrayColumnValue(
+          columnValue,
+          columnName,
+        ),
       }))
       .reduce(
         (acc, arr) => ({
@@ -194,6 +206,7 @@ export const mapFeaturesToTable = (featureGroup?: FeatureGroup): FGRow[] => {
           ...base,
           ...Object.keys(feature).map((key) => ({
             columnName: featuresMap.getByValue(key),
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             columnValue: getColumnValue(key, feature[key]),
             readOnly: true,
@@ -288,32 +301,30 @@ export const validateSchema = async (
 
                   const values = tagValue[nestedKey] && tagValue[nestedKey];
 
-                  for (let index = 0; index < values.length; index++) {
+                  for (let index = 0; index < values.length; index += 1) {
                     const value =
                       typeof values[index].value === 'undefined'
                         ? false
                         : values[index].value;
 
-                    if (!value && !required && nestedType !== 'boolean') {
-                      continue;
-                    }
+                    if (value || required || nestedType === 'boolean') {
+                      if (!schema.isValid(value)) {
+                        next = false;
 
-                    if (!(await schema.isValid(value))) {
-                      next = false;
-
-                      setError(`tags.${key}.${nestedKey}[${index}].value`, {
-                        message: `${nestedKey} is invalid`,
-                      });
+                        setError(`tags.${key}.${nestedKey}[${index}].value`, {
+                          message: `${nestedKey} is invalid`,
+                        });
+                      }
                     }
                   }
                 } else {
                   const schema = getType(nestedKey, type, required);
 
-                  const value = tagValue.hasOwnProperty(nestedKey)
-                    ? typeof tagValue[nestedKey] === 'undefined'
-                      ? false
-                      : tagValue[nestedKey]
-                    : '';
+                  const value =
+                    Object.prototype.hasOwnProperty.call(tagValue, nestedKey) &&
+                    typeof tagValue[nestedKey] !== 'undefined'
+                      ? tagValue[nestedKey]
+                      : '';
 
                   if (
                     (value && required && !(await schema.isValid(value))) ||

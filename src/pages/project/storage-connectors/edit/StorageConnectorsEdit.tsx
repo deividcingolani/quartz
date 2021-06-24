@@ -1,13 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback, useEffect } from 'react';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Selectors
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 // Types
-import { StorageConnectorProtocol } from '../types';
+import StorageConnectorProtocol from '../types';
 import { Dispatch, RootState } from '../../../../store';
 import { StorageConnectorsFormData } from '../forms/types';
 // Components
@@ -31,10 +32,8 @@ const StorageConnectorsEdit: FC = () => {
 
   const [isPopupOpen, handleToggle] = usePopup();
 
-  const {
-    data: featureStoreData,
-    isLoading: isFeatureStoreLoading,
-  } = useSelector(selectFeatureStoreData);
+  const { data: featureStoreData, isLoading: isFeatureStoreLoading } =
+    useSelector(selectFeatureStoreData);
 
   useEffect(() => {
     if (projectId && featureStoreData) {
@@ -47,6 +46,7 @@ const StorageConnectorsEdit: FC = () => {
         dispatch.featureStoreStorageConnectors.clear();
       };
     }
+    return undefined;
   }, [connectorName, dispatch, projectId, featureStoreData]);
 
   const isSubmit = useSelector(

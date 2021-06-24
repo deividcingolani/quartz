@@ -1,9 +1,10 @@
-import { Box } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { useCallback, useMemo } from 'react';
+import { Box } from 'rebass';
 import { Value, Labeling, Badge, Tooltip } from '@logicalclocks/quartz';
 
 import TdFeatureGroupHandle from './TdFeatureGroupHandle';
-import { Feature } from '../../../../types/feature-group';
+import { Feature } from '../../../../types/feature';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 
 import icons from '../../../../sources/icons';

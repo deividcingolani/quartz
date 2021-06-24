@@ -26,12 +26,13 @@ const JoinsMessage: FC<JoinsMessageProps> = ({ joins }) => {
             new Array(joins.length - index - 1)
               .fill(0)
               .map((_, nestedIndex) => (
+                // eslint-disable-next-line react/no-array-index-key
                 <Value key={`first-fg-${index}-${nestedIndex}`} mr="3px">
                   (
                 </Value>
               ))}
           {!index &&
-            (!!firstFg ? (
+            (firstFg ? (
               <Value primary mr="3px">
                 {firstFg.name}
               </Value>
@@ -41,7 +42,7 @@ const JoinsMessage: FC<JoinsMessageProps> = ({ joins }) => {
               </Labeling>
             ))}
           <Value mr="3px"> {'<-->'}</Value>
-          {!!secondFg ? (
+          {secondFg ? (
             <Value primary mr="3px">
               {secondFg.name}
             </Value>
@@ -52,6 +53,7 @@ const JoinsMessage: FC<JoinsMessageProps> = ({ joins }) => {
           )}
           {index !== joins.length - 1 &&
             new Array(index + 1).fill(0).map((_, nestedIndex) => (
+              // eslint-disable-next-line react/no-array-index-key
               <Value key={`second-fg-${index}-${nestedIndex}`} mr="3px">
                 )
               </Value>

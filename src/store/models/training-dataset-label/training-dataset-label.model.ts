@@ -36,7 +36,7 @@ export const trainingDatasetLabelModel = createModel()({
 
       dispatch.trainingDatasetLabels.set({
         id: trainingDatasetId,
-        data: data,
+        data,
       });
     },
     attachLabels: async ({

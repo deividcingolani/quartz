@@ -1,12 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 // Hooks
-import useHistory from '../../../hooks/useHistory';
 import { useParams } from 'react-router-dom';
+import { Labeling, Subtitle } from '@logicalclocks/quartz';
+import useHistory from '../../../hooks/useHistory';
 import useSearchData from '../../../components/search/useSearchData';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Components
-import { Labeling, Subtitle } from '@logicalclocks/quartz';
 import ShortCutItem, { DTO } from './ShortcutItem';
 import FixedShortcuts from './FixedShortcuts';
 // Services

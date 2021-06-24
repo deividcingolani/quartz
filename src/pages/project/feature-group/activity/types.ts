@@ -1,5 +1,5 @@
-import { ActivityItem, FeatureGroup } from '../../../../types/feature-group';
 import { Ref } from 'react';
+import { ActivityItem, FeatureGroup } from '../../../../types/feature-group';
 
 export enum ActivityTypeSortOptions {
   'ALL' = 'all',

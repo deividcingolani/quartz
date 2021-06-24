@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Value, Labeling, IconButton } from '@logicalclocks/quartz';
 
-import { Api } from '../../../../../types/api';
 import { format } from 'date-fns';
+import { Api } from '../../../../../types/api';
 import { cropText } from '../../../../project/storage-connectors/utils';
 
 const useApiListRowData = (data: Api[], scope: string[]) => {

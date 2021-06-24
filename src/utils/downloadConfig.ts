@@ -1,4 +1,4 @@
-export const saveToFile = (
+const saveToFile = (
   title?: React.ReactElement | string,
   content?: string,
 ): void => {
@@ -10,8 +10,8 @@ export const saveToFile = (
       if (window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveOrOpenBlob(file);
       } else {
-        const a = document.createElement('a'),
-          url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(file);
         a.href = url;
         a.download = fileName;
         document.body.appendChild(a);
@@ -24,3 +24,5 @@ export const saveToFile = (
     }
   }
 };
+
+export default saveToFile;

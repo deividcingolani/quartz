@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 // eslint-disable-next-line import/no-unresolved
 import { Ref } from 'react-hook-form/dist/types/fields';
-import { StorageConnectorProtocol } from '../types';
+import StorageConnectorProtocol from '../types';
 
 export interface StorageConnectorFormProps {
   register: (ref: (ReactElement & Ref) | null) => void;

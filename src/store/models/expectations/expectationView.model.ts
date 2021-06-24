@@ -28,13 +28,12 @@ const expectationView = createModel()({
         featureStoreId,
         name,
       );
-      const {
-        data: attachedFGs,
-      } = await ExpectationService.getAttachedFeatureGroups(
-        projectId,
-        featureStoreId,
-        name,
-      );
+      const { data: attachedFGs } =
+        await ExpectationService.getAttachedFeatureGroups(
+          projectId,
+          featureStoreId,
+          name,
+        );
       dispatch.expectationView.setData({
         ...data,
         attachedFeatureGroups: attachedFGs || [],

@@ -1,7 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect } from 'react';
 import { Subtitle } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 
-import React, { FC, memo, useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
@@ -10,7 +12,6 @@ import Loader from '../../../../components/loader/Loader';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import TrainingDatasetOverviewContent from './TrainingDatasetOverviewContent';
 import useTitle from '../../../../hooks/useTitle';
-import { useDispatch } from 'react-redux';
 import { Dispatch } from '../../../../store';
 
 const TrainingDatasetOverview: FC = () => {

@@ -1,15 +1,16 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useEffect, useMemo } from 'react';
 
 // Types
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { FeatureGroup } from '../../../../types/feature-group';
 // Components
 import FilterResult from '../../../../components/filter-result/FilterResult';
 import Card from './Card';
 import useDrawer from '../../../../hooks/useDrawer';
 import ItemDrawer from '../../../../components/drawer/ItemDrawer';
-import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from '../../../../store';
-import { useParams } from 'react-router-dom';
 
 export interface FeatureGroupListContentProps {
   data: FeatureGroup[];
@@ -51,6 +52,7 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
     if (fg) {
       return fg.parentProjectId;
     }
+    return undefined;
   }, [selectedId, data]);
 
   const allFeatureGroups = useSelector(

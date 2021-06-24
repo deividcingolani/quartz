@@ -1,9 +1,9 @@
 import { createModel } from '@rematch/core';
 
 // Types
-import { SearchTypes } from '../../../pages/search/types';
+import SearchTypes from '../../../pages/search/types';
 import { TrainingDataset } from '../../../types/training-dataset';
-import { Feature, FeatureGroup } from '../../../types/feature-group';
+import { FeatureGroup } from '../../../types/feature-group';
 // Services
 import SearchService, {
   ServerResponseData,
@@ -12,6 +12,7 @@ import FeatureGroupsService from '../../../services/project/FeatureGroupsService
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
 import { TrainingDatasetLabelService } from '../../../services/project';
+import { Feature } from '../../../types/feature';
 
 export type SearchCountState = {
   featureGroups: FeatureGroup[];
@@ -50,7 +51,7 @@ const getFullData = async (
       const [fullFeatureGroup] = await FeatureGroupsService.getByName(
         feature.parentProjectId,
         feature.featurestoreId,
-        (feature.featuregroup as unknown) as string,
+        feature.featuregroup as unknown as string,
         feature.version,
       );
 

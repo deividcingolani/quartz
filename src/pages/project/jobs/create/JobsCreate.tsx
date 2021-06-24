@@ -1,12 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Flex } from 'rebass';
-import JobsForm from '../form/JobsForm';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import JobsForm from '../form/JobsForm';
 import { RootState } from '../../../../store';
 import { DynamicAllocation, JobFormData } from '../types';
-import { useParams } from 'react-router-dom';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { formatted } from '../utils/formattedRequest';
+import formatted from '../utils/formattedRequest';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 

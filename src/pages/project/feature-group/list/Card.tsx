@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback } from 'react';
 import {
   Dot,
   Value,
@@ -14,10 +16,11 @@ import {
   SymbolMode,
   Tooltip,
 } from '@logicalclocks/quartz';
-import React, { FC, memo, useCallback } from 'react';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, Box } from 'rebass';
 
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import routeNames from '../../../../routes/routeNames';
 
 // Services
@@ -31,9 +34,7 @@ import CardLabels from './CardLabels';
 import DateValue from './DateValue';
 import { HoverableCardProps } from '../../../../types';
 import styles from '../../styles/hoverable-card';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
-import { useParams } from 'react-router-dom';
 import useBasket from '../../../../hooks/useBasket';
 import icons from '../../../../sources/icons';
 
@@ -102,7 +103,12 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 #{data.id}
               </Value>
               {isSwitch && (
-                <Box onClick={(e) => e.stopPropagation()} ml="-5px" mr="10px" mt="5px">
+                <Box
+                  onClick={(e) => e.stopPropagation()}
+                  ml="-5px"
+                  mr="10px"
+                  mt="5px"
+                >
                   <Symbol
                     handleClick={handleBasket(data.features, data)}
                     mode={SymbolMode.bulk}
@@ -246,12 +252,10 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                       navigate(
                         `/p/${data.parentProjectId}/fg/${data.id}/statistics`,
                       );
+                    } else if (data.statisticsConfig.enabled) {
+                      handleNavigate(data.id, '/fg/:fgId/statistics')();
                     } else {
-                      if (data.statisticsConfig.enabled) {
-                        handleNavigate(data.id, '/fg/:fgId/statistics')();
-                      } else {
-                        e.stopPropagation();
-                      }
+                      e.stopPropagation();
                     }
                   }}
                   justifyContent="center"

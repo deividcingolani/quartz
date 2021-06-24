@@ -1,3 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, {
+  ComponentType,
+  FC,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Row,
   Card,
@@ -15,13 +23,6 @@ import {
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
-import React, {
-  ComponentType,
-  FC,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Types
@@ -42,7 +43,7 @@ import {
 // Components
 import AddMembers from '../forms/AddMembers';
 // Utils
-import { uppercaseFirst } from '../../../utils/uppercaseFirst';
+import uppercaseFirst from '../../../utils/uppercaseFirst';
 import NotificationTitle from '../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../utils/notifications/notificationValue';
 

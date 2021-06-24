@@ -1,3 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import Yup from 'yup';
 import { Box, Flex } from 'rebass';
 import {
@@ -18,14 +27,6 @@ import {
 } from '@logicalclocks/quartz';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 // Default validators
@@ -34,7 +35,7 @@ import { name, shortText } from '../../../../utils/validators';
 // Routes
 import routeNames from '../../../../routes/routeNames';
 // Types
-import { StorageConnectorProtocol } from '../types';
+import StorageConnectorProtocol from '../types';
 import { DescriptionsData, StorageConnectorsFormData } from './types';
 import { EffectError } from '../../../../store/plugins/errors.plugin';
 import { FeatureStoreStorageConnector } from '../../../../types/feature-store';
@@ -119,14 +120,18 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
     resolver: yupResolver(schema),
   });
 
-  const errorsValue =
-    Object.keys(errors).length === 1
-      ? `${Object.keys(errors).length.toString()} error`
-      : Object.keys(errors).length !== 0
-      ? `${Object.keys(errors).length.toString()} errors`
-      : '';
+  let errorsValue = '';
+  const len = Object.keys(errors).length;
+  if (len > 0) {
+    errorsValue =
+      len === 1 ? `${len.toString()} error` : `${len.toString()} errors`;
+  }
 
-  const { name: storageName, protocol, ...descriptions } = watch([
+  const {
+    name: storageName,
+    protocol,
+    ...descriptions
+  } = watch([
     'name',
     'protocol',
     'bucket', // Footer description for AWS
@@ -166,6 +171,7 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
       );
       return data.findIndex((x) => x.name === storageName) === -1;
     }
+    return true;
   }, [featureStoreData, projectId, storageName]);
 
   const handleSubmitWithNameValidation = async () => {

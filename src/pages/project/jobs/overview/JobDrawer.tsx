@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Badge,
@@ -9,12 +10,7 @@ import {
   NotificationsManager,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
-import {
-  format,
-  formatDuration,
-  fromUnixTime,
-  intervalToDuration,
-} from 'date-fns';
+import { format, formatDuration, intervalToDuration } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
@@ -23,12 +19,12 @@ import { DataEntity } from '../../../../types';
 import { Dispatch, RootState } from '../../../../store';
 import CommitGraph from '../../../../components/drawer/commit-graph';
 import icons from '../../../../sources/icons';
-import { setStatus } from '../utils/setStatus';
-import { setTypeOfJob } from '../utils/setTypeOfJob';
+import setStatus from '../utils/setStatus';
+import setTypeOfJob from '../utils/setTypeOfJob';
 import { ExecutionsTypeSortOptions } from '../executions/types';
 import { JobExecutionData } from '../../../../types/jobs';
-import { getAVGtime } from '../utils/getAVGtime';
-import { getPathAndFileName } from '../utils/getPathAndFileName';
+import getAVGtime from '../utils/getAVGtime';
+import getPathAndFileName from '../utils/getPathAndFileName';
 import ExecutionDropdown from './ExecutionDropdown';
 import NotificationBadge from '../../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../../utils/notifications/notificationValue';
@@ -55,6 +51,8 @@ const JobDrawer = <T extends DataEntity>({
 }: JobsDrawerProps<T>) => {
   const navigate = useNavigateRelative();
 
+  const dispatch = useDispatch<Dispatch>();
+
   const handleNavigate = useCallback(
     (route: string) => (): void => {
       dispatch.jobsExecutions.clear();
@@ -75,8 +73,6 @@ const JobDrawer = <T extends DataEntity>({
   const isJobsExecutionsLoading = useSelector(
     (state: RootState) => state.loading.effects.jobsView.fetch,
   );
-
-  const dispatch = useDispatch<Dispatch>();
 
   const item: any = useMemo(
     () => data.find(({ id }) => id === itemId),
@@ -279,6 +275,7 @@ const JobDrawer = <T extends DataEntity>({
                   const status: any = setStatus(ex.finalStatus);
                   return (
                     <Flex
+                      // eslint-disable-next-line react/no-array-index-key
                       key={index}
                       width="100%"
                       p="10px"

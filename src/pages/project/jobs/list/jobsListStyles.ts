@@ -1,4 +1,4 @@
-export const jobsListStyles = (selectedRow: number, isOpen?: boolean) => ({
+const jobsListStyles = (selectedRow: number, isOpen?: boolean) => ({
   width: '100%',
   '>table>tbody>tr': {
     border: '1px solid #E2E2E2',
@@ -114,3 +114,5 @@ export const jobsListStyles = (selectedRow: number, isOpen?: boolean) => ({
     fontFamily: 'IBM Plex Mono',
   },
 });
+
+export default jobsListStyles;

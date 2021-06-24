@@ -1,15 +1,14 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType, FC } from 'react';
+import { Box, Flex } from 'rebass';
 import { Labeling, Row, Value } from '@logicalclocks/quartz';
 
 import { Tag } from '../../types';
 import useSchematisedTagsListRowData from './useSchematisedTagsListRowData';
 
 const SchematisedTagTable: FC<{ tag: Tag }> = ({ tag: { tags, name } }) => {
-  const [
-    schematisedTagsComponents,
-    schematisedTagsProps,
-  ] = useSchematisedTagsListRowData(tags);
+  const [schematisedTagsComponents, schematisedTagsProps] =
+    useSchematisedTagsListRowData(tags);
 
   return (
     <Flex mb="20px" flexDirection="column">

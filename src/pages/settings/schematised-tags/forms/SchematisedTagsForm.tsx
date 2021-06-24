@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC } from 'react';
 import * as yup from 'yup';
 import { Box, Flex } from 'rebass';
-import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -33,25 +34,19 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
   initialData,
   error,
 }) => {
-  const {
-    errors,
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    setError,
-  } = useForm({
-    defaultValues: {
-      properties: [],
-      ...(initialData && {
-        name: initialData.name,
-        description: initialData.description,
-        properties: mapPropertiesToTable(initialData),
-      }),
-    },
-    shouldUnregister: false,
-    resolver: yupResolver(schema),
-  });
+  const { errors, register, handleSubmit, setValue, getValues, setError } =
+    useForm({
+      defaultValues: {
+        properties: [],
+        ...(initialData && {
+          name: initialData.name,
+          description: initialData.description,
+          properties: mapPropertiesToTable(initialData),
+        }),
+      },
+      shouldUnregister: false,
+      resolver: yupResolver(schema),
+    });
 
   const navigate = useNavigate();
 
@@ -91,6 +86,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
         <Box width="100%" mt="10px" mb="10px">
           <Callout
             type={CalloutTypes.error}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             content={errors.properties.message}
           />

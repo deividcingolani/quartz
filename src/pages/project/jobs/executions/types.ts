@@ -39,5 +39,3 @@ export interface JobsExecutionContentProps {
   defaultToDate: Date;
   creationDate?: any;
 }
-
-export interface Tab {}

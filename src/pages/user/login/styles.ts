@@ -18,6 +18,7 @@ const styles = (isShow: boolean, disabled: boolean) => ({
 
     svg: {
       path: {
+        // eslint-disable-next-line no-nested-ternary
         fill: disabled ? 'gray' : isShow ? '#21B182' : 'black',
       },
     },

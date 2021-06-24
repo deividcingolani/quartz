@@ -7,8 +7,10 @@ export type CrossProjectState = CrossUserProject;
 const crossProject = createModel()({
   state: {} as CrossUserProject,
   reducers: {
-    setProject: (_: CrossProjectState, payload: CrossUserProject): CrossProjectState =>
-      payload,
+    setProject: (
+      _: CrossProjectState,
+      payload: CrossUserProject,
+    ): CrossProjectState => payload,
   },
   effects: (dispatch) => ({
     getCrossUserProject: async (id: number): Promise<void> => {

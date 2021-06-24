@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useState, useEffect } from 'react';
 import {
   Button,
   Callout,
@@ -11,13 +13,12 @@ import {
 import { Box, Flex } from 'rebass';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback, useState, useEffect } from 'react';
 
 // Types
 import { useFormContext } from 'react-hook-form';
 import { Dispatch, RootState } from '../../../../../store';
 import { FeatureGroupBasket } from '../../../../../store/models/localManagement/basket.model';
-import { Feature } from '../../../../../types/feature-group';
+import { Feature } from '../../../../../types/feature';
 // Selectors
 import {
   selectBasketFeaturesLength,
@@ -92,6 +93,7 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
   useEffect(() => {
     updateFeatures();
     setOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basket]);
 
   const navigate = useNavigate();

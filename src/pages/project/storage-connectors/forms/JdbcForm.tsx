@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { ChangeEvent, FC, useState } from 'react';
 import * as yup from 'yup';
 import { Flex } from 'rebass';
-import React, { ChangeEvent, FC, useState } from 'react';
 import { Input, IconButton } from '@logicalclocks/quartz';
 import { useFieldArray } from 'react-hook-form';
 
@@ -17,8 +18,8 @@ export const schema = yup.object().shape({
   name: name.label('Name'),
   description: shortText.label('Description'),
   connectionString: shortText.required().label('S3 Bucket'),
-  arguments: yup.array(
-    yup.object({
+  arguments: yup.array().of(
+    yup.object().shape({
       value: shortText.required().label('Value'),
       key: shortText.required().label('Key'),
     }),

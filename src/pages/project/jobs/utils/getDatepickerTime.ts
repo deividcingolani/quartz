@@ -1,6 +1,6 @@
 import { format, isToday } from 'date-fns';
 
-export const getDatePickerTime = (
+const getDatePickerTime = (
   time: Date,
   isFromDate = true,
   defaultDates: {
@@ -34,3 +34,5 @@ export const getDatePickerTime = (
 
   return format(time, 'dd MMM. y H:mm a');
 };
+
+export default getDatePickerTime;

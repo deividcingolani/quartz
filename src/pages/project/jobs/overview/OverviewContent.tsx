@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { Box, Flex } from 'rebass';
 import { Button, Card, Labeling, usePopup, Value } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 import Panel from '../../../../components/panel/Panel';
@@ -8,13 +9,13 @@ import SummaryData from './SummaryData';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import icons from '../../../../sources/icons';
-import { setTypeOfJob } from '../utils/setTypeOfJob';
-import JobsExecutionsPopup from '../executions/JobsExecutionsPopup';
-import { saveToFile } from '../../../../utils/downloadConfig';
-import { getPathAndFileName } from '../utils/getPathAndFileName';
 import DatasetService, {
   DatasetType,
 } from '../../../../services/project/DatasetService';
+import setTypeOfJob from '../utils/setTypeOfJob';
+import JobsExecutionsPopup from '../executions/JobsExecutionsPopup';
+import saveToFile from '../../../../utils/downloadConfig';
+import getPathAndFileName from '../utils/getPathAndFileName';
 
 export interface ContentProps {
   data: Jobs;
@@ -45,7 +46,7 @@ const OverviewContent: FC<ContentProps> = ({
       .catch(() => {
         setJobDownlodable(false);
       });
-  }, [setJobDownlodable]);
+  }, [fileName, id, path, setJobDownlodable]);
 
   const handleDownloadJob = useCallback(async () => {
     DatasetService.getDownloadToken(

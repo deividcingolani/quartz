@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useMemo, useState } from 'react';
+import { Box, Flex } from 'rebass';
 import {
   Button,
   Callout,
@@ -61,6 +62,41 @@ const CorrelationSelector: FC<CorrelationSelectorProps> = ({
     );
   }, [search, features]);
 
+  const correlationTypeMatrix = () => {
+    if (selected.length === maxCount) {
+      return (
+        <Box mt="25px">
+          <Callout
+            type={CalloutTypes.neutral}
+            content={`${maxCount} correlations displayed`}
+          />
+        </Box>
+      );
+    }
+    if (selected.length < maxCount) {
+      return (
+        <Flex
+          mt="25px"
+          height="34px"
+          bg="grayShade3"
+          minHeight="34px"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Label>{selected.length} features selected</Label>
+        </Flex>
+      );
+    }
+    return (
+      <Box mt="25px">
+        <Callout
+          type={CalloutTypes.warning}
+          content={`${maxCount} features selected max`}
+        />
+      </Box>
+    );
+  };
+
   return (
     <Card
       contentProps={{
@@ -97,33 +133,7 @@ const CorrelationSelector: FC<CorrelationSelectorProps> = ({
           </>
         )}
 
-        {type === CorrelationType.matrix &&
-          (selected.length === maxCount ? (
-            <Box mt="25px">
-              <Callout
-                type={CalloutTypes.neutral}
-                content={`${maxCount} correlations displayed`}
-              />
-            </Box>
-          ) : selected.length < maxCount ? (
-            <Flex
-              mt="25px"
-              height="34px"
-              bg="grayShade3"
-              minHeight="34px"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Label>{selected.length} features selected</Label>
-            </Flex>
-          ) : (
-            <Box mt="25px">
-              <Callout
-                type={CalloutTypes.warning}
-                content={`${maxCount} features selected max`}
-              />
-            </Box>
-          ))}
+        {type === CorrelationType.matrix && correlationTypeMatrix()}
 
         {type === CorrelationType.list && (
           <Flex

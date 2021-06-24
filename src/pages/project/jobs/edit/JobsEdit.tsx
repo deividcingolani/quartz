@@ -1,13 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect } from 'react';
 import { Flex } from 'rebass';
-import JobsForm from '../form/JobsForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../store';
 import { useParams } from 'react-router-dom';
+import JobsForm from '../form/JobsForm';
+import { RootState } from '../../../../store';
 import { JobsViewState } from '../../../../store/models/jobs/jobsView.model';
 import { DynamicAllocation, JobFormData } from '../types';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { formatted } from '../utils/formattedRequest';
+import formatted from '../utils/formattedRequest';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
@@ -22,7 +23,7 @@ const JobsEdit: FC = () => {
 
   useEffect(() => {
     if (projectId && item) {
-      dispatch.jobsView.fetch({ projectId: projectId, jobsName: item.name });
+      dispatch.jobsView.fetch({ projectId, jobsName: item.name });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
@@ -69,7 +70,8 @@ const JobsEdit: FC = () => {
   const isFeatureStoreLoading = useSelector(
     (state: RootState) => state.loading.effects.featureStores.fetch,
   );
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const isSubmit = useSelector(
     (state: RootState) => state.loading.effects.jobs.edit,
   );

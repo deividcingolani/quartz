@@ -16,3 +16,5 @@ export const useLatestVersion = <T extends DataEntity>(
     latestVersion,
   };
 };
+
+export default useLatestVersion;

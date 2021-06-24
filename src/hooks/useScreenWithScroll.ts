@@ -10,7 +10,8 @@ const useScreenWithScroll = () => {
 
   useEffect(() => {
     if (content) {
-      //@ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const checkScrollObserver = new window.ResizeObserver(() => {
         if (content) {
           setHasScrollOnScreen(content.scrollHeight > content.clientHeight);
@@ -23,6 +24,7 @@ const useScreenWithScroll = () => {
         checkScrollObserver.unobserve(content);
       };
     }
+    return undefined;
   }, [content]);
 
   return hasScrollOnScreen;

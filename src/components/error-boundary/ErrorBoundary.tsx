@@ -45,7 +45,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidUpdate(prevProps: Readonly<ErrorBoundaryProps>) {
-    if (this.props.location.pathname !== prevProps.location.pathname) {
+    const { location } = this.props;
+    if (location.pathname !== prevProps.location.pathname) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ error: undefined });
     }
   }
@@ -58,8 +60,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const { children } = this.props;
     const { error } = this.state;
 
-    const location = this.props.location;
+    const { location } = this.props;
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const pageNameFn = pagesMap.find(([fn]) => fn(location.pathname));
 

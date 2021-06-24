@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType, FC, useMemo } from 'react';
+import { Box, Flex } from 'rebass';
 import { Button, Microlabeling, Row, Value } from '@logicalclocks/quartz';
 
 import LastValidation from '../overview/expectations/LastValidation';

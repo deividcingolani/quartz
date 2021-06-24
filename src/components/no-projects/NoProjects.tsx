@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback } from 'react';
+import { Box, Flex } from 'rebass';
 import { Button, Value } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
 

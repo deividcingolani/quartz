@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
 import { Box } from 'rebass';
-import React, { FC, useEffect, useMemo, useRef } from 'react';
 
 import { calcColor } from '../utils';
 import { CorrelationItem } from '../../../types/feature-group';
@@ -61,7 +62,8 @@ const ListFeatureMinMaxCorrelation: FC<ListFeatureMinMaxCorrelationProps> = ({
           return d.correlation;
         })
         .attr('x', () => {
-          return index++ * 6;
+          index += 1;
+          return index * 6;
         })
         .attr('width', 5)
         .attr('height', 5)
@@ -91,7 +93,8 @@ const ListFeatureMinMaxCorrelation: FC<ListFeatureMinMaxCorrelationProps> = ({
           return d.correlation;
         })
         .attr('x', () => {
-          return 47 + (index++ - 5) * 6;
+          index += 1;
+          return 47 + (index - 5) * 6;
         })
         .attr('width', 5)
         .attr('height', 5)
@@ -113,7 +116,8 @@ const ListFeatureMinMaxCorrelation: FC<ListFeatureMinMaxCorrelationProps> = ({
           return d.correlation;
         })
         .attr('x', () => {
-          return index++ * 6;
+          index += 1;
+          return index * 6;
         })
         .attr('width', 5)
         .attr('height', 5)

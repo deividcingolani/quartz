@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Button, DatePicker, Select } from '@logicalclocks/quartz';
 
 // Components
@@ -140,7 +141,9 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
                   placeholder: '',
                   width: 'auto',
                   variant: 'white',
-                  onChange: () => {},
+                  onChange: () => {
+                    // Do nothing
+                  },
                   noDataMessage: 'from',
                   value: [
                     getDatePickerTime(startDate, true, {
@@ -177,7 +180,9 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
                 placeholder: '',
                 width: 'auto',
                 variant: 'white',
-                onChange: () => {},
+                onChange: () => {
+                  // Do nothing
+                },
                 noDataMessage: 'to',
                 value: [
                   getDatePickerTime(endDate, false, { toDate: defaultToDate }),

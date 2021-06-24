@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, {
   Dispatch,
   FC,
@@ -18,7 +19,7 @@ import {
 import { format, formatDuration, intervalToDuration } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { setStatus } from '../../pages/project/jobs/utils/setStatus';
+import setStatus from '../../pages/project/jobs/utils/setStatus';
 import ProfileService from '../../services/ProfileService';
 import useNavigateRelative from '../../hooks/useNavigateRelative';
 import icons from '../../sources/icons';
@@ -114,6 +115,7 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
         url: `/elastic/jwt/${id} `,
         type: RequestType.get,
       });
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       setKibanaUrl(res.data.kibanaUrl);
     };
@@ -153,6 +155,7 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                   p: '20px',
                   mb: '20px',
                 }}
+                // eslint-disable-next-line react/no-array-index-key
                 key={index}
               >
                 <Flex justifyContent="space-between">

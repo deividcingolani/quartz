@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useRef } from 'react';
 import {
   List,
@@ -14,7 +15,7 @@ import TokenService from '../../../services/TokenService';
 // Types
 import { Dispatch } from '../../../store';
 import icons from '../../../sources/icons';
-import { pageToViewPathStorageName } from '../../../routes';
+import pageToViewPathStorageName from '../../../routes/storageName';
 
 const UserDropdown: FC = () => {
   const navigate = useNavigate();

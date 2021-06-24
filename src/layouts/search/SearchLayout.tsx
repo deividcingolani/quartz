@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Flex } from 'rebass';
 
 // Components
+import { Value } from '@logicalclocks/quartz';
 import AppHeader from '../app/header/AppHeader';
 import Suspense from '../../components/suspense/Suspense';
 import GlobalErrors from '../../components/error/GlobalErrors';
@@ -10,7 +11,6 @@ import AppAlternativeHeader from './alternative-header/AppAlternativeHeader';
 // Styles
 import styles from './settings-styles';
 
-import { Value } from '@logicalclocks/quartz';
 import DeepSearch from '../../components/search/DeepSearchInput';
 import RightContent from './alternative-header/RightContent';
 

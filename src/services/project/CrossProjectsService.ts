@@ -9,7 +9,7 @@ class CrossProjectsService extends BaseApiService {
       type: RequestType.get,
     });
     return data;
-  }; 
+  };
 }
 
 export default new CrossProjectsService('/project');

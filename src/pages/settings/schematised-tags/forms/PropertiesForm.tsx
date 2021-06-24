@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import {
   Button,
@@ -9,8 +10,9 @@ import {
 import { Box } from 'rebass';
 
 // Types
+// eslint-disable-next-line import/no-unresolved
 import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
-import { propertiesColumns } from './PropertiesColumns';
+import propertiesColumns from './PropertiesColumns';
 
 const PropertiesForm: FC<any> = ({
   setValue,

@@ -1,11 +1,14 @@
-import { Flex } from 'rebass';
-import { Button, Labeling } from '@logicalclocks/quartz';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, ReactElement, useCallback, useEffect } from 'react';
+import { Flex } from 'rebass';
+import { Button, Labeling, NotificationsManager } from '@logicalclocks/quartz';
 
 // Hooks
 import { useDispatch, useSelector } from 'react-redux';
-import { NotificationsManager } from '@logicalclocks/quartz';
+
 // Types
+import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { Dispatch, RootState } from '../../store';
 // Components
 import Error404 from '../../pages/error/404Error';
@@ -16,15 +19,15 @@ import NotificationContent from '../../utils/notifications/notificationValue';
 import NotificationTitle from '../../utils/notifications/notificationBadge';
 // Services
 import TokenService from '../../services/TokenService';
-import { useNavigate } from 'react-router-dom';
-import {AxiosError} from 'axios';
 
 const getErrorTitle = (error: AxiosError) => {
   if (error.message === 'Network Error') {
     return 'Network issue';
-  } else if (error.response?.status && error.response.status >= 500) {
+  }
+  if (error.response?.status && error.response.status >= 500) {
     return 'Server Error';
-  } else if (error.response?.status && error.response.status >= 400) {
+  }
+  if (error.response?.status && error.response.status >= 400) {
     return 'Client Error';
   }
   return 'Error';
@@ -50,13 +53,17 @@ const getErrorContent = (
     return {
       element: ServerErrorContent,
     };
-  } else if (error.response?.status && error.response.status >= 500) {
+  }
+  if (error.response?.status && error.response.status >= 500) {
     return {
       message: 'This page can not reach the server',
     };
-  } else if (error.response?.status && error.response.status >= 400) {
-    const msg = error.response.data?.usrMsg? error.response.data?.usrMsg : error.response.data?.errorMsg;
-    return {message: msg};
+  }
+  if (error.response?.status && error.response.status >= 400) {
+    const msg = error.response.data?.usrMsg
+      ? error.response.data?.usrMsg
+      : error.response.data?.errorMsg;
+    return { message: msg };
   }
   return {
     message: 'error occurred',

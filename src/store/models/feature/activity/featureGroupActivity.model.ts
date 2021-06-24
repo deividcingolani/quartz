@@ -7,7 +7,7 @@ import {
 import FeatureGroupsService from '../../../../services/project/FeatureGroupsService';
 import { ActivityTypeSortOptions } from '../../../../pages/project/feature-group/activity/types';
 
-export interface FeatureGroupActivityState extends ActivityItem {}
+export type FeatureGroupActivityState = ActivityItem;
 
 export interface ActivityFetchParams {
   projectId: number;

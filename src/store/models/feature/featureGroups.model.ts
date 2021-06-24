@@ -18,6 +18,7 @@ const attachTags = async (
   tags = {},
 ) => {
   const mapped = Object.entries(tags).map(([key, property]) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const data = Object.entries(property)
       .map(([key, nestProperty]) => ({
@@ -37,7 +38,11 @@ const attachTags = async (
     };
   });
 
-  for (const { key, data } of mapped) {
+  Object.keys(mapped).forEach((key, data) => {
+    FeatureGroupsService.attachTag(projectId, featureStoreId, id, key, data);
+  });
+
+  /*   for (const { key, data } of mapped) {
     await FeatureGroupsService.attachTag(
       projectId,
       featureStoreId,
@@ -45,7 +50,7 @@ const attachTags = async (
       key,
       data,
     );
-  }
+  } */
 };
 
 const featureGroups = createModel()({

@@ -1,8 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { ComponentType, FC, useEffect, useState } from 'react';
 import { Box } from 'rebass';
 import { useParams } from 'react-router-dom';
 import { Labeling, Row, Select } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { ComponentType, FC, useEffect, useState } from 'react';
 
 // Types
 import { Dispatch, RootState } from '../../../../../../store';
@@ -82,7 +83,7 @@ const Activity: FC<ActivityProps> = ({ id, expectation }) => {
         }
       />
 
-      {!!activity.length ? (
+      {activity.length ? (
         <Box mt="20px" width="100%" sx={activityListStyles}>
           <Row
             middleColumn={1}

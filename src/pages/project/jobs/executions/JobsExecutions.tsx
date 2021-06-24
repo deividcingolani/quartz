@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
@@ -32,6 +33,37 @@ const JobsExecutions: FC = () => {
     (state: RootState) => state.loading.effects.jobsExecutions.fetch,
   );
 
+  const eventType = Object.keys(ExecutionsTypeSortOptions).includes(type)
+    ? ExecutionsTypeSortOptions[type as keyof typeof ExecutionsTypeSortOptions]
+    : ExecutionsTypeSortOptions.ALL;
+
+  const [event, setEvent] = useState<ExecutionsTypeSortOptions>(eventType);
+
+  const executionData = useSelector<RootState, JobsViewExecutions>(
+    (state: RootState) => state.jobsExecutions,
+  );
+
+  const fromTestDate = useMemo(() => {
+    return !!executionData && !isLoading
+      ? Object.keys(executionData).pop()
+      : new Date();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [executionData]);
+
+  const [fromDate, setFromDate] = useState(() => {
+    if (from) {
+      return new Date(+from);
+    }
+
+    if (fromTestDate) {
+      return new Date(fromTestDate);
+    }
+
+    return new Date();
+  });
+
+  const [toDate, setToDate] = useState(to ? new Date(+to) : new Date());
+
   const loadPrimaryExecutionsData = useCallback(async () => {
     if (item?.name) {
       await dispatch.jobsExecutions.fetch({
@@ -50,29 +82,10 @@ const JobsExecutions: FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, id]);
-  const executionData = useSelector<RootState, JobsViewExecutions>(
-    (state: RootState) => state.jobsExecutions,
-  );
 
   useEffect(() => {
     loadPrimaryExecutionsData();
   }, [data, id, loadPrimaryExecutionsData]);
-
-  const fromTestDate = useMemo(() => {
-    return !!executionData && !isLoading
-      ? Object.keys(executionData).pop()
-      : new Date();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [executionData]);
-
-  const [fromDate, setFromDate] = useState(() => {
-    return from
-      ? new Date(+from)
-      : fromTestDate
-      ? new Date(fromTestDate)
-      : new Date();
-  });
-  const [toDate, setToDate] = useState(to ? new Date(+to) : new Date());
 
   useEffect(() => {
     if (executionData) {
@@ -104,25 +117,20 @@ const JobsExecutions: FC = () => {
   const changeEndDate = (date: Date) => {
     setToDate(date);
   };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   const [twentyEventDate, setDateOfTwentyEvent] = useState(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     new Date(fromTestDate),
   );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   const [offset, setOffset] = useState(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   const [hasData, setHasData] = useState({
     hasMore: true,
     hasPrevious: true,
     hasFollowing: false,
   });
-
-  const eventType = Object.keys(ExecutionsTypeSortOptions).includes(type)
-    ? ExecutionsTypeSortOptions[type as keyof typeof ExecutionsTypeSortOptions]
-    : ExecutionsTypeSortOptions.ALL;
-
-  const [event, setEvent] = useState<ExecutionsTypeSortOptions>(eventType);
 
   const handleRefreshData = useCallback(
     async (

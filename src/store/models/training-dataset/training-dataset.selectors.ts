@@ -11,3 +11,5 @@ export const selectTrainingDatasetsData = ({
     isLoading: loading.effects.trainingDatasets.fetch,
   };
 };
+
+export default selectTrainingDatasetsData;

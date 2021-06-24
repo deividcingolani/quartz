@@ -1,8 +1,8 @@
-// @ts-nocheck
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useSelector } from 'react-redux';
 import { Controller, useFormContext } from 'react-hook-form';
-import React, { useCallback, useMemo, useState } from 'react';
 import {
   Button,
   Callout,
@@ -90,9 +90,10 @@ const SelectExistingExpectationForm = () => {
   );
 
   const expectationsData = useMemo(() => {
-    const filteredExpectations = (matchType === ExpectationTypeMatch.all
-      ? expectations
-      : filterExpectations(expectations, featureGroup)
+    const filteredExpectations = (
+      matchType === ExpectationTypeMatch.all
+        ? expectations
+        : filterExpectations(expectations, featureGroup)
     ).sort((a, b) => a.name.localeCompare(b.name));
 
     return {
@@ -142,7 +143,7 @@ const SelectExistingExpectationForm = () => {
                 ml="10px"
                 value={matchType}
                 flexDirection="row"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: any) => e.stopPropagation()}
                 options={Object.values(ExpectationTypeMatch)}
                 onChange={(value) =>
                   setMatchType(value as ExpectationTypeMatch)

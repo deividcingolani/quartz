@@ -1,8 +1,7 @@
 import { createModel } from '@rematch/core';
-import { Databricks } from '../../../types/databricks';
 import DatabricksService from '../../../services/project/DatabricksService';
+import { ClusterStates, Databricks } from '../../../types/databricks';
 import { getValidPromisesValues } from '../search/deep-search.model';
-import { ClusterStates } from '../../../pages/project/integrations/ClusterRow';
 
 export type DatabricksState = Databricks[];
 
@@ -10,7 +9,7 @@ const databricks = createModel()({
   state: [] as DatabricksState,
   reducers: {
     setData: (
-      state: DatabricksState,
+      _state: DatabricksState,
       payload: DatabricksState,
     ): DatabricksState => payload,
     updateData: (
@@ -32,6 +31,7 @@ const databricks = createModel()({
 
         if (clusterIndex > -1) {
           if (copy[databrickIndex].clusters[clusterIndex].user) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             copy[databrickIndex].clusters[clusterIndex].user = {
               ...copy[databrickIndex].clusters[clusterIndex].user,
@@ -81,7 +81,7 @@ const databricks = createModel()({
         data: any;
       };
     }) => {
-      return await DatabricksService.createInstance(data);
+      return DatabricksService.createInstance(data);
     },
     configureCluster: async ({
       data,
@@ -93,7 +93,7 @@ const databricks = createModel()({
         userName: string;
       };
     }) => {
-      return await DatabricksService.configureCluster(data);
+      return DatabricksService.configureCluster(data);
     },
     updateUserAndStatus: async ({
       data,

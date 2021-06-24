@@ -125,7 +125,7 @@ export interface ErrorsPluginOptions {
 
 export default <
   TModels extends Models<TModels>,
-  TExtraModels extends Models<TModels>
+  TExtraModels extends Models<TModels>,
 >(
   options?: ErrorsPluginOptions,
 ): Plugin<TModels, TExtraModels, ExtraModelsFromError<TModels>> => {

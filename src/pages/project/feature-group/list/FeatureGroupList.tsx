@@ -61,6 +61,7 @@ const FeatureGroupList: FC = () => {
     () =>
       maxVersionsData.reduce(
         (acc: string[], { labels }: FeatureGroup) => [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           ...new Set([...acc, ...labels]),
         ],

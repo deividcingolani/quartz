@@ -1,7 +1,8 @@
-import { Value } from '@logicalclocks/quartz';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React from 'react';
+import { Value } from '@logicalclocks/quartz';
 
-export const renderValidationType = (type: string | undefined) => {
+const renderValidationType = (type: string | undefined) => {
   const validationType = {
     none: 'none',
     all: 'all',
@@ -61,5 +62,20 @@ export const renderValidationType = (type: string | undefined) => {
         </span>
       );
     }
+    default: {
+      return (
+        <span>
+          – configured in{' '}
+          {
+            <Value primary display="inline-block">
+              {validationType.none}
+            </Value>
+          }{' '}
+          mode (no data validation is performed)
+        </span>
+      );
+    }
   }
 };
+
+export default renderValidationType;

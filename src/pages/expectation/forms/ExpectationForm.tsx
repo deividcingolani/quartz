@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import * as yup from 'yup';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
@@ -16,18 +18,16 @@ import {
   CardSecondary,
 } from '@logicalclocks/quartz';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 // Components
 import RulesForm from './RulesForm';
 import MatchingError from './MatchingError';
 import UpdatesForm from './Updates/UpdatesForm';
-import ExpectationSummary from './ExpectationSummary';
 import Loader from '../../../components/loader/Loader';
 import ExpectationDetailsForm from './ExpectationDetailsForm';
 // Types
 import { RootState } from '../../../store';
-import { ExpectationData } from '../types';
+import { ExpectationData, ExpectationType } from '../types';
 import { Expectation } from '../../../types/expectation';
 import { FeatureGroup } from '../../../types/feature-group';
 // Utils
@@ -40,11 +40,7 @@ import {
   selectExpectationAttachLoading,
   selectExpectations,
 } from '../../../store/models/expectations/expectations.selectors';
-
-export enum ExpectationType {
-  existing = 'Pick an existing expectation',
-  new = 'Create a new expectation',
-}
+import ExpectationSummary from './ExpectationSummary';
 
 export interface ExpectationFormProps {
   isEdit?: boolean;
@@ -124,12 +120,12 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
     (state: RootState) => state.featureGroupView,
   );
 
-  const errorsValue =
-    Object.keys(errors).length === 1
-      ? `${Object.keys(errors).length.toString()} error`
-      : Object.keys(errors).length !== 0
-      ? `${Object.keys(errors).length.toString()} errors`
-      : '';
+  let errorsValue = '';
+  const len = Object.keys(errors).length;
+  if (len > 0) {
+    errorsValue =
+      len === 1 ? `${len.toString()} error` : `${len.toString()} errors`;
+  }
 
   const expectations = useSelector(selectExpectations);
 
@@ -274,6 +270,7 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
         !prevAttached?.find(({ name }) => featureGroup.name === name) &&
         prevAttached
       ) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         setValue('featureGroups', [featureGroup, ...prevAttached]);
       }
@@ -298,6 +295,7 @@ const ExpectationForm: FC<ExpectationFormProps> = ({
         {!!errors.features && (
           <Box mb="10px">
             <Callout
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               content={errors.features.message}
               type={CalloutTypes.error}

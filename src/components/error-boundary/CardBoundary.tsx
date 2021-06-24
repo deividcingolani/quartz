@@ -1,11 +1,11 @@
-import { Flex } from 'rebass';
 import React, { Component } from 'react';
+import { Flex } from 'rebass';
 import { Labeling, Value, Button, Card } from '@logicalclocks/quartz';
 
 import { Location } from 'history';
-import withRouter from './withRouter';
 // eslint-disable-next-line import/no-unresolved
 import { CardProps } from '@logicalclocks/quartz/dist/components/card';
+import withRouter from './withRouter';
 
 interface CardBoundaryState {
   error?: Error;
@@ -27,7 +27,9 @@ class CardBoundary extends Component<CardBoundaryProps, CardBoundaryState> {
   }
 
   componentDidUpdate(prevProps: Readonly<CardBoundaryProps>) {
-    if (this.props.location.pathname !== prevProps.location.pathname) {
+    const { location } = this.props;
+    if (location.pathname !== prevProps.location.pathname) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ error: undefined });
     }
   }
@@ -39,6 +41,7 @@ class CardBoundary extends Component<CardBoundaryProps, CardBoundaryState> {
   render(): React.ReactNode {
     const { children } = this.props;
     const { error } = this.state;
+    const { title } = this.props;
 
     if (error) {
       return (
@@ -51,8 +54,7 @@ class CardBoundary extends Component<CardBoundaryProps, CardBoundaryState> {
             justifyContent="center"
           >
             <Value>
-              Something went wrong while loading{' '}
-              {this.props.title || 'this card'}
+              Something went wrong while loading {title || 'this card'}
             </Value>
             <Value>-</Value>
             <Flex>

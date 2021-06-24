@@ -1,8 +1,8 @@
-import { FC } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationsManager } from '@logicalclocks/quartz';
-import React, { useCallback, useEffect, useState } from 'react';
 
 // Components
 import SchematisedTagsForm from '../forms/SchematisedTagsForm';

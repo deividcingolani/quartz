@@ -1,10 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Select } from '@logicalclocks/quartz';
 import routeNames from '../../../../routes/routeNames';
 import NoData from '../../../../components/no-data/NoData';
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
 
 // Types
 import { Dispatch, RootState } from '../../../../store';
@@ -126,7 +127,7 @@ const TrainingDatasetStatistics: FC = () => {
 
   const handleCommitChange = useCallback(
     (values) => {
-      let [timeString] = values;
+      const [timeString] = values;
 
       navigateToStatistics(timeString);
     },

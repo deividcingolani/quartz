@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { ComponentType, FC, memo, useEffect, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { ComponentType, FC, memo, useEffect, useState } from 'react';
 import {
   Button,
   Card,

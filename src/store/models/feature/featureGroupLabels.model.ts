@@ -9,7 +9,7 @@ const featureGroupLabels = createModel()({
   state: [] as FeatureGroupLabelsState,
   reducers: {
     addFeatureGroupLabels: (
-      state: FeatureGroupLabelsState,
+      _state: FeatureGroupLabelsState,
       payload: string[],
     ): FeatureGroupLabelsState => payload,
     clear: () => [],

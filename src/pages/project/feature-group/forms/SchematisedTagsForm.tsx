@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Callout,
@@ -12,7 +13,7 @@ import {
 
 // Types
 import { FeatureFormProps } from '../types';
-import { SchematisedTagEntity } from '../../../../types/feature-group';
+import { ListItem } from '../../../../types/feature-group';
 // Components
 import SingleTag from './SingleTag';
 // Selectors
@@ -28,12 +29,6 @@ import { schematisedTagAddEvent } from '../../../../store/models/localManagement
 import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
-
-export interface ListItem {
-  id: string;
-  selected: string[];
-  tag?: SchematisedTagEntity;
-}
 
 const SchematisedTags: FC<FeatureFormProps> = ({
   isDisabled,
@@ -94,8 +89,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
       if (!listTags.find(({ tag }) => name === tag?.name)) {
         return remainingOptions.set(name, description);
       }
-
-      return;
+      return undefined;
     });
 
     return remainingOptions;
@@ -175,13 +169,10 @@ const SchematisedTags: FC<FeatureFormProps> = ({
   );
 
   useEffect(() => {
-    const infoTD: { [key: string]: string } | any = localStorage.getItem(
-      'TdInfo',
-    );
+    const infoTD: { [key: string]: string } | any =
+      localStorage.getItem('TdInfo');
     if (infoTD) {
-      const newInfoTD = Object.assign({}, JSON.parse(infoTD), {
-        listTags: listTags,
-      });
+      const newInfoTD = { ...JSON.parse(infoTD), listTags };
       localStorage.setItem('TdInfo', JSON.stringify(newInfoTD));
     }
   }, [listTags, isLoadingServerTagsTD]);

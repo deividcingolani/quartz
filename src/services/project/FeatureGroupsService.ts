@@ -171,7 +171,7 @@ class FeatureGroupsService extends BaseApiService {
 
   getProvenance = (
     projectId: number,
-    featureStoreId: number,
+    _featureStoreId: number,
     featureGroup: FeatureGroup,
   ) => {
     const { name, version } = featureGroup;

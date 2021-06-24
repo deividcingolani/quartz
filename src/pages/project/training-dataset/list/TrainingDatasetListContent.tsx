@@ -1,6 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useEffect, useMemo } from 'react';
 
 // Types
+import { useDispatch, useSelector } from 'react-redux';
 import { TrainingDataset } from '../../../../types/training-dataset';
 // Components
 import FilterResult from '../../../../components/filter-result/FilterResult';
@@ -9,7 +11,6 @@ import useDrawer from '../../../../hooks/useDrawer';
 import ItemDrawer, {
   ItemDrawerTypes,
 } from '../../../../components/drawer/ItemDrawer';
-import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from '../../../../store';
 
 export interface TrainingDatasetListContentProps {
@@ -48,6 +49,7 @@ const TrainingDatasetListContent: FC<TrainingDatasetListContentProps> = ({
     if (fg) {
       return fg.parentProjectId;
     }
+    return undefined;
   }, [selectedId, data]);
 
   const allTrainingDatasets = useSelector(

@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback } from 'react';
 import { Button } from '@logicalclocks/quartz';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback } from 'react';
 
 // Selectors
 import { selectSecretsCreateLoading } from '../../../../store/models/secrets/secrets.selectors';

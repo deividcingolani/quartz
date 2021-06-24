@@ -1,5 +1,6 @@
-import { Property, SchematisedTagEntity } from '../../../types/feature-group';
+// eslint-disable-next-line import/no-unresolved
 import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
+import { Property, SchematisedTagEntity } from '../../../types/feature-group';
 import { getColumnValueByName } from '../../project/feature-group/utils';
 import labelValueMap from '../../../utils/labelValueBind';
 
@@ -25,12 +26,12 @@ export const mapProperties = (data: FGRow[]): CreateProperties => {
       const name = getColumnValueByName(row, 'Name') as string;
       const description = getColumnValueByName(row, 'Description') as string;
       const required = getColumnValueByName(row, 'Required') as boolean;
-      let type = (getColumnValueByName(row, 'Type') as string[])[0];
+      const type = (getColumnValueByName(row, 'Type') as string[])[0];
 
       if (type.includes('Array')) {
         const itemType = type.slice(type.lastIndexOf(' ') + 1);
         acc.properties[name] = {
-          description: description,
+          description,
           type: 'array',
           items: {
             type: propertiesMap.getByKey(itemType),
@@ -38,7 +39,7 @@ export const mapProperties = (data: FGRow[]): CreateProperties => {
         };
       } else {
         acc.properties[name] = {
-          description: description,
+          description,
           type: propertiesMap.getByKey(type),
         };
       }

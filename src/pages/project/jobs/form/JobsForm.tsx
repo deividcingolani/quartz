@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -12,6 +13,8 @@ import {
   RadioGroup,
   Value,
 } from '@logicalclocks/quartz';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import {
   DynamicAllocation,
   JobFormData,
@@ -22,10 +25,8 @@ import {
 } from '../types';
 import Loader from '../../../../components/loader/Loader';
 import JobsStickySummary from './JobsStickySummary';
-//Utils
+// Utils
 import getInputValidation from '../../../../utils/getInputValidation';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { name } from '../../../../utils/validators';
 import icons from '../../../../sources/icons';
 import FileExplorer from '../../../../components/file-explorer/fileExplorer';
@@ -34,7 +35,7 @@ import {
   FileExplorerOptions,
   UploadFiles,
 } from '../../../../components/file-explorer/types';
-import { FileUploader } from '../../../../components/file-uploader/fileUploader';
+import FileUploader from '../../../../components/file-uploader/fileUploader';
 
 const JobsForm: FC<JobsFormProps> = ({
   isDisabled,
@@ -47,7 +48,7 @@ const JobsForm: FC<JobsFormProps> = ({
   const [activeJobFile, setActiveJobFile] = useState<UploadFiles | null>(null);
   const [isOpenUploadExplorer, setIsOpenUploadExplorer] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-
+  const [advancedConfiguration, setAdvancedConfiguration] = useState(false);
   const schema = yup.object().shape({
     appName: name.label('Name'),
     appPath: yup
@@ -71,11 +72,8 @@ const JobsForm: FC<JobsFormProps> = ({
       ),
   });
 
-  const [advancedConfiguration, setAdvancedConfiguration] = useState(false);
-  const [
-    additionalArchives,
-    setAdditionalArchives,
-  ] = useState<UploadFiles | null>(null);
+  const [additionalArchives, setAdditionalArchives] =
+    useState<UploadFiles | null>(null);
   const [additionalJars, setAdditionalJars] = useState<UploadFiles | null>(
     null,
   );
@@ -102,10 +100,16 @@ const JobsForm: FC<JobsFormProps> = ({
     setIsDelete(false);
   };
 
+  const [fileExplorerOptions, setFileExplorerOptions] = useState(
+    FileExplorerOptions.app,
+  );
+
   const changeExplorerOptions = (currentOptions: string) => {
     const option: any = currentOptions;
     setFileExplorerOptions(option);
   };
+
+  const [isOpenExplorer, setIsOpenExplorer] = useState(false);
 
   const handleSelectFile = (activeFile: any, isDownload: boolean) => {
     switch (fileExplorerOptions) {
@@ -193,16 +197,18 @@ const JobsForm: FC<JobsFormProps> = ({
         }
         break;
       }
+      default:
+      // Nothing to do
     }
-    !isDownload && setIsOpenExplorer(false);
+    if (!isDownload) setIsOpenExplorer(false);
     setIsOpenUploadExplorer(false);
   };
 
   const helperForNewArr = (newFile: any, options: string) => {
     switch (options) {
       case 'isJobFile': {
-        let newFiles = activeJobFile?.files;
-        !!newFiles && newFiles.push(newFile);
+        const newFiles = activeJobFile?.files;
+        if (newFiles) newFiles.push(newFile);
         setActiveJobFile((prevState: any) => ({
           ...prevState,
           files: newFiles,
@@ -257,6 +263,8 @@ const JobsForm: FC<JobsFormProps> = ({
         }));
         break;
       }
+      default:
+      // Nothing to do
     }
   };
 
@@ -282,10 +290,10 @@ const JobsForm: FC<JobsFormProps> = ({
         setAdditionalFiles(null);
         break;
       }
+      default:
+      // Nothing to do
     }
   };
-
-  const [isOpenExplorer, setIsOpenExplorer] = useState(false);
 
   const methods = useForm({
     defaultValues: {
@@ -358,7 +366,7 @@ const JobsForm: FC<JobsFormProps> = ({
   const jobType = watch('jobType');
 
   useEffect(() => {
-    if (!!activeJobFile) {
+    if (activeJobFile) {
       clearErrors('appPath');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -370,16 +378,13 @@ const JobsForm: FC<JobsFormProps> = ({
 
   const errorsLength = Object.keys(errors).length;
 
-  const errorsValue =
-    errorsLength === 1
-      ? `${errorsLength.toString()} error`
-      : errorsLength !== 0
-      ? `${errorsLength.toString()} errors`
-      : '';
-
-  const [fileExplorerOptions, setFileExplorerOptions] = useState(
-    FileExplorerOptions.app,
-  );
+  let errorsValue = '';
+  if (errorsLength > 0) {
+    errorsValue =
+      errorsLength === 1
+        ? `${errorsLength.toString()} error`
+        : `${errorsLength.toString()} errors`;
+  }
 
   const [fileExplorerMode, setFileExplorerMode] = useState(
     FileExplorerMode.oneFile,
@@ -394,6 +399,7 @@ const JobsForm: FC<JobsFormProps> = ({
     };
   }, [additionalArchives, additionalJars, additionalPhyton, additionalFiles]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSubmit = useCallback(
     handleSubmit(async (data: JobFormData) => {
       const test = additional();
@@ -412,7 +418,7 @@ const JobsForm: FC<JobsFormProps> = ({
   };
 
   useEffect(() => {
-    if (!!activeJobFile) {
+    if (activeJobFile) {
       setIsDisabledProjectButton(true);
       setIsDisabledUploadButton(true);
     } else {
@@ -556,14 +562,15 @@ const JobsForm: FC<JobsFormProps> = ({
                     <FileLoader
                       removeHandler={() => helperForClose('isJobFile')}
                       isLoading={!activeJobFile}
-                      children="located in"
                       fileName={
                         !activeJobFile.name
                           ? fileToBeUpload.name
                           : activeJobFile.name
                       }
                       located={activeJobFile.path}
-                    />
+                    >
+                      located in
+                    </FileLoader>
                   </Box>
                 )}
               </Flex>
@@ -571,7 +578,7 @@ const JobsForm: FC<JobsFormProps> = ({
           </Flex>
           <Flex flexDirection="column">
             <Input
-              name={'appName'}
+              name="appName"
               ref={register}
               readOnly={isEdit}
               placeholder="name"
@@ -580,7 +587,7 @@ const JobsForm: FC<JobsFormProps> = ({
               {...getInputValidation('appName', errors)}
             />
             <Input
-              name={'defaultArgs'}
+              name="defaultArgs"
               ref={register}
               optional
               placeholder="args"
@@ -601,7 +608,7 @@ const JobsForm: FC<JobsFormProps> = ({
           {isEdit && jobType && (
             <Controller
               control={control}
-              name={'jobType'}
+              name="jobType"
               defaultValue={
                 StrongRuleTypes[jobType as keyof typeof StrongRuleTypes]
               }
@@ -628,7 +635,7 @@ const JobsForm: FC<JobsFormProps> = ({
           {!isEdit && (
             <Controller
               control={control}
-              name={'jobType'}
+              name="jobType"
               defaultValue={RuleTypes.SPARK}
               render={({ onChange, value }) => (
                 <RadioGroup
@@ -668,9 +675,9 @@ const JobsForm: FC<JobsFormProps> = ({
                   }}
                 >
                   <Input
-                    name={'amMemory'}
+                    name="amMemory"
                     ref={register({
-                      setValueAs: (value) => (value ? parseInt(value) : ''),
+                      setValueAs: (value) => (value ? parseInt(value, 10) : ''),
                     })}
                     placeholder=""
                     label="Memory (MB)"
@@ -684,9 +691,9 @@ const JobsForm: FC<JobsFormProps> = ({
                   }}
                 >
                   <Input
-                    name={'amVCores'}
+                    name="amVCores"
                     ref={register({
-                      setValueAs: (value) => (value ? parseInt(value) : ''),
+                      setValueAs: (value) => (value ? parseInt(value, 10) : ''),
                     })}
                     placeholder=""
                     label="Driver virtual cores"
@@ -704,9 +711,9 @@ const JobsForm: FC<JobsFormProps> = ({
                 }}
               >
                 <Input
-                  name={'amMemory'}
+                  name="amMemory"
                   ref={register({
-                    setValueAs: (value) => (value ? parseInt(value) : 2048),
+                    setValueAs: (value) => (value ? parseInt(value, 10) : 2048),
                   })}
                   placeholder=""
                   label="Driver  memory (MB)"
@@ -714,9 +721,9 @@ const JobsForm: FC<JobsFormProps> = ({
                   disabled={isLoading}
                 />
                 <Input
-                  name={'amVCores'}
+                  name="amVCores"
                   ref={register({
-                    setValueAs: (value) => (value ? parseInt(value) : 1),
+                    setValueAs: (value) => (value ? parseInt(value, 10) : 1),
                   })}
                   placeholder=""
                   label="Driver virtual cores"
@@ -730,10 +737,10 @@ const JobsForm: FC<JobsFormProps> = ({
                 }}
               >
                 <Input
-                  name={'spark*executor*memory'}
+                  name="spark*executor*memory"
                   ref={register({
                     required: false,
-                    setValueAs: (value) => (value ? parseInt(value) : 2048),
+                    setValueAs: (value) => (value ? parseInt(value, 10) : 2048),
                   })}
                   placeholder=""
                   label="Executor  memory (MB)"
@@ -742,9 +749,9 @@ const JobsForm: FC<JobsFormProps> = ({
                   {...getInputValidation('spark*executor*memory', errors)}
                 />
                 <Input
-                  name={'spark*executor*cores'}
+                  name="spark*executor*cores"
                   ref={register({
-                    setValueAs: (value) => (value ? parseInt(value) : 1),
+                    setValueAs: (value) => (value ? parseInt(value, 10) : 1),
                   })}
                   placeholder=""
                   label="Executor virtual cores"
@@ -778,9 +785,9 @@ const JobsForm: FC<JobsFormProps> = ({
                   }}
                 >
                   <Input
-                    name={'spark*dynamicAllocation*minExecutors'}
+                    name="spark*dynamicAllocation*minExecutors"
                     ref={register({
-                      setValueAs: (value) => (value ? parseInt(value) : 1),
+                      setValueAs: (value) => (value ? parseInt(value, 10) : 1),
                     })}
                     placeholder=""
                     label="Min executors"
@@ -788,9 +795,9 @@ const JobsForm: FC<JobsFormProps> = ({
                     disabled={isLoading}
                   />
                   <Input
-                    name={'spark*dynamicAllocation*maxExecutors'}
+                    name="spark*dynamicAllocation*maxExecutors"
                     ref={register({
-                      setValueAs: (value) => (value ? parseInt(value) : 1),
+                      setValueAs: (value) => (value ? parseInt(value, 10) : 1),
                     })}
                     placeholder=""
                     label="Max executors"
@@ -800,9 +807,9 @@ const JobsForm: FC<JobsFormProps> = ({
                 </Flex>
               ) : (
                 <Input
-                  name={'spark*executor*instances'}
+                  name="spark*executor*instances"
                   ref={register({
-                    setValueAs: (value) => (value ? parseInt(value) : 1),
+                    setValueAs: (value) => (value ? parseInt(value, 10) : 1),
                   })}
                   placeholder=""
                   label="Number of executors"
@@ -887,10 +894,9 @@ const JobsForm: FC<JobsFormProps> = ({
                               }));
                             }}
                             isLoading={!additionalArchives}
-                            children="located in"
                             fileName={el.attributes.name}
                             located={
-                              !!additionalArchives.path
+                              additionalArchives.path
                                 ? additionalArchives.path
                                 : el.attributes.path
                                     .split('/')
@@ -900,7 +906,9 @@ const JobsForm: FC<JobsFormProps> = ({
                                     )
                                     .join('/')
                             }
-                          />
+                          >
+                            located in
+                          </FileLoader>
                         </Box>
                       );
                     })}
@@ -977,10 +985,9 @@ const JobsForm: FC<JobsFormProps> = ({
                               }));
                             }}
                             isLoading={!el}
-                            children="located in"
                             fileName={el.attributes.name}
                             located={
-                              !!additionalJars.path
+                              additionalJars.path
                                 ? additionalJars.path
                                 : el.attributes.path
                                     .split('/')
@@ -990,7 +997,9 @@ const JobsForm: FC<JobsFormProps> = ({
                                     )
                                     .join('/')
                             }
-                          />
+                          >
+                            located in
+                          </FileLoader>
                         </Box>
                       );
                     })}
@@ -1067,10 +1076,9 @@ const JobsForm: FC<JobsFormProps> = ({
                               }));
                             }}
                             isLoading={!additionalPhyton}
-                            children="located in"
                             fileName={el.attributes.name}
                             located={
-                              !!additionalPhyton.path
+                              additionalPhyton.path
                                 ? additionalPhyton.path
                                 : el.attributes.path
                                     .split('/')
@@ -1080,7 +1088,9 @@ const JobsForm: FC<JobsFormProps> = ({
                                     )
                                     .join('/')
                             }
-                          />
+                          >
+                            located in
+                          </FileLoader>
                         </Box>
                       );
                     })}
@@ -1157,10 +1167,9 @@ const JobsForm: FC<JobsFormProps> = ({
                               }));
                             }}
                             isLoading={!additionalFiles}
-                            children="located in"
                             fileName={el.attributes.name}
                             located={
-                              !!additionalFiles.path
+                              additionalFiles.path
                                 ? additionalFiles.path
                                 : el.attributes.path
                                     .split('/')
@@ -1170,7 +1179,9 @@ const JobsForm: FC<JobsFormProps> = ({
                                     )
                                     .join('/')
                             }
-                          />
+                          >
+                            located in
+                          </FileLoader>
                         </Box>
                       );
                     })}
@@ -1179,7 +1190,7 @@ const JobsForm: FC<JobsFormProps> = ({
             )}
           <Controller
             control={control}
-            name={'localResources'}
+            name="localResources"
             render={({ onChange, value }) => (
               <Input
                 name="properties"

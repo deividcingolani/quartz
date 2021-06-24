@@ -1,12 +1,12 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Dispatch, RootState } from '../../../../store';
 
-//Types
+// Types
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 // Selectors
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
-import { useParams } from 'react-router-dom';
 
 export interface UseFeatureGroupView {
   data: FeatureGroupViewState;
@@ -46,7 +46,16 @@ const useFeatureGroupView = (
         featureGroupId: fgId,
       });
     }
-  }, [dispatch, fgId, isLoading, featureStoreData, projectId]);
+    return {};
+  }, [
+    dispatch.featureGroupStatistics,
+    dispatch.featureGroupView,
+    featureStoreData?.featurestoreId,
+    isLoading,
+    projectId,
+    fgId,
+    commitTime,
+  ]);
 
   useEffect(() => {
     if (

@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect } from 'react';
 import * as yup from 'yup';
 import { Box, Flex } from 'rebass';
 import { useSelector } from 'react-redux';
-import React, { FC, memo, useCallback, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -68,9 +69,8 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
   onDelete,
   initialData,
 }) => {
-  const infoTD: { [key: string]: string } | any = localStorage.getItem(
-    'TdInfo',
-  );
+  const infoTD: { [key: string]: string } | any =
+    localStorage.getItem('TdInfo');
 
   const methods = useForm({
     defaultValues: {
@@ -179,12 +179,13 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
 
   const errorsLength = Object.keys(errors).length;
 
-  const errorsValue =
-    errorsLength === 1
-      ? `${errorsLength.toString()} error`
-      : errorsLength !== 0
-      ? `${errorsLength.toString()} errors`
-      : '';
+  let errorsValue = '';
+  if (errorsLength > 0) {
+    errorsValue =
+      errorsLength === 1
+        ? `${errorsLength.toString()} error`
+        : `${errorsLength.toString()} errors`;
+  }
 
   const { id: projectId } = useParams();
   const navigate = useNavigate();
@@ -196,6 +197,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
       storageConnectorType === 'ADLS',
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSubmit = useCallback(
     handleSubmit(async (data: TrainingDatasetFormData) => {
       let next = await validateSchema(data.tags, serverTags, setError);
@@ -213,6 +215,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
           splits.length === 2 &&
           splits.every(({ name, percentage }) => !name && !percentage)
         ) {
+          // eslint-disable-next-line no-param-reassign
           data.splits = [];
           splits = [];
         } else if (
@@ -300,6 +303,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             <Box mb="10px">
               <Callout
                 type={CalloutTypes.error}
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 content={errors.features.message}
               />
@@ -309,6 +313,7 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
             <Box mb="10px">
               <Callout
                 type={CalloutTypes.error}
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 content={errors.storage.message}
               />

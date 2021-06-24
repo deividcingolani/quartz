@@ -24,6 +24,7 @@ const handleAuthError = async (fn: () => any) => {
         'Wrong credentials',
     };
   }
+  return { error: false, message: '' };
 };
 
 const auth = createModel()({

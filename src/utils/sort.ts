@@ -20,22 +20,24 @@ const sortDate: SortFunc<any> = (a, b) => {
   return sortNumber(time1, time2);
 };
 
-const sort = <T>(
-  key?: keyof T,
-  sortFunc: SortFunc<T> = sortString,
-  direction: SortDirection = SortDirection.asc,
-) => (data: T[]): T[] => {
-  if (!key) {
-    return data;
-  }
+const sort =
+  <T>(
+    key?: keyof T,
+    sortFunc: SortFunc<T> = sortString,
+    direction: SortDirection = SortDirection.asc,
+  ) =>
+  (data: T[]): T[] => {
+    if (!key) {
+      return data;
+    }
 
-  const result = data.sort(({ [key]: a }, { [key]: b }) => sortFunc(a, b));
+    const result = data.sort(({ [key]: a }, { [key]: b }) => sortFunc(a, b));
 
-  if (direction === SortDirection.desc) {
-    return result.reverse();
-  }
-  return result;
-};
+    if (direction === SortDirection.desc) {
+      return result.reverse();
+    }
+    return result;
+  };
 
 sort.string = sortString;
 sort.number = sortNumber;

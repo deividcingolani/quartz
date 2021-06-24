@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Flex } from 'rebass';
 import { useTheme } from 'emotion-theming';
 import { Labeling } from '@logicalclocks/quartz';
@@ -13,7 +15,6 @@ import {
 } from 'recharts';
 // eslint-disable-next-line import/no-unresolved
 import { ITheme } from '@logicalclocks/quartz/dist/theme/types';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 // Utils
 import randomArrayString from '../../../../../utils/randomArrayString';
@@ -21,108 +22,112 @@ import randomArrayString from '../../../../../utils/randomArrayString';
 import styles from './styles';
 import { ChartProps } from './types';
 
-const renderCustomizedLabel = (count: number, theme: ITheme) => ({
-  x = 0,
-  y = 0,
-  width = 0,
-  height = 0,
-  value = '',
-  fill,
-}: LabelProps) => {
-  const isFit = value.toString().length * 24 + 30 < width;
-  const formattedValue = Math.ceil((+value / count) * 1000) / 10;
+const renderCustomizedLabel =
+  (count: number, theme: ITheme) =>
+  ({ x = 0, y = 0, width = 0, height = 0, value = '', fill }: LabelProps) => {
+    const isFit = value.toString().length * 24 + 30 < width;
+    const formattedValue = Math.ceil((+value / count) * 1000) / 10;
 
-  const dx = (): number => {
-    if (width > 14) {
-      return width - 26;
-    } else {
+    const dx = (): number => {
+      if (width > 14) {
+        return width - 26;
+      }
       return width + 26;
-    }
+    };
+
+    return (
+      <g style={{}}>
+        <text
+          x={x}
+          y={y}
+          dy={height / 2 + 1}
+          dx={dx()}
+          fill={
+            fill === theme.colors.black && isFit
+              ? theme.colors.white
+              : theme.colors.black
+          }
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontFamily="Inter"
+          fontSize="12px"
+        >
+          {`${value} (${formattedValue}%)`}
+        </text>
+      </g>
+    );
   };
 
-  return (
-    <g style={{}}>
-      <text
-        x={x}
-        y={y}
-        dy={height / 2 + 1}
-        dx={dx()}
-        fill={
-          fill === theme.colors.black && isFit
-            ? theme.colors.white
-            : theme.colors.black
-        }
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fontFamily="Inter"
-        fontSize="12px"
-      >
-        {`${value} (${formattedValue}%)`}
-      </text>
-    </g>
-  );
-};
+const renderEndLine =
+  () =>
+  ({ y = 0, width = 0, height = 0 }: LabelProps) => {
+    return (
+      <g>
+        <foreignObject
+          x={width}
+          y={y}
+          width={66}
+          height={23}
+          dy={height / 2 + 1}
+        >
+          <div
+            style={{
+              height: 23,
+              borderRightColor: 'black',
+              borderRightStyle: 'solid',
+              borderRightWidth: '1px',
+            }}
+          />
+        </foreignObject>
+        <Cell />
+      </g>
+    );
+  };
 
-const renderEndLine = () => ({ y = 0, width = 0, height = 0 }: LabelProps) => {
-  return (
-    <g>
-      <foreignObject x={width} y={y} width={66} height={23} dy={height / 2 + 1}>
-        <div
-          style={{
-            height: 23,
-            borderRightColor: 'black',
-            borderRightStyle: 'solid',
-            borderRightWidth: '1px',
-          }}
-        />
-      </foreignObject>
-      <Cell />
-    </g>
-  );
-};
-
-const renderCustomizedTick = () => ({ x, y, payload: { value } }: any) => {
-  const maxLength = 8;
-  const partsLength = Math.ceil(value.length / maxLength);
-  return (
-    <>
-      {Array.from({ length: partsLength })
-        .fill(0)
-        .map((_, ind) => {
-          return (
-            // eslint-disable-next-line react/no-array-index-key
-            <g key={ind}>
-              <foreignObject
-                width={52}
-                height={30}
-                x={x - 50}
-                y={y - 6}
-                dy={
-                  partsLength > 1
-                    ? ind * 10 - 4 * Math.ceil(partsLength / 2)
-                    : 2
-                }
-              >
-                <div
-                  style={{
-                    height: 30,
-                    width: 52,
-                    fontFamily: 'Inter',
-                    fontSize: '10px',
-                    textAlign: 'end',
-                    wordWrap: 'break-word',
-                    overflowWrap: 'break-word',
-                  }}
+const renderCustomizedTick =
+  () =>
+  ({ x, y, payload: { value } }: any) => {
+    const maxLength = 8;
+    const partsLength = Math.ceil(value.length / maxLength);
+    return (
+      <>
+        {Array.from({ length: partsLength })
+          .fill(0)
+          .map((_, ind) => {
+            return (
+              // eslint-disable-next-line react/no-array-index-key
+              <g key={ind}>
+                <foreignObject
+                  width={52}
+                  height={30}
+                  x={x - 50}
+                  y={y - 6}
+                  dy={
+                    partsLength > 1
+                      ? ind * 10 - 4 * Math.ceil(partsLength / 2)
+                      : 2
+                  }
                 >
-                  {value.substring(ind * maxLength, maxLength * (ind + 1))}
-                </div>
-              </foreignObject>
-            </g>
-          );
-        })}
-    </>
-  );
-};
+                  <div
+                    style={{
+                      height: 30,
+                      width: 52,
+                      fontFamily: 'Inter',
+                      fontSize: '10px',
+                      textAlign: 'end',
+                      wordWrap: 'break-word',
+                      overflowWrap: 'break-word',
+                    }}
+                  >
+                    {value.substring(ind * maxLength, maxLength * (ind + 1))}
+                  </div>
+                </foreignObject>
+              </g>
+            );
+          })}
+      </>
+    );
+  };
 
 const HorizontalBarChart: FC<ChartProps> = ({ data }) => {
   const theme = useTheme<ITheme>();
@@ -154,9 +159,10 @@ const HorizontalBarChart: FC<ChartProps> = ({ data }) => {
     });
   }, [mappedData]);
 
-  const keys = useMemo(() => randomArrayString(mappedData.length), [
-    mappedData,
-  ]);
+  const keys = useMemo(
+    () => randomArrayString(mappedData.length),
+    [mappedData],
+  );
   const [focusBar, setFocusBar] = useState(null);
 
   const handleMouseMove = useCallback(

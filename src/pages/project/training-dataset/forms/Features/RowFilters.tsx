@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
-import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Callout,
@@ -67,6 +68,7 @@ const RowFilters: FC<{
   const changeProperty = (index: number, field: string, value: any) => {
     const copy = filters.slice();
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     copy[index][field] = value;
 

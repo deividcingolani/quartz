@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Button, Label, Labeling, Popup, Value } from '@logicalclocks/quartz';
 import { Box, BoxProps, Flex } from 'rebass';
@@ -6,7 +7,7 @@ export interface TermsProps {
   onClose: () => void;
 }
 
-export interface DotProps extends Omit<BoxProps, 'css'> {}
+export type DotProps = Omit<BoxProps, 'css'>;
 
 const Dot: FC<DotProps> = (props) => (
   <Box

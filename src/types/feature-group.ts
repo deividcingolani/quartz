@@ -1,8 +1,11 @@
-import { DataEntity } from './index';
-import { TrainingDataset } from './training-dataset';
+/* eslint-disable import/no-cycle */
 import { User } from './user';
 import { Expectation, Validation } from './expectation';
 import { IStorageConnector } from './storage-connector';
+import { Feature } from './feature';
+import { DataEntity } from '.';
+import { FeatureGroupProvenance } from './featur-group-provenance';
+import { Entry } from './entry';
 
 // These feature types are valid only for statistics
 // Deequ (the library we use to compute statistics)
@@ -77,44 +80,6 @@ export interface ActivityItemData {
   };
 }
 
-export interface Feature {
-  defaultValue: string | number;
-  description?: string;
-  name: string;
-  id: number;
-  features: Feature[];
-  primary: boolean;
-  partition: boolean;
-  type: string;
-  onlineType?: string;
-  label: boolean;
-  index: number;
-  featuregroup: FeatureGroup;
-  basefeaturegroup: FeatureGroup;
-  version: number;
-  created?: string;
-  parentProjectName: string;
-  parentProjectId: number;
-  featurestoreId: number;
-  matchText: string;
-  highlights: any;
-  featureId: number;
-}
-
-export interface Job {
-  jobId: number;
-  jobName: string;
-  lastComputed: string;
-  jobStatus: 'Succeeded' | 'Failed' | 'Running';
-  featurestoreId: number;
-  featuregroupId: number;
-}
-
-export interface Entry {
-  key: string;
-  value: any;
-}
-
 export interface EntryType {
   entry: Entry[];
 }
@@ -147,15 +112,16 @@ export interface SchematisedTagEntity {
   tags: any;
 }
 
+export interface ListItem {
+  id: string;
+  selected: string[];
+  tag?: SchematisedTagEntity;
+}
+
 export interface SchematisedTag {
   value: string;
   name: string;
   type: string;
-}
-
-export interface FeatureGroupProvenance {
-  td: TrainingDataset;
-  info: Entry;
 }
 
 export interface ExpectationRule {

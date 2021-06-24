@@ -1,13 +1,15 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType, FC, memo } from 'react';
 import { Row, Text, Collapse, Labeling } from '@logicalclocks/quartz';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from '../../store';
-import { Feature, FeatureGroup } from '../../types/feature-group';
+import { FeatureGroup } from '../../types/feature-group';
 import useFeaturesListRowData from './useFeaturesListRowData';
 
 import { remove } from '../../sources/basketSvg';
 
 import stickyStyles from './basket-features.styles';
+import { Feature } from '../../types/feature';
 
 export interface BasketFeaturesProps {
   data: Feature[];

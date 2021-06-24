@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import {
   Label,
   Button,
@@ -15,8 +16,8 @@ import {
   Divider,
 } from '@logicalclocks/quartz';
 
-import { User } from '../../../types/user';
 import { useDispatch } from 'react-redux';
+import { User } from '../../../types/user';
 import { Dispatch } from '../../../store';
 import NotificationTitle from '../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../utils/notifications/notificationValue';
@@ -41,7 +42,12 @@ export interface ProjectMember {
   teamRole: Roles;
 }
 
-const AddMembers: FC<AddMembersProps> = ({ members, isOpen, isSearchEnabled, onClose }) => {
+const AddMembers: FC<AddMembersProps> = ({
+  members,
+  isOpen,
+  isSearchEnabled,
+  onClose,
+}) => {
   const { id } = useParams();
 
   const [selectedMembers, setMembers] = useState<ProjectMember[]>([]);
@@ -87,7 +93,7 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, isSearchEnabled, onC
 
   const handleAddMembers = useCallback(async () => {
     setIsLoading(true);
-    try{
+    try {
       await dispatch.members.add({
         id: +id,
         data: {
@@ -101,7 +107,7 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, isSearchEnabled, onC
             (d) => d.email === projectTeamPK.teamMember,
           );
 
-          return members.length? member?.firstname : projectTeamPK.teamMember;
+          return members.length ? member?.firstname : projectTeamPK.teamMember;
         })
         .join(', ');
 
@@ -120,8 +126,8 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, isSearchEnabled, onC
           />
         ),
       });
-    } catch(error) {
-      //nothing to do. Added so that it can continue with the rest of the code  
+    } catch (error) {
+      // nothing to do. Added so that it can continue with the rest of the code
     }
     await dispatch.project.refetchProject(+id);
 
@@ -142,47 +148,44 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, isSearchEnabled, onC
       secondaryButton={['Back', onClose]}
       mainButton={['Add members', handleAddMembers]}
       disabledMainButton={
-        (!members.length && isSearchEnabled) || !selectedMembers.length || isLoading
+        (!members.length && isSearchEnabled) ||
+        !selectedMembers.length ||
+        isLoading
       }
     >
-      {isSearchEnabled? 
-        (
-          <Tooltip
-            mainText="All members of this cluster are part of this project"
-            disabled={!!members.length}
-          >
-            <EditableSelect
-              width="400px"
-              isMulti
-              label="Members"
-              type="searchable"
-              value={selectedEmails}
-              placeholder="pick members"
-              noDataMessage="no members defined"
-              onChange={handleEmailsSelection}
-              disabled={!members.length || isLoading}
-              options={members.map(({ email }) => email)}
-            />
-          </Tooltip>
-        ):
-        (
-          <Tooltip
-            mainText="Enter the email of a user you want to add"
-          >
-            <EditableSelect
-              width="400px"
-              isMulti
-              label="Members"
-              type="editable"
-              value={selectedEmails}
-              placeholder="enter an email"
-              noDataMessage=""
-              options={[]}
-              onChange={handleEmailsSelection}
-            />
-          </Tooltip>
-        )
-      }
+      {isSearchEnabled ? (
+        <Tooltip
+          mainText="All members of this cluster are part of this project"
+          disabled={!!members.length}
+        >
+          <EditableSelect
+            width="400px"
+            isMulti
+            label="Members"
+            type="searchable"
+            value={selectedEmails}
+            placeholder="pick members"
+            noDataMessage="no members defined"
+            onChange={handleEmailsSelection}
+            disabled={!members.length || isLoading}
+            options={members.map(({ email }) => email)}
+          />
+        </Tooltip>
+      ) : (
+        <Tooltip mainText="Enter the email of a user you want to add">
+          <EditableSelect
+            width="400px"
+            isMulti
+            label="Members"
+            type="editable"
+            value={selectedEmails}
+            placeholder="enter an email"
+            noDataMessage=""
+            options={[]}
+            onChange={handleEmailsSelection}
+          />
+        </Tooltip>
+      )}
       {selectedEmails.length > 0 && (
         <>
           <Divider px="20px" />
@@ -196,7 +199,9 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, isSearchEnabled, onC
                 justifyContent="space-between"
               >
                 <Flex flexDirection="column">
-                  {isSearchEnabled && <Label mb="5px">{`${member?.firstname} ${member?.lastname}`}</Label>}
+                  {isSearchEnabled && (
+                    <Label mb="5px">{`${member?.firstname} ${member?.lastname}`}</Label>
+                  )}
                   <Labeling
                     sx={{
                       wordBreak: 'break-all',
@@ -220,7 +225,7 @@ const AddMembers: FC<AddMembersProps> = ({ members, isOpen, isSearchEnabled, onC
         </>
       )}
       <Box my="20px">
-        {!!members.length || !isSearchEnabled? (
+        {!!members.length || !isSearchEnabled ? (
           <Callout
             type={CalloutTypes.neutral}
             content={

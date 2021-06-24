@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -21,8 +22,10 @@ const MembersForm: FC<MembersFormProps> = ({ control, isLoading }) => {
   const me = useSelector((state: RootState) => state.profile.email);
 
   const members = useSelector(selectMembers);
-  const isSearchEnabled = !(members.error?.response?.data.errorCode === 160057)
-  const membersToSelect = members.data? members.data.filter(({ email }) => email !== me) : [];
+  const isSearchEnabled = !(members.error?.response?.data.errorCode === 160057);
+  const membersToSelect = members.data
+    ? members.data.filter(({ email }) => email !== me)
+    : [];
 
   return (
     <>
@@ -33,7 +36,7 @@ const MembersForm: FC<MembersFormProps> = ({ control, isLoading }) => {
         name="membersEmails"
         render={({ onChange, value }) => (
           <>
-            {isSearchEnabled? (
+            {isSearchEnabled ? (
               <EditableSelect
                 isMulti
                 width="100%"
@@ -55,7 +58,7 @@ const MembersForm: FC<MembersFormProps> = ({ control, isLoading }) => {
                 options={membersToSelect.map(({ email }) => email)}
                 noDataMessage="No other member registred in this cluster"
               />
-            ):(
+            ) : (
               <EditableSelect
                 width="100%"
                 isMulti

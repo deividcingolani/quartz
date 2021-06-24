@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useMemo } from 'react';
+import { Box, Flex } from 'rebass';
 import {
   Badge,
   Button,
@@ -9,11 +10,11 @@ import {
   Value,
 } from '@logicalclocks/quartz';
 
+import { useFormContext } from 'react-hook-form';
 import { FeatureGroupJoin } from '../../types';
 import { FeatureGroup } from '../../../../../types/feature-group';
 
 import icons from '../../../../../sources/icons';
-import { useFormContext } from 'react-hook-form';
 import getInputValidation from '../../../../../utils/getInputValidation';
 
 export interface SingleInnerJoinFormProps {
@@ -78,13 +79,18 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [items, index]);
 
-  const delimiterMarginTop = !title
-    ? errorJoin && (errorJoin.firstFg || errorJoin.secondFg)
-      ? 38 + 25
-      : 38
-    : errorJoin && (errorJoin.firstFg || errorJoin.secondFg)
-    ? 50 + 25
-    : 50;
+  let delimiterMarginTop;
+  // !title ?
+  //    errorJoin && (errorJoin.firstFg || errorJoin.secondFg) ? 38 + 25 : 38
+  //  : errorJoin && (errorJoin.firstFg || errorJoin.secondFg) ? 50 + 25 : 50;
+
+  if (!title) {
+    delimiterMarginTop =
+      errorJoin && (errorJoin.firstFg || errorJoin.secondFg) ? 50 + 25 : 50;
+  } else {
+    delimiterMarginTop =
+      errorJoin && (errorJoin.firstFg || errorJoin.secondFg) ? 38 + 25 : 38;
+  }
 
   return (
     <>
@@ -130,7 +136,7 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
                 disabled={isDisabled}
                 hasPlaceholder={false}
                 placeholder="pick a feature group"
-                value={!!firstFg ? [firstFg.name] : []}
+                value={firstFg ? [firstFg.name] : []}
                 options={options
                   .map(({ name }) => name)
                   .sort((a, b) => a.localeCompare(b))}
@@ -165,6 +171,7 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
                 placeholder="pick a join key"
                 noDataMessage="pick a join key"
                 searchPlaceholder="Find a feature..."
+                // eslint-disable-next-line react/no-array-index-key
                 key={`first-features-${nestedIndex}-${index}-${keys.length}`}
                 additionalTexts={
                   firstFg ? [] : afterJoinOptions.map(({ fg }) => fg?.name)
@@ -221,6 +228,7 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
 
             <Box mt={`${delimiterMarginTop}px`}>
               {firstFgJoinKeys.map((_, index) => (
+                // eslint-disable-next-line react/no-array-index-key
                 <Value key={index} mb="37px">
                   {'<->'}
                 </Value>
@@ -251,7 +259,7 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
                 disabled={isDisabled}
                 hasPlaceholder={false}
                 placeholder="pick a feature group"
-                value={!!secondFg ? [secondFg.name] : []}
+                value={secondFg ? [secondFg.name] : []}
                 options={options
                   .map(({ name }) => name)
                   .sort((a, b) => a.localeCompare(b))}
@@ -269,6 +277,7 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
               />
             )}
             {secondFgJoinKeys.map((keys, nestedIndex) => (
+              // eslint-disable-next-line react/no-array-index-key
               <Flex key={`second-features-${nestedIndex}-${index}`}>
                 <Select
                   mt={`${
@@ -321,7 +330,7 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
                 />
 
                 {secondFgJoinKeys.length > 1 &&
-                  (!!nestedIndex ? (
+                  (nestedIndex ? (
                     <Tooltip mt="20px" mr="5px" ml="10px" mainText="Remove">
                       <Box
                         p="8px"

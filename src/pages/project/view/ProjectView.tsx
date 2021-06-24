@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback } from 'react';
 // Hooks
 import { useParams } from 'react-router-dom';

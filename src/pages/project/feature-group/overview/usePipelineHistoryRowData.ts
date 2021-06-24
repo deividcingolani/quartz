@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { Badge, Value, FreshnessBar, IconButton } from '@logicalclocks/quartz';
 
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { Job } from '../../../../types/feature-group';
+import { Job } from '../../../../types/job';
 
 const statusMap = new Map<string, 'bold' | 'fail' | 'success'>([
   ['Succeeded', 'success'],

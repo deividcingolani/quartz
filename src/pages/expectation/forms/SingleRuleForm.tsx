@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useMemo } from 'react';
+import { Box, Flex } from 'rebass';
 import { useFormContext } from 'react-hook-form';
 import {
   Callout,
@@ -95,7 +96,7 @@ const SingleRuleForm: FC<SingleRuleFormProps> = ({
           hasPlaceholder={false}
           options={mappedOptions}
           placeholder="pick rule type"
-          value={!!rule.type ? [rule.type] : []}
+          value={rule.type ? [rule.type] : []}
           label={`Expectation rule #${index + 1}`}
           {...getInputValidation(`ruleType`, ruleErrors[index])}
           onChange={(value) => onChange('type', value[0], index)}

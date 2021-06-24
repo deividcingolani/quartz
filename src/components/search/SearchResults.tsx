@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Labeling, Text } from '@logicalclocks/quartz';
 // Types
@@ -115,21 +116,23 @@ const SearchResults: FC<{ search?: string; data: SearchState }> = ({
       if (['ArrowDown', 'ArrowUp'].includes(e.key)) {
         e.preventDefault();
 
-        const deepButtonsCount = !!search ? deepSearchButtonsCount : 0;
+        const deepButtonsCount = search ? deepSearchButtonsCount : 0;
         const maxLength = itemsLength + deepButtonsCount;
 
         if (e.key === 'ArrowDown') {
-          setActive((index) =>
-            index === -1 ? 0 : index > maxLength - 2 ? 0 : index + 1,
-          );
+          setActive((index) => {
+            if (index === -1 || index > maxLength - 2) {
+              return 0;
+            }
+            return index + 1;
+          });
         } else {
-          setActive((index) =>
-            index === -1
-              ? maxLength - 1
-              : index === 0
-              ? maxLength - 1
-              : index - 1,
-          );
+          setActive((index) => {
+            if (index === -1 || index === 0) {
+              return maxLength - 1;
+            }
+            return index - 1;
+          });
         }
       }
 

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo } from 'react';
 
 // Types
-import { SearchTypes } from '../types';
+import SearchTypes from '../types';
 import { Dispatch, RootState } from '../../../store';
 // Selectors
 import {

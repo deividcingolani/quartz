@@ -1,6 +1,4 @@
-import { Box, Flex } from 'rebass';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, {
   ComponentType,
   FC,
@@ -8,6 +6,9 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { Box, Flex } from 'rebass';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   Card,
@@ -29,13 +30,13 @@ import useExpectationsListRowData from './useExpectationsListRowData';
 import useGetHrefForRoute from '../../../../../hooks/useGetHrefForRoute';
 import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
 
-//styles
+// styles
 import icons from '../../../../../sources/icons';
 import routeNames from '../../../../../routes/routeNames';
 import expectationListStyles from './expectationListStyles';
 
-//utils
-import { renderValidationType } from './utils';
+// utils
+import renderValidationType from './utils';
 
 export interface ExpectationsProps {
   data: FeatureGroup;
@@ -44,12 +45,8 @@ export interface ExpectationsProps {
 const Expectations: FC<ExpectationsProps> = ({ data }) => {
   const { id: projectId } = useParams();
 
-  const {
-    handleSelectItem,
-    handleClose,
-    isOpen,
-    selectedId,
-  } = useDrawer<string>();
+  const { handleSelectItem, handleClose, isOpen, selectedId } =
+    useDrawer<string>();
 
   const [isPopupOpen, handleToggle] = usePopup();
 
@@ -216,7 +213,7 @@ const Expectations: FC<ExpectationsProps> = ({ data }) => {
         <Box mt="20px" sx={expectationListStyles}>
           <Row
             onRowClick={(_, index) => {
-              const name = data.expectations[index].name;
+              const { name } = data.expectations[index];
 
               handleSelectItem(name)();
             }}

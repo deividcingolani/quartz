@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { CardProps } from '@logicalclocks/quartz/dist/components/card';
 import { Box, Flex } from 'rebass';
-import React, { FC } from 'react';
 import { Card, Code, Value } from '@logicalclocks/quartz';
 
 export interface CodeItem {

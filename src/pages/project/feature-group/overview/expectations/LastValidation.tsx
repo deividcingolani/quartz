@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Box, Flex, FlexProps } from 'rebass';
 import { Labeling, Microlabeling, Value } from '@logicalclocks/quartz';
@@ -18,7 +19,7 @@ const LastValidation: FC<LastValidationProps> = ({
     <Flex width="110px" {...props}>
       <Box mr="8px">
         <Microlabeling gray>success</Microlabeling>
-        {!!success ? (
+        {success ? (
           <Value primary>{success}</Value>
         ) : (
           <Labeling bold gray>
@@ -28,7 +29,7 @@ const LastValidation: FC<LastValidationProps> = ({
       </Box>
       <Box mr="8px">
         <Microlabeling gray>warning</Microlabeling>
-        {!!warning ? (
+        {warning ? (
           <Value color="labels.orange">{alert}</Value>
         ) : (
           <Labeling bold gray>
@@ -38,7 +39,7 @@ const LastValidation: FC<LastValidationProps> = ({
       </Box>
       <Box>
         <Microlabeling gray>alert</Microlabeling>
-        {!!alert ? (
+        {alert ? (
           <Value color="labels.red">{alert}</Value>
         ) : (
           <Labeling bold gray>

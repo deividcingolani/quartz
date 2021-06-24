@@ -36,16 +36,17 @@ const useTokenApiInterceptor = () => {
           previousToken &&
           previousToken !== TokenService.get()
         ) {
-          return new Promise((resolve) => () =>
-            resolve(
-              axios.request({
-                ...error.config,
-                headers: {
-                  ...error.config.headers,
-                  Authorization: TokenService.get(),
-                },
-              }),
-            ),
+          return new Promise(
+            (resolve) => () =>
+              resolve(
+                axios.request({
+                  ...error.config,
+                  headers: {
+                    ...error.config.headers,
+                    Authorization: TokenService.get(),
+                  },
+                }),
+              ),
           );
         }
         return Promise.reject(error);

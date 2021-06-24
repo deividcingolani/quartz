@@ -1,5 +1,6 @@
 import { createModel } from '@rematch/core';
-import { Feature, FeatureGroup } from '../../../types/feature-group';
+import { Feature } from '../../../types/feature';
+import { FeatureGroup } from '../../../types/feature-group';
 
 export interface FeatureGroupBasket {
   fg: FeatureGroup;
@@ -65,7 +66,7 @@ const deleteFromBasket = (
 const basket = createModel()({
   state: { featureGroups: [], isSwitched: false } as BasketState,
   reducers: {
-    setFeaturesData: (state: BasketState, payload: BasketState): BasketState =>
+    setFeaturesData: (_state: BasketState, payload: BasketState): BasketState =>
       payload,
     updateSwitch: (state: BasketState, payload: boolean): BasketState => ({
       ...state,
@@ -110,7 +111,9 @@ const basket = createModel()({
         try {
           const parsed = JSON.parse(data);
           dispatch.basket.setFeaturesData(parsed);
-        } catch (e) {}
+        } catch (e) {
+          // continue regardless of error
+        }
       }
     },
     onUpdateStorage: () => {

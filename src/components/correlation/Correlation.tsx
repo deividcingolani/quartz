@@ -1,6 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-
+import { Box, Flex } from 'rebass';
 // Components
 import CorrelationList from './list/CorrelationList';
 import CorrelationTable, { margin } from './matrix/CorrelationTable';
@@ -50,18 +50,17 @@ const Correlation: FC<CorrelationProps> = ({
   );
 
   const correlation = useMemo(() => {
-    let a = filterCorrelationsByRange(
+    const a = filterCorrelationsByRange(
       JSON.parse(debouncedRange),
       defaultCorrelations,
     );
     return a;
   }, [defaultCorrelations, debouncedRange]);
 
-
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(
     Object.keys(correlation),
   );
-  
+
   const [pickedCorrelations, setPickedCorrelations] = useState<
     CorrelationValue[]
   >([]);

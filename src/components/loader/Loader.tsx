@@ -1,5 +1,6 @@
-import { Logo } from '@logicalclocks/quartz';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
+import { Logo } from '@logicalclocks/quartz';
 import { Box, BoxProps } from 'rebass';
 
 // Styles
@@ -18,7 +19,7 @@ const Loader: FC<LoaderProps> = ({
   const { sx, ...restProps } = props;
 
   return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     <Box sx={{ ...styles, ...sx }} {...restProps}>
       <Logo width={width} height={height} />

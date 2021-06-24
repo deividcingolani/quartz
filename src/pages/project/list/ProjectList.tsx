@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { Flex } from 'rebass';
 import { Button, Value } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
 
 // Types
 import { Dispatch, RootState } from '../../../store';
@@ -15,7 +16,7 @@ import ProjectListContent from './ProjectListContent';
 import NoProjects from '../../../components/no-projects/NoProjects';
 import useTitle from '../../../hooks/useTitle';
 import titles from '../../../sources/titles';
-import { pageToViewPathStorageName } from '../../../routes';
+import pageToViewPathStorageName from '../../../routes/storageName';
 
 const ProjectList: FC = () => {
   useTitle(titles.projectList);
@@ -44,12 +45,12 @@ const ProjectList: FC = () => {
     dispatch.projectsList.getProjects();
     const lastPath = localStorage.getItem(pageToViewPathStorageName);
 
-    if (lastPath && lastPath.startsWith("/p")) {
+    if (lastPath && lastPath.startsWith('/p')) {
       // The last page the user visited was a within a project,
       // redirect them there.
       navigate(`${lastPath.split('/').slice(0, 3).join('/')}/view`);
     }
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   // Handlers
   const handleCreate = useCallback(() => {

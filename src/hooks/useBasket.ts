@@ -1,12 +1,13 @@
-import { Dispatch } from '../store';
 import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from '../store';
 import {
   selectFeatureGroups,
   selectSwitch,
 } from '../store/models/localManagement/basket.selectors';
-import { Feature, FeatureGroup } from '../types/feature-group';
+import { FeatureGroup } from '../types/feature-group';
+import { Feature } from '../types/feature';
 
 const useBasket = () => {
   const { id: projectId } = useParams();
@@ -38,13 +39,13 @@ const useBasket = () => {
     (features: Feature[], parent: FeatureGroup) => () => {
       if (isActiveFeatures(features, parent)) {
         dispatch.basket.deleteFeatures({
-          features: features,
+          features,
           featureGroup: parent,
           projectId: +projectId,
         });
       } else {
         dispatch.basket.addFeatures({
-          features: features,
+          features,
           featureGroup: parent,
           projectId: +projectId,
         });

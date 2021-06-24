@@ -1,8 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React from 'react';
 import { Checkbox, Input } from '@logicalclocks/quartz';
+// eslint-disable-next-line import/no-unresolved
 import { TableColumn } from '@logicalclocks/quartz/dist/components/table/editable';
 
-export const featuresColumns = (): TableColumn[] => {
+const featuresColumns = (): TableColumn[] => {
   return [
     {
       name: 'Name',
@@ -27,3 +29,5 @@ export const featuresColumns = (): TableColumn[] => {
     },
   ];
 };
+
+export default featuresColumns;

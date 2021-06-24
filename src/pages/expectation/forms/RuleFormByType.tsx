@@ -1,4 +1,4 @@
-// @ts-nocheck
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Input, Select } from '@logicalclocks/quartz';
@@ -37,7 +37,7 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
         value={rule.pattern}
         disabled={isDisabled}
         placeholder="/([A-Z])\w+/g"
-        onChange={({ target }) => onChange('pattern', target.value, index)}
+        onChange={({ target }: any) => onChange('pattern', target.value, index)}
         {...getInputValidation(`pattern`, ruleErrors[index])}
       />
     );
@@ -51,7 +51,9 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
         value={rule.legalValues}
         placeholder="value1 ; value2"
         {...getInputValidation(`legalValues`, ruleErrors[index])}
-        onChange={({ target }) => onChange('legalValues', target.value, index)}
+        onChange={({ target }: any) =>
+          onChange('legalValues', target.value, index)
+        }
       />
     );
   }
@@ -79,7 +81,7 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
         value={rule.min}
         disabled={isDisabled}
         placeholder="value_1 ; value_2"
-        onChange={({ target }) => onChange('min', target.value, index)}
+        onChange={({ target }: any) => onChange('min', target.value, index)}
         {...getInputValidation(`min`, ruleErrors[index])}
       />
     );
@@ -139,7 +141,9 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
             value={rule.exact}
             disabled={isDisabled}
             label="Exact proportion"
-            onChange={({ target }) => onChange('exact', target.value, index)}
+            onChange={({ target }: any) =>
+              onChange('exact', target.value, index)
+            }
             {...getInputValidation(`exact`, ruleErrors[index])}
           />
         ) : (
@@ -152,7 +156,9 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
               value={rule.min}
               disabled={isDisabled}
               label="Min proportion"
-              onChange={({ target }) => onChange('min', target.value, index)}
+              onChange={({ target }: any) =>
+                onChange('min', target.value, index)
+              }
               {...getInputValidation(`min`, ruleErrors[index])}
             />
             <Input
@@ -160,7 +166,9 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
               value={rule.max}
               label="Max proportion"
               disabled={isDisabled}
-              onChange={({ target }) => onChange('max', target.value, index)}
+              onChange={({ target }: any) =>
+                onChange('max', target.value, index)
+              }
               {...getInputValidation(`max`, ruleErrors[index])}
             />
           </>
@@ -190,7 +198,7 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
           value={rule.exact}
           label="Exact value"
           disabled={isDisabled}
-          onChange={({ target }) => onChange('exact', target.value, index)}
+          onChange={({ target }: any) => onChange('exact', target.value, index)}
           {...getInputValidation(`exact`, ruleErrors[index])}
         />
       ) : (
@@ -203,7 +211,7 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
             value={rule.min}
             label="Min value"
             disabled={isDisabled}
-            onChange={({ target }) => onChange('min', target.value, index)}
+            onChange={({ target }: any) => onChange('min', target.value, index)}
             {...getInputValidation(`min`, ruleErrors[index])}
           />
           <Input
@@ -211,7 +219,7 @@ const RuleFormByType: FC<RuleFormByTypeProps> = ({
             value={rule.max}
             label="Max value"
             disabled={isDisabled}
-            onChange={({ target }) => onChange('max', target.value, index)}
+            onChange={({ target }: any) => onChange('max', target.value, index)}
             {...getInputValidation(`max`, ruleErrors[index])}
           />
         </>

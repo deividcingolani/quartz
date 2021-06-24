@@ -1,5 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React from 'react';
 import { BlurInput, Checkbox, EditableSelect } from '@logicalclocks/quartz';
+// eslint-disable-next-line import/no-unresolved
 import { TableColumn } from '@logicalclocks/quartz/dist/components/table/editable';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -11,6 +13,7 @@ export const featuresColumns = (
   const columns: any[] = [
     {
       name: 'Name',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       render: ({ value, onChange }) => (
         <BlurInput
@@ -24,6 +27,7 @@ export const featuresColumns = (
     },
     {
       name: 'Offline type',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       render: ({ value, onChange }) => (
         <EditableSelect
@@ -37,6 +41,7 @@ export const featuresColumns = (
     },
     {
       name: 'Online type',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       render: ({ value, onChange }) => (
         <EditableSelect
@@ -50,6 +55,7 @@ export const featuresColumns = (
     },
     {
       name: 'Primary key',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       render: ({ value, onChange }) => {
         const handleChange = () => {
@@ -69,6 +75,7 @@ export const featuresColumns = (
     },
     {
       name: 'Partition key',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       render: ({ value, onChange }) => {
         const handleChange = () => {
@@ -88,6 +95,7 @@ export const featuresColumns = (
     },
     {
       name: 'Statistics',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       render: ({ value, onChange }) => {
         const handleChange = () => {
@@ -107,6 +115,7 @@ export const featuresColumns = (
     },
     {
       name: 'Description',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       render: ({ value, onChange }) => (
         <BlurInput
@@ -122,6 +131,7 @@ export const featuresColumns = (
   if (isEdit) {
     columns.splice(6, 0, {
       name: 'Default Value',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       render: ({ value, onChange, readOnly }) => (
         <BlurInput

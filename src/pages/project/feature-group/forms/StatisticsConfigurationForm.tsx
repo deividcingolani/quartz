@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useEffect } from 'react';
+import { Box, Flex } from 'rebass';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Checkbox, Icon, Tooltip } from '@logicalclocks/quartz';
 
@@ -64,7 +65,7 @@ const StatisticConfigurationForm: FC<StatisticConfigurationFormProps> = ({
 
       <Controller
         control={control}
-        name="correlations"       
+        name="correlations"
         render={({ onChange, value }) => (
           <Box mb="20px">
             <Checkbox

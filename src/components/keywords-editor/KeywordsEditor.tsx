@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { Box, Flex } from 'rebass';
 import {
   Button,
   Badge,
@@ -107,6 +108,7 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
       state.loading.effects.trainingDatasetLabels.attachLabels,
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSubmit = useCallback(
     handleSubmit(({ keyword }) => {
       const lowerCaseKeyword = keyword.toLowerCase();
@@ -115,7 +117,7 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
         setError('keyword', { message: 'Keyword should be unique' });
         return;
       }
-      
+
       handleAdd(lowerCaseKeyword);
     }),
     [handleAdd, baseOptions],

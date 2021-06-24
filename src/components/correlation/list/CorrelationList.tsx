@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import { List } from 'react-virtualized';
-import React, { FC, memo, useCallback, useMemo } from 'react';
 import { ListRowProps } from 'react-virtualized/dist/es/List';
 
 import {
@@ -41,48 +42,53 @@ const CorrelationList: FC<CorrelationListProps> = ({
 }) => {
   const mapped = useMemo(() => {
     const a = Object.entries(correlation) // TODO del const a
-   .reduce(
-      (acc: (CorrelationItem & { key: string })[], next, index) => [ // TODO del const b
-        ...acc,
-        ...next[1].correlations
-          .map((data) => ({ ...data, key: next[0] })),
-      ],
-      [],
-    )
-    .filter(
-      (correlation, index, array) => correlation.key !== correlation.column &&
-        selectedFeatures.includes(correlation.key) &&
-        selectedFeatures.includes(correlation.column)
-    );
-   
+      .reduce(
+        (acc: (CorrelationItem & { key: string })[], next, _index) => [
+          // TODO del const b
+          ...acc,
+          ...next[1].correlations.map((data) => ({ ...data, key: next[0] })),
+        ],
+        [],
+      )
+      .filter(
+        (correlation, _index, _array) =>
+          correlation.key !== correlation.column &&
+          selectedFeatures.includes(correlation.key) &&
+          selectedFeatures.includes(correlation.column),
+      );
+
     const names: Set<string> = new Set();
     const indexOfInsertedValues: Set<number> = new Set();
 
-    const res = a.reduce((acc: (CorrelationItem & { key: string })[], value, index) => {
-      if (indexOfInsertedValues.has(index)) return acc;
+    const res = a.reduce(
+      (acc: (CorrelationItem & { key: string })[], value, index) => {
+        if (indexOfInsertedValues.has(index)) return acc;
 
-      names.add(value.column);
-      names.add(value.key);
+        names.add(value.column);
+        names.add(value.key);
 
-      a.some((inner, innerIndex) => {
-        if ((value !== inner) && (names.has(inner.column) && names.has(inner.key))) {
-          indexOfInsertedValues.add(innerIndex);
-          return true;
-        }
+        a.some((inner, innerIndex) => {
+          if (
+            value !== inner &&
+            names.has(inner.column) &&
+            names.has(inner.key)
+          ) {
+            indexOfInsertedValues.add(innerIndex);
+            return true;
+          }
 
-        return false;
-      });
+          return false;
+        });
 
-      acc.push(value);
-      names.clear();
+        acc.push(value);
+        names.clear();
 
-      return acc;
-    }, []);
-    
-    return sortCorrelationsList(
-      sortType,
-      res,
+        return acc;
+      },
+      [],
     );
+
+    return sortCorrelationsList(sortType, res);
   }, [correlation, sortType, selectedFeatures]);
 
   const rowRendered = useCallback(
@@ -91,9 +97,11 @@ const CorrelationList: FC<CorrelationListProps> = ({
         return <div style={style} key={key} />;
       }
 
-      const { column, correlation: correlationValue, key: columnKey } = mapped[
-        index
-      ];
+      const {
+        column,
+        correlation: correlationValue,
+        key: columnKey,
+      } = mapped[index];
 
       const correlationToPick = {
         vertical: columnKey,

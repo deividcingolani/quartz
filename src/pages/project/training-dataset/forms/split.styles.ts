@@ -1,10 +1,9 @@
 import { SxStyleProp } from 'rebass';
 
-export const progressBarStyles = (
-  percent: number,
-  color: string,
-): SxStyleProp => ({
+const progressBarStyles = (percent: number, color: string): SxStyleProp => ({
   bg: color,
-  width: percent + '%',
+  width: `${percent}%`,
   marginRight: '2px',
 });
+
+export default progressBarStyles;

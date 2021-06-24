@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { FeatureGroup } from './feature-group';
 
 export interface ServerRule {

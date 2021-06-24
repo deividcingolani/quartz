@@ -38,13 +38,13 @@ const project = createModel()({
       dispatch.project.setProject(mappedProject);
     },
     create: async ({ data }: { data: any }): Promise<any> => {
-      return await ProjectsService.create(data);
+      return ProjectsService.create(data);
     },
     edit: async ({ id, data }: { id: number; data: any }): Promise<any> => {
-      return await ProjectsService.edit(id, data);
+      return ProjectsService.edit(id, data);
     },
     delete: async ({ id }: { id: number }): Promise<any> => {
-      return await ProjectsService.delete(id);
+      return ProjectsService.delete(id);
     },
     createTour: async (tour: string): Promise<any> => {
       return ProjectsService.createTour(tour);

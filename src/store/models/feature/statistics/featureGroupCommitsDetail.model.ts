@@ -18,7 +18,7 @@ const featureGroupCommitsDetail = createModel()({
       payload: FeatureGroupCommitsDetailState,
     ): FeatureGroupCommitsDetailState => payload,
     setDataTds: (
-      state: FeatureGroupCommitsDetailState,
+      _state: FeatureGroupCommitsDetailState,
       payload: number,
     ): FeatureGroupCommitsDetailState => ({ commits: [], tds: payload }),
     clear: (): FeatureGroupCommitsDetailState => ({ commits: [], tds: 0 }),

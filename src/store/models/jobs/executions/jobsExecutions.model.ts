@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core';
+import { format } from 'date-fns';
 import JobsService from '../../../../services/project/JobsService';
 import { JobExecutions } from '../../../../types/jobs';
-import { format } from 'date-fns';
 import { ExecutionsTypeSortOptions } from '../../../../pages/project/jobs/executions/types';
 
 export type JobsViewExecutions = JobExecutions | null;
@@ -84,7 +84,8 @@ const jobsExecutions = createModel()({
         offsetOptions,
         sortType,
       );
-      //@ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const groupedItems = isSorting ? mapData(data) : data;
 
       dispatch.jobsExecutions.setData(groupedItems);

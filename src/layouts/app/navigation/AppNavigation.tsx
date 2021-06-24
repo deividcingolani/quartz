@@ -1,13 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback } from 'react';
 import { Navigation } from '@logicalclocks/quartz';
 import { matchPath, useLocation, useNavigate } from 'react-router-dom';
 
 // Components
+import { useSelector } from 'react-redux';
 import Footer from './Footer';
 // Hooks
 import useAppNavigation from './useAppNavigation';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import ErrorBoundary from '../../../components/error-boundary/ErrorBoundary';
 

@@ -1,12 +1,13 @@
-import { Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
+import { Flex } from 'rebass';
 import { Button, Select, Value, Divider } from '@logicalclocks/quartz';
 
 import routeNames from '../../../../routes/routeNames';
 // Components
-import { ListItem } from './SchematisedTagsForm';
 import PrimitiveTypeForm from './PrimitiveTypeForm';
 import ArrayTypeForm from './ArrayTypeForm';
+import { ListItem } from '../../../../types/feature-group';
 
 export interface SingleTagProps {
   item: ListItem;
@@ -77,7 +78,7 @@ const SingleTag: FC<SingleTagProps> = ({
             style={{ borderLeft: '1px solid #E2E2E2' }}
           >
             {Object.keys(tag.properties).map((key) => {
-              const type = tag.properties[key].type;
+              const { type } = tag.properties[key];
               if (type === 'array') {
                 return (
                   <ArrayTypeForm

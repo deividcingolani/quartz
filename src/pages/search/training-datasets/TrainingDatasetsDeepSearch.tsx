@@ -1,12 +1,13 @@
-import { Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useEffect, useState } from 'react';
+import { Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
 
 // Components
 import Loader from '../../../components/loader/Loader';
 import TrainingDatasetsList from './TrainingDatasetsList';
 // Types
-import { SearchTypes } from '../types';
+import SearchTypes from '../types';
 import { TrainingDataset } from '../../../types/training-dataset';
 // Hooks
 import useSearchData from '../hooks/useSearchData';

@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
-import ActivityCircle from '../ActivityCircle';
 import { Labeling, Value } from '@logicalclocks/quartz';
+import ActivityCircle from '../ActivityCircle';
 import { ActivityItemData } from '../../../types/feature-group';
 import { getRowsCount } from '../utils';
 import icons from '../../../sources/icons';
@@ -12,7 +13,12 @@ export interface DataIngestionProps {
 
 const DataIngestion: FC<DataIngestionProps> = ({ activity }) => {
   const { commit } = activity;
-  const { rowsUpdated = 0, rowsInserted = 0, rowsDeleted = 0, commitID } = commit;
+  const {
+    rowsUpdated = 0,
+    rowsInserted = 0,
+    rowsDeleted = 0,
+    commitID,
+  } = commit;
 
   const allRowsCount = rowsDeleted + rowsUpdated + rowsInserted;
 

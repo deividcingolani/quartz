@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import {
   Badge,
@@ -7,12 +9,11 @@ import {
   ProjectBadge,
 } from '@logicalclocks/quartz';
 import { useSelector } from 'react-redux';
-import React, { FC, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 // Types
 import { RootState } from '../../../store';
-import { Feature } from '../../../types/feature-group';
+import { Feature } from '../../../types/feature';
 // Hooks
 import useDrawer from '../../../hooks/useDrawer';
 // Components

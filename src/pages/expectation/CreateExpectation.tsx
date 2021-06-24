@@ -1,12 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback, useEffect } from 'react';
 
 // Components
 import Loader from '../../components/loader/Loader';
-import ExpectationForm, { ExpectationType } from './forms/ExpectationForm';
+import ExpectationForm from './forms/ExpectationForm';
 // Types
-import { ExpectationData } from './types';
+import { ExpectationData, ExpectationType } from './types';
 import { Dispatch, RootState } from '../../store';
 import { FeatureGroupViewState } from '../../store/models/feature/featureGroupView.model';
 // Hooks

@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, memo, useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
-import React, { FC, memo, useCallback, useEffect } from 'react';
 
 // Types
 import { TrainingDatasetFormData } from '../types';

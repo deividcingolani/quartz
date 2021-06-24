@@ -4,7 +4,7 @@ import { Value, IconButton } from '@logicalclocks/quartz';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
-import { FeatureGroupProvenance } from '../../../../types/feature-group';
+import { FeatureGroupProvenance } from '../../../../types/featur-group-provenance';
 import { Project } from '../../../../types/project';
 // Utils
 import { cropText } from '../../storage-connectors/utils';

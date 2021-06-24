@@ -1,5 +1,6 @@
-import { Box } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo } from 'react';
+import { Box } from 'rebass';
 
 import SingleInnerJoinForm from './SingleInnerJoinForm';
 import { FeatureGroupJoin } from '../../types';

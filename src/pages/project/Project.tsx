@@ -1,5 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation, useParams } from 'react-router-dom';
 
 import routeNames from '../../routes/routeNames';
@@ -251,7 +252,10 @@ const Project: FC = () => {
 
       <Route path="/settings/integrations/code" element={<ProjectCode />} />
       <Route path="/settings/integrations/spark" element={<ProjectSpark />} />
-      <Route path="/settings/integrations/databricks" element={<ProjectDatabricks />} />
+      <Route
+        path="/settings/integrations/databricks"
+        element={<ProjectDatabricks />}
+      />
 
       <Route
         path={routeNames.expectation.attach}

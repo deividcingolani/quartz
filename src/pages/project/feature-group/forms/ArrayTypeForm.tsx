@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useEffect } from 'react';
+import { Box, Flex } from 'rebass';
 import {
   IconButton,
   Input,

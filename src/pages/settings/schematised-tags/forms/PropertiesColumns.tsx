@@ -1,8 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React from 'react';
 import { BlurInput, Checkbox, Select } from '@logicalclocks/quartz';
+// eslint-disable-next-line import/no-unresolved
 import { TableColumn } from '@logicalclocks/quartz/dist/components/table/editable';
 
-export const propertiesColumns: TableColumn[] = [
+const propertiesColumns: TableColumn[] = [
   {
     name: 'Name',
     render: ({ value, onChange }) => (
@@ -68,3 +70,5 @@ export const propertiesColumns: TableColumn[] = [
     ),
   },
 ];
+
+export default propertiesColumns;

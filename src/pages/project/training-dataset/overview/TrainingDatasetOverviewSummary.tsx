@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback } from 'react';
 import { Flex } from 'rebass';
 import {
@@ -9,6 +10,8 @@ import {
   Labeling,
 } from '@logicalclocks/quartz';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import {
   TrainingDataset,
   TrainingDatasetType,
@@ -16,9 +19,7 @@ import {
 import DateValue from '../../feature-group/list/DateValue';
 import ProfileService from '../../../../services/ProfileService';
 import KeywordsEditor from '../../../../components/keywords-editor/KeywordsEditor';
-import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from '../../../../store';
-import { useParams } from 'react-router-dom';
 
 export interface TdOverviewSummaryDataProps {
   data: TrainingDataset;
@@ -107,7 +108,7 @@ const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
           value={data?.splits.length || 0}
         />
       </Flex>
-      {!!data.description ? (
+      {data.description ? (
         <Text my="20px">{data?.description}</Text>
       ) : (
         <Labeling mt="20px" gray>

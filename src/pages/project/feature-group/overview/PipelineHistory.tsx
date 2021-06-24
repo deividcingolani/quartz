@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { ComponentType, FC, memo, useMemo } from 'react';
 import formatDistance from 'date-fns/formatDistance';
 import { Box, Flex } from 'rebass';
-import React, { ComponentType, FC, memo, useMemo } from 'react';
 import {
   Button,
   Card,
@@ -8,7 +9,7 @@ import {
   Row as QRow,
   Labeling,
 } from '@logicalclocks/quartz';
-import { Job } from '../../../../types/feature-group';
+import { Job } from '../../../../types/job';
 import usePipelineHistoryRowData from './usePipelineHistoryRowData';
 
 export interface PipelineHistoryProps {

@@ -1,3 +1,5 @@
 import { RootState } from '../../index';
 
-export const selectProjectId = (state: RootState) => state.store.lastProject;
+const selectProjectId = (state: RootState) => state.store.lastProject;
+
+export default selectProjectId;

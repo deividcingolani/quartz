@@ -7,8 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { Box, Flex } from 'rebass';
-import JobsFilters from './JobsFilters';
-
+import { FormProvider, useForm } from 'react-hook-form';
 import {
   Button,
   Value,
@@ -22,17 +21,20 @@ import {
 } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import JobsFilters, { KeyFilters } from './JobsFilters';
+
 import { Dispatch } from '../../../../store';
 import useJobs from './useJobs';
 import Loader from '../../../../components/loader/Loader';
 import { Jobs } from '../../../../types/jobs';
 import NoData from '../../../../components/no-data/NoData';
 import useDrawer from '../../../../hooks/useDrawer';
-import { jobsListStyles } from './jobsListStyles';
+import jobsListStyles from './jobsListStyles';
 import useJobsRows from './useJobsRows';
-import { KeyFilters } from './JobsFilters';
+
 import JobDrawer from '../overview/JobDrawer';
-import { FormProvider, useForm } from 'react-hook-form';
 import { JobFormData, StrongRuleTypes } from '../types';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import FileExplorer from '../../../../components/file-explorer/fileExplorer';
@@ -41,13 +43,11 @@ import {
   FileExplorerOptions,
   UploadFiles,
 } from '../../../../components/file-explorer/types';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { name } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
-import { FileUploader } from '../../../../components/file-uploader/fileUploader';
+import FileUploader from '../../../../components/file-uploader/fileUploader';
 
 const JobsList: FC = () => {
   const dispatch = useDispatch<Dispatch>();
@@ -65,13 +65,17 @@ const JobsList: FC = () => {
   const { id: projectId } = useParams();
   const { data, isLoading } = useJobs(+projectId);
   const navigate = useNavigateRelative();
+  const [search, setSearch] = useState<string>('');
+  const [typeFilters, onTypeFiltersChange] = useState<string[]>([]);
+  const [keyFilter, setKeyFilter] = useState<KeyFilters>(KeyFilters.null);
 
   // Filter
   const filterJobs = (data: Jobs[], filter: string[]): Jobs[] => {
     if (filter.length) {
       return data.filter(({ jobType }) =>
         filter.some((f) => {
-          //@ts-ignore
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           return jobType === StrongRuleTypes[f as keyof typeof StrongRuleTypes];
         }),
       );
@@ -79,7 +83,7 @@ const JobsList: FC = () => {
     return data.slice();
   };
 
-  //Sort
+  // Sort
   type JobsSortFunction = (job1: Jobs, job2: Jobs) => number;
 
   interface SortParams {
@@ -96,7 +100,8 @@ const JobsList: FC = () => {
         }
 
         return time1 < time2 ? 1 : -1;
-      } else return 0;
+      }
+      return 0;
     },
     'last created': ({ creationTime: c1 }, { creationTime: c2 }) => {
       const time1 = new Date(c1).getTime();
@@ -108,6 +113,7 @@ const JobsList: FC = () => {
     },
   };
 
+  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[0]]);
   const handleSearchChange = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>): void => {
@@ -127,10 +133,6 @@ const JobsList: FC = () => {
     return sortFunction ? data.sort(sortFunction) : data;
   };
 
-  const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[0]]);
-  const [search, setSearch] = useState<string>('');
-  const [typeFilters, onTypeFiltersChange] = useState<string[]>([]);
-  const [keyFilter, setKeyFilter] = useState<KeyFilters>(KeyFilters.null);
   const typeFilterOptions = useMemo(
     () => Array.from(new Set(data.map(({ jobType }) => jobType))),
     [data],
@@ -153,13 +155,13 @@ const JobsList: FC = () => {
     if (keyFilter && !!sortedData.length) {
       // eslint-disable-next-line array-callback-return
       return sortedData.filter(({ executions }) => {
-        if (!!executions.count) {
+        if (executions.count) {
           return executions.items[0].state === 'RUNNING';
         }
+        return false;
       });
-    } else {
-      return sortedData;
     }
+    return sortedData;
   }, [sort, typeFilters, search, data, keyFilter, sortJobs]);
 
   const onToggleKey = useCallback(
@@ -199,6 +201,22 @@ const JobsList: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeJobFile, isPopupOpen]);
 
+  const [selectedRow, setSelectedRow] = useState(Math.random());
+  const [isOpenExplorer, setIsOpenExplorer] = useState(false);
+  const [isOpenUploadExplorer, setIsOpenUploadExplorer] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const [fileToBeUpload, setFileToBeUpload] = useState<any>({});
+  const [isDisabledUploadButton, setIsDisabledUploadButton] = useState(false);
+  const [isDisabledProjectButton, setIsDisabledProjectButton] = useState(false);
+  const [fileExplorerOptions, setFileExplorerOptions] = useState(
+    FileExplorerOptions.app,
+  );
+  const [fileExplorerMode, setFileExplorerMode] = useState(
+    FileExplorerMode.oneFile,
+  );
+  const [isOpenExplorerFromPopup, setIsOpenExplorerFromPopup] = useState(false);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCreate = useCallback(
     handleSubmit(async (data: JobFormData) => {
       const req = {
@@ -227,21 +245,6 @@ const JobsList: FC = () => {
     [activeJobFile],
   );
 
-  const [selectedRow, setSelectedRow] = useState(Math.random());
-  const [isOpenExplorer, setIsOpenExplorer] = useState(false);
-  const [isOpenUploadExplorer, setIsOpenUploadExplorer] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
-  const [fileToBeUpload, setFileToBeUpload] = useState<any>({});
-  const [isDisabledUploadButton, setIsDisabledUploadButton] = useState(false);
-  const [isDisabledProjectButton, setIsDisabledProjectButton] = useState(false);
-  const [fileExplorerOptions, setFileExplorerOptions] = useState(
-    FileExplorerOptions.app,
-  );
-  const [fileExplorerMode, setFileExplorerMode] = useState(
-    FileExplorerMode.oneFile,
-  );
-  const [isOpenExplorerFromPopup, setIsOpenExplorerFromPopup] = useState(false);
-
   const handleSelectFile = (activeFile: any, isDownload: boolean) => {
     if (typeof activeFile !== 'string') {
       const newPath = activeFile.attributes.path.split('/');
@@ -258,7 +261,7 @@ const JobsList: FC = () => {
       }));
     }
     // setActiveJobFile(activeFile);
-    !isDownload && setIsOpenExplorer(false);
+    if (!isDownload) setIsOpenExplorer(false);
     setIsDisabledProjectButton(true);
     setIsDisabledUploadButton(true);
   };
@@ -279,27 +282,27 @@ const JobsList: FC = () => {
       }));
     }
 
-    !isDownload && setIsOpenExplorer(false);
+    if (!isDownload) setIsOpenExplorer(false);
     setIsOpenUploadExplorer(false);
   };
 
   useEffect(() => {
-    if (!!activeJobFile) {
+    if (activeJobFile) {
       setIsOpenExplorerFromPopup(false);
       setIsDisabledProjectButton(true);
     }
   }, [activeJobFile]);
 
-  const helperForNewArr = (newFile: any, options: string) => {
-    let newFiles = activeJobFile?.files;
-    !!newFiles && newFiles.push(newFile);
+  const helperForNewArr = (newFile: any, _options: string) => {
+    const newFiles = activeJobFile?.files;
+    if (newFiles) newFiles.push(newFile);
     setActiveJobFile((prevState: any) => ({
       ...prevState,
       files: newFiles,
     }));
   };
 
-  const helperForClose = (options: string) => {
+  const helperForClose = (_options: string) => {
     setActiveJobFile(null);
   };
 
@@ -315,7 +318,7 @@ const JobsList: FC = () => {
   };
 
   useEffect(() => {
-    if (!!activeJobFile) {
+    if (activeJobFile) {
       setIsDisabledProjectButton(true);
       setIsDisabledUploadButton(true);
     } else {
@@ -370,7 +373,7 @@ const JobsList: FC = () => {
           height={isOpenExplorerFromPopup ? '100%' : ''}
           isOpen={isPopupOpen}
           onClose={handleToggle}
-          title={`New Job`}
+          title="New Job"
           secondaryText=""
           secondaryButton={['Cancel', handleToggle]}
           mainButton={['Create new job', handleCreate]}
@@ -378,7 +381,7 @@ const JobsList: FC = () => {
           <Flex flexDirection="column">
             <Flex flexDirection="column">
               <Value>File</Value>
-              <Flex mt="8px" mb={!!activeJobFile ? '20px' : '0px'}>
+              <Flex mt="8px" mb={activeJobFile ? '20px' : '0px'}>
                 <Button
                   intent="secondary"
                   mr="8px"
@@ -428,14 +431,15 @@ const JobsList: FC = () => {
                     <FileLoader
                       removeHandler={() => helperForClose('isJobFile')}
                       isLoading={!activeJobFile}
-                      children="located in"
                       fileName={
                         !activeJobFile.name
                           ? fileToBeUpload.name
                           : activeJobFile.name
                       }
                       located={activeJobFile.path}
-                    />
+                    >
+                      located in
+                    </FileLoader>
                   </Box>
                 )}
             </Flex>
@@ -533,7 +537,7 @@ const JobsList: FC = () => {
                   <Box sx={jobsListStyles(selectedRow, isOpen)}>
                     <Row
                       onRowClick={(_, index) => {
-                        const id = data[index].id;
+                        const { id } = data[index];
                         setSelectedRow(index);
                         handleSelectItem(id)();
                       }}

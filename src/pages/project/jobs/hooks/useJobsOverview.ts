@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from '../../../../store';
 
-//Types
+// Types
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 
 export interface useJobsOverview {
@@ -26,9 +26,9 @@ const useJobsOverview = (
 
   useEffect(() => {
     if (projectId && jobsName) {
-      dispatch.jobsView.fetch({ projectId: projectId, jobsName: jobsName });
+      dispatch.jobsView.fetch({ projectId, jobsName });
     }
-  }, [jobsName, projectId]);
+  }, [dispatch.jobsView, jobsName, projectId]);
   return {
     data,
     isLoading,

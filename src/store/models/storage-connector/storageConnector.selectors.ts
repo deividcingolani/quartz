@@ -2,7 +2,7 @@ import { RootState } from '../../index';
 import { ISelectData } from '../../types';
 import { IStorageConnector } from '../../../types/storage-connector';
 
-export const selectStorageConnectorData = ({
+const selectStorageConnectorData = ({
   storageConnectors,
   loading,
 }: RootState): ISelectData<IStorageConnector[]> => {
@@ -11,3 +11,5 @@ export const selectStorageConnectorData = ({
     isLoading: loading.effects.storageConnectors.fetch,
   };
 };
+
+export default selectStorageConnectorData;

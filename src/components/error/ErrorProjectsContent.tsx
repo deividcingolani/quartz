@@ -1,11 +1,12 @@
-import { Button } from '@logicalclocks/quartz';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, ReactNode } from 'react';
+import { Button } from '@logicalclocks/quartz';
 
 // Hooks
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // Selectors
-import { selectProjectId } from '../../store/models/localManagement/store.selectors';
+import selectProjectId from '../../store/models/localManagement/store.selectors';
 
 import { RootState } from '../../store';
 

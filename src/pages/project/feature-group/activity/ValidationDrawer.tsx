@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { useMemo } from 'react';
 import { Box } from 'rebass';
 import { format } from 'date-fns';
-import React, { useMemo } from 'react';
 import { Drawer, Value } from '@logicalclocks/quartz';
 
 import { ActivityItemData } from '../../../../types/feature-group';

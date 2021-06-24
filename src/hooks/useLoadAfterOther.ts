@@ -5,6 +5,8 @@ import { RootState } from '../store';
 type Function = () => any;
 
 const useLoadAfterOther = () => {
+  // TODO: fix this: use a proper function type
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const [fc, setFc] = useState<Function | null>(null);
 
   const loadings = useSelector((state: RootState) => state.loading.effects);
@@ -31,6 +33,8 @@ const useLoadAfterOther = () => {
     }
   }, [isAllLoaded, fc]);
 
+  // TODO: fix this: use a proper function type
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const loadAfterAll = useCallback((fn: Function) => {
     setTimeout(() => {
       setFc(() => fn);

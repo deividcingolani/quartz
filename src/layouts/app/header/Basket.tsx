@@ -1,8 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useRef, memo } from 'react';
 import { Box, Flex } from 'rebass';
 import { Text, Tooltip, usePopup } from '@logicalclocks/quartz';
-import React, { FC, useRef, memo } from 'react';
-import svg from '../../../sources/basketSvg';
 import { useSelector } from 'react-redux';
+import svg from '../../../sources/basketSvg';
 import {
   selectBasketFeaturesLength,
   selectSwitch,

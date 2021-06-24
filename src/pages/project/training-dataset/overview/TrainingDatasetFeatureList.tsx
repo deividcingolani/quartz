@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType, FC, memo } from 'react';
+import { Box, Flex } from 'rebass';
 import {
   Row as QRow,
   Card,
@@ -106,7 +107,7 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
         </ToggleButton>
       </Flex>
 
-      {!!dataFiltered.length ? (
+      {dataFiltered.length ? (
         <Box mt="30px" mx="-20px" sx={featureListStyles}>
           <Row
             middleColumn={3}

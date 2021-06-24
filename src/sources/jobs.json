@@ -1,137 +1,139 @@
-[{
-  "version": "1.0",
-  "image": {
-    "name": "/home/videosdownloader/public_html/image/public/uploadt/s-jobs.svg",
-    "baseName": "s-jobs.svg",
-    "format": "SVG",
-    "formatDescription": "SVG",
-    "mimeType": "image/svg+xml",
-    "class": "DirectClass",
-    "geometry": {
-      "width": 24,
-      "height": 24,
-      "x": 0,
-      "y": 0
-    },
-    "units": "Undefined",
-    "type": "GrayscaleAlpha",
-    "baseType": "Undefined",
-    "endianness": "Undefined",
-    "colorspace": "sRGB",
-    "depth": 16,
-    "baseDepth": 16,
-    "channelDepth": {
-      "alpha": 1,
-      "red": 16,
-      "green": 16,
-      "blue": 1
-    },
-    "pixels": 2304,
-    "imageStatistics": {
-      "Overall": {
-        "min": 10023,
-        "max": 65535,
-        "mean": 56436,
-        "median": 65535,
-        "standardDeviation": 16010.3,
-        "kurtosis": 1.47349,
-        "skewness": -1.81945,
-        "entropy": 0.293078
-      }
-    },
-    "channelStatistics": {
-      "alpha": {
-        "min": 65535,
-        "max": 65535,
-        "mean": 65535,
-        "median": 65535,
-        "standardDeviation": 0,
-        "kurtosis": -4.096e+52,
-        "skewness": 9.375e+35,
-        "entropy": 0
+[
+  {
+    "version": "1.0",
+    "image": {
+      "name": "/home/videosdownloader/public_html/image/public/uploadt/s-jobs.svg",
+      "baseName": "s-jobs.svg",
+      "format": "SVG",
+      "formatDescription": "SVG",
+      "mimeType": "image/svg+xml",
+      "class": "DirectClass",
+      "geometry": {
+        "width": 24,
+        "height": 24,
+        "x": 0,
+        "y": 0
       },
-      "red": {
-        "min": 10023,
-        "max": 65535,
-        "mean": 53403,
-        "median": 65535,
-        "standardDeviation": 21347,
-        "kurtosis": 0.00174382,
-        "skewness": -1.36467,
-        "entropy": 0.390771
+      "units": "Undefined",
+      "type": "GrayscaleAlpha",
+      "baseType": "Undefined",
+      "endianness": "Undefined",
+      "colorspace": "sRGB",
+      "depth": 16,
+      "baseDepth": 16,
+      "channelDepth": {
+        "alpha": 1,
+        "red": 16,
+        "green": 16,
+        "blue": 1
       },
-      "green": {
-        "min": 10023,
-        "max": 65535,
-        "mean": 53403,
-        "median": 65535,
-        "standardDeviation": 21347,
-        "kurtosis": 0.00174382,
-        "skewness": -1.36467,
-        "entropy": 0.390771
+      "pixels": 2304,
+      "imageStatistics": {
+        "Overall": {
+          "min": 10023,
+          "max": 65535,
+          "mean": 56436,
+          "median": 65535,
+          "standardDeviation": 16010.3,
+          "kurtosis": 1.47349,
+          "skewness": -1.81945,
+          "entropy": 0.293078
+        }
       },
-      "blue": {
-        "min": 10023,
-        "max": 65535,
-        "mean": 53403,
-        "median": 65535,
-        "standardDeviation": 21347,
-        "kurtosis": 0.00174382,
-        "skewness": -1.36467,
-        "entropy": 0.390771
-      }
-    },
-    "renderingIntent": "Perceptual",
-    "gamma": 0.454545,
-    "chromaticity": {
-      "redPrimary": {
-        "x": 0.64,
-        "y": 0.33
+      "channelStatistics": {
+        "alpha": {
+          "min": 65535,
+          "max": 65535,
+          "mean": 65535,
+          "median": 65535,
+          "standardDeviation": 0,
+          "kurtosis": -4.096e52,
+          "skewness": 9.375e35,
+          "entropy": 0
+        },
+        "red": {
+          "min": 10023,
+          "max": 65535,
+          "mean": 53403,
+          "median": 65535,
+          "standardDeviation": 21347,
+          "kurtosis": 0.00174382,
+          "skewness": -1.36467,
+          "entropy": 0.390771
+        },
+        "green": {
+          "min": 10023,
+          "max": 65535,
+          "mean": 53403,
+          "median": 65535,
+          "standardDeviation": 21347,
+          "kurtosis": 0.00174382,
+          "skewness": -1.36467,
+          "entropy": 0.390771
+        },
+        "blue": {
+          "min": 10023,
+          "max": 65535,
+          "mean": 53403,
+          "median": 65535,
+          "standardDeviation": 21347,
+          "kurtosis": 0.00174382,
+          "skewness": -1.36467,
+          "entropy": 0.390771
+        }
       },
-      "greenPrimary": {
-        "x": 0.3,
-        "y": 0.6
+      "renderingIntent": "Perceptual",
+      "gamma": 0.454545,
+      "chromaticity": {
+        "redPrimary": {
+          "x": 0.64,
+          "y": 0.33
+        },
+        "greenPrimary": {
+          "x": 0.3,
+          "y": 0.6
+        },
+        "bluePrimary": {
+          "x": 0.15,
+          "y": 0.06
+        },
+        "whitePrimary": {
+          "x": 0.3127,
+          "y": 0.329
+        }
       },
-      "bluePrimary": {
-        "x": 0.15,
-        "y": 0.06
+      "matteColor": "#BDBDBD",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#DFDFDF",
+      "transparentColor": "#00000000",
+      "interlace": "None",
+      "intensity": "Undefined",
+      "compose": "Over",
+      "pageGeometry": {
+        "width": 24,
+        "height": 24,
+        "x": 0,
+        "y": 0
       },
-      "whitePrimary": {
-        "x": 0.3127,
-        "y": 0.329
-      }
-    },
-    "matteColor": "#BDBDBD",
-    "backgroundColor": "#FFFFFF",
-    "borderColor": "#DFDFDF",
-    "transparentColor": "#00000000",
-    "interlace": "None",
-    "intensity": "Undefined",
-    "compose": "Over",
-    "pageGeometry": {
-      "width": 24,
-      "height": 24,
-      "x": 0,
-      "y": 0
-    },
-    "dispose": "Undefined",
-    "iterations": 0,
-    "compression": "Undefined",
-    "orientation": "Undefined",
-    "properties": {
-      "date:create": "2021-04-29T12:10:18+00:00",
-      "date:modify": "2021-04-29T12:10:18+00:00",
-      "signature": "6145d82e2699e0e3f18bea9d40a63e043a823d91efa25f752f8efcf0b7d23f65"
-    },
-    "artifacts": {
-      "mvg:vector-graphics": "push graphic-context\ncompliance \"SVG\"\nfill \"black\"\nfill-opacity 1\nstroke \"none\"\nstroke-width 1\nstroke-opacity 1\nfillRule nonzero\nfill \"none\"\nviewbox 0 0 24 24\naffine 1 0 0 1 0 0\npush graphic-context\nfillRule \"evenodd\"\nclipRule \"evenodd\"\nfill \"#272727\"\npath \"M10.2387 4.64645L4.64645 10.2387C4.45118 10.4339 4.45118 10.7505 4.64645 10.9458L6.99997 13.2993C7.19523 13.4946 7.51181 13.4946 7.70707 13.2993L13.2993 7.70708C13.4946 7.51181 13.4946 7.19523 13.2993 6.99997L10.9458 4.64645C10.7505 4.45118 10.4339 4.45119 10.2387 4.64645ZM3.58579 9.17803C2.80474 9.95907 2.80474 11.2254 3.58579 12.0065L5.93931 14.36C6.72036 15.141 7.98669 15.141 8.76773 14.36L9.94462 13.1831L17.5987 20.8372C18.3798 21.6183 19.6461 21.6183 20.4272 20.8372L20.8374 20.4269C21.6185 19.6459 21.6185 18.3795 20.8374 17.5985L13.1833 9.94438L14.36 8.76774C15.141 7.98669 15.141 6.72036 14.36 5.93931L12.0065 3.58579C11.2254 2.80474 9.95908 2.80474 9.17803 3.58579L8.00383 4.75999L7.91216 4.66832C7.89708 4.65324 7.88164 4.63874 7.86587 4.62483C7.4731 4.27838 6.87339 4.29287 6.49795 4.66832L4.67344 6.49282C4.298 6.86827 4.2835 7.46798 4.62995 7.86074C4.64387 7.87652 4.65837 7.89196 4.67344 7.90704L4.76511 7.9987L3.58579 9.17803ZM11.0745 12.1916L18.6594 19.7765C18.8547 19.9718 19.1712 19.9718 19.3665 19.7765L19.7768 19.3663C19.972 19.171 19.972 18.8544 19.7768 18.6591L12.1918 11.0742L11.0745 12.1916Z\"\npop graphic-context\npop graphic-context\n"
-    },
-    "tainted": false,
-    "filesize": "1422B",
-    "numberPixels": "576",
-    "pixelsPerSecond": "99504B",
-    "userTime": "0.010u",
-    "elapsedTime": "0:01.005",
-    "version": "ImageMagick 7.0.10-58 Q16 x86_64 2021-01-14 https://imagemagick.org"
+      "dispose": "Undefined",
+      "iterations": 0,
+      "compression": "Undefined",
+      "orientation": "Undefined",
+      "properties": {
+        "date:create": "2021-04-29T12:10:18+00:00",
+        "date:modify": "2021-04-29T12:10:18+00:00",
+        "signature": "6145d82e2699e0e3f18bea9d40a63e043a823d91efa25f752f8efcf0b7d23f65"
+      },
+      "artifacts": {
+        "mvg:vector-graphics": "push graphic-context\ncompliance \"SVG\"\nfill \"black\"\nfill-opacity 1\nstroke \"none\"\nstroke-width 1\nstroke-opacity 1\nfillRule nonzero\nfill \"none\"\nviewbox 0 0 24 24\naffine 1 0 0 1 0 0\npush graphic-context\nfillRule \"evenodd\"\nclipRule \"evenodd\"\nfill \"#272727\"\npath \"M10.2387 4.64645L4.64645 10.2387C4.45118 10.4339 4.45118 10.7505 4.64645 10.9458L6.99997 13.2993C7.19523 13.4946 7.51181 13.4946 7.70707 13.2993L13.2993 7.70708C13.4946 7.51181 13.4946 7.19523 13.2993 6.99997L10.9458 4.64645C10.7505 4.45118 10.4339 4.45119 10.2387 4.64645ZM3.58579 9.17803C2.80474 9.95907 2.80474 11.2254 3.58579 12.0065L5.93931 14.36C6.72036 15.141 7.98669 15.141 8.76773 14.36L9.94462 13.1831L17.5987 20.8372C18.3798 21.6183 19.6461 21.6183 20.4272 20.8372L20.8374 20.4269C21.6185 19.6459 21.6185 18.3795 20.8374 17.5985L13.1833 9.94438L14.36 8.76774C15.141 7.98669 15.141 6.72036 14.36 5.93931L12.0065 3.58579C11.2254 2.80474 9.95908 2.80474 9.17803 3.58579L8.00383 4.75999L7.91216 4.66832C7.89708 4.65324 7.88164 4.63874 7.86587 4.62483C7.4731 4.27838 6.87339 4.29287 6.49795 4.66832L4.67344 6.49282C4.298 6.86827 4.2835 7.46798 4.62995 7.86074C4.64387 7.87652 4.65837 7.89196 4.67344 7.90704L4.76511 7.9987L3.58579 9.17803ZM11.0745 12.1916L18.6594 19.7765C18.8547 19.9718 19.1712 19.9718 19.3665 19.7765L19.7768 19.3663C19.972 19.171 19.972 18.8544 19.7768 18.6591L12.1918 11.0742L11.0745 12.1916Z\"\npop graphic-context\npop graphic-context\n"
+      },
+      "tainted": false,
+      "filesize": "1422B",
+      "numberPixels": "576",
+      "pixelsPerSecond": "99504B",
+      "userTime": "0.010u",
+      "elapsedTime": "0:01.005",
+      "version": "ImageMagick 7.0.10-58 Q16 x86_64 2021-01-14 https://imagemagick.org"
+    }
   }
-}]
+]

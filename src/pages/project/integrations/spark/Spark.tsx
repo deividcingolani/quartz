@@ -1,9 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import * as yup from 'yup';
 import { Box, Flex } from 'rebass';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
   Card,
   Code,
@@ -127,6 +128,7 @@ const Spark: FC = () => {
     }
   }, [certificate]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSubmit = useCallback(
     handleSubmit(async ({ password }) => {
       await new BaseApiService()

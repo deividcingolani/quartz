@@ -1,6 +1,4 @@
-import { Box } from 'rebass';
-import { useSelector } from 'react-redux';
-import { useFormContext } from 'react-hook-form';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, {
   FC,
   memo,
@@ -9,6 +7,9 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { Box } from 'rebass';
+import { useSelector } from 'react-redux';
+import { useFormContext } from 'react-hook-form';
 import {
   Button,
   Callout,
@@ -79,6 +80,7 @@ const RulesForm: FC<RulesFormProps> = ({ isDisabled, isEdit }) => {
     (type: string, value: string | string[], index: number) => {
       const ruleCopy = rules.slice();
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       ruleCopy[index][type] = value;
 
@@ -133,6 +135,7 @@ const RulesForm: FC<RulesFormProps> = ({ isDisabled, isEdit }) => {
       <Box mt="20px" mb="10px">
         {!!errors.rulesForm && (
           <Callout
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             type={CalloutTypes.error}
             content={errors.rulesForm.message}

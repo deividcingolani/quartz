@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   CardSecondary,
   Button,
@@ -13,7 +14,7 @@ import {
 } from '@logicalclocks/quartz';
 import { argumentRowStyles } from '../../storage-connectors/forms/jdbc-form.styles';
 
-import { progressBarStyles } from './split.styles';
+import progressBarStyles from './split.styles';
 import getInputValidation from '../../../../utils/getInputValidation';
 import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
 
@@ -46,6 +47,8 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
     setIsActive(true);
   }, [setValue]);
 
+  const [error, setError] = useState('');
+
   useEffect(() => {
     if (errors.splits) {
       setError(errors.splits?.message);
@@ -54,9 +57,7 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
     }
   }, [errors]);
 
-  const [error, setError] = useState('');
-
-  const splits = watch().splits;
+  const { splits } = watch();
 
   const hasScrollOnScreen = useScreenWithScroll();
 
@@ -94,7 +95,7 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
 
         return (
           <Flex sx={argumentRowStyles} key={item.id} alignItems="flex-end">
-            <Flex mb={!!inputErrors ? '20px' : 0} key={item.id} mt="8px">
+            <Flex mb={inputErrors ? '20px' : 0} key={item.id} mt="8px">
               <Input
                 defaultValue={item.name}
                 label={!index ? 'Name' : ''}
@@ -160,7 +161,8 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
       <Flex mt="20px" backgroundColor="grayShade3" width="100%" height="10px">
         {splits.map(({ percentage }: { percentage: string }, ind: number) => (
           <Box
-            key={'bar-' + ind}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`bar-${ind}`}
             sx={progressBarStyles(+percentage, graphColors[ind])}
           />
         ))}

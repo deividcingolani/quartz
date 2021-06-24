@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from 'rebass';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Badge,
   Button,
@@ -11,25 +12,12 @@ import {
   Value,
 } from '@logicalclocks/quartz';
 
-import { TeamMember } from '../../../types/project';
 import { Dispatch, RootState } from '../../../store';
-import { Cluster, Databricks } from '../../../types/databricks';
+import { ClusterRowProps, ClusterStates } from '../../../types/databricks';
 // Components
 import NotificationTitle from '../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../utils/notifications/notificationValue';
 import { Roles } from '../forms/AddMembers';
-
-export interface ClusterRowProps {
-  cluster: Cluster;
-  members: TeamMember[];
-  databricks: Databricks;
-}
-
-export enum ClusterStates {
-  'PENDING' = 'PENDING',
-  'RUNNING' = 'RUNNING',
-  'TERMINATED' = 'TERMINATED',
-}
 
 const getIntent = (status: string): 'light' | 'bold' | 'success' => {
   const statusMap = new Map<string, 'light' | 'bold' | 'success'>([

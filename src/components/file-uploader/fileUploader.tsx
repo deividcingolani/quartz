@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Popup, UploadButton } from '@logicalclocks/quartz';
 import axios from 'axios';
@@ -7,7 +8,7 @@ import FileExplorer from '../file-explorer/fileExplorer';
 import { FileExplorerMode } from '../file-explorer/types';
 import TokenService from '../../services/TokenService';
 
-export const FileUploader = ({
+const FileUploader = ({
   isMultiple,
   fromFile,
   activeApp,
@@ -37,7 +38,7 @@ export const FileUploader = ({
     const characters =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i += 1) {
       result.push(
         characters.charAt(Math.floor(Math.random() * charactersLength)),
       );
@@ -62,6 +63,24 @@ export const FileUploader = ({
   const [firstRef, setFirstRef] = useState<any>(null);
   const [fileCounter, setFileCounter] = useState<any>(0);
 
+  const uploadFile = (file: any) => {
+    setFileSize(file.size);
+    const totalCount =
+      file.size % flowChunkSize === 0
+        ? file.size / flowChunkSize
+        : Math.floor(file.size / flowChunkSize) + 1; // Total count of chunks will have been upload to finish the file
+    setChunkCount(totalCount);
+    setFileToBeUpload(file);
+    const fileName = file.name;
+    setFileGuid(fileName);
+    if (flowChunkSize <= file.size) {
+      setFlowCurrentChunkSize(flowChunkSize);
+    } else {
+      setFlowCurrentChunkSize(file.size);
+    }
+    setShowProgress(true);
+  };
+
   useEffect(() => {
     if (fileCounter > 0) {
       uploadFile(arrayToUpload[fileCounter - 1]);
@@ -81,32 +100,6 @@ export const FileUploader = ({
     setEndOfTheChunk(flowChunkSize);
   };
 
-  const uploadFile = (file: any) => {
-    setFileSize(file.size);
-    const _totalCount =
-      file.size % flowChunkSize === 0
-        ? file.size / flowChunkSize
-        : Math.floor(file.size / flowChunkSize) + 1; // Total count of chunks will have been upload to finish the file
-    setChunkCount(_totalCount);
-    setFileToBeUpload(file);
-    const _fileName = file.name;
-    setFileGuid(_fileName);
-    if (flowChunkSize <= file.size) {
-      setFlowCurrentChunkSize(flowChunkSize);
-    } else {
-      setFlowCurrentChunkSize(file.size);
-    }
-    setShowProgress(true);
-  };
-
-  useEffect(() => {
-    if (showProgress && counter <= chunkCount) {
-      const chunk = fileToBeUpload.slice(beginingOfTheChunk, endOfTheChunk);
-      uploadChunk(chunk);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [counter, showProgress]);
-
   const handleSelectFileFrom = () => {
     if (!firstRef) {
       return;
@@ -117,6 +110,17 @@ export const FileUploader = ({
     }
 
     handleCloseExplorer(options);
+  };
+
+  const getFileContext = () => {
+    const uploadArray: any = [];
+
+    Object.keys(firstRef.current.files).map((key) => {
+      const file = firstRef.current.files[key];
+      return uploadArray.push(file);
+    });
+    setArrayToUpload(uploadArray);
+    setFileCounter(uploadArray.length);
   };
 
   useEffect(() => {
@@ -154,15 +158,92 @@ export const FileUploader = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeApp, firstRef]);
 
-  const getFileContext = () => {
-    const uploadArray: any = [];
-
-    Object.keys(firstRef.current.files).map((key) => {
-      const _file = firstRef.current.files[key];
-      return uploadArray.push(_file);
-    });
-    setArrayToUpload(uploadArray);
-    setFileCounter(uploadArray.length);
+  const helper = () => {
+    switch (options) {
+      case 'isJobFile': {
+        helperForNewArr(
+          {
+            attributes: {
+              name: fileToBeUpload.name,
+              path: activeApp,
+              id: `${makeid(10)} ${fileToBeUpload.name}`,
+            },
+          },
+          options,
+        );
+        break;
+      }
+      case 'isFile': {
+        helperForNewArr(
+          {
+            attributes: {
+              name: fileToBeUpload.name,
+              path: activeApp,
+              id: `${makeid(10)} ${fileToBeUpload.name}`,
+            },
+          },
+          options,
+        );
+        break;
+      }
+      case 'isArchives': {
+        helperForNewArr(
+          {
+            attributes: {
+              name: fileToBeUpload.name,
+              path: activeApp,
+              id: `${makeid(10)} ${fileToBeUpload.name}`,
+            },
+          },
+          options,
+        );
+        break;
+      }
+      case 'isJars': {
+        helperForNewArr(
+          {
+            attributes: {
+              name: fileToBeUpload.name,
+              path: activeApp,
+              id: `${makeid(10)} ${fileToBeUpload.name}`,
+            },
+          },
+          options,
+        );
+        break;
+      }
+      case 'isPhyton': {
+        helperForNewArr(
+          {
+            attributes: {
+              name: fileToBeUpload.name,
+              path: activeApp,
+              id: `${makeid(10)} ${fileToBeUpload.name}`,
+            },
+          },
+          options,
+        );
+        break;
+      }
+      case 'isFiles': {
+        helperForNewArr(
+          {
+            attributes: {
+              name: fileToBeUpload.name,
+              path: activeApp,
+              id: `${makeid(10)} ${fileToBeUpload.name}`,
+            },
+          },
+          options,
+        );
+        break;
+      }
+      default:
+        throw Error('Unsupported file option');
+    }
+    if (options !== 'isJobFile' && !!options) {
+      clearUploadData();
+    }
   };
 
   const uploadChunk = async (chunk: any) => {
@@ -183,7 +264,7 @@ export const FileUploader = ({
     formData.append('flowFilename', `${fileToBeUpload.name}`);
     formData.append('flowRelativePath', `${fileToBeUpload.name}`);
     formData.append('flowTotalChunks', chunkCount.toString());
-    formData.append('flowIdentifier', makeid(10) + ` ${fileToBeUpload.name}`);
+    formData.append('flowIdentifier', `${makeid(10)} ${fileToBeUpload.name}`);
     formData.append('flowTotalSize', fileSize.toString());
     try {
       const response = await axios.post(
@@ -219,91 +300,13 @@ export const FileUploader = ({
     }
   };
 
-  const helper = () => {
-    switch (options) {
-      case 'isJobFile': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: makeid(10) + ` ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isFile': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: makeid(10) + ` ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isArchives': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: makeid(10) + ` ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isJars': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: makeid(10) + ` ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isPhyton': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: makeid(10) + ` ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isFiles': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: makeid(10) + ` ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
+  useEffect(() => {
+    if (showProgress && counter <= chunkCount) {
+      const chunk = fileToBeUpload.slice(beginingOfTheChunk, endOfTheChunk);
+      uploadChunk(chunk);
     }
-    if (options !== 'isJobFile' && !!options) {
-      clearUploadData();
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [counter, showProgress]);
 
   return (
     <>
@@ -317,7 +320,7 @@ export const FileUploader = ({
           handleClick={() => {
             changeExplorerOptions(fileExplorerOptions);
             setIsDelete(false);
-            !!setIsOpenExplorerFromPopup && setIsOpenExplorerFromPopup(true);
+            if (setIsOpenExplorerFromPopup) setIsOpenExplorerFromPopup(true);
             handleClick();
           }}
           maxWidth="145px"
@@ -333,7 +336,7 @@ export const FileUploader = ({
           bottom="20px"
           isOpen={isOpenUploadExplorer}
           onClose={() => {
-            !!setIsOpenExplorerFromPopup && setIsOpenExplorerFromPopup(false);
+            if (setIsOpenExplorerFromPopup) setIsOpenExplorerFromPopup(false);
             setIsOpenUploadExplorer(false);
           }}
         >
@@ -341,7 +344,7 @@ export const FileUploader = ({
             title="Select folder"
             handleCloseExplorer={() => {
               setIsOpenUploadExplorer(false);
-              !!setIsOpenExplorerFromPopup && setIsOpenExplorerFromPopup(false);
+              if (setIsOpenExplorerFromPopup) setIsOpenExplorerFromPopup(false);
               handleCloseExplorer(options);
             }}
             handleSelectFile={handleSelectFolder}
@@ -353,3 +356,5 @@ export const FileUploader = ({
     </>
   );
 };
+
+export default FileUploader;

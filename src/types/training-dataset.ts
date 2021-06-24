@@ -1,4 +1,6 @@
-import { Entry, FeatureGroup } from './feature-group';
+/* eslint-disable import/no-cycle */
+import { Entry } from './entry';
+import { FeatureGroup } from './feature-group';
 import { DataEntity } from './index';
 import { IStorageConnector } from './storage-connector';
 
@@ -14,11 +16,6 @@ export interface TrainingDatasetFeature {
 export enum TrainingDatasetType {
   hopsfs = 'HOPSFS_TRAINING_DATASET',
   external = 'EXTERNAL_TRAINING_DATASET',
-}
-
-export interface Split {
-  name: string;
-  percentage: number;
 }
 
 export interface TrainingDatasetProvenance {

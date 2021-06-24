@@ -1,12 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { useCallback, useMemo } from 'react';
 
 import { Value, Badge, Labeling, Tooltip, Symbol } from '@logicalclocks/quartz';
 
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { Feature, FeatureGroup } from '../../../../types/feature-group';
-import useBasket from '../../../../hooks/useBasket';
 import { Box, Flex } from 'rebass';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { FeatureGroup } from '../../../../types/feature-group';
+import useBasket from '../../../../hooks/useBasket';
 import icons from '../../../../sources/icons';
+import { Feature } from '../../../../types/feature';
 
 const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
   const navigate = useNavigateRelative();
@@ -46,14 +48,8 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
 
   const groupProps = useMemo(() => {
     return features.map((feature) => {
-      const {
-        description,
-        partition,
-        primary,
-        type,
-        name,
-        onlineType,
-      } = feature;
+      const { description, partition, primary, type, name, onlineType } =
+        feature;
 
       const types = fg.onlineEnabled
         ? [

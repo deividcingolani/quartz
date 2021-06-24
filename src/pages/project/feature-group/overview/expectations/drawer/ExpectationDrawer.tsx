@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType } from 'react';
+import { Box, Flex } from 'rebass';
 import { Button, Drawer, Labeling, Row, Value } from '@logicalclocks/quartz';
 
 import Rules from './Rules';
@@ -140,7 +141,7 @@ const ExpectationDrawer = ({
           </Box>
         </Drawer.Section>
         <Drawer.Section title="Activity">
-          {!!data.lastValidation?.length ? (
+          {data.lastValidation?.length ? (
             <Activity expectation={item} id={data.id} />
           ) : (
             <Labeling gray>No last activity</Labeling>

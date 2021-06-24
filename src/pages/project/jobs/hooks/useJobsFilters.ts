@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Jobs } from '../../../../types/jobs';
-import { filterByAttribute } from '../utils/filterByAttribute';
+import filterByAttribute from '../utils/filterByAttribute';
 
 export enum KeyFilters {
   'primary',
@@ -71,11 +71,9 @@ const useJobsFilter = (data: Jobs[], initialSearch = ''): UseJobsFilters => {
       result = filterByAttribute<Jobs>(result, true, 'label');
     }
 
-    result = filterByAttribute<Jobs>(
-      result,
-      typeFilters,
-      'type',
-    ).filter(({ name }) => name.toLowerCase().includes(search.toLowerCase()));
+    result = filterByAttribute<Jobs>(result, typeFilters, 'type').filter(
+      ({ name }) => name.toLowerCase().includes(search.toLowerCase()),
+    );
     return result;
   }, [data, search, keyFilter, typeFilters]);
 

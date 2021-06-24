@@ -1,6 +1,6 @@
-// @ts-nocheck
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType, FC, useMemo, useState } from 'react';
+import { Box, Flex } from 'rebass';
 import {
   Row,
   Input,
@@ -83,7 +83,7 @@ const ExpectationDetailsForm: FC<ExpectationDetailsFormProps> = ({
           width="190px"
           value={search}
           placeholder="Find a feature..."
-          onChange={({ target }) => setSearch(target.value)}
+          onChange={({ target }: any) => setSearch(target.value)}
         />
       </Flex>
 

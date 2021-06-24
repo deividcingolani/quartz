@@ -1,5 +1,6 @@
-import { format } from 'date-fns';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
+import { format } from 'date-fns';
 import { Flex, FlexProps } from 'rebass';
 import { Microlabeling, Value } from '@logicalclocks/quartz';
 

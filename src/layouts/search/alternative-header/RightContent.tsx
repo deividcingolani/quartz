@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import React, { useCallback, useEffect, useMemo } from 'react';
 import { Select } from '@logicalclocks/quartz';
 
 // Types
@@ -32,13 +33,17 @@ const RightContent = () => {
     const { pathname: path } = location;
     const [, , projectId] = path.match(/(p)\/(\d+)/) || [];
     const [, , searchText] = path.match(/(features|td|fg)\/(.*)/) || [];
-    const type = path.includes('features')
-      ? 'features'
-      : path.includes('td')
-      ? 'td'
-      : path.includes('fg')
-      ? 'fg'
-      : 'features';
+    let type;
+
+    if (path.includes('features')) {
+      type = 'features';
+    } else if (path.includes('td')) {
+      type = 'td';
+    } else if (path.includes('fg')) {
+      type = 'fg';
+    } else {
+      type = 'features';
+    }
 
     return {
       projectId: +projectId,

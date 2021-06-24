@@ -1,11 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Box } from 'rebass';
 import { useFormContext } from 'react-hook-form';
 import { EditableTable, CardSecondary } from '@logicalclocks/quartz';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+// eslint-disable-next-line import/no-unresolved
 import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
 
 import tableStyles from './table.styles';
-import { featuresColumns } from './featuresColumns';
+import featuresColumns from './featuresColumns';
 import { createStatistics } from '../utils';
 
 const StatisticsFeaturesForm: FC = () => {

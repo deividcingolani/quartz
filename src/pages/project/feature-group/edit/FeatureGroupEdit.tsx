@@ -1,8 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // Types
+import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroupFormData } from '../types';
 // Components
@@ -12,7 +14,6 @@ import FeatureGroupForm from '../forms/FeatureGroupForm';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Utils
 import { mapFeatures, getEnabledStatistics } from '../utils';
-import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';

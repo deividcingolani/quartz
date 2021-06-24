@@ -1,5 +1,6 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
+import { Box, Flex } from 'rebass';
 import {
   Badge,
   Card,
@@ -13,7 +14,6 @@ import {
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
-  Feature,
   FeatureGroup,
   FeatureGroupStatistics,
 } from '../../../../types/feature-group';
@@ -25,6 +25,7 @@ import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import useBasket from '../../../../hooks/useBasket';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import { Feature } from '../../../../types/feature';
 
 export interface StatisticsCardProps {
   data: Feature;

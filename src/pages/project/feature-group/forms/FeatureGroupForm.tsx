@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import {
   Button,
@@ -16,6 +17,7 @@ import { Box, Flex } from 'rebass';
 import * as yup from 'yup';
 
 // Components
+import { useSelector } from 'react-redux';
 import FeaturesForm from './FeaturesForm';
 import FeatureStickySummary from './FeatureStickySummary';
 import LabelsForm from './LabelsForm';
@@ -37,8 +39,7 @@ import {
 } from '../utils';
 import { name, shortText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
-import { uppercaseFirst } from '../../../../utils/uppercaseFirst';
-import { useSelector } from 'react-redux';
+import uppercaseFirst from '../../../../utils/uppercaseFirst';
 import { selectSchematisedTags } from '../../../../store/models/schematised-tags/schematised-tags.selectors';
 import StatisticConfigurationForm from './StatisticsConfigurationForm';
 import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
@@ -102,6 +103,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
   } = methods;
 
   const serverTags = useSelector(selectSchematisedTags);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSubmit = useCallback(
     handleSubmit(async (data: FeatureGroupFormData) => {
       const next = await validateSchema(data.tags, serverTags, setError);
@@ -113,6 +115,7 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
     [setError, serverTags, clearErrors, submitHandler],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const isUpdatedFunction = useCallback(
     isUpdated(mapFeaturesToTable(initialData)),
     [initialData],
@@ -122,17 +125,17 @@ const FeatureGroupForm: FC<FeatureGroupFormProps> = ({
 
   const ErrorObjKeysLength = Object.keys(errors).length;
 
-  const errorsValue =
-    ErrorObjKeysLength === 1
-      ? `${ErrorObjKeysLength.toString()} error`
-      : ErrorObjKeysLength !== 0
-      ? `${ErrorObjKeysLength.toString()} errors`
-      : '';
-
-  const isUpdatedFeatures = useMemo(() => isUpdatedFunction(features), [
-    features,
-    isUpdatedFunction,
-  ]);
+  let errorsValue = '';
+  if (ErrorObjKeysLength > 0) {
+    errorsValue =
+      ErrorObjKeysLength === 1
+        ? `${ErrorObjKeysLength.toString()} error`
+        : `${ErrorObjKeysLength.toString()} errors`;
+  }
+  const isUpdatedFeatures = useMemo(
+    () => isUpdatedFunction(features),
+    [features, isUpdatedFunction],
+  );
 
   const hasScrollOnScreen = useScreenWithScroll();
 

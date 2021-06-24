@@ -1,6 +1,6 @@
 import { RuleTypes } from '../types';
 
-export const setTypeOfJob = (type: string) => {
+const setTypeOfJob = (type: string): RuleTypes => {
   switch (type) {
     case 'SPARK': {
       return RuleTypes.SPARK;
@@ -11,5 +11,9 @@ export const setTypeOfJob = (type: string) => {
     case 'FLINK': {
       return RuleTypes.FLINK;
     }
+    default:
+      return RuleTypes.SPARK;
   }
 };
+
+export default setTypeOfJob;

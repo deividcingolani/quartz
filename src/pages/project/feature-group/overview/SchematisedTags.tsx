@@ -1,4 +1,4 @@
-import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, {
   ComponentType,
   FC,
@@ -16,8 +16,10 @@ import {
   Value,
 } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
+import { Box, Flex } from 'rebass';
 
 // Types
+import { useSelector } from 'react-redux';
 import { Tag } from '../../../../types';
 // Hooks
 import useSchematisedTagsListRowData from './useSchematisedTagsListRowData';
@@ -26,7 +28,6 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import tagsListStyles from './tags-list-styles';
 
 import routeNames from '../../../../routes/routeNames';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
@@ -42,7 +43,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
   data = [],
   type = ItemDrawerTypes.fg,
 }) => {
-  const { [type + 'Id']: id } = useParams();
+  const { [`${type}Id`]: id } = useParams();
 
   const [selected, setSelected] = useState<Tag>(data[0]);
 

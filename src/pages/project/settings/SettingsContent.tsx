@@ -1,11 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo } from 'react';
 // Types
+import { Box } from 'rebass';
 import { Project } from '../../../types/project';
 // Components
 import ProjectMembers from './ProjectMembers';
 import Integrations from './Integrations';
 import DangerZone from './DangerZone';
-import { Box } from 'rebass';
 
 export interface ContentProps {
   data: Project;

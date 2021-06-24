@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Feature } from '../../../../types/feature-group';
+import { Feature } from '../../../../types/feature';
 import filterByAttribute from '../overview/utils';
 
 export enum KeyFilters {
