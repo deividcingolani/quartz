@@ -48,7 +48,16 @@ const ProjectList: FC = () => {
     if (lastPath && lastPath.startsWith('/p')) {
       // The last page the user visited was a within a project,
       // redirect them there.
-      navigate(`${lastPath.split('/').slice(0, 3).join('/')}/view`);
+      const pathSplits = lastPath.split('/');
+      if (
+        pathSplits.length >= 3 &&
+        !Number.isNaN(parseInt(pathSplits[2], 10))
+      ) {
+        navigate(`/p/${pathSplits[2]}/view`);
+      } else {
+        // the last page does not contain a projectId (eg. /p/new)
+        localStorage.removeItem(pageToViewPathStorageName);
+      }
     }
   }, [dispatch, navigate]);
 
