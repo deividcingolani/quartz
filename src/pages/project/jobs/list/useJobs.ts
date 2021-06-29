@@ -8,19 +8,19 @@ import {
   SelectData,
   selectJobsData,
 } from '../../../../store/models/feature/selectors';
-import { Jobs } from '../../../../types/jobs';
+import { ProjectJobs } from '../../../../types/jobs';
 
-const useJobs = (projectId: number): SelectData<Jobs[]> => {
+const useJobs = (projectId: number): SelectData<ProjectJobs> => {
   const { data, isLoading } = useSelector(selectJobsData);
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
-    if (!data.length && !isLoading) {
+    if (data.projectId !== projectId && !isLoading) {
       dispatch.jobs.fetch({
         projectId,
       });
     }
-  }, [projectId, data.length, dispatch, isLoading]);
+  }, [projectId, data.jobs.length, dispatch, isLoading, data.projectId]);
   return { data, isLoading };
 };
 

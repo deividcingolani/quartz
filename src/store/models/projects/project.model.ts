@@ -18,8 +18,10 @@ const project = createModel()({
 
       const mappedProject = {
         ...project,
-        featureGroupsCount: featureStore.numFeatureGroups,
-        trainingDatasetsCount: featureStore.numTrainingDatasets,
+        featureGroupsCount: featureStore ? featureStore.numFeatureGroups : 0,
+        trainingDatasetsCount: featureStore
+          ? featureStore.numTrainingDatasets
+          : 0,
       };
 
       dispatch.project.setProject(mappedProject);
@@ -31,8 +33,10 @@ const project = createModel()({
 
       const mappedProject = {
         ...project,
-        featureGroupsCount: featureStore.numFeatureGroups,
-        trainingDatasetsCount: featureStore.numTrainingDatasets,
+        featureGroupsCount: featureStore ? featureStore.numFeatureGroups : 0,
+        trainingDatasetsCount: featureStore
+          ? featureStore.numTrainingDatasets
+          : 0,
       };
 
       dispatch.project.setProject(mappedProject);

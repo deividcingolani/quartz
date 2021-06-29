@@ -9,6 +9,11 @@ export enum JobsType {
   flink = 'FLINK',
 }
 
+export interface ProjectJobs {
+  jobs: Jobs[], 
+  projectId: number
+}
+
 export interface Jobs extends DataEntity {
   items: Jobs[];
   defaultValue: string | number;

@@ -134,7 +134,7 @@ const JobsList: FC = () => {
   };
 
   const typeFilterOptions = useMemo(
-    () => Array.from(new Set(data.map(({ jobType }) => jobType))),
+    () => Array.from(new Set(data.jobs.map(({ jobType }) => jobType))),
     [data],
   );
 
@@ -148,7 +148,7 @@ const JobsList: FC = () => {
   const dataResult = useMemo(() => {
     const [sortKey] = sort;
     const sortedData = sortJobs(
-      filterJobs(searchJobsText(data, search), typeFilters),
+      filterJobs(searchJobsText(data.jobs, search), typeFilters),
       sortKey,
     );
 
@@ -480,7 +480,7 @@ const JobsList: FC = () => {
             width: '100%',
           }}
         >
-          {!isLoading && !!data.length && (
+          {!isLoading && !!data.jobs.length && (
             <Flex
               flexDirection="column"
               width="100%"
@@ -514,7 +514,7 @@ const JobsList: FC = () => {
                 </Value>
                 <Value>out of</Value>
                 <Value primary px="5px">
-                  {data.length}
+                  {data.jobs.length}
                 </Value>
                 <Value>jobs displayed</Value>
                 <Tooltip ml="auto" mainText="⇧ + click, for advanced mode">
@@ -537,7 +537,8 @@ const JobsList: FC = () => {
                   <Box sx={jobsListStyles(selectedRow, isOpen)}>
                     <Row
                       onRowClick={(_, index) => {
-                        const { id } = data[index];
+                        const { id } = data.jobs[index];
+
                         setSelectedRow(index);
                         handleSelectItem(id)();
                       }}
@@ -564,7 +565,7 @@ const JobsList: FC = () => {
           )}
           {isLoading && <Loader />}
         </Flex>
-        {!data.length && !isLoading && (
+        {!data.jobs.length && !isLoading && (
           <NoData
             mainText="No job configured"
             secondaryText="Create a new job to run files from the user interface."

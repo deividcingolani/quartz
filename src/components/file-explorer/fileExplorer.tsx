@@ -1,9 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useEffect } from 'react';
-import {
-  FileSystemExplorer,
-  NotificationsManager,
-} from '@logicalclocks/quartz';
+import { FileSystemExplorer } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FileExplorerMode, FileExplorerProps } from './types';
@@ -13,8 +10,6 @@ import getPathAndFileName from '../../pages/project/jobs/utils/getPathAndFileNam
 import DatasetService, {
   DatasetType,
 } from '../../services/project/DatasetService';
-import NotificationTitle from '../../utils/notifications/notificationBadge';
-import NotificationContent from '../../utils/notifications/notificationValue';
 
 const FileExplorer: FC<FileExplorerProps> = ({
   handleCloseExplorer,
@@ -53,29 +48,7 @@ const FileExplorer: FC<FileExplorerProps> = ({
 
   const handleDownloadFile = async (file: any) => {
     const { fileName, path } = getPathAndFileName(file.attributes.path);
-
-    DatasetService.getDownloadToken(
-      +id,
-      `${path}/${fileName}`,
-      DatasetType.DATASET,
-    )
-      .then(({ data }) => {
-        window.open(
-          `${
-            process.env.REACT_APP_API_HOST
-          }/project/${id}/dataset/download/with_token/${encodeURIComponent(
-            `${path}/${fileName}`,
-          )}?token=${data.data.value}&type=${DatasetType.DATASET}`,
-          '_blank',
-        );
-      })
-      .catch(({ response }) => {
-        NotificationsManager.create({
-          isError: true,
-          type: <NotificationTitle message="Error downloading the file" />,
-          content: <NotificationContent message={response.data.errorMsg} />,
-        });
-      });
+    DatasetService.download(+id, `${path}/${fileName}`, DatasetType.DATASET);
   };
 
   if (isLoading) {

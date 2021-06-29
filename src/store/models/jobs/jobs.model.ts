@@ -1,19 +1,20 @@
 import { createModel } from '@rematch/core';
-import { Jobs } from '../../../types/jobs';
+import { Jobs, ProjectJobs } from '../../../types/jobs';
 import JobsService from '../../../services/project/JobsService';
 
-export type JobsState = Jobs[];
+export type JobsState = ProjectJobs;
 
 const jobs = createModel()({
-  state: [] as JobsState,
+  state: { projectId: 0, jobs: [] } as ProjectJobs,
   reducers: {
-    set: (_: JobsState, payload: Jobs[]): JobsState => payload,
-    clear: () => [],
+    set: (_: JobsState, projectId: number, payload: Jobs[]): JobsState => {
+      return { jobs: payload, projectId };
+    },
   },
   effects: (dispatch) => ({
     fetch: async ({ projectId }: { projectId: number }): Promise<void> => {
       const data = await JobsService.getList(projectId);
-      dispatch.jobs.set(data.items || []);
+      dispatch.jobs.set(projectId, data.items || []);
     },
     run: async ({
       argumentsData,

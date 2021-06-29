@@ -85,20 +85,11 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
   };
 
   const handleOpenLogs = async (executionId: number) => {
-    const stdout = await dispatch.jobsExecutions.logs({
-      projectId: id,
+    const data = {
+      projectId: +id,
       jobName: selectedJobName,
       executionId,
-      logsType: 'out',
-    });
-    const stderr = await dispatch.jobsExecutions.logs({
-      projectId: id,
-      jobName: selectedJobName,
-      executionId,
-      logsType: 'err',
-    });
-
-    const data = { stdout: stdout.data.log, stderr: stderr.data.log };
+    };
     if (data && setDataLog && handleTogglePopupForLogs) {
       setDataLog(data);
       handleTogglePopupForLogs();
@@ -178,12 +169,14 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                         {execution.id}
                       </Value>
                     </Flex>
-                    <Box sx={{ width: '78px', height: '19px', mr: '20px' }}>
-                      <Badge
-                        variant={badgeProps.variant}
-                        value={badgeProps.value}
-                      />
-                    </Box>
+                    {badgeProps.value !== 'undefined' && (
+                      <Box sx={{ width: '78px', height: '19px', mr: '20px' }}>
+                        <Badge
+                          variant={badgeProps.variant}
+                          value={badgeProps.value}
+                        />
+                      </Box>
+                    )}
                     <Flex flexDirection="column" mt="0px">
                       <Labeling
                         gray

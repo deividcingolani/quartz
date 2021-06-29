@@ -10,7 +10,6 @@ import {
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import icons from '../../../../sources/icons';
 import JobsExecutionsPopup from '../executions/JobsExecutionsPopup';
 import ProfileService from '../../../../services/ProfileService';
@@ -18,7 +17,7 @@ import ProfileService from '../../../../services/ProfileService';
 const ExecutionDropdown = ({ executionId, jobName, userInfo }: any) => {
   const buttonRef = useRef(null);
   const { id } = useParams();
-  const dispatch = useDispatch();
+
   const [isOpenMore, handleToggleMore, handleClickOutside] = useDropdown();
   useOnClickOutside(buttonRef, handleClickOutside);
 
@@ -27,20 +26,11 @@ const ExecutionDropdown = ({ executionId, jobName, userInfo }: any) => {
   const [dataLog, setDataLog] = useState<any>(null);
 
   const handleOpenLogs = async () => {
-    const stdout = await dispatch.jobsExecutions.logs({
+    const data = {
       projectId: +id,
       jobName,
       executionId,
-      logsType: 'out',
-    });
-    const stderr = await dispatch.jobsExecutions.logs({
-      projectId: +id,
-      jobName,
-      executionId,
-      logsType: 'err',
-    });
-
-    const data = { stdout: stdout.data.log, stderr: stderr.data.log };
+    };
     if (data) {
       setDataLog(data);
       handleTogglePopupForLogs();

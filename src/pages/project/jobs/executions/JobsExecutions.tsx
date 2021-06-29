@@ -25,7 +25,7 @@ const JobsExecutions: FC = () => {
   const { data } = useJobs(+id);
   const batchSize = 30;
 
-  const item = data.find(({ id }) => id === +jobId);
+  const item = data.jobs.find(({ id }) => id === +jobId);
 
   useTitle(`${titles.executions} - ${item?.name}`);
 

@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { Button, DatePicker, Select, usePopup } from '@logicalclocks/quartz';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { JobsExecutionContentProps, ExecutionsTypeSortOptions } from './types';
 import Panel from '../../../../components/panel/Panel';
 import { RootState } from '../../../../store';
@@ -37,6 +37,7 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
     hasPrevious: false,
     hasFollowing: false,
   });
+  const { id } = useParams();
 
   useEffect(() => {
     if (executions && !isLoading) {
@@ -99,13 +100,15 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
               onClickEdit={handleEdit}
               onClickRefresh={handleRefreshData}
             />
-            <JobsExecutionsPopup
-              isLog
-              projectId={+data.id}
-              item={dataLog}
-              isOpenPopup={isOpenPopupForLogs}
-              handleTogglePopup={handleTogglePopupForLogs}
-            />
+            {isOpenPopupForLogs && (
+              <JobsExecutionsPopup
+                isLog
+                projectId={+id}
+                item={dataLog}
+                isOpenPopup={isOpenPopupForLogs}
+                handleTogglePopup={handleTogglePopupForLogs}
+              />
+            )}
           </>
         )}
         <Flex justifyContent="space-between" mt="65px">

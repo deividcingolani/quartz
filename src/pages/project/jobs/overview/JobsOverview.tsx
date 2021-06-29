@@ -26,7 +26,7 @@ const JobsOverview = () => {
 
   const { data } = useJobs(+projectId);
   useEffect(() => {
-    const item = data.find((jobs) => jobs.id === +jobId);
+    const item = data.jobs.find((jobs) => jobs.id === +jobId);
     if (projectId && item) {
       dispatch.jobsView.fetch({ projectId, jobsName: item.name });
     }

@@ -6,6 +6,7 @@ import React, {
   SetStateAction,
   useMemo,
   useState,
+  useEffect,
 } from 'react';
 import {
   AlternativeHeader,
@@ -28,6 +29,10 @@ import NotificationBadge from '../../../../utils/notifications/notificationBadge
 import NotificationContent from '../../../../utils/notifications/notificationValue';
 import { name } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
+import DatasetService, {
+  DatasetType,
+} from '../../../../services/project/DatasetService';
+import Loader from '../../../../components/loader/Loader';
 
 export interface JobsExecutionsPopupProps {
   projectId: number;
@@ -54,9 +59,14 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
   const navigate = useNavigateRelative();
   const [disabledQuickRunButton, setDisabledQuickRunButton] = useState(false);
 
+  const [dataLog, setDataLog] = useState<any>(null);
+  const [loading, setLoding] = useState<boolean>(true);
+
   const schema = yup.object().shape({
     appName: name.label('Name'),
   });
+
+  const [active, setActive] = useState('stdout');
 
   const methods = useForm({
     defaultValues: {
@@ -73,6 +83,58 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
     reValidateMode: 'onChange',
     mode: 'onChange',
   });
+
+  const getLogs = useCallback(async () => {
+    const stdout = await dispatch.jobsExecutions.logs({
+      projectId: item.projectId,
+      jobName: item.jobName,
+      executionId: item.executionId,
+      logsType: 'out',
+    });
+    const stderr = await dispatch.jobsExecutions.logs({
+      projectId: item.projectId,
+      jobName: item.jobName,
+      executionId: item.executionId,
+      logsType: 'err',
+    });
+
+    const data = {
+      stdout: stdout.data.log,
+      stdoutPath: stdout.data.path,
+      stderr: stderr.data.log,
+      stderrPath: stderr.data.path,
+    };
+    if (data) {
+      setDataLog(data);
+      setLoding(false);
+    }
+  }, [dispatch.jobsExecutions, item.executionId, item.jobName, item.projectId]);
+
+  useEffect(() => {
+    async function fetchLogs() {
+      if (isLog && item) {
+        await getLogs();
+      }
+    }
+    fetchLogs();
+  }, [getLogs, isLog, item]);
+
+  const handleDownloadJob = async () => {
+    DatasetService.download(
+      projectId,
+      active === 'stdout' ? dataLog.stdoutPath : dataLog.stderrPath,
+      DatasetType.DATASET,
+    );
+  };
+
+  const getDownloadHandler = () => {
+    const log =
+      active === 'stdout' && dataLog ? dataLog.stdout : dataLog.stderr;
+    if (log.startsWith('Log is too big to display in browser.')) {
+      return handleDownloadJob;
+    }
+    return undefined;
+  };
 
   const { control, handleSubmit, errors } = methods;
 
@@ -132,8 +194,6 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
   const handleCancelStop = () => {
     handleTogglePopup(!isOpenPopup);
   };
-
-  const [active, setActive] = useState('stdout');
 
   const tabs = useMemo(
     () => [
@@ -237,7 +297,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
           </FormProvider>
         </TinyPopup>
       )}
-      {isLog && item && !isStop && (
+      {isLog && !isStop && (
         <TinyPopup
           px="0px"
           width="1440px"
@@ -277,14 +337,20 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
             </Tooltip>
             <AlternativeHeader title="Logs" tabs={tabs} />
           </Box>
-          <Code
-            title={format(new Date(), 'yyyy-MM-dd hh:mm:ss')}
-            isColorSyntax={false}
-            wrapLongLines
-            copyButton
-            downloadButton
-            content={active === 'stdout' ? item.stdout : item.stderr}
-          />
+          {loading && <Loader />}
+          {dataLog && !loading && (
+            <Code
+              title={format(new Date(), 'yyyy-MM-dd hh:mm:ss')}
+              isColorSyntax={false}
+              wrapLongLines
+              copyButton
+              downloadButton
+              downloadCallback={getDownloadHandler()}
+              content={
+                active === 'stdout' && dataLog ? dataLog.stdout : dataLog.stderr
+              }
+            />
+          )}
         </TinyPopup>
       )}
       {isStop && (

@@ -1,7 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Box, Flex } from 'rebass';
-import { Button, Card, Labeling, usePopup, Value } from '@logicalclocks/quartz';
+import {
+  Button,
+  Card,
+  Labeling,
+  NotificationsManager,
+  usePopup,
+  Value,
+} from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 import Panel from '../../../../components/panel/Panel';
 import { Jobs } from '../../../../types/jobs';
@@ -12,10 +19,12 @@ import icons from '../../../../sources/icons';
 import DatasetService, {
   DatasetType,
 } from '../../../../services/project/DatasetService';
-import setTypeOfJob from '../utils/setTypeOfJob';
+import getPathAndFileName from '../utils/getPathAndFileName';
+import NotificationTitle from '../../../../utils/notifications/notificationBadge';
+import NotificationContent from '../../../../utils/notifications/notificationValue';
 import JobsExecutionsPopup from '../executions/JobsExecutionsPopup';
 import saveToFile from '../../../../utils/downloadConfig';
-import getPathAndFileName from '../utils/getPathAndFileName';
+import setTypeOfJob from '../utils/setTypeOfJob';
 
 export interface ContentProps {
   data: Jobs;
@@ -49,19 +58,16 @@ const OverviewContent: FC<ContentProps> = ({
   }, [fileName, id, path, setJobDownlodable]);
 
   const handleDownloadJob = useCallback(async () => {
-    DatasetService.getDownloadToken(
+    DatasetService.download(
       +id,
       `${path}/${fileName}`,
       DatasetType.DATASET,
-    ).then(({ data }) => {
-      window.open(
-        `${
-          process.env.REACT_APP_API_HOST
-        }/project/${id}/dataset/download/with_token/${encodeURIComponent(
-          `${path}/${fileName}`,
-        )}?token=${data.data.value}&type=${DatasetType.DATASET}`,
-        '_blank',
-      );
+    ).catch((_e) => {
+      NotificationsManager.create({
+        isError: true,
+        type: <NotificationTitle message="Error" />,
+        content: <NotificationContent message="Error downloading the file" />,
+      });
     });
   }, [id, fileName, path]);
 

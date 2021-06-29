@@ -1,7 +1,7 @@
 import { FeatureGroup } from '../../../types/feature-group';
 import { FeatureStore } from '../../../types/feature-store';
 import { RootState } from '../../index';
-import { Jobs } from '../../../types/jobs';
+import { ProjectJobs } from '../../../types/jobs';
 
 export type SelectData<Data> = {
   data: Data;
@@ -27,7 +27,7 @@ export const selectFeatureStoreData = ({
 export const selectJobsData = ({
   jobs,
   loading,
-}: RootState): SelectData<Jobs[]> => ({
+}: RootState): SelectData<ProjectJobs> => ({
   data: jobs,
   isLoading: loading.effects.jobs.fetch,
 });
