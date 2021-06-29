@@ -3,15 +3,18 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 // Services
+import { useNavigate } from 'react-router-dom';
 import TokenService from '../services/TokenService';
 import BaseApiService from '../services/BaseApiService';
 // Types
 import { Dispatch } from '../store';
+import routeNames from '../routes/routeNames';
 
 export type UseProjectNavigate = (to: string, relativeTo?: string) => void;
 
 const useTokenApiInterceptor = () => {
   const dispatch = useDispatch<Dispatch>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     BaseApiService.setInterceptor(
@@ -29,7 +32,7 @@ const useTokenApiInterceptor = () => {
 
       (error) => {
         // If request failed with previous token repeat request
-        const previousToken = error.config.headers.Authorization?.split(' ')[1];
+        const previousToken = error.config.headers.Authorization;
         if (
           TokenService.get() &&
           error.response?.status === 401 &&
@@ -49,10 +52,20 @@ const useTokenApiInterceptor = () => {
               ),
           );
         }
+        if (
+          TokenService.get() &&
+          error.response?.status === 401 &&
+          previousToken &&
+          previousToken === TokenService.get()
+        ) {
+          TokenService.delete();
+          navigate(routeNames.auth.login, { replace: true });
+        }
+
         return Promise.reject(error);
       },
     );
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 };
 
 export default useTokenApiInterceptor;
