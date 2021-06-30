@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, memo, useCallback } from 'react';
+import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import {
   Text,
@@ -26,6 +26,7 @@ import { Dispatch, RootState } from '../../../../store';
 import routeNames from '../../../../routes/routeNames';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+import { NodeTypes } from '../../../../components/provenance/types';
 
 export interface SummaryDataProps {
   data: FeatureGroup;
@@ -79,6 +80,17 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
       routeNames.project.view,
     );
   };
+
+  const tdsCount = useMemo(() => {
+    if (isLoading) return 0;
+    const ups = data.provenance.upstream.nodes.filter(
+      (n) => n.type === NodeTypes.trainingDataset,
+    ).length;
+    const downs = data.provenance.downstream.nodes.filter(
+      (n) => n.type === NodeTypes.trainingDataset,
+    ).length;
+    return ups + downs;
+  }, [data.provenance, isLoading]);
 
   return (
     <>
@@ -164,7 +176,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
               variant="gray"
               ml="8px"
               text="training datasets"
-              value={data.provenance?.length}
+              value={tdsCount}
             />
           </Flex>
         )}

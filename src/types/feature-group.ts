@@ -1,11 +1,11 @@
 /* eslint-disable import/no-cycle */
 import { User } from './user';
+import { DataEntity } from '.';
+import { Entry } from './entry';
+import { Feature } from './feature';
 import { Expectation, Validation } from './expectation';
 import { IStorageConnector } from './storage-connector';
-import { Feature } from './feature';
-import { DataEntity } from '.';
-import { FeatureGroupProvenance } from './featur-group-provenance';
-import { Entry } from './entry';
+import { ProvenanceState } from '../components/provenance/types';
 
 // These feature types are valid only for statistics
 // Deequ (the library we use to compute statistics)
@@ -135,7 +135,7 @@ export interface FeatureGroup extends DataEntity {
   statisticColumns: any;
   timeTravelFormat?: string;
   validationType?: string;
-  provenance: FeatureGroupProvenance[];
+  provenance: ProvenanceState;
   features: Feature[];
   parentProjectId: number;
   parentProjectName: string;

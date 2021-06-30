@@ -6,7 +6,6 @@ import {
   FeatureGroup,
   FeatureGroupCommitDetail,
   FeatureGroupRowItem,
-  Provenance,
 } from '../../types/feature-group';
 import { StorageConnectorType } from '../../types/feature-group-data-preview';
 import { ActivityTypeSortOptions } from '../../pages/project/feature-group/activity/types';
@@ -169,18 +168,6 @@ class FeatureGroupsService extends BaseApiService {
       type: RequestType.get,
     });
 
-  getProvenance = (
-    projectId: number,
-    _featureStoreId: number,
-    featureGroup: FeatureGroup,
-  ) => {
-    const { name, version } = featureGroup;
-    return this.request<Provenance>({
-      url: `${projectId}/provenance/links?filter_by=IN_ARTIFACT:${name}_${version}&filter_by=IN_TYPE:FEATURE&filter_by=OUT_TYPE:TRAINING_DATASET`,
-      type: RequestType.get,
-    });
-  };
-
   getRows = (
     projectId: number,
     featureStoreId: number,
@@ -275,8 +262,8 @@ class FeatureGroupsService extends BaseApiService {
 
   getOneByName = async (
     projectId: number,
-    featureStoreId: number,
     name: string,
+    featureStoreId: number,
   ): Promise<FeatureGroup[]> => {
     const { data } = await this.request<FeatureGroup[]>({
       url: `${projectId}/featurestores/${featureStoreId}/featuregroups/${name}`,

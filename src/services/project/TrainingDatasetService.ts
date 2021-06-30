@@ -5,7 +5,7 @@ import {
   TrainingDatasetQuery,
 } from '../../types/training-dataset';
 
-import { ActivityItemData, Provenance } from '../../types/feature-group';
+import { ActivityItemData } from '../../types/feature-group';
 import {
   getExpandParam,
   getOffsetParam,
@@ -28,22 +28,10 @@ class TrainingDatasetService extends BaseApiService {
     return data;
   };
 
-  getProvenance = (
-    projectId: number,
-    _featureStoreId: number,
-    trainingDataset: TrainingDataset,
-  ) => {
-    const { name, version } = trainingDataset;
-    return this.request<Provenance>({
-      url: `${projectId}/provenance/links?only_apps=true&full_link=true&filter_by=OUT_ARTIFACT:${name}_${version}&filter_by=IN_TYPE:FEATURE&filter_by=OUT_TYPE:TRAINING_DATASET`,
-      type: RequestType.get,
-    });
-  };
-
   getOneByName = async (
     projectId: number,
-    featureStoreId: number,
     name: string,
+    featureStoreId: number,
   ): Promise<TrainingDataset[]> => {
     const { data } = await this.request<TrainingDataset[]>({
       url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${name}`,

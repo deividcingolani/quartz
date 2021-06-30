@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
 import { Entry } from './entry';
+import { ProvenanceState } from '../components/provenance/types';
 import { FeatureGroup } from './feature-group';
 import { DataEntity } from './index';
 import { IStorageConnector } from './storage-connector';
@@ -40,7 +41,7 @@ export interface TrainingDataset extends DataEntity {
   storageConnectorType: string;
   trainingDatasetType: TrainingDatasetType;
   version: number;
-  provenance: TrainingDatasetProvenance[];
+  provenance: ProvenanceState;
   parentProjectId: number;
   parentProjectName: string;
   storageConnector: IStorageConnector;

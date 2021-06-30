@@ -15,7 +15,7 @@ import { FeatureGroup } from '../../../../types/feature-group';
 // Features
 import SummaryData from './SummaryData';
 import SchematisedTags from './SchematisedTags';
-import Provenance from './Provenance';
+import Provenance from '../../../../components/provenance';
 import FeatureList from './FeatureList';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
@@ -143,7 +143,7 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
         </Anchor>
         <Anchor groupName="fgOverview" anchor={provenance}>
           <CardBoundary mt="20px" title="Provenance">
-            <Provenance data={data.provenance} />
+            <Provenance provenance={data.provenance} rootId={data.id} />
           </CardBoundary>
         </Anchor>
 

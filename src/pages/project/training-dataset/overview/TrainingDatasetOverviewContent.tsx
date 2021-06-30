@@ -15,11 +15,11 @@ import TrainingDatasetFeatureList from './TrainingDatasetFeatureList';
 import CodeCard from '../../feature-group/overview/CodeCard';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import SchematisedTags from '../../feature-group/overview/SchematisedTags';
-import Provenance from './Provenance';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import SplitGraph from './SplitGraph';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import CardBoundary from '../../../../components/error-boundary/CardBoundary';
+import Provenance from '../../../../components/provenance';
 
 // Utils
 import { useVersionsSort } from '../utils';
@@ -131,7 +131,7 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
 
         <Anchor groupName="tdOverview" anchor={provenance}>
           <CardBoundary mt="20px" title="Provenance">
-            <Provenance data={data.provenance} />
+            <Provenance provenance={data.provenance} rootId={data.id} />
           </CardBoundary>
         </Anchor>
 

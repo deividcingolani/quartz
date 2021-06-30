@@ -1,5 +1,6 @@
 import { createModel } from '@rematch/core';
 import FeatureGroupsService from '../../../../services/project/FeatureGroupsService';
+import ProvenanceService from '../../../../services/project/ProvenanceService';
 import {
   FeatureGroup,
   FeatureGroupCommitDetail,
@@ -49,19 +50,15 @@ const featureGroupCommitsDetail = createModel()({
     },
     fetchTD: async ({
       projectId,
-      featureStoreId,
       featureGroup,
     }: {
       projectId: number;
-      featureStoreId: number;
       featureGroup: FeatureGroup;
     }): Promise<void> => {
-      const { data } = await FeatureGroupsService.getProvenance(
+      const data = await ProvenanceService.getTDProvenance({
         projectId,
-        featureStoreId,
         featureGroup,
-      );
-
+      });
       dispatch.featureGroupCommitsDetail.setDataTds(data?.items?.length || 0);
     },
   }),

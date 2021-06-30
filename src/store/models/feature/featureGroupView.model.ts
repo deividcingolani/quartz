@@ -6,10 +6,10 @@ import { ActivityTypeSortOptions } from '../../../pages/project/feature-group/ac
 // Services
 import ExpectationService from '../../../services/project/ExpectationService';
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
-import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
 import { Expectation } from '../../../types/expectation';
 import { getValidPromisesValues } from '../search/deep-search.model';
+import { ProvenanceState } from '../../../components/provenance/types';
 
 export type FeatureGroupViewState = FeatureGroup | null;
 
@@ -67,7 +67,7 @@ const featureGroupView = createModel()({
 
       const mapped = {
         ...data,
-        provenance: [],
+        provenance: {} as ProvenanceState,
         labels: [],
         tags: [],
         commits: [],
@@ -103,7 +103,7 @@ const featureGroupView = createModel()({
 
       dispatch.featureGroupView.setData({
         ...data,
-        provenance: [],
+        provenance: {} as ProvenanceState,
         labels: [],
         tags: [],
         commits: [],
@@ -132,41 +132,12 @@ const featureGroupView = createModel()({
       );
 
       /* PROVENANCE */
-      const { data: provenance } = await FeatureGroupsService.getProvenance(
+      const provenance = await dispatch.provenance.fetch({
         projectId,
         featureStoreId,
         data,
-      );
+      });
 
-      const entries =
-        provenance.items && provenance.items.map(({ out }) => out.entry[0]);
-
-      let fgProvenances = [];
-
-      if (entries) {
-        dispatch.project.getProject(projectId);
-
-        const fgProvenancesPromises = await Promise.allSettled(
-          entries.map(async (entry) => {
-            const { key } = entry;
-            const [td] = await TrainingDatasetService.getOneByName(
-              projectId,
-              featureStoreId,
-              key.slice(0, key.lastIndexOf('_')),
-            );
-            return {
-              td,
-              info: entry,
-            };
-          }),
-        );
-        fgProvenances = fgProvenancesPromises.reduce((acc: any[], next) => {
-          if (next.status === 'fulfilled') {
-            return [...acc, next.value];
-          }
-          return acc;
-        }, []);
-      }
       /* TAGS */
       const { data: tags } = await FeatureGroupsService.getTags(
         projectId,
@@ -196,8 +167,8 @@ const featureGroupView = createModel()({
       /* SAME NAME */
       const fgsWithSameName = await FeatureGroupsService.getOneByName(
         projectId,
-        featureStoreId,
         data.name,
+        featureStoreId,
       );
       /* COMMITS */
       let commits: any = [];
@@ -246,8 +217,8 @@ const featureGroupView = createModel()({
 
       dispatch.featureGroupView.setData({
         ...data,
-        provenance: fgProvenances,
         labels: keywords,
+        provenance,
         commits: commits.items || [],
         tags: mappedTags || [],
         versions: fgsWithSameName.map(({ id, version }) => ({ id, version })),

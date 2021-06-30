@@ -161,7 +161,6 @@ const ItemDrawer = <T extends DataEntity>({
       if ((item as unknown as FeatureGroup).timeTravelFormat !== 'HUDI') {
         dispatch.featureGroupCommitsDetail.fetchTD({
           projectId: featureStoreData.projectId,
-          featureStoreId: featureStoreData.featurestoreId,
           featureGroup: item as unknown as FeatureGroup,
         });
       }

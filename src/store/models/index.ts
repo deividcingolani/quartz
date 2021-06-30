@@ -46,6 +46,7 @@ import featureStoreSettings from './settings/featureStoreSettings.model';
 import fileExplorerDataset from './file-explorer/fileExplorerDataset.model';
 import uploadFileData from './file-explorer/uploadFileData.model';
 import crossProject from './projects/crossProject.model';
+import provenance from './provenance/provenance.model';
 import { trainingDatasetModel } from './training-dataset/training-dataset.model';
 import databricks from './databricks/databricks.model';
 import expectations from './expectations/expectations.model';
@@ -99,6 +100,7 @@ export interface RootModel extends Models<RootModel> {
   fileExplorerDataset: typeof fileExplorerDataset;
   uploadFileData: typeof uploadFileData;
   crossProject: typeof crossProject;
+  provenance: typeof provenance;
 }
 
 const models: RootModel = {
@@ -150,6 +152,7 @@ const models: RootModel = {
   fileExplorerDataset,
   uploadFileData,
   crossProject,
+  provenance,
 };
 
 export default models;

@@ -1,10 +1,9 @@
 import { createModel } from '@rematch/core';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
 import { TrainingDataset } from '../../../types/training-dataset';
-import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
 import { SchemaType } from '../feature/featureGroupView.model';
 import { TrainingDatasetLabelService } from '../../../services/project';
-import { getValidPromisesValues } from '../search/deep-search.model';
+import { ProvenanceState } from '../../../components/provenance/types';
 
 export type TrainingDatasetViewState = TrainingDataset | null;
 
@@ -39,7 +38,7 @@ const trainingDatasetView = createModel()({
 
       dispatch.trainingDatasetView.setData({
         ...data,
-        provenance: [],
+        provenance: {} as ProvenanceState,
         versions: [{ id: data.id, version: data.version }],
         tags: [],
         labels: [],
@@ -63,41 +62,16 @@ const trainingDatasetView = createModel()({
       featureStoreId: number;
       trainingDatasetId: number;
     }): Promise<void> => {
-      const { data: provenance } = await TrainingDatasetService.getProvenance(
+      const provenance = await dispatch.provenance.fetch({
         projectId,
         featureStoreId,
         data,
-      );
-
-      const entries =
-        provenance.items && provenance.items[0] && provenance.items[0].in.entry;
-
-      let tdProvenances = [];
-
-      if (entries) {
-        dispatch.project.getProject(projectId);
-
-        const tdProvenancesPromises = await Promise.allSettled(
-          entries.map(async (entry) => {
-            const { key } = entry;
-            const [fg] = await FeatureGroupsService.getOneByName(
-              projectId,
-              featureStoreId,
-              key.slice(0, key.lastIndexOf('_')),
-            );
-            return {
-              fg,
-              info: entry,
-            };
-          }),
-        );
-        tdProvenances = getValidPromisesValues(tdProvenancesPromises);
-      }
+      });
 
       const tdsWithSameName = await TrainingDatasetService.getOneByName(
         projectId,
-        featureStoreId,
         data.name,
+        featureStoreId,
       );
 
       const { data: tags } = await TrainingDatasetService.getTags(
@@ -135,7 +109,7 @@ const trainingDatasetView = createModel()({
 
       dispatch.trainingDatasetView.setData({
         ...data,
-        provenance: tdProvenances,
+        provenance,
         versions: tdsWithSameName.map(({ id, version }) => ({ id, version })),
         tags: mappedTags || [],
         labels: keywords,
