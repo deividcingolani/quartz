@@ -83,12 +83,14 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
 
   const tdsCount = useMemo(() => {
     if (isLoading) return 0;
-    const ups = data.provenance.upstream.nodes.filter(
-      (n) => n.type === NodeTypes.trainingDataset,
-    ).length;
-    const downs = data.provenance.downstream.nodes.filter(
-      (n) => n.type === NodeTypes.trainingDataset,
-    ).length;
+    const ups =
+      data?.provenance?.upstream?.nodes?.filter(
+        (n) => n.type === NodeTypes.trainingDataset,
+      ).length || 0;
+    const downs =
+      data?.provenance?.downstream?.nodes?.filter(
+        (n) => n.type === NodeTypes.trainingDataset,
+      ).length || 0;
     return ups + downs;
   }, [data.provenance, isLoading]);
 
