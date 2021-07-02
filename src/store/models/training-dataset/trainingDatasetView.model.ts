@@ -25,10 +25,12 @@ const trainingDatasetView = createModel()({
       projectId,
       featureStoreId,
       trainingDatasetId,
+      needProvenance = true,
     }: {
       projectId: number;
       featureStoreId: number;
       trainingDatasetId: number;
+      needProvenance?: boolean;
     }): Promise<void> => {
       const data = await TrainingDatasetService.get(
         projectId,
@@ -49,6 +51,7 @@ const trainingDatasetView = createModel()({
         projectId,
         featureStoreId,
         trainingDatasetId,
+        needProvenance,
       });
     },
     loadRemainingData: async ({
@@ -56,17 +59,22 @@ const trainingDatasetView = createModel()({
       featureStoreId,
       trainingDatasetId,
       data,
+      needProvenance,
     }: {
       data: TrainingDataset;
       projectId: number;
       featureStoreId: number;
       trainingDatasetId: number;
+      needProvenance: boolean;
     }): Promise<void> => {
-      const provenance = await dispatch.provenance.fetch({
-        projectId,
-        featureStoreId,
-        data,
-      });
+      let provenance: ProvenanceState = {} as ProvenanceState;
+      if (needProvenance) {
+        provenance = await dispatch.provenance.fetch({
+          projectId,
+          featureStoreId,
+          data,
+        });
+      }
 
       const tdsWithSameName = await TrainingDatasetService.getOneByName(
         projectId,

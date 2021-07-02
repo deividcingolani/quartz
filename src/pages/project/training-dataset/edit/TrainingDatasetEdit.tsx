@@ -35,6 +35,7 @@ const TrainingDatasetEdit: FC = () => {
         projectId: +projectId,
         featureStoreId: featureStoreData.featurestoreId,
         trainingDatasetId: +tdId,
+        needProvenance: false,
       });
       dispatch.schematisedTags.fetch();
       dispatch.featureGroupLabels.fetch({

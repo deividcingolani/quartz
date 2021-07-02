@@ -43,12 +43,14 @@ const featureGroupView = createModel()({
       featureGroupId,
       needMore = true,
       needExpectation = false,
+      needProvenance = true,
     }: {
       projectId: number;
       featureStoreId: number;
       featureGroupId: number;
       needMore?: boolean;
       needExpectation?: boolean;
+      needProvenance?: boolean;
     }): Promise<void> => {
       const data = await FeatureGroupsService.get(
         projectId,
@@ -65,9 +67,19 @@ const featureGroupView = createModel()({
         );
       }
 
+      let provenance: ProvenanceState = {} as ProvenanceState;
+      if (needProvenance) {
+        /* PROVENANCE */
+        provenance = await dispatch.provenance.fetch({
+          projectId,
+          featureStoreId,
+          data,
+        });
+      }
+
       const mapped = {
         ...data,
-        provenance: {} as ProvenanceState,
+        provenance,
         labels: [],
         tags: [],
         commits: [],
@@ -130,13 +142,6 @@ const featureGroupView = createModel()({
         featureStoreId,
         featureGroupId,
       );
-
-      /* PROVENANCE */
-      const provenance = await dispatch.provenance.fetch({
-        projectId,
-        featureStoreId,
-        data,
-      });
 
       /* TAGS */
       const { data: tags } = await FeatureGroupsService.getTags(
@@ -218,7 +223,6 @@ const featureGroupView = createModel()({
       dispatch.featureGroupView.setData({
         ...data,
         labels: keywords,
-        provenance,
         commits: commits.items || [],
         tags: mappedTags || [],
         versions: fgsWithSameName.map(({ id, version }) => ({ id, version })),

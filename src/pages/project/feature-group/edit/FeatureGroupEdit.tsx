@@ -37,6 +37,7 @@ const FeatureGroupEdit: FC = () => {
         projectId: +projectId,
         featureStoreId: featureStoreData.featurestoreId,
         featureGroupId: +fgId,
+        needProvenance: false,
       });
       dispatch.schematisedTags.fetch();
       dispatch.featureGroupLabels.fetch({
