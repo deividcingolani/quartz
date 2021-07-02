@@ -85,7 +85,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
   const dispatch = useDispatch<Dispatch>();
 
   const membersToSelect = useMemo(() => {
-    return allMembers.data.filter(
+    return allMembers.data?.filter(
       ({ email }) => !data.projectTeam.find(({ user }) => user.email === email),
     );
   }, [data, allMembers]);

@@ -45,6 +45,9 @@ const routeNames = {
     splitGraph: 'split-graph',
     expectations: 'expectations',
     executions: 'executions',
+    code: 'code',
+    databricks: 'databricks',
+    spark: 'spark',
   },
 
   featureGroup: {
@@ -104,11 +107,10 @@ const routeNames = {
 
   settings: {
     view: 'settings/*',
-    integrations: {
-      code: 'p/:id/settings/integrations/code',
-      databricks: 'p/:id/settings/integrations/databricks',
-      spark: 'p/:id/settings/integrations/spark',
-    },
+    general: 'p/:id/settings/general',
+    python: 'p/:id/settings/python',
+    alert: 'p/:id/settings/alert',
+    integrations: 'p/:id/settings/integrations',
     schematisedTags: {
       list: 'settings/schematised-tags',
       create: 'settings/schematised-tags/new',

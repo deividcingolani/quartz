@@ -39,12 +39,13 @@ import {
   JobsEdit,
   JobsCreate,
   JobsExecutions,
-  ProjectCode,
-  ProjectDatabricks,
-  ProjectSpark,
   ExpectationAttach,
   ExpectationEdit,
 } from './lazyComponents';
+import Integrations from './settings/Integrations';
+import GeneralSettings from './settings/GeneralSettings';
+import Python from './settings/Python';
+import Alerts from './settings/Alerts';
 
 const Project: FC = () => {
   const { id } = useParams();
@@ -84,7 +85,11 @@ const Project: FC = () => {
     <Routes>
       <Route path="/view" element={<ProjectView />} />
       <Route path="/edit" element={<ProjectEdit />} />
-      <Route path="/settings" element={<Settings />} />
+      <Route path="/settings" element={<GeneralSettings />} />
+      <Route path="/settings/general" element={<Settings />} />
+      <Route path="/settings/python" element={<Python />} />
+      <Route path="/settings/alerts" element={<Alerts />} />
+      <Route path="/settings/integrations" element={<Integrations />} />
       <Route
         path={routeNames.featureGroup.edit}
         element={<FeatureGroupEdit />}
@@ -249,14 +254,6 @@ const Project: FC = () => {
         path={routeNames.storageConnector.createWithProtocol}
         element={<StorageConnectorsCreate />}
       />
-
-      <Route path="/settings/integrations/code" element={<ProjectCode />} />
-      <Route path="/settings/integrations/spark" element={<ProjectSpark />} />
-      <Route
-        path="/settings/integrations/databricks"
-        element={<ProjectDatabricks />}
-      />
-
       <Route
         path={routeNames.expectation.attach}
         element={<ExpectationAttach />}

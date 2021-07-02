@@ -29,7 +29,7 @@ const useAppNavigation = (): TreeNode[] => {
     (e) => {
       if (
         (e.ctrlKey || e.metaKey) &&
-        ['0', '1', '2', '3', '4'].includes(e.key)
+        ['0', '1', '2', '3', '4', '5'].includes(e.key)
       ) {
         switch (e.key) {
           case '0': {
@@ -50,6 +50,10 @@ const useAppNavigation = (): TreeNode[] => {
           }
           case '4': {
             navigate('/jobs', 'p/:id/*');
+            break;
+          }
+          case '5': {
+            navigate('/settings/general', 'p/:id/*');
             break;
           }
           default:
@@ -396,39 +400,51 @@ const useAppNavigation = (): TreeNode[] => {
         id: 'psettings',
         title: 'Project settings',
         icon: icons.settings,
-        tooltipText: `Project settings`,
+        tooltipText: `Project settings ${
+          osName === OSNames.MAC ? '⌘' : 'Ctrl'
+        } + 5`,
         isActive: isActive('/p/:id/settings'),
         href: getHref('/settings', routeNames.project.view),
         onClick: handleNavigateRelative('/settings', routeNames.project.view),
         children: [
           {
-            id: 'projectDatabricks',
-            title: 'Databricks',
-            isActive: isActive(routeNames.settings.integrations.databricks),
-            href: getHref('/settings/integrations/databricks', '/p/:id/*'),
+            id: 'general',
+            title: 'General',
+            isActive: isActive(routeNames.settings.general),
+            href: getHref('/settings/general', routeNames.project.view),
             onClick: handleNavigateRelative(
-              '/settings/integrations/databricks',
-              '/p/:id/*',
+              '/settings/general',
+              routeNames.project.view,
             ),
           },
           {
-            id: 'projectSpark',
-            title: 'Spark',
-            href: getHref('/settings/integrations/spark', '/p/:id/*'),
-            isActive: isActive(routeNames.settings.integrations.spark),
+            id: 'python',
+            title: 'Python libraries',
+            isActive: isActive(routeNames.settings.python),
+            href: getHref('/settings/python', routeNames.project.view),
             onClick: handleNavigateRelative(
-              '/settings/integrations/spark',
-              '/p/:id/*',
+              '/settings/python',
+              routeNames.project.view,
             ),
           },
           {
-            id: 'projectCode',
-            href: getHref('/settings/integrations/code', '/p/:id/*'),
-            title: 'Connect to Feature Store',
-            isActive: isActive(routeNames.settings.integrations.code),
+            id: 'alerts',
+            title: 'Alerts',
+            isActive: isActive(routeNames.settings.alert),
+            href: getHref('/settings/alerts', routeNames.project.view),
             onClick: handleNavigateRelative(
-              '/settings/integrations/code',
-              '/p/:id/*',
+              '/settings/alerts',
+              routeNames.project.view,
+            ),
+          },
+          {
+            id: 'integrations',
+            title: 'Integrations',
+            isActive: isActive(routeNames.settings.integrations),
+            href: getHref('/settings/integrations', routeNames.project.view),
+            onClick: handleNavigateRelative(
+              '/settings/integrations',
+              routeNames.project.view,
             ),
           },
         ],
@@ -447,13 +463,17 @@ const useAppNavigation = (): TreeNode[] => {
     ];
   }, [
     osName,
-    createFgAnchorLink,
-    createTdAnchorLink,
-    location,
     isActive,
     getHref,
     handleNavigateRelative,
-    disabledTabs,
+    createFgAnchorLink,
+    disabledTabs.dataPreviewDisabled,
+    disabledTabs.fgStatisticsDisabled,
+    disabledTabs.fgCorrelationsDisabled,
+    disabledTabs.tdStatisticsDisabled,
+    disabledTabs.tdCorrelationsDisabled,
+    createTdAnchorLink,
+    location.pathname,
   ]);
 };
 

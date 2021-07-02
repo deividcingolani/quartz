@@ -5,7 +5,6 @@ import { Box } from 'rebass';
 import { Project } from '../../../types/project';
 // Components
 import ProjectMembers from './ProjectMembers';
-import Integrations from './Integrations';
 import DangerZone from './DangerZone';
 
 export interface ContentProps {
@@ -16,7 +15,6 @@ const SettingsContent: FC<ContentProps> = ({ data }) => {
   return (
     <>
       {!!data.projectTeam && <ProjectMembers data={data} />}
-      <Integrations />
       <DangerZone data={data} />
       <Box
         sx={{
