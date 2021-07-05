@@ -18,7 +18,7 @@ import {
 } from '@logicalclocks/quartz';
 
 // Validators
-import { alphanum } from '../../../utils/validators';
+import { alphanum, alphanumUnlimited } from '../../../utils/validators';
 // Utils
 import getInputValidation from '../../../utils/getInputValidation';
 // Types
@@ -32,7 +32,7 @@ import useTitle from '../../../hooks/useTitle';
 import icons from '../../../sources/icons';
 
 export const schema = yup.object().shape({
-  email: alphanum.label('Email'),
+  email: alphanumUnlimited.label('Email'),
   password: alphanum.label('Password'),
 });
 

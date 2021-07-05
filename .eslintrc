@@ -6,6 +6,13 @@
 		"@typescript-eslint/no-unused-vars-experimental": "error",
 		"react/jsx-props-no-spreading": 0,
 		"no-shadow": "off",
-		"react/jsx-boolean-value": "off"
+		"react/jsx-boolean-value": "off",
+		"prettier/prettier": [
+			"error",
+			{
+				"endOfLine": "auto"
+			}
+		]
+
 	}
 }
