@@ -76,7 +76,7 @@ const jobsListStyles = (selectedRow: number, isOpen?: boolean) => ({
   },
   'tr:first-of-type>td:nth-last-of-type(5)': {
     position: 'relative',
-    paddingLeft: '20px',
+    paddingLeft: '10px',
     ':before': {
       display: 'none',
     },
@@ -93,9 +93,6 @@ const jobsListStyles = (selectedRow: number, isOpen?: boolean) => ({
       left: 0,
       transform: 'translateY(-50%)',
     },
-  },
-  'tr>td:nth-of-type(4)': {
-    paddingRight: '20px',
   },
   'tr>td:nth-of-type(2), tr>td:nth-of-type(1)': {
     cursor: 'pointer',

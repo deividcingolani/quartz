@@ -191,7 +191,7 @@ const useAppNavigation = (): TreeNode[] => {
         href: getHref('/view', routeNames.project.view),
         onClick: handleNavigateRelative('/view', routeNames.project.view),
       },
-      { id: 'Features Store', title: 'Features Store' },
+      { id: 'Feature Store', title: 'Feature Store' },
       {
         id: 'fg',
         title: 'Feature Groups',

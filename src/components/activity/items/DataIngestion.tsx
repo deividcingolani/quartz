@@ -1,7 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import { Labeling, Value } from '@logicalclocks/quartz';
+import { format } from 'date-fns';
 import ActivityCircle from '../ActivityCircle';
 import { ActivityItemData } from '../../../types/feature-group';
 import { getRowsCount } from '../utils';
@@ -11,6 +12,8 @@ export interface DataIngestionProps {
   activity: ActivityItemData;
 }
 
+const dateFormat = 'yyyy-MM-dd HH:mm:ss';
+
 const DataIngestion: FC<DataIngestionProps> = ({ activity }) => {
   const { commit } = activity;
   const {
@@ -19,6 +22,10 @@ const DataIngestion: FC<DataIngestionProps> = ({ activity }) => {
     rowsDeleted = 0,
     commitID,
   } = commit;
+
+  const commitLabel = useMemo(() => {
+    return format(+commitID, dateFormat);
+  }, [commitID]);
 
   const allRowsCount = rowsDeleted + rowsUpdated + rowsInserted;
 
@@ -45,7 +52,7 @@ const DataIngestion: FC<DataIngestionProps> = ({ activity }) => {
         </Flex>
 
         <Labeling ml="20px">commit</Labeling>
-        <Value ml="5px">{commitID}</Value>
+        <Value ml="5px">{commitLabel}</Value>
         <Value ml="20px">{getRowsCount(rowsInserted)}</Value>
         <Labeling ml="5px">new rows,</Labeling>
         <Value ml="5px">{getRowsCount(rowsUpdated)}</Value>

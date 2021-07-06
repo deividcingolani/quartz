@@ -30,7 +30,10 @@ const CommitLegend: FC<CommitLegendProps> = ({
         <Flex key={`legend-${key}`} mr="12px">
           <Box mr="5px" mt="3px" sx={circleStyles(colors[idx])} />
           <Label>{values ? values[key] : ''}</Label>
-          <Labeling ml="5px">{key}</Labeling>
+          <Labeling ml="5px">
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {values ? (values[key] !== 1 ? key : key.slice(0, -1)) : key}
+          </Labeling>
         </Flex>
       ))}
     </Flex>

@@ -88,7 +88,7 @@ const OverviewContent: FC<ContentProps> = ({
           name="description"
           width="100%"
           ref={register}
-          placeholder="Enter project name to delete it"
+          placeholder="Enter description to edit it"
           {...getInputValidation('description', errors)}
         />
         <Box mb="20px" />

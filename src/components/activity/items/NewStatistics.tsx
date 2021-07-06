@@ -1,7 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import { Tooltip, Labeling, User, Value } from '@logicalclocks/quartz';
+import { format } from 'date-fns';
 import ProfileService from '../../../services/ProfileService';
 import { ActivityItemData } from '../../../types/feature-group';
 import icons from '../../../sources/icons';
@@ -11,7 +12,13 @@ export interface NewStatisticsProps {
   onButtonClick?: (commitTime?: number) => void;
 }
 
+const dateFormat = 'yyyy-MM-dd HH:mm:ss';
+
 const NewStatistics: FC<NewStatisticsProps> = ({ activity, onButtonClick }) => {
+  const commitLabel = useMemo(() => {
+    return format(+activity.statistics.commitTime, dateFormat);
+  }, [activity]);
+
   return (
     <Flex
       bg="white"
@@ -30,7 +37,7 @@ const NewStatistics: FC<NewStatisticsProps> = ({ activity, onButtonClick }) => {
           New statistics
         </Labeling>
         <Labeling ml="150px">commit</Labeling>
-        <Value ml="5px">{activity.statistics.commitTime}</Value>
+        <Value ml="5px">{commitLabel}</Value>
       </Flex>
 
       <Flex>
