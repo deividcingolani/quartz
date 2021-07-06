@@ -39,8 +39,7 @@ const getRootProvenance = async (projectId: number, data: Dataset) => {
 
   const items = rootProvenance?.items;
 
-  if (!items) return null;
-
+  if (!items || items.length === 0) return null;
   const rootEl = items[0].in.entry[0].value;
 
   const root = {

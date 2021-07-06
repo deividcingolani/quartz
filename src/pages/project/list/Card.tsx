@@ -78,11 +78,6 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               </Value>
             </Flex>
             <Flex>
-              {isDemo && (
-                <Button mr="20px" intent="ghost" onClick={handleToggle}>
-                  Delete Demo
-                </Button>
-              )}
               <Button onClick={handleNavigate(routeNames.project.viewHome)}>
                 Open project
               </Button>

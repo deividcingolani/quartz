@@ -30,6 +30,7 @@ import Terms from './Terms';
 import LoginHelp from './LoginHelp';
 import styles from './styles';
 import icons from '../../../sources/icons';
+import RegisterSuccess from './RegisterSuccess';
 
 export const schema = yup.object().shape({
   email: yup.string().email().required().label('Email'),
@@ -60,6 +61,8 @@ const Register: FC = () => {
 
   const [isShowPassword, setIsShow] = useState(false);
 
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.auth.register,
   );
@@ -84,17 +87,20 @@ const Register: FC = () => {
         return;
       }
 
-      if (error) {
+      if (error?.error) {
         setError(error);
       } else {
-        navigate('/login');
+        setIsSuccess(true);
       }
     },
-    [dispatch, navigate, isAgree],
+    [dispatch, isAgree],
   );
 
   const { password } = watch(['password']);
 
+  if (isSuccess) {
+    return <RegisterSuccess onClick={() => navigate('/login')} />;
+  }
   return (
     <>
       {isOpenTerms && <Terms onClose={() => setIsOpenTerms(false)} />}

@@ -22,11 +22,12 @@ const FeatureGroupJoinForm: FC<{
 
   const initialJoins = (): FeatureGroupJoin[] => {
     const itemTD = localStorage.getItem('TdInfo');
-
-    if (itemTD) {
-      return JSON.parse(itemTD).joins || [];
+    if (!itemTD) {
+      return [];
     }
-
+    const td = JSON.parse(itemTD);
+    delete td.joins;
+    localStorage.setItem('TdInfo', JSON.stringify(td));
     return [];
   };
 

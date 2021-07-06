@@ -403,6 +403,7 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                       <Value
                         sx={{
                           mt: '4px',
+                          wordBreak: 'break-all',
                         }}
                       >
                         {execution.args || '-'}
