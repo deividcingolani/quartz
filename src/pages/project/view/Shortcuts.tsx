@@ -94,6 +94,8 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
     [navigate],
   );
 
+  const pinnedIds = useMemo(() => pinned.map((x) => x.id), [pinned]);
+
   return (
     <Flex flexDirection="row" mx="20px" mt="40px">
       {/* LEFT SIDE */}
@@ -133,7 +135,7 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
             handlePin={handlePin}
             handleUnPin={handleUnPin}
             handleClick={handleNavigate}
-            pinned={pinned.includes(item)}
+            pinned={pinnedIds.includes(item.id)}
           />
         ))}
         {recentlyOpened.length === 0 && (
