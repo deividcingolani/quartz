@@ -9,9 +9,11 @@ import {
   Labeling,
   RadioGroup,
   Select,
+  Tooltip,
+  TooltipPositions,
 } from '@logicalclocks/quartz';
 import { Controller, useFieldArray } from 'react-hook-form';
-import { Flex } from 'rebass';
+import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'emotion-theming';
 // eslint-disable-next-line import/no-unresolved
@@ -27,6 +29,8 @@ import { shortText, numInt } from '../../../../utils/validators';
 // Types
 import { StorageConnectorFormProps } from './types';
 import { RoleMapping } from '../../../../types/role-mapping';
+import icons from '../../../../sources/icons';
+import { passwordStyles } from './styles';
 
 export const schema = yup.object().shape({
   clusterIdentifier: shortText.required().label('Cluster identifier'),
@@ -63,8 +67,14 @@ const RedshiftForm: FC<StorageConnectorFormProps> = ({
   setValue,
   errors,
 }) => {
-  const { authMethod, autoCreate } = watch(['authMethod', 'autoCreate']);
+  const { authMethod, autoCreate, databasePassword } = watch([
+    'authMethod',
+    'autoCreate',
+    'databasePassword',
+  ]);
   const [key, setKey] = useState('');
+  const [isShowPassword, setIsShow] = useState(false);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'arguments',
@@ -275,11 +285,27 @@ const RedshiftForm: FC<StorageConnectorFormProps> = ({
       {/* Authentication method parameters */}
       {authMethod === 'Password' ? (
         <Input
+          type={isShowPassword ? 'text' : 'password'}
           label="Database Password"
           name="databasePassword"
           disabled={isDisabled}
           placeholder="·····"
           ref={register}
+          rightIcon={
+            <Box
+              onMouseDown={() => setIsShow(true)}
+              onMouseUp={() => setIsShow(false)}
+              onMouseOut={() => setIsShow(false)}
+              sx={passwordStyles(isShowPassword, !databasePassword)}
+            >
+              <Tooltip
+                mainText="show password"
+                position={TooltipPositions.right}
+              >
+                <Box>{icons.eye}</Box>
+              </Tooltip>
+            </Box>
+          }
           {...getInputValidation('databasePassword', errors)}
         />
       ) : (

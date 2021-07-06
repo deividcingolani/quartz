@@ -10,6 +10,8 @@ import {
   Labeling,
   RadioGroup,
   Value,
+  Tooltip,
+  TooltipPositions,
 } from '@logicalclocks/quartz';
 import * as yup from 'yup';
 import { Controller, useFieldArray } from 'react-hook-form';
@@ -17,6 +19,8 @@ import { Box, Flex } from 'rebass';
 import { shortText } from '../../../../utils/validators';
 import { StorageConnectorFormProps } from './types';
 import getInputValidation from '../../../../utils/getInputValidation';
+import icons from '../../../../sources/icons';
+import { passwordStyles } from './styles';
 // Reuse the JDBC styles
 import { tooltipProps, argumentRowStyles } from './jdbc-form.styles';
 
@@ -43,10 +47,15 @@ const SnowflakeForm: FC<StorageConnectorFormProps> = ({
   errors,
   setValue: setFormValue,
 }) => {
-  const { authMethod, token } = watch(['authMethod', 'token']);
+  const { authMethod, token, password } = watch([
+    'authMethod',
+    'token',
+    'password',
+  ]);
 
   const [name, setName] = useState('');
   const [value, setValue] = useState('');
+  const [isShowPassword, setIsShow] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -114,10 +123,26 @@ const SnowflakeForm: FC<StorageConnectorFormProps> = ({
           label="Password"
           name="password"
           key="password"
+          type={isShowPassword ? 'text' : 'password'}
           disabled={isDisabled}
           placeholder="password"
           ref={register}
           labelProps={{ width: '100%' }}
+          rightIcon={
+            <Box
+              onMouseDown={() => setIsShow(true)}
+              onMouseUp={() => setIsShow(false)}
+              onMouseOut={() => setIsShow(false)}
+              sx={passwordStyles(isShowPassword, !password)}
+            >
+              <Tooltip
+                mainText="show password"
+                position={TooltipPositions.left}
+              >
+                <Box>{icons.eye}</Box>
+              </Tooltip>
+            </Box>
+          }
           {...getInputValidation('password', errors)}
         />
       )}
