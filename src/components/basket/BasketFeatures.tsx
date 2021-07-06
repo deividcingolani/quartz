@@ -34,6 +34,7 @@ const BasketFeatures: FC<BasketFeaturesProps> = ({
 
   return (
     <Collapse
+      isOpenProps
       sx={stickyStyles}
       title={<Labeling ml="8px">{name}</Labeling>}
       secondaryContent={
