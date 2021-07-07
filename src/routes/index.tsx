@@ -92,7 +92,7 @@ const Routes: FC = () => {
 
     dispatch.basket.getFromLocalStorage();
     window.addEventListener('storage', (ev: StorageEvent) => {
-      if (ev.key) {
+      if (ev.key === 'basket_data') {
         dispatch.basket.onUpdateStorage();
       }
     });
