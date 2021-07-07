@@ -79,8 +79,7 @@ const Routes: FC = () => {
     ) {
       localStorage.setItem(pageToViewPathStorageName, location.pathname);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+  }, [location.pathname]);
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -92,7 +91,11 @@ const Routes: FC = () => {
     }
 
     dispatch.basket.getFromLocalStorage();
-    window.addEventListener('storage', dispatch.basket.onUpdateStorage);
+    window.addEventListener('storage', (ev: StorageEvent) => {
+      if (ev.key) {
+        dispatch.basket.onUpdateStorage();
+      }
+    });
 
     return () => {
       window.removeEventListener('storage', dispatch.basket.onUpdateStorage);
