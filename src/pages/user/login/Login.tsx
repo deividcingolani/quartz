@@ -64,7 +64,7 @@ const Login: FC = () => {
     async (data) => {
       setError(null);
 
-      const error = await dispatch.auth.login({
+      const error: AuthError = await dispatch.auth.login({
         data,
       });
 
@@ -72,7 +72,7 @@ const Login: FC = () => {
         return;
       }
 
-      if (error) {
+      if (error?.error) {
         setError(error);
       } else {
         dispatch.profile.getUser();
