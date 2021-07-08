@@ -96,7 +96,12 @@ const TrainingDatasetList: FC = () => {
     isLoading || !labels?.length || isKeywordsAndLastUpdateLoading;
 
   function handleRefresh(): void {
-    dispatch.trainingDatasets.set([]);
+    if (featureStoreData?.featurestoreId) {
+      dispatch.trainingDatasets.fetch({
+        projectId: +projectId,
+        featureStoreId: featureStoreData?.featurestoreId,
+      });
+    }
   }
 
   const navigate = useNavigateRelative();

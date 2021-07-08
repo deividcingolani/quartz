@@ -35,7 +35,7 @@ const TrainingDatasetOverview: FC = () => {
 
   useEffect(() => {
     return () => {
-      dispatch.featureGroupView.clear();
+      dispatch.trainingDatasetView.clear();
     };
   }, [dispatch]);
 
