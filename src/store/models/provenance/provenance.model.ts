@@ -5,7 +5,10 @@ import {
   ProvenanceNode,
   ProvenanceState,
 } from '../../../components/provenance/types';
-import { typesMap } from '../../../components/provenance/utils/utils';
+import {
+  rootTypesMap,
+  typesMap,
+} from '../../../components/provenance/utils/utils';
 import ExperimentsService from '../../../services/project/ExperimentsService';
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
 import ModelsService from '../../../services/project/ModelsService';
@@ -29,23 +32,11 @@ const inverseDirection = {
 
 export type Dataset = FeatureGroup | TrainingDataset;
 
-const getRootProvenance = async (projectId: number, data: Dataset) => {
-  const rootProvenance = await ProvenanceService.getProvenance({
-    projectId,
-    datasetName: data.name,
-    direction: Direction.in,
-    datasetVersion: data.version,
-  });
-
-  const items = rootProvenance?.items;
-
-  if (!items || items.length === 0) return null;
-  const rootEl = items[0].in.entry[0].value;
-
+const getRootProvenance = (data: Dataset) => {
   const root = {
     id: data.id,
     name: data.name,
-    type: typesMap[rootEl.docSubType],
+    type: rootTypesMap[data.type],
     data: {
       name: data.name,
       features: data.features.length,
@@ -166,8 +157,8 @@ const provenance = createModel()({
         return result;
       };
 
-      const root = await getRootProvenance(projectId, data);
-      if (!root) return {} as ProvenanceState;
+      if (!data) return {} as ProvenanceState;
+      const root = getRootProvenance(data);
       const upstream = await getProvenance(data, Direction.in);
       const downstream = await getProvenance(data, Direction.out);
       const count = upstream.nodes.length + downstream.nodes.length;

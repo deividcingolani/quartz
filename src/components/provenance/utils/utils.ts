@@ -1,5 +1,10 @@
 import { Colors, NodeTypes } from '../types';
 
+export const rootTypesMap = {
+  cachedFeaturegroupDTO: NodeTypes.featureGroup,
+  trainingDatasetDTO: NodeTypes.trainingDataset,
+} as any;
+
 export const typesMap = {
   FEATURE: NodeTypes.featureGroup,
   TRAINING_DATASET: NodeTypes.trainingDataset,
