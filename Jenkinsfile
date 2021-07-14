@@ -12,7 +12,7 @@ pipeline {
 
            steps {
               sh """
-                VERSION=`cat version.txt`
+                VERSION=`cat package.json | jq -r '.version'`
                 QUARTZ_BRANCH=\$VERSION
                 if [[ \$VERSION =~ .*-SNAPSHOT ]]
                 then
