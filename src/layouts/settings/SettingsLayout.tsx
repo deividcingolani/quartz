@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Flex } from 'rebass';
 
 // Components
+import { useSelector } from 'react-redux';
 import AppHeader from '../app/header/AppHeader';
 import Suspense from '../../components/suspense/Suspense';
 import GlobalErrors from '../../components/error/GlobalErrors';
@@ -9,6 +10,9 @@ import ErrorBoundary from '../../components/error-boundary/ErrorBoundary';
 import AppAlternativeHeader from './alternative-header/AppAlternativeHeader';
 // Styles
 import styles from './settings-styles';
+import { RootState } from '../../store';
+import isAdmin from '../../utils/userRole';
+import Error from '../../components/error/Error';
 
 export interface SettingsLayoutProps {
   children: React.ReactElement;
@@ -17,6 +21,10 @@ export interface SettingsLayoutProps {
 const SettingsLayout: FC<SettingsLayoutProps> = ({
   children,
 }: SettingsLayoutProps) => {
+  const decodedToken = useSelector(
+    (state: RootState) => state.auth.decodedToken,
+  );
+
   return (
     <Flex width="100%" height="100%" overflow="auto" flexDirection="column">
       <AppHeader showList={false} hasBackButton={true} />
@@ -43,7 +51,14 @@ const SettingsLayout: FC<SettingsLayoutProps> = ({
           >
             <ErrorBoundary>
               <Suspense>
-                <GlobalErrors>{children}</GlobalErrors>
+                {isAdmin(decodedToken) ? (
+                  <GlobalErrors>{children}</GlobalErrors>
+                ) : (
+                  <Error
+                    errorTitle="403"
+                    errorMessage="You need an Administrator role to access this page."
+                  />
+                )}
               </Suspense>
             </ErrorBoundary>
           </Flex>

@@ -1,34 +1,23 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, useCallback, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {
-  Header,
-  Label,
-  User,
-  Value,
-  Labeling,
-  useDropdown,
-  useOnClickOutside,
-  List,
-  ListItem,
-} from '@logicalclocks/quartz';
+import { Header, Label, User, Value, Labeling } from '@logicalclocks/quartz';
 
 // Components
-import { Box, Flex } from 'rebass';
+import { Box } from 'rebass';
 import BasketMenu from './Basket';
 import ProjectsDropdown from './ProjectsDropdown';
 import HelpDropdown from './HelpDropdown';
 import UserDropdown from './UserDropdown';
 // Types
-import { Dispatch, RootState } from '../../../store';
+import { RootState } from '../../../store';
 // Services
 import ProfileService from '../../../services/ProfileService';
 // Selectors
 import selectProjectId from '../../../store/models/localManagement/store.selectors';
 import Search from '../../../components/search/Search';
-import TokenService from '../../../services/TokenService';
-import pageToViewPathStorageName from '../../../routes/storageName';
+import icons from '../../../sources/icons';
 
 export interface AppHeaderProps {
   showList?: boolean;
@@ -59,54 +48,21 @@ const AppHeader: FC<AppHeaderProps> = ({
     }
   }, [lastProjectId, navigate]);
 
-  const dispatch = useDispatch<Dispatch>();
-
-  const handleLogOut = useCallback(() => {
-    TokenService.delete();
-    dispatch.auth.clear();
-    dispatch.projectsList.clear();
-    dispatch.profile.clear();
-    dispatch.store.clear();
-    localStorage.removeItem(pageToViewPathStorageName);
-  }, [dispatch]);
-
-  const buttonRef = useRef(null);
-
-  const [isOpen, handleToggle, handleClickOutside] = useDropdown();
-  useOnClickOutside(buttonRef, handleClickOutside);
-
   return (
     <Header
       logoAction={() => navigate('/')}
-      menuAction={<UserDropdown />}
+      menuAction={
+        <UserDropdown>
+          <Box p="5px">{icons.more}</Box>
+        </UserDropdown>
+      }
       user={
         <>
           {firstname && email && lastname ? (
-            <Flex
-              onClick={() => handleToggle()}
-              ref={buttonRef}
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                cursor: 'pointer',
-              }}
-            >
+            <UserDropdown>
               <User name={firstname} photo={ProfileService.avatar(email)} />
               <Label ml="10px" pointer>{`${firstname} ${lastname}`}</Label>
-              {isOpen && (
-                <Box sx={{ position: 'absolute', right: '10px', top: '60px' }}>
-                  <List>
-                    <ListItem onClick={() => navigate('/account')}>
-                      Account settings
-                    </ListItem>
-                    <ListItem onClick={() => navigate('/settings')}>
-                      Cluster settings
-                    </ListItem>
-                    <ListItem onClick={handleLogOut}>Log out</ListItem>
-                  </List>
-                </Box>
-              )}
-            </Flex>
+            </UserDropdown>
           ) : (
             <Labeling gray>loading...</Labeling>
           )}

@@ -112,7 +112,7 @@ const OverviewContent: FC<ContentProps> = ({
             p="10px"
             sx={{ border: '1px solid', borderColor: 'grayShade2' }}
           >
-            <Value>On this project, your access role is</Value>
+            <Value>Your role for this project is</Value>
             &nbsp;
             <Value color="labels.green">{userRole}</Value>
           </Flex>

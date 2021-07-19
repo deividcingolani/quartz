@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, memo, ReactNode } from 'react';
+import React, { FC, memo, ReactNode, useCallback } from 'react';
 import { Button } from '@logicalclocks/quartz';
 
 // Hooks
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import selectProjectId from '../../store/models/localManagement/store.selectors';
 
 import { RootState } from '../../store';
+import pageToViewPathStorageName from '../../routes/storageName';
 
 export interface ErrorProjectsContentProps {
   actions: ReactNode;
@@ -23,6 +24,11 @@ const ErrorProjectsContent: FC<ErrorProjectsContentProps> = ({ actions }) => {
 
   const name = projects.find(({ id }) => lastProjectId === id)?.name;
 
+  const goToProjects = useCallback(() => {
+    localStorage.removeItem(pageToViewPathStorageName);
+    navigate('/');
+  }, [navigate]);
+
   if (name) {
     return (
       <>
@@ -36,7 +42,7 @@ const ErrorProjectsContent: FC<ErrorProjectsContentProps> = ({ actions }) => {
 
   return (
     <>
-      <Button intent="ghost" onClick={() => navigate('/')}>
+      <Button intent="ghost" onClick={goToProjects}>
         See all projects
       </Button>
       {actions}

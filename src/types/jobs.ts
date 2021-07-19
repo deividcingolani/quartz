@@ -10,8 +10,8 @@ export enum JobsType {
 }
 
 export interface ProjectJobs {
-  jobs: Jobs[], 
-  projectId: number
+  jobs: Jobs[];
+  projectId: number;
 }
 
 export interface Jobs extends DataEntity {

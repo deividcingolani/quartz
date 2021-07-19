@@ -25,6 +25,7 @@ const useTokenApiInterceptor = () => {
           TokenService.set(token);
           dispatch.auth.setState({
             token,
+            decodedToken: TokenService.getDecodedToken(),
           });
         }
         return response;

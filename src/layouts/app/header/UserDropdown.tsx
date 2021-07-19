@@ -8,16 +8,16 @@ import {
 } from '@logicalclocks/quartz';
 import { useNavigate } from 'react-router-dom';
 import { Box, Flex } from 'rebass';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Services
 import TokenService from '../../../services/TokenService';
 // Types
-import { Dispatch } from '../../../store';
-import icons from '../../../sources/icons';
+import { Dispatch, RootState } from '../../../store';
 import pageToViewPathStorageName from '../../../routes/storageName';
+import isAdmin from '../../../utils/userRole';
 
-const UserDropdown: FC = () => {
+const UserDropdown: FC = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
@@ -34,25 +34,32 @@ const UserDropdown: FC = () => {
 
   const [isOpen, handleToggle, handleClickOutside] = useDropdown();
   useOnClickOutside(buttonRef, handleClickOutside);
+  const decodedToken = useSelector(
+    (state: RootState) => state.auth.decodedToken,
+  );
 
   return (
     <Flex
       sx={{ cursor: 'pointer' }}
       ref={buttonRef}
+      alignItems="center"
+      justifyContent="center"
       mr="10px"
       ml="10px"
       onClick={() => handleToggle()}
     >
-      <Box p="5px">{icons.more}</Box>
+      {children}
       {isOpen && (
         <Box sx={{ position: 'absolute', right: '10px', top: '60px' }}>
           <List>
             <ListItem onClick={() => navigate('/account')}>
               Account settings
             </ListItem>
-            <ListItem onClick={() => navigate('/settings')}>
-              Cluster settings
-            </ListItem>
+            {isAdmin(decodedToken) && (
+              <ListItem onClick={() => navigate('/settings')}>
+                Cluster settings
+              </ListItem>
+            )}
             <ListItem onClick={handleLogOut}>Log out</ListItem>
           </List>
         </Box>

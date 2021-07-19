@@ -148,7 +148,7 @@ const AddMembers: FC<AddMembersProps> = ({
       secondaryButton={['Back', onClose]}
       mainButton={['Add members', handleAddMembers]}
       disabledMainButton={
-        (!members.length && isSearchEnabled) ||
+        (!members?.length && isSearchEnabled) ||
         !selectedMembers.length ||
         isLoading
       }
