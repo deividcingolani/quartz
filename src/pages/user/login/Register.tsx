@@ -12,7 +12,6 @@ import {
   Value,
   Button,
   Callout,
-  Checkbox,
   Tooltip,
   CalloutTypes,
   TooltipPositions,
@@ -26,7 +25,6 @@ import getInputValidation from '../../../utils/getInputValidation';
 // Types
 import { Dispatch, RootState } from '../../../store';
 // Components
-import Terms from './Terms';
 import LoginHelp from './LoginHelp';
 import styles from './styles';
 import icons from '../../../sources/icons';
@@ -55,10 +53,6 @@ const Register: FC = () => {
 
   const [error, setError] = useState<AuthError | null>(null);
 
-  const [isAgree, setIsAgree] = useState(false);
-
-  const [isOpenTerms, setIsOpenTerms] = useState(false);
-
   const [isShowPassword, setIsShow] = useState(false);
 
   const [isSuccess, setIsSuccess] = useState(false);
@@ -70,14 +64,6 @@ const Register: FC = () => {
   const handleRegister = useCallback(
     async (data) => {
       setError(null);
-      if (!isAgree) {
-        setError({
-          error: true,
-          message: 'You must agree with the terms',
-        });
-
-        return;
-      }
 
       const error = await dispatch.auth.register({
         data,
@@ -93,7 +79,7 @@ const Register: FC = () => {
         setIsSuccess(true);
       }
     },
-    [dispatch, isAgree],
+    [dispatch],
   );
 
   const { password } = watch(['password']);
@@ -103,8 +89,6 @@ const Register: FC = () => {
   }
   return (
     <>
-      {isOpenTerms && <Terms onClose={() => setIsOpenTerms(false)} />}
-
       <Flex mt="50px" flexDirection="column" alignItems="center">
         <Hero />
         <Value mb="60px" mt="15px" fontFamily="Inter" fontSize="18px" primary>
@@ -171,21 +155,6 @@ const Register: FC = () => {
               }
               {...getInputValidation('password', errors)}
             />
-            <Flex alignItems="center" mt="20px">
-              <Checkbox
-                checked={isAgree}
-                onChange={() => setIsAgree(!isAgree)}
-              />
-              <Value ml="5px">I agree with</Value>
-              <Button
-                m="-8px"
-                ml="-12px"
-                intent="inline"
-                onClick={() => setIsOpenTerms(true)}
-              >
-                the terms
-              </Button>
-            </Flex>
             <Button
               type="submit"
               mt="20px"
