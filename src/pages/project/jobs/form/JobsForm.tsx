@@ -601,7 +601,7 @@ const JobsForm: FC<JobsFormProps> = ({
       </Card>
       <CardSecondary
         mt="20px"
-        mb="20px"
+        mb={isEdit && onDelete ? '20px' : '100px'}
         title="Advanced configuration"
         sx={{ width: '100%' }}
       >
