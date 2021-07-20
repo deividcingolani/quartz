@@ -21,7 +21,7 @@ const JobsStickySummary: FC<JobsStickySummaryProps> = ({
   const { watch } = useFormContext();
 
   const navigate = useNavigate();
-  const { name } = watch(['name']);
+  const { appName } = watch(['appName']);
   const hasScrollOnScreen = useScreenWithScroll();
 
   return (
@@ -47,7 +47,7 @@ const JobsStickySummary: FC<JobsStickySummaryProps> = ({
           Back
         </Button>
       }
-      title={name}
+      title={appName}
       errorsValue={errorsValue}
       hasScrollOnScreen={hasScrollOnScreen}
     />

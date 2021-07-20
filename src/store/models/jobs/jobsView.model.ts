@@ -22,6 +22,15 @@ const jobsView = createModel()({
       const data = await JobsService.getOneByName(projectId, jobsName);
       dispatch.jobsView.setData(data);
     },
+    delete: async ({
+      projectId,
+      jobName,
+    }: {
+      projectId: number;
+      jobName: string;
+    }): Promise<void> => {
+      await JobsService.delete(projectId, jobName);
+    },
   }),
 });
 

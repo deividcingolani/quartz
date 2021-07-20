@@ -1,16 +1,27 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect } from 'react';
-import { Flex } from 'rebass';
+// Components
+import {
+  NotificationsManager,
+  TinyPopup,
+  usePopup,
+} from '@logicalclocks/quartz';
+// Hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import JobsForm from '../form/JobsForm';
-import { RootState } from '../../../../store';
-import { JobsViewState } from '../../../../store/models/jobs/jobsView.model';
-import { DynamicAllocation, JobFormData } from '../types';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import formatted from '../utils/formattedRequest';
 import useTitle from '../../../../hooks/useTitle';
+// Types
+import { RootState } from '../../../../store';
+import { DynamicAllocation, JobFormData } from '../types';
+import { JobsViewState } from '../../../../store/models/jobs/jobsView.model';
+// layouts
+import JobsForm from '../form/JobsForm';
+import formatted from '../utils/formattedRequest';
+// Utils
 import titles from '../../../../sources/titles';
+import NotificationTitle from '../../../../utils/notifications/notificationBadge';
+import NotificationContent from '../../../../utils/notifications/notificationValue';
 
 const JobsEdit: FC = () => {
   const { id: projectId } = useParams();
@@ -19,7 +30,17 @@ const JobsEdit: FC = () => {
 
   const item = useSelector<RootState, JobsViewState>((state) => state.jobsView);
 
+  const isDeleting = useSelector(
+    (state: RootState) => state.loading.effects.jobsView.delete,
+  );
+
+  const isLoadingJobs = useSelector(
+    (state: RootState) => state.loading.effects.jobs.fetch,
+  );
+
   useTitle(`${titles.editJob} ${item?.name}`);
+
+  const [isPopupOpen, handleToggle] = usePopup();
 
   useEffect(() => {
     if (projectId && item) {
@@ -67,6 +88,37 @@ const JobsEdit: FC = () => {
     [projectId],
   );
 
+  const handleDelete = useCallback(async () => {
+    if (item) {
+      await dispatch.jobsView.delete({
+        projectId: +projectId,
+        jobName: item.name,
+      });
+
+      handleToggle();
+      navigate('/jobs', 'p/:id/*');
+
+      await dispatch.jobs.fetch({
+        projectId: +projectId,
+      });
+
+      NotificationsManager.create({
+        isError: false,
+        type: <NotificationTitle message="Job deleted" />,
+        content: (
+          <NotificationContent message={`${item.name} has been deleted`} />
+        ),
+      });
+    }
+  }, [
+    item,
+    dispatch.jobsView,
+    dispatch.jobs,
+    projectId,
+    handleToggle,
+    navigate,
+  ]);
+
   const isFeatureStoreLoading = useSelector(
     (state: RootState) => state.loading.effects.featureStores.fetch,
   );
@@ -77,17 +129,29 @@ const JobsEdit: FC = () => {
   );
 
   return (
-    <Flex flexDirection="column">
+    <>
       {item && (
         <JobsForm
           isLoading={isFeatureStoreLoading}
           isDisabled={isSubmit}
           isEdit
           initialData={item}
+          onDelete={handleToggle}
           submitHandler={handleUpdateSubmit}
         />
       )}
-    </Flex>
+      <TinyPopup
+        width="440px"
+        title={`Delete ${item?.name}`}
+        secondaryText="Once you delete a job, there is no going back. Please be certain."
+        isOpen={isPopupOpen}
+        mainButton={['Delete job', handleDelete]}
+        secondaryButton={['Back', handleToggle]}
+        disabledMainButton={isDeleting || isLoadingJobs}
+        disabledSecondaryButton={isDeleting || isLoadingJobs}
+        onClose={handleToggle}
+      />
+    </>
   );
 };
 

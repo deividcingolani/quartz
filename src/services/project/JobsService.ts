@@ -195,6 +195,12 @@ class JobsService extends BaseApiService {
     });
     return res;
   };
+
+  delete = (projectId: number, jobName: string) =>
+    this.request<any>({
+      type: RequestType.delete,
+      url: `${projectId}/jobs/${jobName}`,
+    });
 }
 
 export default new JobsService('/project');

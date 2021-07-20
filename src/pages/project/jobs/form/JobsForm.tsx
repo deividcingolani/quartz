@@ -43,6 +43,7 @@ const JobsForm: FC<JobsFormProps> = ({
   isEdit = false,
   initialData,
   submitHandler,
+  onDelete,
 }) => {
   const [type, setType] = useState(RuleTypes.SPARK);
   const [activeJobFile, setActiveJobFile] = useState<UploadFiles | null>(null);
@@ -600,7 +601,7 @@ const JobsForm: FC<JobsFormProps> = ({
       </Card>
       <CardSecondary
         mt="20px"
-        mb="100px"
+        mb="20px"
         title="Advanced configuration"
         sx={{ width: '100%' }}
       >
@@ -1216,6 +1217,17 @@ const JobsForm: FC<JobsFormProps> = ({
         </Flex>
       </CardSecondary>
       {isLoading && <Loader />}
+      {isEdit && onDelete && (
+        <CardSecondary title="Danger zone" mb="100px">
+          <Button
+            intent="alert"
+            onClick={onDelete}
+            disabled={isLoading || isDisabled}
+          >
+            Delete job
+          </Button>
+        </CardSecondary>
+      )}
       <JobsStickySummary
         errorsValue={errorsValue}
         isEdit={isEdit}
