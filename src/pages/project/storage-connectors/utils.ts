@@ -118,11 +118,13 @@ export const getDescription = (
 
 export const formatArguments = (
   args?: StorageConnectorsFormDataArgument[],
-): string => args?.map(({ key, value }) => `${key}=${value}`).join() || '';
-
-export const formatGroups = (
-  groups?: StorageConnectorsFormDataArgument[],
-): string => groups?.map(({ key }) => `${key}`).join() || '';
+): string =>
+  args
+    ?.map(({ key, value }) => {
+      if (key && value) return `${key}=${value}`;
+      return key;
+    })
+    .join() || '';
 
 export const formatStringToArguments = (
   args: string,

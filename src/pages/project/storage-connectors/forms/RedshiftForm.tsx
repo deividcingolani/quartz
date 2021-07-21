@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
   Checkbox,
   Divider,
@@ -12,7 +12,7 @@ import {
   Tooltip,
   TooltipPositions,
 } from '@logicalclocks/quartz';
-import { Controller, useFieldArray } from 'react-hook-form';
+import { Controller, Ref, useFieldArray } from 'react-hook-form';
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'emotion-theming';
@@ -59,6 +59,8 @@ export const schema = yup.object().shape({
   }),
 });
 
+type RefElement = React.ReactElement<any, string> & Ref;
+
 const RedshiftForm: FC<StorageConnectorFormProps> = ({
   register,
   watch,
@@ -72,7 +74,6 @@ const RedshiftForm: FC<StorageConnectorFormProps> = ({
     'autoCreate',
     'databasePassword',
   ]);
-  const [key, setKey] = useState('');
   const [isShowPassword, setIsShow] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
@@ -94,6 +95,14 @@ const RedshiftForm: FC<StorageConnectorFormProps> = ({
       dispatch.roleMappings.clear();
     };
   }, [dispatch.roleMappings, featureStoreData, authMethod]);
+
+  useEffect(() => {
+    if (!fields.length) {
+      append({ key: '' });
+    }
+    // run only on component mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [append]);
 
   const iamRoles = useMemo(() => {
     return roles.map((ds: RoleMapping) => ds.cloudRole);
@@ -203,70 +212,50 @@ const RedshiftForm: FC<StorageConnectorFormProps> = ({
           >
             <Flex flexDirection="row" mb="10px" alignItems="flex-end">
               <Input
-                name={`arguments[${index}].key`}
+                key={`${item.id}`}
+                name={`arguments.${index}.key` as const}
                 disabled={isDisabled}
                 placeholder="enter the key"
                 defaultValue={item.key}
-                ref={(ref: any) => register(ref)}
+                ref={(ref: RefElement) => register(ref)}
                 {...getInputValidation('key', argumentsError)}
               />
-              <IconButton
-                type="button"
-                disabled={isDisabled}
-                tooltipProps={{
-                  ml: '15px',
-                }}
-                tooltip="Remove"
-                onClick={() => remove(index)}
-                icon="minus"
-              />
+              {fields.length - 1 === index ? (
+                <IconButton
+                  type="button"
+                  tooltipProps={{
+                    ml: '15px',
+                  }}
+                  tooltip="Add"
+                  disabled={isDisabled}
+                  onClick={() => append({ key: '' })}
+                  icon="plus"
+                />
+              ) : (
+                <IconButton
+                  type="button"
+                  disabled={isDisabled}
+                  tooltipProps={{
+                    ml: '15px',
+                  }}
+                  tooltip="Remove"
+                  onClick={() => remove(index)}
+                  icon="minus"
+                />
+              )}
             </Flex>
           </Label>
         );
       })}
-      <Label
-        mt="0 !important"
-        text={!fields.length ? 'Database group' : undefined}
-        action={
-          !fields.length && (
-            <Labeling gray ml="5px">
-              (optional)
-            </Labeling>
-          )
-        }
-      >
-        <Flex flexDirection="row" mb="0px" alignItems="flex-end">
-          <Input
-            name="key"
-            value={key}
-            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-              setKey(target.value)
-            }
-            disabled={isDisabled}
-            placeholder="enter the key"
-          />
-          <IconButton
-            type="button"
-            tooltipProps={{
-              ml: '15px',
-            }}
-            tooltip="Add"
-            disabled={isDisabled}
-            onClick={() => {
-              append({ key });
-              setKey('');
-            }}
-            icon="plus"
-          />
-        </Flex>
-      </Label>
       {/* Authentication Method */}
       <Divider legend="Authentication" />
       <Label mb="8px">Authentication method</Label>
       <Controller
         control={control}
         name="authMethod"
-        defaultValue="IAM"
+        defaultValue={
+          databasePassword && databasePassword !== '' ? 'Password' : 'IAM'
+        }
         render={({ onChange, value }) => (
           <RadioGroup
             flexDirection="row"

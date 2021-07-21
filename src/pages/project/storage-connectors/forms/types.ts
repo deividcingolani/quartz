@@ -19,6 +19,11 @@ export interface StorageConnectorsFormDataArgument {
   value: string;
 }
 
+export interface SnowflakeFormDataSfOptions {
+  name: string;
+  value: string;
+}
+
 export interface StorageConnectorsFormData {
   name: string;
   description: string;
@@ -53,6 +58,8 @@ export interface StorageConnectorsFormData {
   serviceCredential: string;
   accountName: string;
   containerName?: string;
+  // Snowflake
+  sfOptions?: SnowflakeFormDataSfOptions[];
 }
 
 export enum Descriptions {

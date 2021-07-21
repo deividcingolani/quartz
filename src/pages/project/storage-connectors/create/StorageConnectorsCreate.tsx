@@ -13,12 +13,7 @@ import { Dispatch, RootState } from '../../../../store';
 import StorageConnectorsForm from '../forms/StorageConnectorsForm';
 import Loader from '../../../../components/loader/Loader';
 // Utils
-import {
-  formatArguments,
-  formatGroups,
-  getDtoType,
-  protocolOptions,
-} from '../utils';
+import { formatArguments, getDtoType, protocolOptions } from '../utils';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
@@ -57,25 +52,30 @@ const StorageConnectorsCreate: FC = () => {
       const {
         protocol: storageConnectorType,
         arguments: args,
+        sfOptions,
         ...restData
       } = data;
-
-      const formattedArgs = formatArguments(args);
 
       if (featureStoreData?.featurestoreId) {
         dispatch.error.clear({
           name: 'featureStoreStorageConnectors',
           action: 'create',
         });
+
         await dispatch.featureStoreStorageConnectors.create({
           projectId: +projectId,
           featureStoreId: featureStoreData?.featurestoreId,
           data: {
-            ...(storageConnectorType === StorageConnectorProtocol.jdbc && {
-              arguments: formattedArgs,
+            // JDBC, REDSHIFT keyvalue (arguments)
+            ...([
+              StorageConnectorProtocol.jdbc,
+              StorageConnectorProtocol.redshift,
+            ].includes(storageConnectorType) && {
+              arguments: formatArguments(args),
             }),
-            ...(storageConnectorType === StorageConnectorProtocol.redshift && {
-              databaseGroup: formatGroups(args),
+            // SNOWFLAKE keyvalue (sfOtions)
+            ...(storageConnectorType === StorageConnectorProtocol.snowflake && {
+              sfOptions,
             }),
             type: getDtoType(storageConnectorType),
             storageConnectorType:

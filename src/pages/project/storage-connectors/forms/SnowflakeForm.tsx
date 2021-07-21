@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   Button,
   Callout,
@@ -14,7 +14,7 @@ import {
   TooltipPositions,
 } from '@logicalclocks/quartz';
 import * as yup from 'yup';
-import { Controller, useFieldArray } from 'react-hook-form';
+import { Controller, Ref, useFieldArray } from 'react-hook-form';
 import { Box, Flex } from 'rebass';
 import { shortText } from '../../../../utils/validators';
 import { StorageConnectorFormProps } from './types';
@@ -37,7 +37,15 @@ export const schema = yup.object().shape({
   }),
   database: shortText.required().label('database'),
   schema: shortText.required().label('schema'),
+  sfOptions: yup.array().of(
+    yup.object().shape({
+      value: shortText.required().label('Value'),
+      name: shortText.required().label('Key'),
+    }),
+  ),
 });
+
+type RefElement = React.ReactElement<any, string> & Ref;
 
 const SnowflakeForm: FC<StorageConnectorFormProps> = ({
   register,
@@ -53,14 +61,20 @@ const SnowflakeForm: FC<StorageConnectorFormProps> = ({
     'password',
   ]);
 
-  const [name, setName] = useState('');
-  const [value, setValue] = useState('');
   const [isShowPassword, setIsShow] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'sfOptions',
   });
+
+  useEffect(() => {
+    if (!fields.length) {
+      append({ name: '', value: '' });
+    }
+    // run only on component mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [append]);
 
   return (
     <>
@@ -264,8 +278,8 @@ const SnowflakeForm: FC<StorageConnectorFormProps> = ({
       </Flex>
 
       {fields.map((item, index) => {
-        const argumentsError = errors?.arguments?.length
-          ? errors?.arguments[index]
+        const sfOptionsError = errors?.sfOptions?.length
+          ? errors?.sfOptions[index]
           : {};
         const isFirstItem = !index;
 
@@ -278,70 +292,47 @@ const SnowflakeForm: FC<StorageConnectorFormProps> = ({
           >
             <Input
               label={isFirstItem ? 'Key' : undefined}
-              name={`arguments[${index}].name`}
+              key={`${item.id}.name`}
+              name={`sfOptions.${index}.name` as const}
               disabled={isDisabled}
               placeholder="key"
               defaultValue={item.name}
-              ref={register}
-              {...getInputValidation('name', argumentsError)}
+              ref={(el: RefElement) => register(el)}
+              {...getInputValidation('name', sfOptionsError)}
             />
             <Input
               label={isFirstItem ? 'Value' : undefined}
-              name={`arguments[${index}].value`}
+              key={`${item.id}.value`}
+              name={`sfOptions.${index}.value` as const}
               placeholder="value"
               disabled={isDisabled}
               defaultValue={item.value}
               labelProps={{ ml: '15px' }}
-              ref={register}
-              {...getInputValidation('value', argumentsError)}
+              ref={(el: RefElement) => register(el)}
+              {...getInputValidation('value', sfOptionsError)}
             />
-            <IconButton
-              type="button"
-              disabled={isDisabled}
-              tooltipProps={tooltipProps}
-              tooltip="Remove"
-              onClick={() => remove(index)}
-              icon="minus"
-            />
+            {fields.length - 1 === index ? (
+              <IconButton
+                type="button"
+                tooltipProps={tooltipProps}
+                tooltip="Add"
+                disabled={isDisabled}
+                onClick={() => append({ name: '', value: '' })}
+                icon="plus"
+              />
+            ) : (
+              <IconButton
+                type="button"
+                disabled={isDisabled}
+                tooltipProps={tooltipProps}
+                tooltip="Remove"
+                onClick={() => remove(index)}
+                icon="minus"
+              />
+            )}
           </Flex>
         );
       })}
-
-      <Flex sx={argumentRowStyles} my="10px" alignItems="flex-end">
-        <Input
-          label={!fields.length ? 'Key' : undefined}
-          name={undefined}
-          value={name}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setName(target.value)
-          }
-          disabled={isDisabled}
-          placeholder="key"
-        />
-        <Input
-          label={!fields.length ? 'Value' : undefined}
-          value={value}
-          name={undefined}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
-            setValue(target.value);
-          }}
-          placeholder="value"
-          disabled={isDisabled}
-          labelProps={{ ml: '15px' }}
-        />
-        <IconButton
-          type="button"
-          tooltipProps={tooltipProps}
-          tooltip="Add"
-          disabled={isDisabled}
-          onClick={() => {
-            append({ name, value });
-            setValue('');
-            setName('');
-          }}
-          icon="plus"
-        />
-      </Flex>
     </>
   );
 };
