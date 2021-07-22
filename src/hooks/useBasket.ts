@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from '../store';
+import { Dispatch, RootState } from '../store';
 import {
   selectFeatureGroups,
   selectSwitch,
@@ -14,6 +14,8 @@ const useBasket = () => {
 
   const isSwitch = useSelector(selectSwitch);
   const featureGroups = useSelector(selectFeatureGroups);
+
+  const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -42,16 +44,18 @@ const useBasket = () => {
           features,
           featureGroup: parent,
           projectId: +projectId,
+          userId,
         });
       } else {
         dispatch.basket.addFeatures({
           features,
           featureGroup: parent,
           projectId: +projectId,
+          userId,
         });
       }
     },
-    [dispatch, isActiveFeatures, projectId],
+    [dispatch, isActiveFeatures, projectId, userId],
   );
 
   return {

@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // Types
 import { useFormContext } from 'react-hook-form';
 import { Dispatch, RootState } from '../../../../../store';
-import { FeatureGroupBasket } from '../../../../../store/models/localManagement/basket.model';
+import { FeatureGroupBasket } from '../../../../../services/localStorage/BasketService';
 import { Feature } from '../../../../../types/feature';
 // Selectors
 import {
@@ -59,6 +59,8 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
   const error = useSelector(
     (state: RootState) => state.error.effects.trainingDatasets.create,
   );
+
+  const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -104,6 +106,7 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
         features: copy[index].features,
         featureGroup: copy[index].fg,
         projectId: +projectId,
+        userId,
       });
       copy.splice(index, 1);
 
@@ -121,6 +124,7 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
         features: copy[index].features,
         featureGroup: copy[index].fg,
         projectId: +projectId,
+        userId,
       });
 
       copy[index].features = copy[index].features.filter(
@@ -131,6 +135,7 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
         features: copy[index].features,
         featureGroup: copy[index].fg,
         projectId: +projectId,
+        userId,
       });
 
       setFeatureGroups(copy);
@@ -141,10 +146,14 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
 
   const handleGoToFG = useCallback(
     () => () => {
-      dispatch.basket.switch(true);
+      dispatch.basket.switch({
+        active: true,
+        projectId: +projectId,
+        userId,
+      });
       navigate(`/p/${projectId}/${routeNames.featureGroup.list}`);
     },
-    [dispatch.basket, navigate, projectId],
+    [dispatch.basket, navigate, projectId, userId],
   );
 
   const handleOpenStatistics = useCallback(

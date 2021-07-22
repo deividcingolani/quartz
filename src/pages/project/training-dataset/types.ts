@@ -1,6 +1,6 @@
 import { IStorageConnector } from '../../../types/storage-connector';
 import { FeatureGroup } from '../../../types/feature-group';
-import { FeatureGroupBasket } from '../../../store/models/localManagement/basket.model';
+import { FeatureGroupBasket } from '../../../services/localStorage/BasketService';
 
 export interface TdSplit {
   name: string;

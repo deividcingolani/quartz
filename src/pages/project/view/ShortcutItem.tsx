@@ -4,15 +4,15 @@ import { Box, Flex } from 'rebass';
 import { Labeling, Tooltip, Value } from '@logicalclocks/quartz';
 import { ItemDrawerTypes } from '../../../components/drawer/ItemDrawer';
 import icons from '../../../sources/icons';
-import { LSDataEntity } from '../../../services/project/ShortcutsService';
+import { ShortcutItem } from '../../../services/localStorage/ShortcutsService';
 
 export interface ShortcutItemProps {
-  item: LSDataEntity;
+  item: ShortcutItem;
   pinnable?: boolean;
   pinned?: boolean;
-  handleClick: (item: LSDataEntity) => void;
-  handlePin?: (item: LSDataEntity) => void;
-  handleUnPin?: (item: LSDataEntity) => void;
+  handleClick: (item: ShortcutItem) => void;
+  handlePin?: (item: ShortcutItem) => void;
+  handleUnPin?: (item: ShortcutItem) => void;
 }
 
 export enum DTO {

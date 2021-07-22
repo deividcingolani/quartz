@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import selectProjectId from '../../store/models/localManagement/store.selectors';
 
 import { RootState } from '../../store';
-import pageToViewPathStorageName from '../../routes/storageName';
+import LastPathService from '../../services/localStorage/LastPathService';
 
 export interface ErrorProjectsContentProps {
   actions: ReactNode;
@@ -22,12 +22,14 @@ const ErrorProjectsContent: FC<ErrorProjectsContentProps> = ({ actions }) => {
 
   const projects = useSelector((state: RootState) => state.projectsList);
 
+  const { id: userId } = useSelector((state: RootState) => state.profile);
+
   const name = projects.find(({ id }) => lastProjectId === id)?.name;
 
   const goToProjects = useCallback(() => {
-    localStorage.removeItem(pageToViewPathStorageName);
+    LastPathService.delete(userId);
     navigate('/');
-  }, [navigate]);
+  }, [navigate, userId]);
 
   if (name) {
     return (

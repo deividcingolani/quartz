@@ -21,9 +21,6 @@ const ProjectView: FC = () => {
   const { project, isLoading } = useProject(+projectId);
 
   const currentUser = useSelector((state: RootState) => state.profile);
-  const loadingCurrentUser = useSelector(
-    (state: RootState) => state.loading.effects.profile.getUser,
-  );
 
   useTitle(project.projectName);
 
@@ -43,7 +40,7 @@ const ProjectView: FC = () => {
     [dispatch.project, projectId, navigate],
   );
 
-  if (isLoading || loadingCurrentUser || !project || !currentUser.id) {
+  if (isLoading || !project) {
     return <Loader />;
   }
 

@@ -12,7 +12,7 @@ import {
   Value,
 } from '@logicalclocks/quartz';
 import icons from '../../../../../sources/icons';
-import { FeatureGroupBasket } from '../../../../../store/models/localManagement/basket.model';
+import { FeatureGroupBasket } from '../../../../../services/localStorage/BasketService';
 import FeatureGroupsService from '../../../../../services/project/FeatureGroupsService';
 
 export interface CollapsedFeaturesFormProps {

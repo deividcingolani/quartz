@@ -1,5 +1,5 @@
 export default {
-  '& > div:first-child': {
+  '& > div:first-of-type': {
     position: 'sticky',
     top: 0,
   },

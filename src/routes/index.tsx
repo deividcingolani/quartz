@@ -9,6 +9,7 @@ import AccountLayout from '../layouts/account/AccountLayout';
 import SettingsLayout from '../layouts/settings/SettingsLayout';
 import ProjectManagementLayout from '../layouts/project-management/ProjectManagementLayout';
 // Components
+import Loader from '../components/loader/Loader';
 import Error404 from '../pages/error/404Error';
 import Redirect from '../components/redirect/Redirect';
 import Register from '../pages/user/login/Register';
@@ -22,7 +23,7 @@ import useTokenApiInterceptor from '../hooks/useTokenApiInterceptor';
 import routeNames from './routeNames';
 import useCloseNotifications from '../hooks/useCloseNotifications';
 import useLoadAfterOther from '../hooks/useLoadAfterOther';
-import pageToViewPathStorageName from './storageName';
+import LastPathService from '../services/localStorage/LastPathService';
 
 // Pages
 const DeepSearch = React.lazy(() => import('../pages/search/DeepSearch'));
@@ -70,43 +71,59 @@ const Routes: FC = () => {
 
   const token = useSelector((state: RootState) => state.auth.token);
 
+  const { id: userId } = useSelector((state: RootState) => state.profile);
+
   const location = useLocation();
+
+  const [, , projectId] = location.pathname.match(/(p)\/(\d+)/) || [];
 
   useEffect(() => {
     if (
+      userId &&
       location.pathname !== routeNames.home &&
       location.pathname !== routeNames.auth.login
     ) {
-      localStorage.setItem(pageToViewPathStorageName, location.pathname);
+      if (projectId) {
+        LastPathService.setInfo({ userId, data: projectId });
+      } else {
+        LastPathService.delete(userId);
+      }
     }
-  }, [location.pathname]);
+  }, [location.pathname, projectId, userId]);
 
   const dispatch = useDispatch<Dispatch>();
 
   const { loadAfterAll } = useLoadAfterOther();
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (token) {
       loadAfterAll(dispatch.profile.getUser);
     }
+    if (userId && projectId) {
+      dispatch.basket.getFromLocalStorage({ userId, projectId: +projectId });
+      window.addEventListener('storage', (ev: StorageEvent) => {
+        if (ev.key === 'basket_data') {
+          dispatch.basket.onUpdateStorage({ userId, projectId: +projectId });
+        }
+      });
+      return () => {
+        window.removeEventListener('storage', () =>
+          dispatch.basket.onUpdateStorage({ userId, projectId: +projectId }),
+        );
+      };
+    }
 
-    dispatch.basket.getFromLocalStorage();
-    window.addEventListener('storage', (ev: StorageEvent) => {
-      if (ev.key === 'basket_data') {
-        dispatch.basket.onUpdateStorage();
-      }
-    });
-
-    return () => {
-      window.removeEventListener('storage', dispatch.basket.onUpdateStorage);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch, userId, projectId]);
 
   useErrorCleaner();
   useCloseNotifications();
 
   if (token) {
+    if (!userId) {
+      return <Loader />;
+    }
     return (
       <RouterRoutes>
         <Route>

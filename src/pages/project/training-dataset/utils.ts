@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { FeatureGroupFilter, FeatureGroupJoin } from './types';
 import { Feature } from '../../../types/feature';
 import labelValueMap from '../../../utils/labelValueBind';
-import { FeatureGroupBasket } from '../../../store/models/localManagement/basket.model';
+import { FeatureGroupBasket } from '../../../services/localStorage/BasketService';
 import { FeatureStore } from '../../../types/feature-store';
 import { TrainingDataset } from '../../../types/training-dataset';
 

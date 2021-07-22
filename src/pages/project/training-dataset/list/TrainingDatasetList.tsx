@@ -30,6 +30,7 @@ import icons from '../../../../sources/icons';
 import titles from '../../../../sources/titles';
 import routeNames from '../../../../routes/routeNames';
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import TdInfoService from '../../../../services/localStorage/TdInfoService';
 
 export const sortOptions: { [key: string]: keyof TrainingDataset } = {
   'last updated': 'updated',
@@ -43,6 +44,8 @@ const TrainingDatasetList: FC = () => {
   const { id: projectId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
+
+  const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const getHref = useGetHrefForRoute();
 
@@ -107,8 +110,15 @@ const TrainingDatasetList: FC = () => {
   const navigate = useNavigateRelative();
 
   function handleCreate(): void {
-    localStorage.removeItem('TdInfo');
-    dispatch.basket.switch(true);
+    TdInfoService.delete({
+      userId,
+      projectId: +projectId,
+    });
+    dispatch.basket.switch({
+      active: true,
+      projectId: +projectId,
+      userId,
+    });
     navigate('/new', '/p/:id/td/');
   }
 

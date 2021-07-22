@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { ComponentType, FC, memo } from 'react';
 import { Row, Text, Collapse, Labeling } from '@logicalclocks/quartz';
-import { useDispatch } from 'react-redux';
-import { Dispatch } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch, RootState } from '../../store';
 import { FeatureGroup } from '../../types/feature-group';
 import useFeaturesListRowData from './useFeaturesListRowData';
 
@@ -22,13 +22,16 @@ const BasketFeatures: FC<BasketFeaturesProps> = ({
   parent,
   projectId,
 }) => {
+  const dispatch = useDispatch<Dispatch>();
+
+  const { id: userId } = useSelector((state: RootState) => state.profile);
+
   const [featureComponents, featureProps] = useFeaturesListRowData(
     data,
     parent,
+    userId,
     projectId,
   );
-
-  const dispatch = useDispatch<Dispatch>();
 
   const { name } = parent;
 
@@ -46,6 +49,7 @@ const BasketFeatures: FC<BasketFeaturesProps> = ({
               features: data,
               featureGroup: parent,
               projectId: +projectId,
+              userId,
             });
           }}
         >

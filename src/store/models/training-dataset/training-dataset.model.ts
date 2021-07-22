@@ -7,7 +7,7 @@ import { getValidPromisesValues } from '../search/deep-search.model';
 import { TrainingDatasetLabelService } from '../../../services/project';
 import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
 import TrainingDatasetService from '../../../services/project/TrainingDatasetService';
-import ShortcutsService from '../../../services/project/ShortcutsService';
+import ShortcutsService from '../../../services/localStorage/ShortcutsService';
 
 export type TrainingDatasetState = TrainingDataset[];
 

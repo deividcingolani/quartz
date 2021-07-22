@@ -12,9 +12,9 @@ import ShortCutItem, { DTO } from './ShortcutItem';
 import FixedShortcuts from './FixedShortcuts';
 // Services
 import ShortcutsService, {
-  LSDataEntity,
+  ShortcutItem,
   LSInnerKeys,
-} from '../../../services/project/ShortcutsService';
+} from '../../../services/localStorage/ShortcutsService';
 // Utils
 import filterByRecentHistory from './filterByRecentHistory';
 
@@ -25,8 +25,8 @@ export interface ShortcutsProps {
 }
 
 const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
-  const [recentlyOpened, setRecentlyOpened] = useState<LSDataEntity[]>([]);
-  const [pinned, setPinned] = useState<LSDataEntity[]>([]);
+  const [recentlyOpened, setRecentlyOpened] = useState<ShortcutItem[]>([]);
+  const [pinned, setPinned] = useState<ShortcutItem[]>([]);
 
   const { data } = useSearchData();
   const { history } = useHistory();
@@ -40,8 +40,8 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
   }, [data, history, projectId]);
 
   const combineRecents = (
-    newOpened: LSDataEntity[],
-    oldOpened: LSDataEntity[],
+    newOpened: ShortcutItem[],
+    oldOpened: ShortcutItem[],
   ) => {
     const newIds = newOpened.map((x) => x.id);
     const oldFiltered = oldOpened.filter(({ id }) => !newIds.includes(id));
@@ -65,7 +65,7 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
     });
   }, [allResults, projectId, userId]);
 
-  const handlePin = (item: LSDataEntity) => {
+  const handlePin = (item: ShortcutItem) => {
     const newPins = [item, ...pinned];
     setPinned(newPins);
     ShortcutsService.set(userId, +projectId, {
@@ -74,7 +74,7 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
     });
   };
 
-  const handleUnPin = (item: LSDataEntity) => {
+  const handleUnPin = (item: ShortcutItem) => {
     const newPins = pinned.filter((prev) => prev.id !== item.id);
     setPinned(newPins);
     ShortcutsService.set(userId, +projectId, {
@@ -84,7 +84,7 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
   };
 
   const handleNavigate = useCallback(
-    (item: LSDataEntity) => {
+    (item: ShortcutItem) => {
       if (item.type === DTO.fg) {
         navigate(`/fg/${item.id}`, `p/:id/*`);
       } else if (item.type === DTO.td) {
@@ -110,7 +110,7 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
               pinnable={true}
               handlePin={handlePin}
               handleUnPin={handleUnPin}
-              pinned={pinned.includes(item)}
+              pinned={pinnedIds.includes(item.id)}
               handleClick={handleNavigate}
             />
           );

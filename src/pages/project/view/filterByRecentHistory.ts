@@ -1,16 +1,16 @@
-import { LSDataEntity } from '../../../services/project/ShortcutsService';
+import { ShortcutItem } from '../../../services/localStorage/ShortcutsService';
 import { SearchState } from '../../../store/models/search/search.model';
 
-const getEntityById = <T extends LSDataEntity>(id: number, entities: T[]) =>
+const getEntityById = <T extends ShortcutItem>(id: number, entities: T[]) =>
   entities.find(({ id: itemId }) => itemId === id);
 
 const filterByRecentHistory = (
   projectId: number,
   data: SearchState,
   history: string[],
-): LSDataEntity[] => {
+): ShortcutItem[] => {
   const reversed = history.slice().reverse();
-  const matchItems = reversed.reduce((acc: LSDataEntity[], path) => {
+  const matchItems = reversed.reduce((acc: ShortcutItem[], path) => {
     const [, , pId, type, id] = path.match(/(p)\/(\d+)\/(fg|td)\/(\d+)/) || [];
 
     let item;

@@ -46,6 +46,7 @@ import { selectFeatureStoreStorageConnectors } from '../../../../store/models/fe
 import SplitsForm from './SplitsForm';
 import FeaturesForm from './Features/FeaturesForm';
 import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
+import TdInfoService from '../../../../services/localStorage/TdInfoService';
 
 const schema = yup.object().shape({
   name: name.label('Name'),
@@ -69,23 +70,28 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
   onDelete,
   initialData,
 }) => {
-  const infoTD: { [key: string]: string } | any =
-    localStorage.getItem('TdInfo');
+  const { id: projectId } = useParams();
+  const { id: userId } = useSelector((state: RootState) => state.profile);
+
+  const infoTD: { [key: string]: string } | any = TdInfoService.getInfo({
+    userId,
+    projectId: +projectId,
+  });
 
   const methods = useForm({
     defaultValues: {
-      tags: infoTD ? JSON.parse(infoTD).tags : {},
-      name: infoTD ? JSON.parse(infoTD).name : '',
-      storage: infoTD ? JSON.parse(infoTD).storage : ({} as IStorageConnector),
-      keywords: infoTD ? JSON.parse(infoTD).keywords : [],
-      description: infoTD ? JSON.parse(infoTD).description : '',
+      tags: infoTD?.tags || {},
+      name: infoTD?.name || '',
+      storage: infoTD?.storage || ({} as IStorageConnector),
+      keywords: infoTD?.keywords || [],
+      description: infoTD?.description || '',
       features: [],
       location: '',
-      dataFormat: infoTD ? [JSON.parse(infoTD).dataFormat] : ['CSV'],
-      correlations: infoTD ? JSON.parse(infoTD).correlations : false,
-      enabled: infoTD ? JSON.parse(infoTD).enabled : true,
+      dataFormat: infoTD ? [infoTD.dataFormat] : ['CSV'],
+      correlations: infoTD?.correlations || false,
+      enabled: infoTD?.enabled || true,
       splits: [],
-      histograms: infoTD ? JSON.parse(infoTD).histograms : false,
+      histograms: infoTD?.histograms || false,
       ...(!!initialData && {
         name: initialData.name,
         tags: mapTags(initialData),
@@ -153,12 +159,19 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         tags,
         keywords,
       };
-      const prevInfoTD = localStorage.getItem('TdInfo');
+      const prevInfoTD = TdInfoService.getInfo({
+        userId,
+        projectId: +projectId,
+      });
 
       if (prevInfoTD) {
-        infoTD = { ...JSON.parse(prevInfoTD), ...infoTD };
+        infoTD = { ...prevInfoTD, ...infoTD };
       }
-      localStorage.setItem('TdInfo', JSON.stringify(infoTD));
+      TdInfoService.setInfo({
+        userId,
+        projectId: +projectId,
+        data: infoTD,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -187,7 +200,6 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
         : `${errorsLength.toString()} errors`;
   }
 
-  const { id: projectId } = useParams();
   const navigate = useNavigate();
 
   const storages = useSelector(selectFeatureStoreStorageConnectors).filter(
@@ -282,7 +294,10 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
       }
 
       submitHandler(data);
-      localStorage.removeItem('TdInfo');
+      TdInfoService.delete({
+        userId,
+        projectId: +projectId,
+      });
     }),
     [setError, serverTags, clearErrors],
   );

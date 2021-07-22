@@ -9,17 +9,18 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
-
 // Services
 import TokenService from '../../../services/TokenService';
+import LastPathService from '../../../services/localStorage/LastPathService';
 // Types
 import { Dispatch, RootState } from '../../../store';
-import pageToViewPathStorageName from '../../../routes/storageName';
 import isAdmin from '../../../utils/userRole';
 
 const UserDropdown: FC = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
+
+  const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const handleLogOut = useCallback(() => {
     TokenService.delete();
@@ -27,8 +28,8 @@ const UserDropdown: FC = ({ children }) => {
     dispatch.projectsList.clear();
     dispatch.profile.clear();
     dispatch.store.clear();
-    localStorage.removeItem(pageToViewPathStorageName);
-  }, [dispatch]);
+    LastPathService.delete(userId);
+  }, [dispatch, userId]);
 
   const buttonRef = useRef(null);
 

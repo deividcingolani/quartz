@@ -14,7 +14,7 @@ import {
 // Types
 import { FeatureGroupFilter } from '../../types';
 import { FeatureGroup } from '../../../../../types/feature-group';
-import { FeatureGroupBasket } from '../../../../../store/models/localManagement/basket.model';
+import { FeatureGroupBasket } from '../../../../../services/localStorage/BasketService';
 import { selectFeatureGroupsData } from '../../../../../store/models/feature/selectors';
 // Components
 import SingleFilter from './SingleFilter';

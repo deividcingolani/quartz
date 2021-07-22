@@ -24,6 +24,8 @@ const TrainingDatasetCreate: FC = () => {
 
   const navigate = useNavigateRelative();
 
+  const { id: userId } = useSelector((state: RootState) => state.profile);
+
   const featureStoreData = useSelector((state: RootState) =>
     state.featureStores?.length ? state.featureStores[0] : null,
   );
@@ -107,8 +109,12 @@ const TrainingDatasetCreate: FC = () => {
           });
 
           dispatch.trainingDatasets.clear();
-          dispatch.basket.switch(false);
-          dispatch.basket.clear();
+          dispatch.basket.switch({
+            active: false,
+            projectId: +projectId,
+            userId,
+          });
+          dispatch.basket.clear({ projectId: +projectId, userId });
           dispatch.search.fetchTd({
             projectId: +projectId,
             featureStoreId: featureStoreData.featurestoreId,
@@ -117,7 +123,7 @@ const TrainingDatasetCreate: FC = () => {
         }
       }
     },
-    [dispatch, featureStoreData, navigate, projectId],
+    [dispatch, featureStoreData, navigate, projectId, userId],
   );
 
   const isFeatureStoreLoading = useSelector(

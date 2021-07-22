@@ -14,7 +14,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from './project-button.styles';
 // Types
 import { Dispatch, RootState } from '../../../store';
-import pageToViewPathStorageName from '../../../routes/storageName';
+import LastPathService from '../../../services/localStorage/LastPathService';
 
 const ProjectsDropdown: FC = () => {
   const projects = useSelector((state: RootState) => state.projectsList);
@@ -23,6 +23,8 @@ const ProjectsDropdown: FC = () => {
   );
 
   const { id: projectId } = useParams();
+  const { id: userId } = useSelector((state: RootState) => state.profile);
+
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
@@ -68,7 +70,7 @@ const ProjectsDropdown: FC = () => {
               // We need to remove the last page viewed here
               // otherwise the / will redirect users to the project
               // they are coming from
-              localStorage.removeItem(pageToViewPathStorageName);
+              LastPathService.delete(userId);
               navigate('/');
             }}
           >

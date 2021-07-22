@@ -10,6 +10,7 @@ import { Feature } from '../../types/feature';
 const useFeaturesListRowData = (
   features: Feature[],
   fg: FeatureGroup,
+  userId: number,
   projectId: number,
 ): any => {
   const dispatch = useDispatch<Dispatch>();
@@ -35,12 +36,13 @@ const useFeaturesListRowData = (
             projectId,
             featureGroup: fg,
             features: [feature],
+            userId,
           });
         },
         children: remove.feature,
       },
     ]);
-  }, [features, dispatch, projectId, fg]);
+  }, [features, dispatch, projectId, fg, userId]);
 
   return useMemo(() => {
     return [groupComponents, groupProps];

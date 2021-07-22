@@ -10,7 +10,7 @@ import {
   Value,
   Labeling,
 } from '@logicalclocks/quartz';
-
+import { useParams } from 'react-router-dom';
 // Types
 import { FeatureFormProps } from '../types';
 import { ListItem } from '../../../../types/feature-group';
@@ -29,6 +29,7 @@ import { schematisedTagAddEvent } from '../../../../store/models/localManagement
 import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import TdInfoService from '../../../../services/localStorage/TdInfoService';
 
 const SchematisedTags: FC<FeatureFormProps> = ({
   isDisabled,
@@ -37,6 +38,9 @@ const SchematisedTags: FC<FeatureFormProps> = ({
   const tags = useSelector(selectSchematisedTags).sort((tagA, tagB) =>
     tagA.name.localeCompare(tagB.name),
   );
+
+  const { id: projectId } = useParams();
+  const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -68,14 +72,10 @@ const SchematisedTags: FC<FeatureFormProps> = ({
 
   const initialTags = (): ListItem[] => {
     if (type === ItemDrawerTypes.td) {
-      const infoTD = localStorage.getItem('TdInfo');
-      if (infoTD) {
-        return (
-          JSON.parse(infoTD).listTags || [
-            { id: randomArrayString(10)[0], selected: [] },
-          ]
-        );
-      }
+      const infoTD = TdInfoService.getInfo({ userId, projectId: +projectId });
+      return (
+        infoTD?.listTags || [{ id: randomArrayString(10)[0], selected: [] }]
+      );
     }
 
     return [{ id: randomArrayString(10)[0], selected: [] }];
@@ -169,13 +169,19 @@ const SchematisedTags: FC<FeatureFormProps> = ({
   );
 
   useEffect(() => {
-    const infoTD: { [key: string]: string } | any =
-      localStorage.getItem('TdInfo');
+    const infoTD: { [key: string]: string } | any = TdInfoService.getInfo({
+      userId,
+      projectId: +projectId,
+    });
     if (infoTD) {
-      const newInfoTD = { ...JSON.parse(infoTD), listTags };
-      localStorage.setItem('TdInfo', JSON.stringify(newInfoTD));
+      const newInfoTD = { ...infoTD, listTags };
+      TdInfoService.setInfo({
+        userId,
+        projectId: +projectId,
+        data: newInfoTD,
+      });
     }
-  }, [listTags, isLoadingServerTagsTD]);
+  }, [listTags, isLoadingServerTagsTD, userId, projectId]);
 
   useEffect(() => {
     const serverTags =

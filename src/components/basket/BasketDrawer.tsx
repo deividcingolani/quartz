@@ -5,16 +5,17 @@ import { Labeling, Button, Popup, Text } from '@logicalclocks/quartz';
 import { useNavigate, useParams } from 'react-router-dom';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NavigateFunction } from 'react-router';
-import { Dispatch } from '../../store';
+import { Dispatch, RootState } from '../../store';
 import BasketFeatures from './BasketFeatures';
 import {
   selectBasketFeaturesLength,
   selectFeatureGroups,
 } from '../../store/models/localManagement/basket.selectors';
 import { placeholder } from '../../sources/basketSvg';
-import { FeatureGroupBasket } from '../../store/models/localManagement/basket.model';
 import { FeatureGroup } from '../../types/feature-group';
 import { Feature } from '../../types/feature';
+import { FeatureGroupBasket } from '../../services/localStorage/BasketService';
+import TdInfoService from '../../services/localStorage/TdInfoService';
 
 export interface BasketDrawerProps {
   isOpen: boolean;
@@ -44,6 +45,7 @@ type BasketFeaturesOptions = {
   // eslint-disable-next-line react/no-unused-prop-types
   directMode: boolean;
   dispatch: Dispatch;
+  userId: number;
 };
 
 const BasketEnabledFeaturesSelected: React.FC<any> = ({
@@ -51,6 +53,7 @@ const BasketEnabledFeaturesSelected: React.FC<any> = ({
   handleToggle,
   navigate,
   projectId,
+  userId,
   dispatch,
 }: BasketFeaturesOptions) => (
   <>
@@ -63,7 +66,7 @@ const BasketEnabledFeaturesSelected: React.FC<any> = ({
           navigate(`/p/${projectId}/td/new`);
         }}
       >
-        {!localStorage.getItem('TdInfo')
+        {!TdInfoService.getInfo({ userId, projectId })
           ? 'New training dataset'
           : 'Back to training dataset'}
       </Button>
@@ -74,7 +77,7 @@ const BasketEnabledFeaturesSelected: React.FC<any> = ({
         style={{ cursor: 'pointer' }}
         color="labels.red"
         alignSelf="center"
-        onClick={dispatch.basket.clear}
+        onClick={() => dispatch.basket.clear({ projectId, userId })}
         disabled={!featureGroups.length}
       >
         empty basket
@@ -101,7 +104,10 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
   const featureGroups = useSelector(selectFeatureGroups);
 
   const navigate = useNavigate();
+
   const { id: projectId } = useParams();
+
+  const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -109,7 +115,16 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
 
   const BasketDisabled = () => (
     <Flex alignItems="center" px="40px" flexDirection="column">
-      <Button m="20px" onClick={() => dispatch.basket.switch(true)}>
+      <Button
+        m="20px"
+        onClick={() =>
+          dispatch.basket.switch({
+            active: true,
+            projectId: +projectId,
+            userId,
+          })
+        }
+      >
         Start feature selection
       </Button>
       <Labeling bold mb="20px" textAlign="center">
@@ -126,7 +141,11 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
           intent="secondary"
           onClick={() => {
             if (directMode) {
-              dispatch.basket.switch(false);
+              dispatch.basket.switch({
+                active: false,
+                projectId: +projectId,
+                userId,
+              });
             } else {
               navigate(`/p/${projectId}/td/new`);
             }
@@ -194,6 +213,7 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
             handleToggle={handleToggle}
             navigate={navigate}
             featureGroups={featureGroups}
+            userId={userId}
           />
         )}
       </Flex>

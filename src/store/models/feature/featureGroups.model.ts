@@ -7,7 +7,7 @@ import { FeatureGroup } from '../../../types/feature-group';
 import FeatureGroupsService from '../../../services/project/FeatureGroupsService';
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
 import { getValidPromisesValues } from '../search/deep-search.model';
-import ShortcutsService from '../../../services/project/ShortcutsService';
+import ShortcutsService from '../../../services/localStorage/ShortcutsService';
 
 export type FeatureGroupState = FeatureGroup[];
 

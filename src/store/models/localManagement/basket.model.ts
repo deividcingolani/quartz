@@ -1,25 +1,28 @@
 import { createModel } from '@rematch/core';
+import BasketService, {
+  BasketState,
+  FeatureGroupBasket,
+} from '../../../services/localStorage/BasketService';
 import { Feature } from '../../../types/feature';
 import { FeatureGroup } from '../../../types/feature-group';
 
-export interface FeatureGroupBasket {
-  fg: FeatureGroup;
-  projectId: number;
-  features: Feature[];
-}
-
-export type BasketState = {
-  featureGroups: FeatureGroupBasket[];
-  isSwitched: boolean;
-};
-
 export type params = {
+  userId: number;
   projectId: number;
   features: Feature[];
   featureGroup: FeatureGroup;
 };
 
-export const localStorageKey = 'basket_data';
+export type switchParams = {
+  userId: number;
+  projectId: number;
+  active: boolean;
+};
+
+export type getParams = {
+  userId: number;
+  projectId: number;
+};
 
 const addToBasket = (
   prevState: FeatureGroupBasket[],
@@ -68,9 +71,9 @@ const basket = createModel()({
   reducers: {
     setFeaturesData: (_state: BasketState, payload: BasketState): BasketState =>
       payload,
-    updateSwitch: (state: BasketState, payload: boolean): BasketState => ({
+    updateSwitch: (state: BasketState, payload: switchParams): BasketState => ({
       ...state,
-      isSwitched: payload,
+      isSwitched: payload.active,
     }),
     addFeaturesData: (state: BasketState, payload: params): BasketState => ({
       ...state,
@@ -81,43 +84,42 @@ const basket = createModel()({
       featureGroups: deleteFromBasket(state.featureGroups, payload),
     }),
     clearData: (state: BasketState) => ({ ...state, featureGroups: [] }),
-    setStorage: (state: BasketState): BasketState => {
-      localStorage.setItem(localStorageKey, JSON.stringify(state));
-
+    setStorage: (state: BasketState, { userId, projectId }): BasketState => {
+      BasketService.setAll(userId, projectId, state);
       return state;
     },
   },
   effects: (dispatch) => ({
     addFeatures: (params: params) => {
+      const { userId, projectId } = params;
       dispatch.basket.addFeaturesData(params);
-      dispatch.basket.setStorage();
+      dispatch.basket.setStorage({ userId, projectId });
     },
     deleteFeatures: (params: params) => {
+      const { userId, projectId } = params;
       dispatch.basket.deleteFeaturesData(params);
-      dispatch.basket.setStorage();
+      dispatch.basket.setStorage({ userId, projectId });
     },
-    switch: (isSwitched: boolean) => {
-      dispatch.basket.updateSwitch(isSwitched);
-      dispatch.basket.setStorage();
+    switch: (params: switchParams) => {
+      const { userId, projectId } = params;
+      dispatch.basket.updateSwitch(params);
+      dispatch.basket.setStorage({ userId, projectId });
     },
-    clear: () => {
+    clear: (params: getParams) => {
+      const { userId, projectId } = params;
       dispatch.basket.clearData();
-      dispatch.basket.setStorage();
+      dispatch.basket.setStorage({ userId, projectId });
     },
-    getFromLocalStorage: () => {
-      const data = localStorage.getItem(localStorageKey);
-
+    getFromLocalStorage: ({ userId, projectId }: getParams) => {
+      const data = BasketService.getBasket(userId, projectId);
       if (data) {
-        try {
-          const parsed = JSON.parse(data);
-          dispatch.basket.setFeaturesData(parsed);
-        } catch (e) {
-          // continue regardless of error
-        }
+        dispatch.basket.setFeaturesData(data);
+      } else {
+        dispatch.basket.clearData();
       }
     },
-    onUpdateStorage: () => {
-      dispatch.basket.getFromLocalStorage();
+    onUpdateStorage: ({ userId, projectId }: getParams) => {
+      dispatch.basket.getFromLocalStorage(userId, projectId);
     },
   }),
 });

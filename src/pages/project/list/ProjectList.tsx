@@ -16,7 +16,7 @@ import ProjectListContent from './ProjectListContent';
 import NoProjects from '../../../components/no-projects/NoProjects';
 import useTitle from '../../../hooks/useTitle';
 import titles from '../../../sources/titles';
-import pageToViewPathStorageName from '../../../routes/storageName';
+import LastPathService from '../../../services/localStorage/LastPathService';
 
 const ProjectList: FC = () => {
   useTitle(titles.projectList);
@@ -33,6 +33,8 @@ const ProjectList: FC = () => {
     (state: RootState) => state.loading.effects.project.delete,
   );
 
+  const { id: userId } = useSelector((state: RootState) => state.profile);
+
   const isLoading = useMemo(
     () => isGetProjects || isDeleting,
     [isGetProjects, isDeleting],
@@ -43,23 +45,10 @@ const ProjectList: FC = () => {
 
   useEffect(() => {
     dispatch.projectsList.getProjects();
-    const lastPath = localStorage.getItem(pageToViewPathStorageName);
+    const lastProject = LastPathService.getInfo(userId);
 
-    if (lastPath && lastPath.startsWith('/p')) {
-      // The last page the user visited was a within a project,
-      // redirect them there.
-      const pathSplits = lastPath.split('/');
-      if (
-        pathSplits.length >= 3 &&
-        !Number.isNaN(parseInt(pathSplits[2], 10))
-      ) {
-        navigate(`/p/${pathSplits[2]}/view`);
-      } else {
-        // the last page does not contain a projectId (eg. /p/new)
-        localStorage.removeItem(pageToViewPathStorageName);
-      }
-    }
-  }, [dispatch, navigate]);
+    if (lastProject) navigate(`/p/${lastProject}/view`);
+  }, [dispatch, navigate, userId]);
 
   // Handlers
   const handleCreate = useCallback(() => {

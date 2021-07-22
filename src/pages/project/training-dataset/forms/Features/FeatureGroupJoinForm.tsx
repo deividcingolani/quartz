@@ -3,16 +3,20 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from 'rebass';
 import { useFormContext } from 'react-hook-form';
 import { Divider, Value } from '@logicalclocks/quartz';
-
+// Hooks
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 // Components
 import JoinsMessage from './JoinsMessage';
 import InnerJoinForm from './InnerJoinForm';
 // Types
 import { FeatureGroupJoin } from '../../types';
 import { FeatureGroup } from '../../../../../types/feature-group';
-import { FeatureGroupBasket } from '../../../../../store/models/localManagement/basket.model';
+import { FeatureGroupBasket } from '../../../../../services/localStorage/BasketService';
 // Utils
 import randomString from '../../../../../utils/randomString';
+import TdInfoService from '../../../../../services/localStorage/TdInfoService';
+import { RootState } from '../../../../../store';
 
 const FeatureGroupJoinForm: FC<{
   featureGroups: FeatureGroupBasket[];
@@ -20,14 +24,23 @@ const FeatureGroupJoinForm: FC<{
 }> = ({ featureGroups: basketFeatureGroups, isDisabled }) => {
   const { setValue } = useFormContext();
 
+  const { id: projectId } = useParams();
+  const { id: userId } = useSelector((state: RootState) => state.profile);
+
   const initialJoins = (): FeatureGroupJoin[] => {
-    const itemTD = localStorage.getItem('TdInfo');
-    if (!itemTD) {
+    const td = TdInfoService.getInfo({
+      userId,
+      projectId: +projectId,
+    });
+    if (!td) {
       return [];
     }
-    const td = JSON.parse(itemTD);
     delete td.joins;
-    localStorage.setItem('TdInfo', JSON.stringify(td));
+    TdInfoService.setInfo({
+      userId,
+      projectId: +projectId,
+      data: td,
+    });
     return [];
   };
 
@@ -73,8 +86,8 @@ const FeatureGroupJoinForm: FC<{
   );
 
   useEffect(() => {
-    const tdInfo = localStorage.getItem('TdInfo');
-    if (tdInfo && JSON.parse(tdInfo).joins) {
+    const tdInfo = TdInfoService.getInfo({ userId, projectId: +projectId });
+    if (tdInfo?.joins) {
       return;
     }
 
@@ -99,21 +112,27 @@ const FeatureGroupJoinForm: FC<{
         }));
       setJoins(joinsFromFgs);
     }
-  }, [mappedFeatureGroups]);
+  }, [mappedFeatureGroups, projectId, userId]);
 
   useEffect(() => {
     setValue('joins', joins);
   }, [joins, setValue]);
 
   useEffect(() => {
-    const infoTD: { [key: string]: string } | any =
-      localStorage.getItem('TdInfo');
+    const infoTD: { [key: string]: string } | any = TdInfoService.getInfo({
+      userId,
+      projectId: +projectId,
+    });
 
     if (infoTD) {
-      const newInfoTD = { ...JSON.parse(infoTD), joins };
-      localStorage.setItem('TdInfo', JSON.stringify(newInfoTD));
+      const newInfoTD = { ...infoTD, joins };
+      TdInfoService.setInfo({
+        userId,
+        projectId: +projectId,
+        data: newInfoTD,
+      });
     }
-  }, [joins]);
+  }, [joins, projectId, userId]);
 
   return (
     <>
