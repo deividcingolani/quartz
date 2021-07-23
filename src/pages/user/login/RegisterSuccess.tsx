@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
-import { Button, Label, Labeling, Value } from '@logicalclocks/quartz';
-import { Card, Flex } from 'rebass';
+import { Button, Labeling, Value, Card } from '@logicalclocks/quartz';
+import { Flex } from 'rebass';
 import Hero from '../Hero';
 
 export interface RegisterSuccessProps {
@@ -15,20 +15,14 @@ const RegisterSuccess: FC<RegisterSuccessProps> = ({ onClick }) => (
       <Value mb="60px" mt="15px" fontFamily="Inter" fontSize="18px" primary>
         Hopsworks Feature Store
       </Value>
-
-      <Card width="466px">
-        <Flex p="20px" flexDirection="column">
-          <Label mb="20px" fontSize="18px">
-            Waiting for validation
-          </Label>
+      <Card width="466px" title="Waiting for validation">
+        <Flex flexDirection="column">
           <Value>Account created</Value>
-          <Labeling mt="8px">
+          <Labeling mt="8px" mb="15px">
             Your account is created. A cluster admin must validate your account
-            before you can log in
+            before you can log in.
           </Labeling>
-        </Flex>
-        <Flex p="20px" bg="grayShade3" justifyContent="flex-end">
-          <Button onClick={onClick} intent="secondary">
+          <Button onClick={onClick} intent="secondary" alignSelf="flex-end">
             Login
           </Button>
         </Flex>

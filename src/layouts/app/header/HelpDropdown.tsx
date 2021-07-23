@@ -61,7 +61,7 @@ const HelpDropdown: FC = () => {
                 window.open('https://forms.gle/ucrT5Y6fsFUooiVf7', '_blank')
               }
             >
-              Send a feedback
+              Send feedback
             </ListItem>
           </List>
         )}

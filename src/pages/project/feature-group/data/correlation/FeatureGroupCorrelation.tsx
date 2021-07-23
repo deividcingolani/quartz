@@ -2,7 +2,7 @@
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Select } from '@logicalclocks/quartz';
+import { Select } from '@logicalclocks/quartz';
 
 // Types
 import { Dispatch, RootState } from '../../../../../store';
@@ -17,7 +17,6 @@ import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
 // Selectors
 import { selectFeatureStoreData } from '../../../../../store/models/feature/selectors';
 
-import routeNames from '../../../../../routes/routeNames';
 import useTitle from '../../../../../hooks/useTitle';
 import titles from '../../../../../sources/titles';
 import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
@@ -108,16 +107,7 @@ const FeatureGroupCorrelation: FC = () => {
     !statistics ||
     Object.values(statistics).some(({ correlations }) => !correlations)
   ) {
-    return (
-      <NoData mainText="No Feature Statistics" secondaryText="">
-        <Button
-          intent="secondary"
-          onClick={() => navigate(routeNames.featureGroup.list, 'p/:id/*')}
-        >
-          Feature Groups
-        </Button>
-      </NoData>
-    );
+    return <NoData mainText="No Feature Statistics" secondaryText="" />;
   }
 
   return (

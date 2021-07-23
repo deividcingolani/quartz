@@ -7,7 +7,6 @@ import {
   Labeling,
   FreshnessBar,
   Microlabeling,
-  HoverableText,
   Card as QuartzCard,
   User,
   Badge,
@@ -15,13 +14,14 @@ import {
   Symbol,
   SymbolMode,
   Tooltip,
+  HoverableLink,
 } from '@logicalclocks/quartz';
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, Box } from 'rebass';
-
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import routeNames from '../../../../routes/routeNames';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 // Services
 import ProfileService from '../../../../services/ProfileService';
@@ -51,6 +51,8 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
 
   const { isActiveFeatures, handleBasket, isSwitch } = useBasket();
 
+  const getHref = useGetHrefForRoute();
+
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
       navigate(route.replace(':fgId', String(id)), routeNames.project.view);
@@ -74,25 +76,28 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                   variant={data.onlineEnabled ? 'green' : 'black'}
                 />
               </Box>
-              <HoverableText
-                fontFamily="Inter"
-                onClick={() => {
-                  if (hasMatchText) {
-                    navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
-                  } else {
-                    handleNavigate(data.id, '/fg/:fgId')();
-                  }
-                }}
-                ml="20px"
-                fontSize="20px"
-                color={
-                  !projectsIds.includes(data.parentProjectId) && hasMatchText
-                    ? 'gray'
-                    : 'initial'
+              <HoverableLink
+                href={
+                  hasMatchText
+                    ? `/p/${data.parentProjectId}/fg/${data.id}`
+                    : getHref(
+                        '/fg/:fgId'.replace(':fgId', String(data.id)),
+                        routeNames.project.view,
+                      )
                 }
+                sx={{
+                  textDecoration: 'none',
+                  marginLeft: '20px',
+                  fontSize: '20px',
+                  fontFamily: 'Inter',
+                  color:
+                    !projectsIds.includes(data.parentProjectId) && hasMatchText
+                      ? 'gray'
+                      : 'initial',
+                }}
               >
                 {data.name}
-              </HoverableText>
+              </HoverableLink>
 
               <Value
                 mt="auto"

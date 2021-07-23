@@ -10,7 +10,7 @@ import {
   User,
   Badge,
   ProjectBadge,
-  HoverableText,
+  HoverableLink,
   Tooltip,
 } from '@logicalclocks/quartz';
 import formatDistance from 'date-fns/formatDistance';
@@ -26,6 +26,8 @@ import { TrainingDataset } from '../../../../types/training-dataset';
 import { RootState } from '../../../../store';
 import CardLabels from '../../feature-group/list/CardLabels';
 import icons from '../../../../sources/icons';
+import routeNames from '../../../../routes/routeNames';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 const Card: FC<HoverableCardProps<TrainingDataset>> = ({
   data,
@@ -40,10 +42,12 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':tdId', String(id)), 'p/:id/*');
+      navigate(route.replace(':tdId', String(id)), routeNames.project.view);
     },
     [navigate],
   );
+
+  const getHref = useGetHrefForRoute();
 
   const projectsIds = useSelector((state: RootState) => state.projectsList).map(
     ({ id }) => id,
@@ -55,24 +59,28 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
         <Flex my="6px" flexDirection="column">
           <Flex alignItems="center" justifyContent="space-between">
             <Flex>
-              <HoverableText
-                onClick={() => {
-                  if (hasMatchText) {
-                    navigate(`/p/${data.parentProjectId}/td/${data.id}/`);
-                  } else {
-                    handleNavigate(data.id, '/td/:tdId/')();
-                  }
-                }}
-                fontFamily="Inter"
-                fontSize="20px"
-                color={
-                  !projectsIds.includes(data.parentProjectId) && hasMatchText
-                    ? 'gray'
-                    : 'initial'
+              <HoverableLink
+                href={
+                  hasMatchText
+                    ? `/p/${data.parentProjectId}/td/${data.id}`
+                    : getHref(
+                        '/td/:tdId'.replace(':tdId', String(data.id)),
+                        routeNames.project.view,
+                      )
                 }
+                sx={{
+                  textDecoration: 'none',
+                  marginLeft: '20px',
+                  fontSize: '20px',
+                  fontFamily: 'Inter',
+                  color:
+                    !projectsIds.includes(data.parentProjectId) && hasMatchText
+                      ? 'gray'
+                      : 'initial',
+                }}
               >
                 {data.name}
-              </HoverableText>
+              </HoverableLink>
 
               <Value
                 mt="auto"
