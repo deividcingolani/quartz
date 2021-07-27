@@ -60,6 +60,15 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
           <Flex alignItems="center" justifyContent="space-between">
             <Flex>
               <HoverableLink
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  if (hasMatchText) {
+                    navigate(`/p/${data.parentProjectId}/td/${data.id}`);
+                  } else {
+                    handleNavigate(data.id, '/td/:tdId')();
+                  }
+                }}
                 href={
                   hasMatchText
                     ? `/p/${data.parentProjectId}/td/${data.id}`

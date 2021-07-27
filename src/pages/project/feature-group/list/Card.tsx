@@ -77,6 +77,15 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 />
               </Box>
               <HoverableLink
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  if (hasMatchText) {
+                    navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
+                  } else {
+                    handleNavigate(data.id, '/fg/:fgId')();
+                  }
+                }}
                 href={
                   hasMatchText
                     ? `/p/${data.parentProjectId}/fg/${data.id}`
