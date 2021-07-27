@@ -24,6 +24,7 @@ import routeNames from './routeNames';
 import useCloseNotifications from '../hooks/useCloseNotifications';
 import useLoadAfterOther from '../hooks/useLoadAfterOther';
 import LastPathService from '../services/localStorage/LastPathService';
+import { LS_BASKET_KEY } from '../services/localStorage/constants';
 
 // Pages
 const DeepSearch = React.lazy(() => import('../pages/search/DeepSearch'));
@@ -103,7 +104,7 @@ const Routes: FC = () => {
     if (userId && projectId) {
       dispatch.basket.getFromLocalStorage({ userId, projectId: +projectId });
       window.addEventListener('storage', (ev: StorageEvent) => {
-        if (ev.key === 'basket_data') {
+        if (ev.key === LS_BASKET_KEY) {
           dispatch.basket.onUpdateStorage({ userId, projectId: +projectId });
         }
       });

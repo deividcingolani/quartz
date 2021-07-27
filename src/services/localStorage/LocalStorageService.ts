@@ -1,8 +1,3 @@
-export enum LSInnerKeys {
-  'recent' = 'recent',
-  'pinned' = 'pinned',
-}
-
 export interface LSUserContent<T> {
   [key: number]: T;
 }

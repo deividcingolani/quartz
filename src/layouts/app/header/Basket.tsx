@@ -15,6 +15,7 @@ import {
   openBasketIconStyles,
   featureCountStyles,
 } from './basket.styles';
+import { isSelectionActive } from '../../../components/basket/utils';
 
 const BasketMenu: FC = () => {
   const featureLength = useSelector(selectBasketFeaturesLength);
@@ -22,7 +23,9 @@ const BasketMenu: FC = () => {
 
   const buttonRef = useRef(null);
 
-  const [isOpenPopup, handleTogglePopup] = usePopup(false);
+  const shouldBeOpen = isSelectionActive();
+
+  const [isOpenPopup, handleTogglePopup] = usePopup(shouldBeOpen);
 
   return (
     <>

@@ -294,10 +294,6 @@ const TrainingDatasetForm: FC<TrainingDatasetFormProps> = ({
       }
 
       submitHandler(data);
-      TdInfoService.delete({
-        userId,
-        projectId: +projectId,
-      });
     }),
     [setError, serverTags, clearErrors],
   );

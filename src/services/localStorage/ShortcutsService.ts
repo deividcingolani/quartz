@@ -1,3 +1,4 @@
+import { LS_SHORTCUTS_KEY } from './constants';
 import LocalStorageService, { LSObject } from './LocalStorageService';
 
 export enum LSInnerKeys {
@@ -91,4 +92,4 @@ class ShortcutsService extends LocalStorageService<ShortcutObject> {
   }
 }
 
-export default new ShortcutsService('shortcuts');
+export default new ShortcutsService(LS_SHORTCUTS_KEY);

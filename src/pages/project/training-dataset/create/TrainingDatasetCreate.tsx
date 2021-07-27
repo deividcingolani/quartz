@@ -14,6 +14,7 @@ import TrainingDatasetForm from '../forms/TrainingDatasetForm';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import TdInfoService from '../../../../services/localStorage/TdInfoService';
 
 const TrainingDatasetCreate: FC = () => {
   useTitle(titles.createTrainingDataset);
@@ -119,6 +120,12 @@ const TrainingDatasetCreate: FC = () => {
             projectId: +projectId,
             featureStoreId: featureStoreData.featurestoreId,
           });
+
+          TdInfoService.delete({
+            userId,
+            projectId: +projectId,
+          });
+
           navigate(`/${id}`, 'p/:id/td/*');
         }
       }

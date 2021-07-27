@@ -2,7 +2,14 @@ import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Input, Tooltip, Select, Value } from '@logicalclocks/quartz';
+import {
+  Button,
+  Input,
+  Tooltip,
+  Select,
+  Value,
+  usePopup,
+} from '@logicalclocks/quartz';
 import routeNames from '../../../../routes/routeNames';
 // Types
 import { Dispatch, RootState } from '../../../../store';
@@ -20,6 +27,8 @@ import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import icons from '../../../../sources/icons';
+import BasketTutoPopup from '../../../../components/basket/BasketTutoPopup';
+import { isSelectionActive } from '../../../../components/basket/utils';
 
 const FeatureGroupList: FC = () => {
   const { id: projectId } = useParams();
@@ -117,152 +126,167 @@ const FeatureGroupList: FC = () => {
     );
   }, [maxVersionsData, sort, filter, search]);
 
+  // Features picking tutorial
+  const shouldShowTutorial = useSelector(
+    (state: RootState) => state.basket.showTutorial,
+  );
+  const shouldBeOpen = isSelectionActive();
+  const [isOpenTutoPopup, handleToggleTutoPopup] = usePopup(
+    shouldShowTutorial && shouldBeOpen,
+  );
+
   useTitle(titles.featureGroups);
 
   return (
-    <Flex flexGrow={1} flexDirection="column">
-      <Flex alignItems="center">
-        <Input
-          variant="white"
-          disabled={!maxVersionsData.length}
-          value={search}
-          width="180px"
-          placeholder="Find a feature group..."
-          onChange={handleSearchChange}
-        />
-        {!!labels.length && (
-          <Tooltip
-            ml="8px"
-            mt="7px"
-            disabled={!isFilterDisabled}
-            mainText="No keywords defined"
-          >
-            <Select
-              disabled={isFilterDisabled}
-              maxWidth="180px"
-              width="max-content"
-              value={
-                filter.length
-                  ? filter.filter((keyword) => keyword !== 'any')
-                  : ['any']
-              }
-              variant="white"
-              isMulti
-              mt="-7px"
-              options={labels}
-              noDataMessage="keywords"
-              placeholder="keywords"
-              onChange={setFilter}
-            />
-          </Tooltip>
-        )}
-        <Flex ml="auto" alignItems="center">
-          <Tooltip mainText="Refresh">
-            <Flex
-              onClick={handleRefresh}
-              backgroundColor="#FFFFFF"
-              justifyContent="center"
-              alignItems="center"
-              width="34px"
-              height="32px"
-              sx={{
-                borderStyle: 'solid',
-                borderWidth: '1px',
-                borderColor: 'grayShade1',
-                cursor: 'pointer',
-                transition: 'all .25s ease',
-
-                ':hover': {
-                  borderColor: 'black',
-                },
-              }}
-            >
-              {icons.refresh}
-            </Flex>
-          </Tooltip>
-          <Select
-            width="150px"
+    <>
+      <BasketTutoPopup
+        isOpen={isOpenTutoPopup}
+        handleToggle={handleToggleTutoPopup}
+      />
+      <Flex flexGrow={1} flexDirection="column">
+        <Flex alignItems="center">
+          <Input
             variant="white"
-            value={sort}
-            listWidth="100%"
-            ml="10px"
-            disabled={isKeywordsAndLastUpdateLoading || isLoading}
-            options={Object.keys(sortOptions)}
-            placeholder="sort by"
-            onChange={setSort}
+            disabled={!maxVersionsData.length}
+            value={search}
+            width="180px"
+            placeholder="Find a feature group..."
+            onChange={handleSearchChange}
           />
+          {!!labels.length && (
+            <Tooltip
+              ml="8px"
+              mt="7px"
+              disabled={!isFilterDisabled}
+              mainText="No keywords defined"
+            >
+              <Select
+                disabled={isFilterDisabled}
+                maxWidth="180px"
+                width="max-content"
+                value={
+                  filter.length
+                    ? filter.filter((keyword) => keyword !== 'any')
+                    : ['any']
+                }
+                variant="white"
+                isMulti
+                mt="-7px"
+                options={labels}
+                noDataMessage="keywords"
+                placeholder="keywords"
+                onChange={setFilter}
+              />
+            </Tooltip>
+          )}
+          <Flex ml="auto" alignItems="center">
+            <Tooltip mainText="Refresh">
+              <Flex
+                onClick={handleRefresh}
+                backgroundColor="#FFFFFF"
+                justifyContent="center"
+                alignItems="center"
+                width="34px"
+                height="32px"
+                sx={{
+                  borderStyle: 'solid',
+                  borderWidth: '1px',
+                  borderColor: 'grayShade1',
+                  cursor: 'pointer',
+                  transition: 'all .25s ease',
+
+                  ':hover': {
+                    borderColor: 'black',
+                  },
+                }}
+              >
+                {icons.refresh}
+              </Flex>
+            </Tooltip>
+            <Select
+              width="150px"
+              variant="white"
+              value={sort}
+              listWidth="100%"
+              ml="10px"
+              disabled={isKeywordsAndLastUpdateLoading || isLoading}
+              options={Object.keys(sortOptions)}
+              placeholder="sort by"
+              onChange={setSort}
+            />
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex mt="20px" mb="20px">
+        <Flex mt="20px" mb="20px">
+          {!isLoading && (
+            <>
+              <Value primary px="5px">
+                {dataResult.length}
+              </Value>
+              <Value>out of</Value>
+              <Value primary px="5px">
+                {maxVersionsData.length}
+              </Value>
+              <Value>feature groups displayed</Value>
+            </>
+          )}
+          <Box ml="auto">
+            <Button
+              href={getHref(
+                routeNames.featureGroup.create,
+                routeNames.project.view,
+              )}
+              onClick={handleCreate}
+            >
+              New Feature Group
+            </Button>
+          </Box>
+        </Flex>
+        {isLoading && <Loader />}
         {!isLoading && (
-          <>
-            <Value primary px="5px">
-              {dataResult.length}
-            </Value>
-            <Value>out of</Value>
-            <Value primary px="5px">
-              {maxVersionsData.length}
-            </Value>
-            <Value>feature groups displayed</Value>
-          </>
+          <FeatureGroupListContent
+            data={dataResult}
+            loading={isKeywordsAndLastUpdateLoading}
+            isFiltered={maxVersionsData.length !== dataResult.length}
+            onResetFilters={handleResetFilters}
+          />
         )}
-        <Box ml="auto">
-          <Button
-            href={getHref(
-              routeNames.featureGroup.create,
-              routeNames.project.view,
-            )}
-            onClick={handleCreate}
+        {!isLoading && !maxVersionsData.length && (
+          <NoData
+            mainText="No Feature Groups"
+            secondaryText="You can create a feature group from the UI or in a program"
           >
-            New Feature Group
-          </Button>
-        </Box>
+            <Button
+              intent="secondary"
+              onClick={handleRouteChange(routeNames.storageConnector.list)}
+              href={getHref(
+                routeNames.storageConnector.list,
+                routeNames.project.view,
+              )}
+              mr="14px"
+            >
+              All Storage Connectors
+            </Button>
+            <Button
+              href={getHref('', routeNames.project.view)}
+              intent="secondary"
+              onClick={handleRouteChange('')}
+              mr="14px"
+            >
+              Feature Group Documentation
+            </Button>
+            <Button
+              href={getHref(
+                routeNames.featureGroup.create,
+                routeNames.project.view,
+              )}
+              onClick={handleCreate}
+            >
+              New Feature Group
+            </Button>
+          </NoData>
+        )}
       </Flex>
-      {isLoading && <Loader />}
-      {!isLoading && (
-        <FeatureGroupListContent
-          data={dataResult}
-          loading={isKeywordsAndLastUpdateLoading}
-          isFiltered={maxVersionsData.length !== dataResult.length}
-          onResetFilters={handleResetFilters}
-        />
-      )}
-      {!isLoading && !maxVersionsData.length && (
-        <NoData
-          mainText="No Feature Groups"
-          secondaryText="You can create a feature group from the UI or in a program"
-        >
-          <Button
-            intent="secondary"
-            onClick={handleRouteChange(routeNames.storageConnector.list)}
-            href={getHref(
-              routeNames.storageConnector.list,
-              routeNames.project.view,
-            )}
-            mr="14px"
-          >
-            All Storage Connectors
-          </Button>
-          <Button
-            href={getHref('', routeNames.project.view)}
-            intent="secondary"
-            onClick={handleRouteChange('')}
-            mr="14px"
-          >
-            Feature Group Documentation
-          </Button>
-          <Button
-            href={getHref(
-              routeNames.featureGroup.create,
-              routeNames.project.view,
-            )}
-            onClick={handleCreate}
-          >
-            New Feature Group
-          </Button>
-        </NoData>
-      )}
-    </Flex>
+    </>
   );
 };
 

@@ -1,10 +1,12 @@
 import { Feature } from '../../types/feature';
 import { FeatureGroup } from '../../types/feature-group';
+import { LS_BASKET_KEY } from './constants';
 import LocalStorageService from './LocalStorageService';
 
 export interface BasketState {
   featureGroups: FeatureGroupBasket[];
   isSwitched: boolean;
+  showTutorial: boolean;
 }
 
 export interface FeatureGroupBasket {
@@ -48,4 +50,4 @@ class BasketService extends LocalStorageService<BasketState> {
   }
 }
 
-export default new BasketService('basket');
+export default new BasketService(LS_BASKET_KEY);

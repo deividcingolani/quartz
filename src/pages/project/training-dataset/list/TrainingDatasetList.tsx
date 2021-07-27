@@ -122,6 +122,11 @@ const TrainingDatasetList: FC = () => {
     navigate('/new', '/p/:id/td/');
   }
 
+  function handleGoBack(): void {
+    dispatch.basket.switch({ userId, projectId: +projectId, active: true });
+    navigate('/new', '/p/:id/td/');
+  }
+
   function handleResetFilters(): void {
     setFilter([]);
     setSearch('');
@@ -149,6 +154,8 @@ const TrainingDatasetList: FC = () => {
       searchText(search),
     )(maxVersionsData);
   }, [maxVersionsData, sort, filter, search]);
+
+  const hasActiveTD = TdInfoService.getInfo({ userId, projectId: +projectId });
 
   return (
     <Flex mb="40px" flexGrow={1} flexDirection="column">
@@ -225,20 +232,44 @@ const TrainingDatasetList: FC = () => {
           />
         </Flex>
       </Flex>
-      <Flex mt="20px" mb="20px">
-        {!isLoading && (
-          <>
-            <Value primary mr="5px">
-              {dataResult.length}
-            </Value>
-            <Value>training datasets</Value>
-          </>
-        )}
-        <Box ml="auto">
-          <Button onClick={handleCreate} href={getHref('/new', '/p/:id/td/')}>
-            New Training Dataset
-          </Button>
-        </Box>
+      <Flex
+        mt="20px"
+        mb="20px"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Flex>
+          {!isLoading && (
+            <>
+              <Value primary mr="5px">
+                {dataResult.length}
+              </Value>
+              <Value>training datasets</Value>
+            </>
+          )}
+        </Flex>
+        <Flex>
+          <Box ml="auto">
+            <Button
+              onClick={handleCreate}
+              href={getHref('/new', '/p/:id/td/')}
+              intent={hasActiveTD ? 'secondary' : 'primary'}
+            >
+              New Training Dataset
+            </Button>
+          </Box>
+
+          {hasActiveTD && (
+            <Box ml="10px">
+              <Button
+                onClick={handleGoBack}
+                href={getHref('/new', '/p/:id/td/')}
+              >
+                Back to Training Dataset
+              </Button>
+            </Box>
+          )}
+        </Flex>
       </Flex>
       {isLoading && <Loader />}
       {!isLoading && (

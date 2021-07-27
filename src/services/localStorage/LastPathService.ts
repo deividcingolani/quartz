@@ -1,3 +1,4 @@
+import { LS_LAST_PATH_KEY } from './constants';
 import LocalStorageService from './LocalStorageService';
 
 export type LastPathState = string;
@@ -34,4 +35,4 @@ class LastPathService extends LocalStorageService<LastPathState> {
   }
 }
 
-export default new LastPathService('last_path');
+export default new LastPathService(LS_LAST_PATH_KEY);

@@ -11,7 +11,7 @@ import {
   Divider,
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Types
@@ -26,6 +26,7 @@ import {
 } from '../../../../../store/models/localManagement/basket.selectors';
 // Hooks
 import useDrawer from '../../../../../hooks/useDrawer';
+import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
 // Components
 import RowFilters from './RowFilters';
 import SearchPopup from '../../../../../components/basket/BasketTutoPopup';
@@ -34,6 +35,7 @@ import CollapsedFeaturesForm from './CollapsedFeaturesForm';
 import FeatureDrawer from '../../../../../components/feature-drawer/FeatureDrawer';
 
 import routeNames from '../../../../../routes/routeNames';
+import { BASKET_SELECTION_HASH } from '../../../../../components/basket/utils';
 
 export interface SelectedState {
   fgId: number;
@@ -47,6 +49,9 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
   const { setValue } = useFormContext();
 
   const [isOpen, setOpen] = useState<boolean>(false);
+  const [pickLoading, setPickLoading] = useState<boolean>(false);
+
+  const navigate = useNavigateRelative();
 
   const featureLength = useSelector(selectBasketFeaturesLength);
 
@@ -69,28 +74,10 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
   const [selectedFeature, setSelected] = useState<SelectedState>();
 
   const [isOpenSearchPopup, handleToggleSearchPopup] = usePopup(false);
+
   const updateFeatures = useCallback(() => {
-    const copy = featureGroups.slice();
-    basket.forEach(({ features, fg, projectId }) => {
-      const fgIndex = copy.findIndex(({ fg: { id } }) => id === fg.id);
-
-      if (fgIndex < 0) {
-        copy.unshift({
-          fg,
-          projectId,
-          features,
-        });
-      } else {
-        const newFeatures = features.filter(
-          ({ name }) =>
-            !copy[fgIndex].features.find((feature) => feature.name === name),
-        );
-        copy[fgIndex].features = [...newFeatures, ...copy[fgIndex].features];
-      }
-    });
-
-    setFeatureGroups(copy);
-  }, [featureGroups, basket]);
+    setFeatureGroups(basket);
+  }, [basket]);
 
   useEffect(() => {
     updateFeatures();
@@ -98,10 +85,12 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basket]);
 
-  const navigate = useNavigate();
   const handleDeleteAllFg = useCallback(
     (index: number) => () => {
-      const copy = featureGroups.slice();
+      const copy = JSON.parse(
+        JSON.stringify(featureGroups),
+      ) as FeatureGroupBasket[];
+
       dispatch.basket.deleteFeatures({
         features: copy[index].features,
         featureGroup: copy[index].fg,
@@ -118,10 +107,14 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
 
   const handleDelete = useCallback(
     (index: number, featureName: string) => () => {
-      const copy = featureGroups.slice();
+      const copy = JSON.parse(
+        JSON.stringify(featureGroups),
+      ) as FeatureGroupBasket[];
 
       dispatch.basket.deleteFeatures({
-        features: copy[index].features,
+        features: copy[index].features.filter(
+          ({ name }) => name === featureName,
+        ),
         featureGroup: copy[index].fg,
         projectId: +projectId,
         userId,
@@ -131,30 +124,28 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
         ({ name }) => name !== featureName,
       );
 
-      dispatch.basket.addFeatures({
-        features: copy[index].features,
-        featureGroup: copy[index].fg,
-        projectId: +projectId,
-        userId,
-      });
-
       setFeatureGroups(copy);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [featureGroups, basket, projectId],
   );
 
-  const handleGoToFG = useCallback(
-    () => () => {
-      dispatch.basket.switch({
-        active: true,
-        projectId: +projectId,
-        userId,
-      });
-      navigate(`/p/${projectId}/${routeNames.featureGroup.list}`);
-    },
-    [dispatch.basket, navigate, projectId, userId],
-  );
+  const handleGoToFG = useCallback(() => {
+    setPickLoading(true);
+
+    dispatch.basket.switch({
+      active: true,
+      projectId: +projectId,
+      userId,
+    });
+
+    setTimeout(() => {
+      setPickLoading(false);
+      navigate(
+        `/p/${projectId}/${routeNames.featureGroup.list}${BASKET_SELECTION_HASH}`,
+      );
+    }, 2000);
+  }, [dispatch.basket, navigate, projectId, userId]);
 
   const handleOpenStatistics = useCallback(
     (fgId: number, name: string) => () => {
@@ -199,11 +190,11 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
         <Flex flexDirection="column">
           <Value>Selected Features</Value>
           <Flex mt="8px">
-            <Button onClick={handleGoToFG()}>
+            <Button isLoading={pickLoading} onClick={handleGoToFG}>
               Pick features from the UI ↗
             </Button>
             <Button intent="inline" onClick={handleToggleSearchPopup}>
-              How to pick features using from the UI?
+              How to pick features from the UI?
             </Button>
           </Flex>
           <Box my="8px">

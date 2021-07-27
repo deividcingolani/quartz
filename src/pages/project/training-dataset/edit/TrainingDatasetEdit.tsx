@@ -15,9 +15,11 @@ import useTitle from '../../../../hooks/useTitle';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 
 import titles from '../../../../sources/titles';
+import TdInfoService from '../../../../services/localStorage/TdInfoService';
 
 const TrainingDatasetEdit: FC = () => {
   const { id: projectId, tdId } = useParams();
+  const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -85,10 +87,26 @@ const TrainingDatasetEdit: FC = () => {
         });
 
         dispatch.trainingDatasetView.clear();
+
+        TdInfoService.delete({
+          userId,
+          projectId: +projectId,
+        });
+
         navigate(`/${tdId}`, 'p/:id/td/*');
       }
     },
-    [dispatch, featureStoreData, navigate, projectId, tdId, trainingDataset],
+    [
+      dispatch.error,
+      dispatch.trainingDatasetView,
+      dispatch.trainingDatasets,
+      featureStoreData?.featurestoreId,
+      navigate,
+      projectId,
+      tdId,
+      trainingDataset?.tags,
+      userId,
+    ],
   );
 
   const handleDelete = useCallback(async () => {

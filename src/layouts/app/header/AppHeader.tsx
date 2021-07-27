@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, matchPath } from 'react-router-dom';
 import { Header, Label, User, Value, Labeling } from '@logicalclocks/quartz';
 
 // Components
@@ -40,6 +40,8 @@ const AppHeader: FC<AppHeaderProps> = ({
 
   const { firstname, lastname, email } = user;
 
+  const location = useLocation();
+
   const handleNavigate = useCallback(() => {
     if (lastProjectId) {
       navigate(`p/${lastProjectId}`);
@@ -47,6 +49,9 @@ const AppHeader: FC<AppHeaderProps> = ({
       navigate(`/`);
     }
   }, [lastProjectId, navigate]);
+
+  // Only show the basket in the feature groups section
+  const showBasket = !!matchPath('/p/:id/fg/*', location.pathname);
 
   return (
     <Header
@@ -70,7 +75,7 @@ const AppHeader: FC<AppHeaderProps> = ({
       }
       actions={[
         <>
-          <BasketMenu />
+          {showBasket && <BasketMenu />}
           <HelpDropdown />
         </>,
       ]}

@@ -1,4 +1,5 @@
 import { IStorageConnector } from '../../types/storage-connector';
+import { LS_TD_INFO_KEY } from './constants';
 import LocalStorageService from './LocalStorageService';
 
 export interface TdInfoState {
@@ -71,4 +72,4 @@ class TdInfoService extends LocalStorageService<TdInfoState> {
   }
 }
 
-export default new TdInfoService('td_info');
+export default new TdInfoService(LS_TD_INFO_KEY);

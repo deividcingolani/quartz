@@ -19,6 +19,12 @@ export type switchParams = {
   active: boolean;
 };
 
+export type tutorialParams = {
+  userId: number;
+  projectId: number;
+  showTutorial: boolean;
+};
+
 export type getParams = {
   userId: number;
   projectId: number;
@@ -34,7 +40,7 @@ const addToBasket = (
     return [{ fg: featureGroup, features, projectId }, ...prevState];
   }
 
-  const copy = prevState.slice();
+  const copy = JSON.parse(JSON.stringify(prevState)) as FeatureGroupBasket[];
   const prevFeatures = copy[fgIndex].features.filter(
     ({ name }) => !features.find((feature) => feature.name === name),
   );
@@ -53,7 +59,7 @@ const deleteFromBasket = (
     return prevState;
   }
 
-  const copy = prevState.slice();
+  const copy = JSON.parse(JSON.stringify(prevState)) as FeatureGroupBasket[];
   const prevFeatures = copy[fgIndex].features;
   copy[fgIndex].features = prevFeatures.filter(
     ({ name }) => !features.some(({ name: newName }) => newName === name),
@@ -67,13 +73,24 @@ const deleteFromBasket = (
 };
 
 const basket = createModel()({
-  state: { featureGroups: [], isSwitched: false } as BasketState,
+  state: {
+    featureGroups: [],
+    isSwitched: false,
+    showTutorial: true,
+  } as BasketState,
   reducers: {
     setFeaturesData: (_state: BasketState, payload: BasketState): BasketState =>
       payload,
     updateSwitch: (state: BasketState, payload: switchParams): BasketState => ({
       ...state,
       isSwitched: payload.active,
+    }),
+    updateTutorial: (
+      state: BasketState,
+      payload: tutorialParams,
+    ): BasketState => ({
+      ...state,
+      showTutorial: payload.showTutorial,
     }),
     addFeaturesData: (state: BasketState, payload: params): BasketState => ({
       ...state,
@@ -105,6 +122,11 @@ const basket = createModel()({
       dispatch.basket.updateSwitch(params);
       dispatch.basket.setStorage({ userId, projectId });
     },
+    showTutorial: (params: tutorialParams) => {
+      const { userId, projectId } = params;
+      dispatch.basket.updateTutorial(params);
+      dispatch.basket.setStorage({ userId, projectId });
+    },
     clear: (params: getParams) => {
       const { userId, projectId } = params;
       dispatch.basket.clearData();
@@ -119,7 +141,7 @@ const basket = createModel()({
       }
     },
     onUpdateStorage: ({ userId, projectId }: getParams) => {
-      dispatch.basket.getFromLocalStorage(userId, projectId);
+      dispatch.basket.getFromLocalStorage({ userId, projectId });
     },
   }),
 });
