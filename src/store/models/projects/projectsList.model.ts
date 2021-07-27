@@ -23,12 +23,8 @@ const projectsList = createModel()({
 
           return {
             ...project,
-            featureGroupsCount: featureStore
-              ? featureStore.numFeatureGroups
-              : 0,
-            trainingDatasetsCount: featureStore
-              ? featureStore.numTrainingDatasets
-              : 0,
+            featureGroupsCount: featureStore.numFeatureGroups,
+            trainingDatasetsCount: featureStore.numTrainingDatasets,
           };
         }),
       );
