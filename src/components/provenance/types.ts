@@ -23,6 +23,13 @@ export enum Colors {
   gray = 'gray',
 }
 
+export enum OutTypes {
+  FEATURE = 'FEATURE',
+  TRAINING_DATASET = 'TRAINING_DATASET',
+  MODEL = 'MODEL',
+  EXPERIMENT = 'EXPERIMENT',
+}
+
 export enum NodeTypes {
   storageConnector = 'storage connector',
   featureGroup = 'feature group',

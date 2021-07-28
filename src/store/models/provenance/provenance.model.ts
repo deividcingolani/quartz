@@ -7,6 +7,7 @@ import {
 } from '../../../components/provenance/types';
 import {
   rootTypesMap,
+  rootTypesToOut,
   typesMap,
 } from '../../../components/provenance/utils/utils';
 import ExperimentsService from '../../../services/project/ExperimentsService';
@@ -31,22 +32,6 @@ const inverseDirection = {
 };
 
 export type Dataset = FeatureGroup | TrainingDataset;
-
-const getRootProvenance = (data: Dataset) => {
-  const root = {
-    id: data.id,
-    name: data.name,
-    type: rootTypesMap[data.type],
-    data: {
-      name: data.name,
-      features: data.features.length,
-      updated: data.created,
-      owner: data.creator,
-    },
-  } as ProvenanceNode;
-
-  return root;
-};
 
 const buildNode = (data: Dataset, ds: Dataset, subtype: string) => {
   const node = {
@@ -113,6 +98,25 @@ const provenance = createModel()({
       featureStoreId: number;
       data: Dataset;
     }): Promise<ProvenanceState> => {
+      const visited = new Set<string>();
+
+      const getRootProvenance = (data: Dataset) => {
+        const root = {
+          id: data.id,
+          name: data.name,
+          type: rootTypesMap[data.type],
+          data: {
+            name: data.name,
+            features: data.features.length,
+            updated: data.created,
+            owner: data.creator,
+          },
+        } as ProvenanceNode;
+
+        visited.add(`${data.id}_${data.name}_${data.type}`);
+        return root;
+      };
+
       const getProvenance = async (
         data: Dataset,
         direction: Direction,
@@ -123,6 +127,7 @@ const provenance = createModel()({
           direction: inverseDirection[direction],
           datasetName: data.name,
           datasetVersion: data.version,
+          rootType: rootTypesToOut[data.type],
         });
 
         const entries = provenance?.items?.reduce(
@@ -144,11 +149,18 @@ const provenance = createModel()({
 
               const ds = element.length ? element[0] : element;
 
+              // Discard entries already visited.
+              if (visited.has(`${ds.id}_${ds.name}_${ds.type}`)) {
+                return result;
+              }
+
               const node = buildNode(data, ds, entry.value.docSubType);
               const link = buildLink(data, ds, entry);
 
               result.nodes.push(node);
               result.links.push(link);
+
+              visited.add(`${ds.id}_${ds.name}_${ds.type}`);
 
               return getProvenance(ds, direction, result);
             }),
