@@ -15,14 +15,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 import Loader from '../../../../components/loader/Loader';
-import { DataEntity } from '../../../../types';
 import { Dispatch, RootState } from '../../../../store';
 import CommitGraph from '../../../../components/drawer/commit-graph';
 import icons from '../../../../sources/icons';
 import setStatus from '../utils/setStatus';
-import setTypeOfJob from '../utils/setTypeOfJob';
 import { ExecutionsTypeSortOptions } from '../executions/types';
-import { JobExecutionData } from '../../../../types/jobs';
+import { JobExecutionData, Jobs } from '../../../../types/jobs';
 import getAVGtime from '../utils/getAVGtime';
 import getPathAndFileName from '../utils/getPathAndFileName';
 import ExecutionDropdown from './ExecutionDropdown';
@@ -30,7 +28,7 @@ import NotificationBadge from '../../../../utils/notifications/notificationBadge
 import NotificationContent from '../../../../utils/notifications/notificationValue';
 import executionDurationLocale from '../utils/durationLocale';
 
-export interface JobsDrawerProps<T extends DataEntity> {
+export interface JobsDrawerProps<T extends Jobs> {
   itemId: number;
   data: T[];
   handleToggle: () => void;
@@ -40,7 +38,7 @@ export interface JobsDrawerProps<T extends DataEntity> {
   projectId?: number;
 }
 
-const JobDrawer = <T extends DataEntity>({
+const JobDrawer = <T extends Jobs>({
   itemId,
   handleToggle,
   data,
@@ -454,7 +452,7 @@ const JobDrawer = <T extends DataEntity>({
                         mt: '4px',
                       }}
                     >
-                      {setTypeOfJob(jobsItem.config.jobType)}
+                      {jobsItem.config.jobType}
                     </Value>
                   </Flex>
                   <Flex flexDirection="column" mt="20px">

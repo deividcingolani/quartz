@@ -114,12 +114,9 @@ const useAppNavigation = (): TreeNode[] => {
     (state: RootState) => state.trainingDatasetView,
   );
 
-  const jobs = useSelector((state: RootState) => state.jobsView);
-
   const disabledTabs = useMemo(() => {
     const fgConfig = featureGroup?.statisticsConfig;
     const tdConfig = trainingDataset?.statisticsConfig;
-    const jobsConfig = jobs?.statisticsConfig;
 
     const fgStatisticsDisabled = !featureGroupStatistics;
 
@@ -133,20 +130,14 @@ const useAppNavigation = (): TreeNode[] => {
     const dataPreviewDisabled =
       featureGroup?.type === 'onDemandFeaturegroupDTO';
 
-    const jobStatisticsDisabled = !jobsConfig?.enabled;
-    const jobCorrelationsDisabled =
-      !jobsConfig?.enabled || !jobsConfig?.correlations;
-
     return {
       fgStatisticsDisabled,
       fgCorrelationsDisabled,
       tdStatisticsDisabled,
       tdCorrelationsDisabled,
       dataPreviewDisabled,
-      jobStatisticsDisabled,
-      jobCorrelationsDisabled,
     };
-  }, [featureGroup, trainingDataset, featureGroupStatistics, jobs]);
+  }, [featureGroup, trainingDataset, featureGroupStatistics]);
 
   const createFgAnchorLink = useCallback(
     (title: string, to: string, id: string) => ({

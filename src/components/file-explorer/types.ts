@@ -19,13 +19,14 @@ export enum FileExplorerOptions {
   app = 'activeApp',
   archives = 'additionalArchives',
   jars = 'additionalJars',
-  phyton = 'additionalPhyton',
+  python = 'additionalPython',
   files = 'additionalFiles',
 }
 
 export interface UploadFiles {
+  id: string;
   name: string;
   path: string;
-  files: any[];
   fromFile: string;
+  extension: string;
 }

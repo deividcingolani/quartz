@@ -68,23 +68,6 @@ const jobs = createModel()({
 
       return id;
     },
-    copy: async ({
-      projectId,
-      data,
-    }: {
-      projectId: number;
-      data: any;
-    }): Promise<number> => {
-      const {
-        data: { id },
-      } = await JobsService.copy(projectId, data);
-
-      return id;
-    },
-    // download: async ({ projectId }: { projectId: number }): Promise<any> => {
-    //   const data = await JobsService.downloadFile(projectId);
-    //   dispatch.jobs.set(data);
-    // },
   }),
 });
 

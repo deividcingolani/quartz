@@ -1,59 +1,19 @@
-import { Jobs } from '../../../types/jobs';
+import { Jobs, JobsConfig } from '../../../types/jobs';
 
 export const sourceFrom = {
   scratch: 'New job from scratch',
   existingJob: 'Import an existing job',
 };
 
-export enum JobType {
-  'PYSPARK' = 'Python',
-  'SPARK' = 'Spark',
-  'FLINK' = 'Flink',
-}
-
-export enum JobEtc {
-  'PYSPARK' = '.py',
-  'SPARK' = '.jar',
-  'FLINK' = '.xml',
-}
-
-export enum RuleTypes {
-  PYSPARK = 'Python',
-  SPARK = 'Spark',
-  FLINK = 'Flink',
-}
-
 export enum DynamicAllocation {
   DYNAMIC = 'Dynamic',
   STATIC = 'Static',
 }
 
-export enum StrongRuleTypes {
-  Python = 'PYSPARK',
-  Spark = 'SPARK',
-  Flink = 'FLINK',
-}
-
-export interface JobFormData {
-  type: string;
-  appName: string;
-  defaultArgs: string;
-  amMemory: number;
-  amVCores: number;
-  jobType: string;
-  appPath: string;
-  dynamicAllocation?: string;
-  GPUs?: number;
-  mainClass: string;
-  'spark.executor.instances': number;
-  'spark.executor.cores': number;
-  'spark.executor.gpus': number;
-  'spark*executor.memory': number;
-  'spark.dynamicAllocation.enabled': string;
-  'spark.dynamicAllocation.minExecutors': number;
-  'spark.dynamicAllocation.maxExecutors': number;
-  localResources: [];
-  spark?: any;
+export enum FrameworkTypeUI {
+  SPARK = 'SPARK',
+  PYTHON = 'PYTHON',
+  FLINK = 'FLINK',
 }
 
 export interface ArgumentsForRun {
@@ -63,7 +23,7 @@ export interface ArgumentsForRun {
 export interface JobsFormProps {
   isLoading: boolean;
   isDisabled: boolean;
-  submitHandler: (data: JobFormData, activeApp: any, additional: any) => void;
+  submitHandler: (data: JobsConfig) => void;
   onDelete?: () => void;
   isEdit?: boolean;
   initialData?: Jobs;

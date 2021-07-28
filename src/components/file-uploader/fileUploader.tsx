@@ -11,23 +11,9 @@ import TokenService from '../../services/TokenService';
 const FileUploader = ({
   isMultiple,
   fromFile,
-  activeApp,
-  handleSelectFolder,
-  setFileExplorerMode,
-  fileExplorerMode,
-  fileExplorerOptions,
-  handleCloseExplorer,
-  isOpenUploadExplorer,
-  setIsOpenUploadExplorer,
-  fileToBeUpload,
-  setFileToBeUpload,
   options,
   helperForNewArr,
   isDisabledUploadButton,
-  changeExplorerOptions,
-  isDelete,
-  setIsDelete,
-  handleDelete,
   setIsOpenExplorerFromPopup,
 }: any) => {
   const { id: projectId } = useParams();
@@ -47,7 +33,9 @@ const FileUploader = ({
   };
 
   const flowChunkSize = 1048576;
-
+  const [uploadPath, setUploadPath] = useState<string>();
+  const [isOpenExplorer, setIsOpenExplorer] = useState(false);
+  const [fileToBeUpload, setFileToBeUpload] = useState<any>({});
   const [arrayToUpload, setArrayToUpload] = useState<any>([]);
   const [showProgress, setShowProgress] = useState(false);
   const [counter, setCounter] = useState(1);
@@ -95,21 +83,8 @@ const FileUploader = ({
     setProgress(0);
     setFileGuid('');
     setCounter(1);
-    handleDelete();
     setBeginingOfTheChunk(0);
     setEndOfTheChunk(flowChunkSize);
-  };
-
-  const handleSelectFileFrom = () => {
-    if (!firstRef) {
-      return;
-    }
-
-    if (firstRef && firstRef.current) {
-      firstRef.current.click();
-    }
-
-    handleCloseExplorer(options);
   };
 
   const getFileContext = () => {
@@ -123,20 +98,15 @@ const FileUploader = ({
     setFileCounter(uploadArray.length);
   };
 
-  useEffect(() => {
-    if (
-      Object.keys(fileToBeUpload).length !== 0 &&
-      FileExplorerMode.oneFolder
-    ) {
-      getFileContext();
+  const handleSetIsOpenExplorerFromPopup = (value: boolean) => {
+    if (setIsOpenExplorerFromPopup) {
+      setIsOpenExplorerFromPopup(value);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileToBeUpload]);
+  };
 
   const handleClick = useCallback(() => {
-    setFileExplorerMode(FileExplorerMode.oneFolder);
-    setIsOpenUploadExplorer(true);
-
+    setIsOpenExplorer(true);
+    handleSetIsOpenExplorerFromPopup(true);
     if (firstRef && firstRef.current) {
       firstRef.current.value = '';
     }
@@ -145,102 +115,25 @@ const FileUploader = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileRef]);
 
-  useEffect(() => {
-    if (
-      activeApp &&
-      !isOpenUploadExplorer &&
-      fileExplorerMode === FileExplorerMode.oneFolder &&
-      counter !== chunkCount &&
-      !isDelete
-    ) {
-      handleSelectFileFrom();
+  const handleSelectFileFrom = useCallback(() => {
+    if (!firstRef) {
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeApp, firstRef]);
+
+    if (firstRef && firstRef.current) {
+      firstRef.current.click();
+    }
+  }, [firstRef]);
 
   const helper = () => {
-    switch (options) {
-      case 'isJobFile': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: `${makeid(10)} ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isFile': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: `${makeid(10)} ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isArchives': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: `${makeid(10)} ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isJars': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: `${makeid(10)} ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isPhyton': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: `${makeid(10)} ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      case 'isFiles': {
-        helperForNewArr(
-          {
-            attributes: {
-              name: fileToBeUpload.name,
-              path: activeApp,
-              id: `${makeid(10)} ${fileToBeUpload.name}`,
-            },
-          },
-          options,
-        );
-        break;
-      }
-      default:
-        throw Error('Unsupported file option');
-    }
+    helperForNewArr(
+      {
+        name: fileToBeUpload.name,
+        path: `${uploadPath}/${fileToBeUpload.name}`,
+        id: `${uploadPath}/${fileToBeUpload.name}`,
+      },
+      options,
+    );
     if (options !== 'isJobFile' && !!options) {
       clearUploadData();
     }
@@ -268,7 +161,7 @@ const FileUploader = ({
     formData.append('flowTotalSize', fileSize.toString());
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/project/${projectId}/dataset/upload${activeApp.path}`,
+        `${process.env.REACT_APP_API_HOST}/project/${projectId}/dataset/upload${uploadPath}`,
         formData,
         {
           headers: {
@@ -318,9 +211,6 @@ const FileUploader = ({
           intent="secondary"
           onHandleUpload={getFileContext}
           handleClick={() => {
-            changeExplorerOptions(fileExplorerOptions);
-            setIsDelete(false);
-            if (setIsOpenExplorerFromPopup) setIsOpenExplorerFromPopup(true);
             handleClick();
           }}
           maxWidth="145px"
@@ -328,31 +218,36 @@ const FileUploader = ({
           {`Upload ${fromFile ? 'new' : 'job'} file`}
         </UploadButton>
       </Flex>
-      {isOpenUploadExplorer && (
-        <Popup
-          left="40px"
-          right="40px"
-          top="20px"
-          bottom="20px"
-          isOpen={isOpenUploadExplorer}
-          onClose={() => {
-            if (setIsOpenExplorerFromPopup) setIsOpenExplorerFromPopup(false);
-            setIsOpenUploadExplorer(false);
+
+      <Popup
+        left="40px"
+        right="40px"
+        top="20px"
+        bottom="20px"
+        isOpen={isOpenExplorer}
+        onClose={() => {
+          setIsOpenExplorer(false);
+          handleSetIsOpenExplorerFromPopup(false);
+        }}
+      >
+        <FileExplorer
+          title="Select folder"
+          mode={FileExplorerMode.oneFolder}
+          handleCloseExplorer={() => {
+            setIsOpenExplorer(false);
+            handleSetIsOpenExplorerFromPopup(false);
           }}
-        >
-          <FileExplorer
-            title="Select folder"
-            handleCloseExplorer={() => {
-              setIsOpenUploadExplorer(false);
-              if (setIsOpenExplorerFromPopup) setIsOpenExplorerFromPopup(false);
-              handleCloseExplorer(options);
-            }}
-            handleSelectFile={handleSelectFolder}
-            mode={fileExplorerMode}
-            activeFile={activeApp}
-          />
-        </Popup>
-      )}
+          handleSelectFile={(activeFile: any, _: boolean) => {
+            // activeFile in case of folder is the string
+            // containing the path to the folder
+            setUploadPath(activeFile);
+            // Open the selector for the local file to upload
+            handleSelectFileFrom();
+            setIsOpenExplorer(false);
+            handleSetIsOpenExplorerFromPopup(false);
+          }}
+        />
+      </Popup>
     </>
   );
 };

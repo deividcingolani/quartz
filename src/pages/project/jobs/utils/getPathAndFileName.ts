@@ -2,9 +2,9 @@ const getPathAndFileName = (appPath: string) => {
   let fileName: string | undefined = '-';
   let path = '-';
   if (appPath) {
-    const splitPath: string[] = appPath.split('/');
+    const splitPath = appPath.replace('hdfs://', '').split('/');
     fileName = splitPath.pop();
-    path = splitPath.slice(3).join('/');
+    path = splitPath.join('/');
   }
 
   return { fileName, path };

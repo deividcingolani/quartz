@@ -15,8 +15,6 @@ const FileExplorer: FC<FileExplorerProps> = ({
   handleCloseExplorer,
   handleSelectFile,
   mode = FileExplorerMode.oneFile,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-  activeFile,
   title,
 }) => {
   const { id } = useParams();

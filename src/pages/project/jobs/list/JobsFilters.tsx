@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import { Input, Select, ToggleButton, Tooltip } from '@logicalclocks/quartz';
 import icons from '../../../../sources/icons';
-import { JobType } from '../types';
+import { JobType } from '../../../../types/jobs';
 
 export enum KeyFilters {
   null,

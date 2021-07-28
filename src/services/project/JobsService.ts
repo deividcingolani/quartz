@@ -158,7 +158,7 @@ class JobsService extends BaseApiService {
   new = (projectId: number, data: any) => {
     return this.request<any>({
       type: RequestType.put,
-      url: `${projectId}/jobs/new`,
+      url: `${projectId}/jobs/${data.appName}`,
       data,
     });
   };
@@ -170,13 +170,6 @@ class JobsService extends BaseApiService {
       data,
     });
   };
-
-  copy = (projectId: number, data: any) =>
-    this.request<any>({
-      type: RequestType.put,
-      url: `${projectId}/jobs/${data.appName}`,
-      data,
-    });
 
   run = async (data: string, projectId: number, jobsName: string) => {
     const res = await this.request<any>({

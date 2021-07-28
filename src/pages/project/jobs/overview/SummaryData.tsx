@@ -14,7 +14,6 @@ import ProfileService from '../../../../services/ProfileService';
 // Components
 import DateValue from '../../list/DateValue';
 import getAVGtime from '../utils/getAVGtime';
-import setTypeOfJob from '../utils/setTypeOfJob';
 
 export interface SummaryDataProps {
   data: any;
@@ -56,7 +55,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
           <Microlabeling mb="3px" gray>
             Type
           </Microlabeling>
-          <Value primary>{setTypeOfJob(data.jobType)}</Value>
+          <Value primary>{data.jobType}</Value>
         </Flex>
       </Flex>
       <Flex mt="17px" alignItems="center">

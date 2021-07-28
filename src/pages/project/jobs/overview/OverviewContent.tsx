@@ -11,10 +11,8 @@ import {
 } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 import Panel from '../../../../components/panel/Panel';
-import { Jobs } from '../../../../types/jobs';
+import { FrameworkType, Jobs } from '../../../../types/jobs';
 import SummaryData from './SummaryData';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import icons from '../../../../sources/icons';
 import DatasetService, {
   DatasetType,
@@ -24,7 +22,8 @@ import NotificationTitle from '../../../../utils/notifications/notificationBadge
 import NotificationContent from '../../../../utils/notifications/notificationValue';
 import JobsExecutionsPopup from '../executions/JobsExecutionsPopup';
 import saveToFile from '../../../../utils/downloadConfig';
-import setTypeOfJob from '../utils/setTypeOfJob';
+import SparkConfigurationOverview from './SparkConfigurationOverview';
+import PythonConfigurationOverview from './PythonConfigurationOverview';
 
 export interface ContentProps {
   data: Jobs;
@@ -38,10 +37,8 @@ const OverviewContent: FC<ContentProps> = ({
   onClickEdit,
 }) => {
   const { id } = useParams();
-  const navigate = useNavigateRelative();
-  const getHref = useGetHrefForRoute();
   const { fileName, path } = getPathAndFileName(data.config.appPath);
-  const [jobDownloadable, setJobDownlodable] = useState<boolean>(true);
+  const [jobDownloadable, setJobDownloadable] = useState<boolean>(true);
 
   useEffect(() => {
     DatasetService.getDownloadToken(
@@ -50,12 +47,12 @@ const OverviewContent: FC<ContentProps> = ({
       DatasetType.DATASET,
     )
       .then(() => {
-        setJobDownlodable(true);
+        setJobDownloadable(true);
       })
       .catch(() => {
-        setJobDownlodable(false);
+        setJobDownloadable(false);
       });
-  }, [fileName, id, path, setJobDownlodable]);
+  }, [fileName, id, path, setJobDownloadable]);
 
   const handleDownloadJob = useCallback(async () => {
     DatasetService.download(
@@ -179,7 +176,7 @@ const OverviewContent: FC<ContentProps> = ({
                     mt: '4px',
                   }}
                 >
-                  {setTypeOfJob(data.jobType)}
+                  {data.jobType}
                 </Value>
               </Flex>
               <Flex flexDirection="column" mr="20px">
@@ -214,23 +211,6 @@ const OverviewContent: FC<ContentProps> = ({
                   }}
                 >
                   {fileName}
-                </Value>
-              </Flex>
-              <Flex flexDirection="column" mr="20px">
-                <Labeling
-                  gray
-                  sx={{
-                    fontSize: '10px',
-                  }}
-                >
-                  Main class
-                </Labeling>
-                <Value
-                  sx={{
-                    mt: '4px',
-                  }}
-                >
-                  {data.config.mainClass}
                 </Value>
               </Flex>
             </Flex>
@@ -274,124 +254,12 @@ const OverviewContent: FC<ContentProps> = ({
           </Flex>
         </Flex>
       </Card>
-      <Card
-        mt="20px"
-        title="Configuration"
-        contentProps={{ pb: 0, overflow: 'none' }}
-        maxHeight="184px"
-        actions={
-          data && (
-            <Button
-              p={0}
-              intent="inline"
-              href={getHref('/edit', '/p/:id/jobs/:jobId/*')}
-              onClick={() => navigate('/edit', '/p/:id/jobs/:jobId/*')}
-            >
-              edit configuration
-            </Button>
-          )
-        }
-      >
-        <Flex mb="16px">
-          <Flex flexDirection="column" mr="20px">
-            <Labeling
-              gray
-              sx={{
-                fontSize: '10px',
-              }}
-            >
-              Driver memory (MB)
-            </Labeling>
-            <Value
-              sx={{
-                mt: '4px',
-              }}
-            >
-              {data.config.amMemory}
-            </Value>
-          </Flex>
-          <Flex flexDirection="column" mr="20px">
-            <Labeling
-              gray
-              sx={{
-                fontSize: '10px',
-              }}
-            >
-              Driver virtual cores
-            </Labeling>
-            <Value
-              sx={{
-                mt: '4px',
-              }}
-            >
-              {data.config.amVCores}
-            </Value>
-          </Flex>
-          <Flex flexDirection="column" mr="20px">
-            <Labeling
-              gray
-              sx={{
-                fontSize: '10px',
-              }}
-            >
-              Executor memory (MB)
-            </Labeling>
-            <Value
-              sx={{
-                mt: '4px',
-              }}
-            >
-              {data.config['spark.executor.memory']}
-            </Value>
-          </Flex>
-          <Flex flexDirection="column" mr="20px">
-            <Labeling
-              gray
-              sx={{
-                fontSize: '10px',
-              }}
-            >
-              Executor virtual cores
-            </Labeling>
-            <Value
-              sx={{
-                mt: '4px',
-              }}
-            >
-              {data.config['spark.executor.cores']}
-            </Value>
-          </Flex>
-          <Flex flexDirection="column" mr="20px">
-            <Labeling
-              gray
-              sx={{
-                fontSize: '10px',
-              }}
-            >
-              Mode
-            </Labeling>
-            {data.config['spark.dynamicAllocation.enabled'] && (
-              <Value
-                sx={{
-                  mt: '4px',
-                }}
-              >
-                Dynamic {data.config['spark.dynamicAllocation.minExecutors']} to{' '}
-                {data.config['spark.dynamicAllocation.maxExecutors']}
-              </Value>
-            )}
-            {!data.config['spark.dynamicAllocation.enabled'] && (
-              <Value
-                sx={{
-                  mt: '4px',
-                }}
-              >
-                Static
-              </Value>
-            )}
-          </Flex>
-        </Flex>
-      </Card>
+      {data.config.type === FrameworkType.SPARK && (
+        <SparkConfigurationOverview job={data} />
+      )}
+      {data.config.type === FrameworkType.PYTHON && (
+        <PythonConfigurationOverview job={data} />
+      )}
     </Box>
   );
 };

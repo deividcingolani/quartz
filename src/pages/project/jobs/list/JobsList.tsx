@@ -28,14 +28,13 @@ import JobsFilters, { KeyFilters } from './JobsFilters';
 import { Dispatch } from '../../../../store';
 import useJobs from './useJobs';
 import Loader from '../../../../components/loader/Loader';
-import { Jobs } from '../../../../types/jobs';
+import { Jobs, JobsConfig } from '../../../../types/jobs';
 import NoData from '../../../../components/no-data/NoData';
 import useDrawer from '../../../../hooks/useDrawer';
 import jobsListStyles from './jobsListStyles';
 import useJobsRows from './useJobsRows';
 
 import JobDrawer from '../overview/JobDrawer';
-import { JobFormData, StrongRuleTypes } from '../types';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import FileExplorer from '../../../../components/file-explorer/fileExplorer';
 import {
@@ -74,9 +73,7 @@ const JobsList: FC = () => {
     if (filter.length) {
       return data.filter(({ jobType }) =>
         filter.some((f) => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          return jobType === StrongRuleTypes[f as keyof typeof StrongRuleTypes];
+          return jobType === f;
         }),
       );
     }
@@ -203,9 +200,6 @@ const JobsList: FC = () => {
 
   const [selectedRow, setSelectedRow] = useState(Math.random());
   const [isOpenExplorer, setIsOpenExplorer] = useState(false);
-  const [isOpenUploadExplorer, setIsOpenUploadExplorer] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
-  const [fileToBeUpload, setFileToBeUpload] = useState<any>({});
   const [isDisabledUploadButton, setIsDisabledUploadButton] = useState(false);
   const [isDisabledProjectButton, setIsDisabledProjectButton] = useState(false);
   const [fileExplorerOptions, setFileExplorerOptions] = useState(
@@ -218,16 +212,12 @@ const JobsList: FC = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCreate = useCallback(
-    handleSubmit(async (data: JobFormData) => {
+    handleSubmit(async (data: JobsConfig) => {
       const req = {
         ...data,
         type: 'sparkJobConfiguration',
-        appPath: activeJobFile
-          ? `hdfs://${activeJobFile.path}/${
-              !activeJobFile.name ? fileToBeUpload.name : activeJobFile.name
-            }`
-          : '',
-        mainClass: 'io.hops.examples.featurestore_tour.Main',
+        appPath: activeJobFile?.path,
+        mainClass: 'org.apache.spark.deploy.PythonRunner',
       };
       const id = await dispatch.jobs.create({
         projectId: +projectId,
@@ -266,26 +256,6 @@ const JobsList: FC = () => {
     setIsDisabledUploadButton(true);
   };
 
-  const handleSelectUploadFile = (activeFile: any, isDownload: boolean) => {
-    if (typeof activeFile !== 'string') {
-      const newPath = activeFile.attributes.path.split('/');
-      newPath.pop();
-      setActiveJobFile((prevState: any) => ({
-        ...prevState,
-        name: activeFile.attributes.name,
-        path: newPath.join('/'),
-      }));
-    } else {
-      setActiveJobFile((prevState: any) => ({
-        ...prevState,
-        path: activeFile,
-      }));
-    }
-
-    if (!isDownload) setIsOpenExplorer(false);
-    setIsOpenUploadExplorer(false);
-  };
-
   useEffect(() => {
     if (activeJobFile) {
       setIsOpenExplorerFromPopup(false);
@@ -294,26 +264,15 @@ const JobsList: FC = () => {
   }, [activeJobFile]);
 
   const helperForNewArr = (newFile: any, _options: string) => {
-    const newFiles = activeJobFile?.files;
-    if (newFiles) newFiles.push(newFile);
-    setActiveJobFile((prevState: any) => ({
-      ...prevState,
-      files: newFiles,
-    }));
+    setActiveJobFile(newFile);
   };
 
   const helperForClose = (_options: string) => {
     setActiveJobFile(null);
   };
 
-  const handleDelete = () => {
-    setIsDelete(false);
-  };
-
   const handleCloseExplorer = () => {
-    setIsOpenUploadExplorer(false);
     setIsOpenExplorer(false);
-    setFileToBeUpload({});
     setIsDisabledUploadButton(false);
   };
 
@@ -326,11 +285,6 @@ const JobsList: FC = () => {
       setIsDisabledUploadButton(false);
     }
   }, [activeJobFile]);
-
-  const changeExplorerOptions = (currentOptions: string) => {
-    const option: any = currentOptions;
-    setFileExplorerOptions(option);
-  };
 
   return (
     <>
@@ -390,7 +344,6 @@ const JobsList: FC = () => {
                     setFileExplorerOptions(FileExplorerOptions.app);
                     setFileExplorerMode(FileExplorerMode.oneFile);
                     setIsOpenExplorer(true);
-                    setFileToBeUpload({});
                   }}
                 >
                   From project
@@ -398,24 +351,10 @@ const JobsList: FC = () => {
                 <FileUploader
                   key={2}
                   fromFile
+                  isEdit
                   options="isJobFile"
-                  handleSelectFolder={handleSelectUploadFile}
-                  changeExplorerOptions={changeExplorerOptions}
-                  handleCloseExplorer={handleCloseExplorer}
                   helperForNewArr={helperForNewArr}
-                  handleDelete={handleDelete}
-                  setFileExplorerMode={setFileExplorerMode}
-                  activeApp={activeJobFile}
-                  fileExplorerMode={fileExplorerMode}
-                  fileExplorerOptions={FileExplorerOptions.app}
                   isDisabledUploadButton={isDisabledUploadButton}
-                  fileToBeUpload={fileToBeUpload}
-                  setFileToBeUpload={setFileToBeUpload}
-                  setactiveJobFile={setActiveJobFile}
-                  isDelete={isDelete}
-                  setIsDelete={setIsDelete}
-                  isOpenUploadExplorer={isOpenUploadExplorer}
-                  setIsOpenUploadExplorer={setIsOpenUploadExplorer}
                   setIsOpenExplorerFromPopup={setIsOpenExplorerFromPopup}
                 />
               </Flex>
@@ -429,14 +368,14 @@ const JobsList: FC = () => {
                 fileExplorerOptions === FileExplorerOptions.app && (
                   <Box mt="20px">
                     <FileLoader
-                      removeHandler={() => helperForClose('isJobFile')}
+                      removeHandler={(_: any) => helperForClose('isJobFile')}
                       isLoading={!activeJobFile}
-                      fileName={
-                        !activeJobFile.name
-                          ? fileToBeUpload.name
-                          : activeJobFile.name
-                      }
-                      located={activeJobFile.path}
+                      id={activeJobFile.id}
+                      fileName={activeJobFile.name}
+                      located={activeJobFile.path
+                        .split('/')
+                        .slice(0, activeJobFile.path.split('/').length - 1)
+                        .join('/')}
                     >
                       located in
                     </FileLoader>
@@ -578,7 +517,7 @@ const JobsList: FC = () => {
             </Button>
           </NoData>
         )}
-        {dataResult.length === 0 && !isLoading && (
+        {dataResult.length === 0 && !isLoading && data.jobs.length > 0 && (
           <NoData
             isFilter
             mainText="0 job match with the filters"

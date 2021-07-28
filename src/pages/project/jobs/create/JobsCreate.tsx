@@ -5,11 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import JobsForm from '../form/JobsForm';
 import { RootState } from '../../../../store';
-import { DynamicAllocation, JobFormData } from '../types';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import formatted from '../utils/formattedRequest';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import { JobsConfig } from '../../../../types/jobs';
 
 const JobsCreate: FC = () => {
   const { id: projectId } = useParams();
@@ -26,33 +25,10 @@ const JobsCreate: FC = () => {
     (state: RootState) => state.loading.effects.jobs.create,
   );
 
-  const handleSubmit = async (
-    data: JobFormData,
-    activeApp: any,
-    additional: any,
-  ) => {
-    const isObject = (val: any) => val instanceof Object;
-    const isDynamic: boolean =
-      data.dynamicAllocation === DynamicAllocation.DYNAMIC;
-    const req: any = {
-      ...formatted(data),
-      'spark.dynamicAllocation.enabled': isDynamic,
-      'spark.yarn.dist.pyFiles': additional ? additional.phyton.join(',') : '',
-      'spark.yarn.dist.archives': additional
-        ? additional.archives.join(',')
-        : '',
-      'spark.yarn.dist.jars': additional ? additional.jars.join(',') : '',
-      'spark.yarn.dist.files': additional ? additional.files.join(',') : '',
-      appPath: isObject(activeApp)
-        ? `hdfs://${activeApp.path}/${activeApp.name}`
-        : `hdfs://${activeApp}`,
-      type: 'sparkJobConfiguration',
-      mainClass: 'io.hops.examples.featurestore_tour.Main',
-    };
-    delete req.dynamicAllocation;
+  const handleSubmit = async (data: JobsConfig) => {
     const id = await dispatch.jobs.create({
       projectId: +projectId,
-      data: req,
+      data,
     });
 
     if (id) {

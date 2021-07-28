@@ -22,7 +22,7 @@ import { useDispatch } from 'react-redux';
 import { format } from 'date-fns';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ArgumentsForRun, JobFormData } from '../types';
+import { ArgumentsForRun } from '../types';
 import icons from '../../../../sources/icons';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import NotificationBadge from '../../../../utils/notifications/notificationBadge';
@@ -33,6 +33,7 @@ import DatasetService, {
   DatasetType,
 } from '../../../../services/project/DatasetService';
 import Loader from '../../../../components/loader/Loader';
+import { JobsConfig } from '../../../../types/jobs';
 
 export interface JobsExecutionsPopupProps {
   projectId: number;
@@ -60,7 +61,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
   const [disabledQuickRunButton, setDisabledQuickRunButton] = useState(false);
 
   const [dataLog, setDataLog] = useState<any>(null);
-  const [loading, setLoding] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const schema = yup.object().shape({
     appName: name.label('Name'),
@@ -68,19 +69,24 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
 
   const [active, setActive] = useState('stdout');
 
-  const methods = useForm({
+  const copyForm = useForm({
     defaultValues: {
-      defaultArgs: '',
       appName: '',
       ...(!!item &&
         !isLog &&
         !isStop && {
-          defaultArgs: item.config.defaultArgs,
           appName: `${format(new Date(), 'HH-mm-ss')}`,
         }),
     },
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
+    mode: 'onChange',
+  });
+
+  const runForm = useForm({
+    defaultValues: {
+      args: item.config?.defaultArgs || '',
+    },
     mode: 'onChange',
   });
 
@@ -106,7 +112,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
     };
     if (data) {
       setDataLog(data);
-      setLoding(false);
+      setLoading(false);
     }
   }, [dispatch.jobsExecutions, item.executionId, item.jobName, item.projectId]);
 
@@ -136,11 +142,38 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
     return undefined;
   };
 
-  const { control, handleSubmit, errors } = methods;
+  const {
+    control: copyControl,
+    handleSubmit: copyHandleSubmit,
+    errors: copyErrors,
+  } = copyForm;
+
+  const { control: runControl, handleSubmit: runHandleSubmit } = runForm;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onSubmit = useCallback(
-    handleSubmit(async (data: ArgumentsForRun) => {
+  const onHandleCopy = useCallback(
+    copyHandleSubmit(async (data: JobsConfig) => {
+      // eslint-disable-next-line no-param-reassign
+      item.config.appName = data.appName;
+
+      handleTogglePopup(!isOpenPopup);
+      const id = await dispatch.jobs.create({
+        projectId: +projectId,
+        data: item.config,
+      });
+
+      dispatch.jobsView.fetch({
+        projectId: +projectId,
+        jobsName: data.appName,
+      });
+      navigate(`/jobs/${id}`, 'p/:id/*');
+    }),
+    [projectId],
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onHandleRun = useCallback(
+    runHandleSubmit(async (data: ArgumentsForRun) => {
       setDisabledQuickRunButton(true);
       if (projectId && item && handleTogglePopup) {
         const res = await dispatch.jobs.run({
@@ -158,31 +191,6 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
           handleTogglePopup(!isOpenPopup);
         }
       }
-    }),
-    [handleSubmit, projectId],
-  );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onHandleCopy = useCallback(
-    handleSubmit(async (data: JobFormData) => {
-      const req = {
-        type: item.config.type,
-        appName: data.appName,
-        mainClass: item.config.mainClass,
-      };
-      // eslint-disable-next-line no-param-reassign
-      delete item.spark;
-      handleTogglePopup(!isOpenPopup);
-      const id = await dispatch.jobs.copy({
-        projectId: +projectId,
-        data: req,
-      });
-
-      dispatch.jobsView.fetch({
-        projectId: +projectId,
-        jobsName: data.appName,
-      });
-      navigate(`/jobs/${id}`, 'p/:id/*');
     }),
     [projectId],
   );
@@ -222,20 +230,21 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
           secondaryText=""
           disabledMainButton={disabledQuickRunButton}
           secondaryButton={['Cancel', () => handleTogglePopup(!isOpenPopup)]}
-          mainButton={['Run', onSubmit]}
+          mainButton={['Run', onHandleRun]}
         >
-          <Box
-            sx={{
-              '>div': {
-                p: '0px',
-              },
-              mb: '20px',
-            }}
-          >
-            <FormProvider {...methods}>
+          <FormProvider {...runForm}>
+            <Box
+              sx={{
+                '>div': {
+                  p: '0px',
+                },
+                mb: '20px',
+              }}
+            >
               <Controller
-                control={control}
+                control={runControl}
                 name="defaultArgs"
+                defaultValue={item.config.defaultArgs}
                 render={({ onChange, value }) => (
                   <Input
                     label="Arguments"
@@ -249,8 +258,8 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
                   />
                 )}
               />
-            </FormProvider>
-          </Box>
+            </Box>
+          </FormProvider>
         </TinyPopup>
       )}
       {isCopy && !isLog && !isStop && (
@@ -263,7 +272,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
           secondaryText=""
           secondaryButton={['Cancel', handleCancelCopy]}
         >
-          <FormProvider {...methods}>
+          <FormProvider {...copyForm}>
             <Flex flexDirection="column">
               <Text
                 sx={{
@@ -277,7 +286,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
               </Text>
             </Flex>
             <Controller
-              control={control}
+              control={copyControl}
               defaultValue={`${item.name}${format(new Date(), 'dd-MM-yyyy')}`}
               name="appName"
               render={({ onChange, value }) => (
@@ -290,7 +299,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
                   labelProps={{ width: '100%', mb: '20px' }}
                   value={value}
                   onChange={(value: any) => onChange(value)}
-                  {...getInputValidation('appName', errors)}
+                  {...getInputValidation('appName', copyErrors)}
                 />
               )}
             />

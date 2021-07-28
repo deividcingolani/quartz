@@ -13,7 +13,6 @@ import routeNames from '../../../../routes/routeNames';
 
 // utils
 import setStatus from '../utils/setStatus';
-import setTypeOfJob from '../utils/setTypeOfJob';
 import executionDurationLocale from '../utils/durationLocale';
 
 const useJobsListRowData = (jobs: any) => {
@@ -69,7 +68,7 @@ const useJobsListRowData = (jobs: any) => {
         ),
       },
       {
-        children: setTypeOfJob(job.jobType),
+        children: job.jobType,
       },
       {
         children:

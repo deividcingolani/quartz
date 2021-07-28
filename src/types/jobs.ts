@@ -1,12 +1,14 @@
-import { DataEntity } from '.';
-import { User } from './user';
-import { Expectation } from './expectation';
-import { ActivityType } from './feature-group';
+export enum JobType {
+  PYSPARK = 'PYSPARK',
+  SPARK = 'SPARK',
+  FLINK = 'FLINK',
+  PYTHON = 'PYTHON',
+  DOCKER = 'DOCKER',
+}
 
-export enum JobsType {
-  spark = 'SPARK',
-  python = 'PYSPARK',
-  flink = 'FLINK',
+export enum FrameworkType {
+  SPARK = 'sparkJobConfiguration',
+  PYTHON = 'pythonJobConfiguration',
 }
 
 export interface ProjectJobs {
@@ -14,7 +16,8 @@ export interface ProjectJobs {
   projectId: number;
 }
 
-export interface Jobs extends DataEntity {
+export interface Jobs {
+  id: number;
   items: Jobs[];
   defaultValue: string | number;
   defaultArgs: string;
@@ -22,22 +25,10 @@ export interface Jobs extends DataEntity {
   lastRun: string;
   description: string;
   name: string;
-  partition: boolean;
-  primary: boolean;
-  jobType: JobsType;
-  onlineType?: JobsType;
-  label: boolean;
-  index: number;
-  version: number;
-  parentProjectName: string;
-  parentProjectId: number;
-  featurestoreId: number;
-  matchText: string;
-  highlights: any;
-  featureId: number;
+  jobType: JobType;
+  type: FrameworkType;
   projectId: number;
   executions: any;
-  email: string;
   config: JobsConfig;
   submissionTime: string;
 }
@@ -68,10 +59,6 @@ export interface JobExecutions {
   config: JobsConfig;
 }
 
-export interface Property {
-  [key: string]: string;
-}
-
 export interface JobExecutionData {
   appId: string;
   args: string;
@@ -92,15 +79,21 @@ export interface JobExecutionData {
   };
 }
 
+export interface PythonResourceConfig {
+  cores: number;
+  memory: number;
+}
+
 export interface JobsConfig {
-  amMemory: number;
   appName: string;
   appPath: string;
-  jobType: JobsType;
+  jobType: JobType;
   mainClass: string;
-  amVCores: number;
-  type: string;
+  type: FrameworkType;
   defaultArgs?: string;
+  // spark
+  amVCores: number;
+  amMemory: number;
   'spark.executor.memory': number;
   'spark.executor.cores': number;
   'spark.executor.enabled': boolean;
@@ -111,10 +104,14 @@ export interface JobsConfig {
   'spark.dynamicAllocation.initialExecutors': number;
   'spark.dynamicAllocation.maxExecutors': number;
   'spark.dynamicAllocation.minExecutors': number;
-  'spark.yarn.dist.pyFiles': string[];
-  'spark.yarn.dist.jars': string[];
-  'spark.yarn.dist.files': string[];
-  'spark.yarn.dist.archives': string[];
+  'spark.yarn.dist.pyFiles': string;
+  'spark.yarn.dist.jars': string;
+  'spark.yarn.dist.files': string;
+  'spark.yarn.dist.archives': string;
+  properties: string;
+  // python and docker
+  resourceConfig: PythonResourceConfig;
+  files: string;
 }
 
 export interface JobsDownloadFile {
@@ -124,59 +121,6 @@ export interface JobsDownloadFile {
   type?: string;
 }
 
-export interface ActivityItemData {
-  type: ActivityType;
-  timestamp: number;
-  href: string;
-  user: User;
-  metadata: string;
-  statistics: {
-    commitTime: string;
-    href: string;
-  };
-  executions: {
-    href: string;
-    finalStatus: string;
-    id: number;
-  };
-  commit: {
-    commitDateString: string;
-    commitID: number;
-    commitTime: number;
-    href: string;
-    rowsDeleted: number;
-    rowsInserted: number;
-    rowsUpdated: number;
-  };
-  validations: {
-    expectationResults: {
-      expectation: Expectation;
-      results: {
-        feature: string;
-        message: string;
-        rule: any;
-        status: string;
-        value: string;
-      }[];
-      status: string;
-    }[];
-  };
-}
-
 export interface JobsRowItem {
   items: Jobs[];
-}
-
-export interface JobsStorageConnector {
-  arguments: string;
-  connectionString?: string;
-  hopsfsPath?: string;
-  description: string;
-  featurestoreId: number;
-  id: number;
-  name: string;
-  bucket?: string;
-  storageConnectorType: JobsType;
-  accessKey?: string;
-  secretKey?: string;
 }

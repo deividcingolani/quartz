@@ -13,11 +13,10 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
 // Types
 import { RootState } from '../../../../store';
-import { DynamicAllocation, JobFormData } from '../types';
 import { JobsViewState } from '../../../../store/models/jobs/jobsView.model';
+import { JobsConfig } from '../../../../types/jobs';
 // layouts
 import JobsForm from '../form/JobsForm';
-import formatted from '../utils/formattedRequest';
 // Utils
 import titles from '../../../../sources/titles';
 import NotificationTitle from '../../../../utils/notifications/notificationBadge';
@@ -50,28 +49,10 @@ const JobsEdit: FC = () => {
   }, [projectId]);
 
   const handleUpdateSubmit = useCallback(
-    async (data: JobFormData, activeApp: any, additional: any) => {
-      const isDynamic: boolean =
-        data.dynamicAllocation === DynamicAllocation.DYNAMIC;
-      const req: any = {
-        ...formatted(data),
-        type: 'sparkJobConfiguration',
-        mainClass: 'io.hops.examples.featurestore_tour.Main',
-        'spark.dynamicAllocation.enabled': isDynamic,
-        'spark.yarn.dist.pyFiles': additional
-          ? additional.phyton.join(',')
-          : '',
-        'spark.yarn.dist.archives': additional
-          ? additional.archives.join(',')
-          : '',
-        'spark.yarn.dist.jars': additional ? additional.jars.join(',') : '',
-        'spark.yarn.dist.files': additional ? additional.files.join(',') : '',
-        appPath: `hdfs://${activeApp.path}/${activeApp.name}`,
-      };
-      delete req.dynamicAllocation;
+    async (data: JobsConfig) => {
       const id = await dispatch.jobs.update({
         projectId: +projectId,
-        data: req,
+        data,
         oldName: !!item && item.name,
       });
 
