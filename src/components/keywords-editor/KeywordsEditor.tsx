@@ -8,6 +8,7 @@ import {
   Input,
   usePopup,
   EditableSelect,
+  Tooltip,
 } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -175,22 +176,27 @@ const KeywordsEditor: FC<KeywordsEditorProps> = ({
   }
 
   return (
-    <Flex>
+    <Flex alignItems="baseline">
       {value?.length ? (
         <CardLabels labels={values} />
       ) : (
         <Badge variant="bold" value="No keywords" />
       )}
 
-      <Button
-        height="20px"
-        mt="-7px"
-        intent="inline"
-        disabled={isDisabled}
-        onClick={() => setEdit(true)}
+      <Tooltip
+        disabled={!isDisabled}
+        mainText="You have no edit right on the feature store"
       >
-        edit keywords
-      </Button>
+        <Button
+          height="20px"
+          mt="-7px"
+          intent="inline"
+          disabled={isDisabled}
+          onClick={() => setEdit(true)}
+        >
+          edit keywords
+        </Button>
+      </Tooltip>
     </Flex>
   );
 };

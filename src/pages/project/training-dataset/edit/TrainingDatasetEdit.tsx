@@ -18,7 +18,7 @@ import titles from '../../../../sources/titles';
 import TdInfoService from '../../../../services/localStorage/TdInfoService';
 
 const TrainingDatasetEdit: FC = () => {
-  const { id: projectId, tdId } = useParams();
+  const { id: projectId, fsId, tdId } = useParams();
   const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<Dispatch>();
@@ -27,24 +27,17 @@ const TrainingDatasetEdit: FC = () => {
 
   const [isPopupOpen, handleToggle] = usePopup();
 
-  const featureStoreData = useSelector((state: RootState) =>
-    state.featureStores?.length ? state.featureStores[0] : null,
-  );
-
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasetView.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData.featurestoreId,
-        trainingDatasetId: +tdId,
-        needProvenance: false,
-      });
-      dispatch.schematisedTags.fetch();
-      dispatch.featureGroupLabels.fetch({
-        projectId: +projectId,
-      });
-    }
-  }, [dispatch, projectId, featureStoreData, tdId]);
+    dispatch.trainingDatasetView.fetch({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+    });
+    dispatch.schematisedTags.fetch();
+    dispatch.featureGroupLabels.fetch({
+      projectId: +projectId,
+    });
+  }, [dispatch, projectId, fsId, tdId]);
 
   const trainingDataset = useSelector(
     (state: RootState) => state.trainingDatasetView,
@@ -69,38 +62,36 @@ const TrainingDatasetEdit: FC = () => {
         action: 'edit',
       });
 
-      if (featureStoreData?.featurestoreId) {
-        await dispatch.trainingDatasets.edit({
-          projectId: +projectId,
-          featureStoreId: featureStoreData?.featurestoreId,
-          trainingDatasetId: +tdId,
-          data: {
-            ...restData,
-            statisticsConfig: {
-              columns: statisticsColumns,
-              correlations,
-              enabled,
-              histograms,
-            },
+      await dispatch.trainingDatasets.edit({
+        projectId: +projectId,
+        featureStoreId: +fsId,
+        trainingDatasetId: +tdId,
+        data: {
+          ...restData,
+          statisticsConfig: {
+            columns: statisticsColumns,
+            correlations,
+            enabled,
+            histograms,
           },
-          prevTagNames: trainingDataset?.tags.map(({ name }) => name) || [],
-        });
+        },
+        prevTagNames: trainingDataset?.tags.map(({ name }) => name) || [],
+      });
 
-        dispatch.trainingDatasetView.clear();
+      dispatch.trainingDatasetView.clear();
 
-        TdInfoService.delete({
-          userId,
-          projectId: +projectId,
-        });
+      TdInfoService.delete({
+        userId,
+        projectId: +projectId,
+      });
 
-        navigate(`/${tdId}`, 'p/:id/td/*');
-      }
+      navigate(`/${tdId}`, 'p/:id/fs/:fsId/td/*');
     },
     [
       dispatch.error,
       dispatch.trainingDatasetView,
       dispatch.trainingDatasets,
-      featureStoreData?.featurestoreId,
+      fsId,
       navigate,
       projectId,
       tdId,
@@ -110,21 +101,19 @@ const TrainingDatasetEdit: FC = () => {
   );
 
   const handleDelete = useCallback(async () => {
-    if (featureStoreData?.featurestoreId) {
-      handleToggle();
-      await dispatch.trainingDatasets.delete({
-        projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-        trainingDatasetId: +tdId,
-      });
+    handleToggle();
+    await dispatch.trainingDatasets.delete({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+    });
 
-      dispatch.trainingDatasets.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
-      navigate('/td', 'p/:id/*');
-    }
-  }, [dispatch, featureStoreData, projectId, navigate, tdId, handleToggle]);
+    dispatch.trainingDatasets.fetch({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+    });
+    navigate('/td', 'p/:id/fs/:fsId/*');
+  }, [dispatch, projectId, navigate, fsId, tdId, handleToggle]);
 
   const isFeatureStoreLoading = useSelector(
     (state: RootState) => state.loading.effects.featureStores.fetch,

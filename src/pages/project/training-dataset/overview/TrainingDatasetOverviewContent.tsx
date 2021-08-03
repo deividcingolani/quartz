@@ -2,11 +2,11 @@
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Box } from 'rebass';
 import { useSelector } from 'react-redux';
-
+// Hooks
+import { useParams } from 'react-router-dom';
+// Components
 import { Button, Select } from '@logicalclocks/quartz';
 import { TrainingDataset } from '../../../../types/training-dataset';
-
-// Components
 import Panel from '../../../../components/panel/Panel';
 import TrainingDatasetOverviewSummary from './TrainingDatasetOverviewSummary';
 import Anchor from '../../../../components/anchor/Anchor';
@@ -23,6 +23,10 @@ import Provenance from '../../../../components/provenance';
 
 // Utils
 import { useVersionsSort } from '../utils';
+// Selectors
+import useUserPermissions from '../../feature-group/overview/useUserPermissions';
+// Types
+import { RootState } from '../../../../store';
 
 export interface TrainingDatasetContentProps {
   data: TrainingDataset;
@@ -49,7 +53,13 @@ const TrainingDatasetOverviewContent: FC<TrainingDatasetContentProps> = ({
   onClickRefresh,
   onClickEdit,
 }) => {
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { fsId } = useParams();
+
+  const { data: featureStoreData } = useSelector((state: RootState) =>
+    selectFeatureStoreData(state, +fsId),
+  );
+
+  const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
 
   const apiCode = useMemo(() => {
     return [
@@ -103,6 +113,7 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
         id={data.id}
         onClickEdit={onClickEdit}
         onClickRefresh={onClickRefresh}
+        isEditDisabled={!canEdit || isPermissionsLoading}
         idColor="labels.purple"
         hasVersionDropdown
         versionDropdown={
@@ -122,7 +133,10 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
         }
       />
       <Box mb="20px" mt="55px" width="100%">
-        <TrainingDatasetOverviewSummary data={data} />
+        <TrainingDatasetOverviewSummary
+          data={data}
+          canEdit={canEdit && isPermissionsLoading}
+        />
         <Anchor groupName="tdOverview" anchor={featureList}>
           <CardBoundary mt="20px" title="Feature list">
             <TrainingDatasetFeatureList data={data} />

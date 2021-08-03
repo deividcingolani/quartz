@@ -12,19 +12,19 @@ import Error404 from '../error/404Error';
 import { Dispatch, RootState } from '../../store';
 
 import {
-  FeatureGroupList,
+  MultiStoreFGList,
   FeatureGroupEdit,
   FeatureGroupCreate,
   FeatureGroupActivity,
   FeatureGroupDataPreview,
   FeatureGroupDataCorrelation,
   FeatureGroupStatistics,
-  StorageConnectorsList,
+  MultiStoreSCList,
   StorageConnectorsCreate,
   StorageConnectorsEdit,
   StorageConnectorsImportSample,
   FeatureGroupOverview,
-  TrainingDatasetList,
+  MultiStoreTDList,
   ProjectView,
   Settings,
   ProjectEdit,
@@ -66,6 +66,8 @@ const Project: FC = () => {
     dispatch.featureStoreStorageConnectors.clear();
     dispatch.featureStores.setFeatureStores(null);
     dispatch.featureStoreSettings.clear();
+    dispatch.multistore.clear();
+    dispatch.project.clear();
   }, [dispatch]);
 
   useEffect(() => {
@@ -96,7 +98,7 @@ const Project: FC = () => {
       />
       <Route
         path={routeNames.featureGroup.list}
-        element={<FeatureGroupList />}
+        element={<MultiStoreFGList />}
       />
       <Route
         path={routeNames.featureGroup.create}
@@ -169,7 +171,7 @@ const Project: FC = () => {
       />
       <Route
         path={routeNames.trainingDataset.list}
-        element={<TrainingDatasetList />}
+        element={<MultiStoreTDList />}
       />
       <Route
         path={routeNames.trainingDataset.overview}
@@ -214,7 +216,7 @@ const Project: FC = () => {
 
       <Route
         path={routeNames.storageConnector.list}
-        element={<StorageConnectorsList />}
+        element={<MultiStoreSCList />}
       />
       <Route
         path={routeNames.storageConnector.create}

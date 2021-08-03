@@ -50,7 +50,9 @@ const ExpectationDrawer = ({
         <Flex alignItems="center">
           <Value mr="10px">{name}</Value>
           <Button
-            onClick={() => navigate(`/expectation/${item.name}`, 'p/:id/*')}
+            onClick={() =>
+              navigate(`/expectation/${item.name}`, 'p/:id/fs/:fsId/*')
+            }
             intent="ghost"
           >
             Edit
@@ -64,7 +66,7 @@ const ExpectationDrawer = ({
           <Button
             intent="ghost"
             onClick={() =>
-              navigate('/activity/VALIDATIONS', '/p/:id/fg/:fgId/*')
+              navigate('/activity/VALIDATIONS', '/p/:id/fs/:fdId/fg/:fgId/*')
             }
           >
             View full expectation activity

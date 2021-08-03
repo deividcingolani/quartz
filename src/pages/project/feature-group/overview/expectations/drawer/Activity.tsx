@@ -6,7 +6,7 @@ import { Labeling, Row, Select } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Types
-import { Dispatch, RootState } from '../../../../../../store';
+import { Dispatch } from '../../../../../../store';
 import { Expectation } from '../../../../../../types/expectation';
 
 import {
@@ -23,7 +23,7 @@ export interface ActivityProps {
 }
 
 const Activity: FC<ActivityProps> = ({ id, expectation }) => {
-  const { id: projectId } = useParams();
+  const { id: projectId, fsId } = useParams();
 
   const [selected, setSelected] = useState<number>(id);
 
@@ -35,19 +35,13 @@ const Activity: FC<ActivityProps> = ({ id, expectation }) => {
 
   const dispatch = useDispatch<Dispatch>();
 
-  const featureStoreData = useSelector((state: RootState) =>
-    state.featureStores?.length ? state.featureStores[0] : null,
-  );
-
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.validators.fetch({
-        projectId: +projectId,
-        featureGroupId: selected,
-        featureStoreId: featureStoreData?.featurestoreId,
-      });
-    }
-  }, [dispatch, featureStoreData, projectId, selected]);
+    dispatch.validators.fetch({
+      projectId: +projectId,
+      featureGroupId: selected,
+      featureStoreId: +fsId,
+    });
+  }, [dispatch, fsId, projectId, selected]);
 
   const handleFGChange = (values: string[]) => {
     const toSelect = expectation.attachedFeatureGroups?.find(

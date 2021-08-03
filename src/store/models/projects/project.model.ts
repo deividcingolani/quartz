@@ -9,6 +9,7 @@ const project = createModel()({
   state: {} as Project,
   reducers: {
     setProject: (_: ProjectState, payload: Project): ProjectState => payload,
+    clear: () => ({} as Project),
   },
   effects: (dispatch) => ({
     getProject: async (id: number): Promise<void> => {

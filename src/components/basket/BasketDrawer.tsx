@@ -14,6 +14,7 @@ import {
 import { placeholder } from '../../sources/basketSvg';
 import { FeatureGroup } from '../../types/feature-group';
 import { Feature } from '../../types/feature';
+import { selectFeatureStoreData } from '../../store/models/feature/selectors';
 import { FeatureGroupBasket } from '../../services/localStorage/BasketService';
 import TdInfoService from '../../services/localStorage/TdInfoService';
 
@@ -42,6 +43,7 @@ type BasketFeaturesOptions = {
   navigate: NavigateFunction;
   handleToggle: () => void;
   projectId: number;
+  fsId: string;
   // eslint-disable-next-line react/no-unused-prop-types
   directMode: boolean;
   dispatch: Dispatch;
@@ -53,6 +55,7 @@ const BasketEnabledFeaturesSelected: React.FC<any> = ({
   handleToggle,
   navigate,
   projectId,
+  fsId,
   userId,
   dispatch,
 }: BasketFeaturesOptions) => (
@@ -63,7 +66,7 @@ const BasketEnabledFeaturesSelected: React.FC<any> = ({
         disabled={!featureGroups.length}
         onClick={() => {
           handleToggle();
-          navigate(`/p/${projectId}/td/new`);
+          navigate(`/p/${projectId}/fs/${fsId}/td/new`);
         }}
       >
         {!TdInfoService.getInfo({ userId, projectId })
@@ -102,6 +105,7 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
 }) => {
   const featureLength = useSelector(selectBasketFeaturesLength);
   const featureGroups = useSelector(selectFeatureGroups);
+  const { data: fs } = useSelector(selectFeatureStoreData);
 
   const navigate = useNavigate();
 
@@ -147,7 +151,9 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
                 userId,
               });
             } else {
-              navigate(`/p/${projectId}/td/new`);
+              navigate(
+                `/p/${projectId}/fs/${String(fs?.featurestoreId)}/td/new`,
+              );
             }
             handleToggle();
           }}
@@ -210,6 +216,7 @@ const BasketDrawer: FC<BasketDrawerProps> = ({
             directMode={directMode}
             dispatch={dispatch}
             projectId={projectId}
+            fsId={String(fs?.featurestoreId)}
             handleToggle={handleToggle}
             navigate={navigate}
             featureGroups={featureGroups}

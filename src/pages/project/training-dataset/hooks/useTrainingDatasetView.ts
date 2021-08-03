@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Dispatch, RootState } from '../../../../store';
 
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { TrainingDatasetViewState } from '../../../../store/models/training-dataset/trainingDatasetView.model';
 
 export interface UseTrainingDatasetView {
@@ -15,7 +15,7 @@ const useTrainingDatasetView = (
   projectId: number,
   tdId: number,
 ): UseTrainingDatasetView => {
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { fsId } = useParams();
 
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.trainingDatasetView.fetch,
@@ -28,20 +28,17 @@ const useTrainingDatasetView = (
   const dispatch = useDispatch<Dispatch>();
 
   const fetchData = useCallback(() => {
-    if (featureStoreData?.featurestoreId && !isLoading) {
+    if (!isLoading) {
       dispatch.trainingDatasetView.fetch({
         projectId,
-        featureStoreId: featureStoreData.featurestoreId,
+        featureStoreId: +fsId,
         trainingDatasetId: tdId,
       });
     }
-  }, [dispatch, tdId, isLoading, featureStoreData, projectId]);
+  }, [dispatch, tdId, isLoading, fsId, projectId]);
 
   useEffect(() => {
-    if (
-      tdId !== data?.id ||
-      featureStoreData?.featurestoreId !== data.featurestoreId
-    ) {
+    if (tdId !== data?.id || +fsId !== data.featurestoreId) {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

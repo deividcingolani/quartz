@@ -83,12 +83,12 @@ export interface ProvenanceData {
   links: ProvenanceLink[];
 }
 
-export interface ProvenanceState {
+export type ProvenanceState = {
   upstream: ProvenanceData;
   downstream: ProvenanceData;
   root: ProvenanceNode;
   count: number;
-}
+} | null;
 
 export interface ProvenanceGraphValue {
   nodes: ProvenanceNode[];

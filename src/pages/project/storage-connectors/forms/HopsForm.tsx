@@ -3,11 +3,11 @@ import React, { FC, useEffect, useMemo } from 'react';
 import { Select } from '@logicalclocks/quartz';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 // Utils
 import { Controller } from 'react-hook-form';
 import { Dispatch, RootState } from '../../../../store';
 import getInputValidation from '../../../../utils/getInputValidation';
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 // Default validators
 import { shortText } from '../../../../utils/validators';
 // Types
@@ -23,21 +23,20 @@ const HopsForm: FC<StorageConnectorFormProps> = ({
   isDisabled,
   errors,
 }) => {
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { id: projectId } = useParams();
 
   const datasets = useSelector((state: RootState) => state.dataset);
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
-    if (featureStoreData?.projectId && featureStoreData?.featurestoreId) {
-      dispatch.dataset.fetch({
-        projectId: featureStoreData.projectId,
-      });
-    }
+    dispatch.dataset.fetch({
+      projectId: +projectId,
+    });
+
     return () => {
       dispatch.dataset.clear();
     };
-  }, [dispatch.dataset, featureStoreData]);
+  }, [dispatch.dataset, projectId]);
 
   const datasetNames = useMemo(() => {
     return datasets.map((ds: Dataset) => ds.name);

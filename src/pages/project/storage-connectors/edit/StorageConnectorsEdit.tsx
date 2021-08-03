@@ -5,8 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-// Selectors
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import useTitle from '../../../../hooks/useTitle';
 // Types
 import StorageConnectorProtocol from '../types';
 import { Dispatch, RootState } from '../../../../store';
@@ -16,25 +15,21 @@ import Loader from '../../../../components/loader/Loader';
 import StorageConnectorsForm from '../forms/StorageConnectorsForm';
 // Utils
 import { formatArguments, getDtoType, protocolOptions } from '../utils';
-import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
 const StorageConnectorsEdit: FC = () => {
-  const { connectorName, id: projectId } = useParams();
+  const { connectorName, id: projectId, fsId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();
 
   const [isPopupOpen, handleToggle] = usePopup();
 
-  const { data: featureStoreData, isLoading: isFeatureStoreLoading } =
-    useSelector(selectFeatureStoreData);
-
   useEffect(() => {
-    if (projectId && featureStoreData) {
+    if (projectId) {
       dispatch.featureStoreStorageConnectors.fetchOne({
         projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
+        featureStoreId: +fsId,
         connectorName,
       });
       return () => {
@@ -42,7 +37,7 @@ const StorageConnectorsEdit: FC = () => {
       };
     }
     return undefined;
-  }, [connectorName, dispatch, projectId, featureStoreData]);
+  }, [connectorName, dispatch, projectId, fsId]);
 
   const isSubmit = useSelector(
     (state: RootState) =>
@@ -69,62 +64,58 @@ const StorageConnectorsEdit: FC = () => {
 
       const formattedArgs = formatArguments(args);
 
-      if (featureStoreData?.featurestoreId) {
-        dispatch.error.clear({
-          name: 'featureStoreStorageConnectors',
-          action: 'edit',
-        });
-
-        await dispatch.featureStoreStorageConnectors.edit({
-          projectId: +projectId,
-          featureStoreId: featureStoreData?.featurestoreId,
-          connectorName,
-          data: {
-            // JDBC, REDSHIFT keyvalue (arguments)
-            ...([
-              StorageConnectorProtocol.jdbc,
-              StorageConnectorProtocol.redshift,
-            ].includes(storageConnectorType) && {
-              arguments: formattedArgs,
-            }),
-            // SNOWFLAKE keyvalue (sfOtions)
-            ...(storageConnectorType === StorageConnectorProtocol.snowflake && {
-              sfOptions,
-            }),
-            type: getDtoType(storageConnectorType),
-            ...restData,
-          },
-        });
-
-        dispatch.featureStoreStorageConnectors.clear();
-
-        navigate('/storage-connectors', 'p/:id/*');
-      }
-    },
-    [dispatch, navigate, projectId, connectorName, featureStoreData],
-  );
-
-  const handleDelete = useCallback(async () => {
-    if (featureStoreData?.featurestoreId) {
       dispatch.error.clear({
         name: 'featureStoreStorageConnectors',
-        action: 'delete',
+        action: 'edit',
       });
-      await dispatch.featureStoreStorageConnectors.delete({
+
+      await dispatch.featureStoreStorageConnectors.edit({
         projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
+        featureStoreId: +fsId,
         connectorName,
+        data: {
+          // JDBC, REDSHIFT keyvalue (arguments)
+          ...([
+            StorageConnectorProtocol.jdbc,
+            StorageConnectorProtocol.redshift,
+          ].includes(storageConnectorType) && {
+            arguments: formattedArgs,
+          }),
+          // SNOWFLAKE keyvalue (sfOtions)
+          ...(storageConnectorType === StorageConnectorProtocol.snowflake && {
+            sfOptions,
+          }),
+          type: getDtoType(storageConnectorType),
+          ...restData,
+        },
       });
 
       dispatch.featureStoreStorageConnectors.clear();
 
-      navigate('/storage-connectors', 'p/:id/*');
-    }
-  }, [dispatch, featureStoreData, projectId, navigate, connectorName]);
+      navigate('/storage-connectors', 'p/:id/fs/:fsId/*');
+    },
+    [dispatch, navigate, projectId, connectorName, fsId],
+  );
+
+  const handleDelete = useCallback(async () => {
+    dispatch.error.clear({
+      name: 'featureStoreStorageConnectors',
+      action: 'delete',
+    });
+    await dispatch.featureStoreStorageConnectors.delete({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+      connectorName,
+    });
+
+    dispatch.featureStoreStorageConnectors.clear();
+
+    navigate('/storage-connectors', 'p/:id/fs/:fsId/*');
+  }, [dispatch, fsId, projectId, navigate, connectorName]);
 
   useTitle(`${titles.editStorageConnector} - ${storageConnector?.name}`);
 
-  if (isFeatureStoreLoading || rest.length || !storageConnector) {
+  if (rest.length || !storageConnector) {
     return <Loader />;
   }
 

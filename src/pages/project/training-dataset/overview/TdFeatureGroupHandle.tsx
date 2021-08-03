@@ -30,7 +30,10 @@ const TdFeatureGroupHandle: FC<TdFeatureGroupHandleProps> = ({
         mx="-15px"
         intent="inline"
         onClick={() =>
-          window.open(getHref(`/fg/${featureGroup?.id}`, 'p/:id/*'), '_blank')
+          window.open(
+            getHref(`/fg/${featureGroup?.id}`, 'p/:id/fs/:fsId/*'),
+            '_blank',
+          )
         }
       >
         {featureGroup.name} ↗

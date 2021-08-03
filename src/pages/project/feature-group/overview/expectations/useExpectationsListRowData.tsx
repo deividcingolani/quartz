@@ -13,6 +13,7 @@ import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
 import { rulesMap } from '../../../../expectation/types';
 import { cropText } from '../../../storage-connectors/utils';
 import { getStatusCount } from '../../../../../components/activity/utils';
+import useUserPermissions from '../useUserPermissions';
 
 const useExpectationsListRowData = (
   data: FeatureGroup,
@@ -33,10 +34,13 @@ const useExpectationsListRowData = (
 
   const handleNavigate = useCallback(
     (route: string) => (): void => {
-      navigate(route, 'p/:id/*');
+      navigate(route, 'p/:id/fs/:fsId/*');
     },
     [navigate],
   );
+
+  const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
+  const userCanEdit = canEdit && !isPermissionsLoading;
 
   const groupProps = useMemo(() => {
     let successCount = 0;
@@ -102,12 +106,19 @@ const useExpectationsListRowData = (
                 {icons.bin}
               </Box>
             </Tooltip>
-            <Tooltip ml="8px" mainText="Edit">
+            <Tooltip
+              ml="8px"
+              mainText={
+                userCanEdit
+                  ? 'Edit'
+                  : "Can't edit expectations of shared feature groups"
+              }
+            >
               <Box
                 p="5px"
                 height="28px"
                 sx={{
-                  cursor: 'pointer',
+                  cursor: userCanEdit ? 'pointer' : '',
                   backgroundColor: '#ffffff',
                   transition: 'all .4s ease',
 
@@ -118,6 +129,11 @@ const useExpectationsListRowData = (
                   svg: {
                     width: '20px',
                     height: '20px',
+                    ...(!userCanEdit && {
+                      path: {
+                        fill: '#a0a0a0',
+                      },
+                    }),
                   },
                 }}
                 onClick={handleNavigate(`/expectation/${name}`)}
@@ -155,7 +171,14 @@ const useExpectationsListRowData = (
         ),
       },
     ]);
-  }, [data, handleNavigate, onOpenDrawer, onDelete]);
+  }, [
+    data.lastValidation,
+    data.expectations,
+    userCanEdit,
+    handleNavigate,
+    onDelete,
+    onOpenDrawer,
+  ]);
 
   return useMemo(() => {
     return [groupComponents, groupProps];

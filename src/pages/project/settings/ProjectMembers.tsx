@@ -48,7 +48,7 @@ import NotificationTitle from '../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../utils/notifications/notificationValue';
 
 export interface StorageConnectorListContentProps {
-  data: Project;
+  project: Project;
 }
 
 const contentProps = {
@@ -67,7 +67,7 @@ const getVariant = (role: string) => {
 
 const DATA_OWNER = 'Data owner';
 
-const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
+const ProjectMembers: FC<StorageConnectorListContentProps> = ({ project }) => {
   const { id } = useParams();
 
   const allMembers = useSelector(selectMembers);
@@ -86,9 +86,10 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
 
   const membersToSelect = useMemo(() => {
     return allMembers.data?.filter(
-      ({ email }) => !data.projectTeam.find(({ user }) => user.email === email),
+      ({ email }) =>
+        !project.projectTeam.find(({ user }) => user.email === email),
     );
-  }, [data, allMembers]);
+  }, [project, allMembers]);
 
   const [isEditMembers, setIsEdit] = useState<boolean>(false);
   const [isAddMembers, setIsAddMembers] = useState<boolean>(false);
@@ -96,16 +97,16 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
   const me = useSelector((state: RootState) => state.profile);
 
   const myRole = useMemo(() => {
-    return data.projectTeam.find((user) => user.user.fname === me.firstname)
+    return project.projectTeam.find((user) => user.user.fname === me.firstname)
       ?.teamRole;
-  }, [data, me]);
+  }, [project, me]);
 
   const projectTeam = useMemo(() => {
-    return data.projectTeam.sort(
+    return project.projectTeam.sort(
       ({ user: userA }, { user: userB }) =>
         userA.fname?.localeCompare(userB.fname || '') || 1,
     );
-  }, [data]);
+  }, [project]);
 
   const handleChangeRole = useCallback(
     (index: number) => async (value: string[]) => {
@@ -180,13 +181,13 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
         Value,
         Labeling,
         Select,
-        user.email !== me.email && user.email !== data.owner
+        user.email !== me.email && user.email !== project.owner
           ? IconButton
           : () => null,
       ]);
     }
     return projectTeam.map(() => [Tooltip, Value, Labeling, Badge]);
-  }, [projectTeam, isEditMembers, me, data]);
+  }, [projectTeam, isEditMembers, me, project]);
 
   const groupProps = useMemo(() => {
     if (isEditMembers) {
@@ -208,10 +209,10 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
         },
         {
           value: [
-            user.email === data.owner ? 'author' : teamRole.toLowerCase(),
+            user.email === project.owner ? 'author' : teamRole.toLowerCase(),
           ],
           disabled:
-            user.email === data.owner ||
+            user.email === project.owner ||
             user.email === me.email ||
             isEditingMembers ||
             isRefetchingList,
@@ -219,7 +220,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
           width: 'fit-content',
           onChange: (value: string[]) => handleChangeRole(index)(value),
         },
-        user.email !== me.email && user.email !== data.owner
+        user.email !== me.email && user.email !== project.owner
           ? {
               tooltip: 'remove',
               intent: 'ghost',
@@ -247,15 +248,15 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
       },
       {
         width: 'max-content',
-        value: user.email === data.owner ? 'author' : teamRole.toLowerCase(),
-        variant: getVariant(user.email === data.owner ? 'Author' : teamRole),
+        value: user.email === project.owner ? 'author' : teamRole.toLowerCase(),
+        variant: getVariant(user.email === project.owner ? 'Author' : teamRole),
         fontFamily: 'Inter',
         mr: '10px',
       },
     ]);
   }, [
     me,
-    data,
+    project,
     projectTeam,
     handleDelete,
     isEditMembers,
@@ -305,9 +306,9 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
       >
         <Flex alignItems="center" pb="15px" justifyContent="space-between">
           <Flex>
-            <Value primary>{data.projectTeam.length}</Value>
+            <Value primary>{project.projectTeam.length}</Value>
             <Labeling bold ml="5px">
-              {data.projectTeam.length > 1 ? 'members' : 'member'}
+              {project.projectTeam.length > 1 ? 'members' : 'member'}
             </Labeling>
           </Flex>
           {myRole === DATA_OWNER && (

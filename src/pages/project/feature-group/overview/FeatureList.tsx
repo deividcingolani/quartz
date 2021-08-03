@@ -68,9 +68,11 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
               intent="inline"
               href={getHref(
                 '/statistics',
-                'data.onlineEnabled ? "offline type" : "type"/p/:id/fg/:fgId/*',
+                'data.onlineEnabled ? "offline type" : "type"/p/:id/fs/:fdId/fg/:fgId/*',
               )}
-              onClick={() => navigate('/statistics', '/p/:id/fg/:fgId/*')}
+              onClick={() =>
+                navigate('/statistics', '/p/:id/fs/:fdId/fg/:fgId/*')
+              }
             >
               inspect data
             </Button>
@@ -99,8 +101,10 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           <Button
             p={0}
             intent="inline"
-            href={getHref('/statistics', '/p/:id/fg/:fgId/*')}
-            onClick={() => navigate('/statistics', '/p/:id/fg/:fgId/*')}
+            href={getHref('/statistics', '/p/:id/fs/:fdId/fg/:fgId/*')}
+            onClick={() =>
+              navigate('/statistics', '/p/:id/fs/:fdId/fg/:fgId/*')
+            }
           >
             inspect data
           </Button>

@@ -51,7 +51,7 @@ const AppHeader: FC<AppHeaderProps> = ({
   }, [lastProjectId, navigate]);
 
   // Only show the basket in the feature groups section
-  const showBasket = !!matchPath('/p/:id/fg/*', location.pathname);
+  const showBasket = !!matchPath('/p/:id/fs/:fsId/fg/*', location.pathname);
 
   return (
     <Header

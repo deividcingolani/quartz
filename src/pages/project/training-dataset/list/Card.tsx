@@ -26,7 +26,6 @@ import { TrainingDataset } from '../../../../types/training-dataset';
 import { RootState } from '../../../../store';
 import CardLabels from '../../feature-group/list/CardLabels';
 import icons from '../../../../sources/icons';
-import routeNames from '../../../../routes/routeNames';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 const Card: FC<HoverableCardProps<TrainingDataset>> = ({
@@ -42,7 +41,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':tdId', String(id)), routeNames.project.view);
+      navigate(route.replace(':tdId', String(id)), 'p/:id/fs/:fsId/*');
     },
     [navigate],
   );
@@ -64,18 +63,17 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
                   e.stopPropagation();
                   e.preventDefault();
                   if (hasMatchText) {
-                    navigate(`/p/${data.parentProjectId}/td/${data.id}`);
+                    navigate(
+                      `/p/${data.parentProjectId}/fs/${data.featurestoreId}/td/${data.id}`,
+                    );
                   } else {
-                    handleNavigate(data.id, '/td/:tdId')();
+                    handleNavigate(data.id, `/td/:tdId`)();
                   }
                 }}
                 href={
                   hasMatchText
-                    ? `/p/${data.parentProjectId}/td/${data.id}`
-                    : getHref(
-                        '/td/:tdId'.replace(':tdId', String(data.id)),
-                        routeNames.project.view,
-                      )
+                    ? `/p/${data.parentProjectId}/fs/${data.featurestoreId}/td/${data.id}/`
+                    : getHref(`/td/${data.id}`, 'p/:id/fs/:fsId/*')
                 }
                 sx={{
                   textDecoration: 'none',

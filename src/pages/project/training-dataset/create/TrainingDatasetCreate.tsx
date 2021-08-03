@@ -15,11 +15,12 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 import TdInfoService from '../../../../services/localStorage/TdInfoService';
+import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 
 const TrainingDatasetCreate: FC = () => {
   useTitle(titles.createTrainingDataset);
 
-  const { id: projectId } = useParams();
+  const { id: projectId, fsId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -27,27 +28,25 @@ const TrainingDatasetCreate: FC = () => {
 
   const { id: userId } = useSelector((state: RootState) => state.profile);
 
-  const featureStoreData = useSelector((state: RootState) =>
-    state.featureStores?.length ? state.featureStores[0] : null,
+  const { data: featureStoreData } = useSelector((state: RootState) =>
+    selectFeatureStoreData(state, +fsId),
   );
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.schematisedTags.fetch();
-      dispatch.featureStoreStorageConnectors.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-      });
-      dispatch.featureGroupLabels.fetch({
-        projectId: +projectId,
-      });
-      dispatch.featureGroups.fetch({
-        projectId: +projectId,
-        featureStoreId: +featureStoreData.featurestoreId,
-        needMore: false,
-      });
-    }
-  }, [dispatch, projectId, featureStoreData]);
+    dispatch.schematisedTags.fetch();
+    dispatch.featureStoreStorageConnectors.fetch({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+    });
+    dispatch.featureGroupLabels.fetch({
+      projectId: +projectId,
+    });
+    dispatch.featureGroups.fetch({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+      needMore: false,
+    });
+  }, [dispatch, projectId, fsId]);
 
   const handleSubmit = useCallback(
     async (data: TrainingDatasetFormData) => {
@@ -67,7 +66,6 @@ const TrainingDatasetCreate: FC = () => {
         name: 'trainingDatasets',
         action: 'create',
       });
-
       if (featureStoreData?.featurestoreId) {
         const queryDTO = {
           filter: mapFilters(rowFilters),
@@ -76,7 +74,7 @@ const TrainingDatasetCreate: FC = () => {
 
         const id = await dispatch.trainingDatasets.create({
           projectId: +projectId,
-          featureStoreId: featureStoreData?.featurestoreId,
+          featureStoreId: +fsId,
           data: {
             ...restData,
             dataFormat: dataFormatMap.getByKey(dataFormat[0]),
@@ -104,7 +102,7 @@ const TrainingDatasetCreate: FC = () => {
           // settings.
           dispatch.trainingDatasets.compute({
             projectId: +projectId,
-            featureStoreId: featureStoreData?.featurestoreId,
+            featureStoreId: +fsId,
             trainingDatasetId: id,
             computeConf: { query: queryDTO },
           });
@@ -118,7 +116,7 @@ const TrainingDatasetCreate: FC = () => {
           dispatch.basket.clear({ projectId: +projectId, userId });
           dispatch.search.fetchTd({
             projectId: +projectId,
-            featureStoreId: featureStoreData.featurestoreId,
+            featureStoreId: +fsId,
           });
 
           TdInfoService.delete({
@@ -126,11 +124,11 @@ const TrainingDatasetCreate: FC = () => {
             projectId: +projectId,
           });
 
-          navigate(`/${id}`, 'p/:id/td/*');
+          navigate(`/${id}`, 'p/:id/fs/:fsId/td/*');
         }
       }
     },
-    [dispatch, featureStoreData, navigate, projectId, userId],
+    [dispatch, featureStoreData, fsId, navigate, projectId, userId],
   );
 
   const isFeatureStoreLoading = useSelector(

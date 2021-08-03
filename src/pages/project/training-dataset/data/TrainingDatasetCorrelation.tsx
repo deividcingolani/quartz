@@ -6,26 +6,22 @@ import { Button, Select } from '@logicalclocks/quartz';
 import routeNames from '../../../../routes/routeNames';
 // Types
 import { Dispatch, RootState } from '../../../../store';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 // Hooks
 import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useTitle from '../../../../hooks/useTitle';
 // Components
 import Panel from '../../../../components/panel/Panel';
 import Loader from '../../../../components/loader/Loader';
 import NoData from '../../../../components/no-data/NoData';
 import Correlation from '../../../../components/correlation/Correlation';
-// Selectors
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
-import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
-import useTitle from '../../../../hooks/useTitle';
-import titles from '../../../../sources/titles';
 // Utils
+import titles from '../../../../sources/titles';
 import { useVersionsSort } from '../utils';
 
 const TrainingDatasetCorrelation: FC = () => {
-  const { id, tdId } = useParams();
-
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { id, fsId, tdId } = useParams();
 
   const statistics = useSelector(
     (state: RootState) => state.trainingDatasetStatistics?.entities.statistics,
@@ -41,36 +37,32 @@ const TrainingDatasetCorrelation: FC = () => {
   const navigate = useNavigateRelative();
 
   const handleRefreshData = useCallback(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasets.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
-      dispatch.trainingDatasetStatistics.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        trainingDatasetId: +tdId,
-      });
-    }
-  }, [id, tdId, dispatch, featureStoreData]);
+    dispatch.trainingDatasets.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+    });
+    dispatch.trainingDatasetStatistics.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+    });
+  }, [id, tdId, dispatch, fsId]);
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasets.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
-      dispatch.trainingDatasetStatistics.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        trainingDatasetId: +tdId,
-      });
-    }
+    dispatch.trainingDatasets.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+    });
+    dispatch.trainingDatasetStatistics.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+    });
 
     return () => {
       dispatch.trainingDatasetStatistics.clear();
     };
-  }, [id, tdId, dispatch, featureStoreData]);
+  }, [id, tdId, dispatch, fsId]);
 
   const latestVersion = useMemo(
     () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
@@ -88,7 +80,7 @@ const TrainingDatasetCorrelation: FC = () => {
       const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
-        navigate(`/${newId}/correlation`, '/p/:id/td/*');
+        navigate(`/${newId}/correlation`, '/p/:id/fs/:fsId/td/*');
       }
     },
     [data, navigate],
@@ -107,7 +99,9 @@ const TrainingDatasetCorrelation: FC = () => {
       <NoData mainText="No Features" secondaryText="">
         <Button
           intent="secondary"
-          onClick={() => navigate(routeNames.trainingDataset.list, 'p/:id/*')}
+          onClick={() =>
+            navigate(routeNames.trainingDataset.list, 'p/:id/fs/:fsId/*')
+          }
         >
           Training Datasets
         </Button>
@@ -123,7 +117,9 @@ const TrainingDatasetCorrelation: FC = () => {
       <NoData mainText="No Feature Statistics" secondaryText="">
         <Button
           intent="secondary"
-          onClick={() => navigate(routeNames.trainingDataset.list, 'p/:id/*')}
+          onClick={() =>
+            navigate(routeNames.trainingDataset.list, 'p/:id/fs/:fsId/*')
+          }
         >
           Training Datasets
         </Button>

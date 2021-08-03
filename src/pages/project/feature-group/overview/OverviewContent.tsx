@@ -2,26 +2,29 @@
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Box } from 'rebass';
 import { Button, Select } from '@logicalclocks/quartz';
-
-// Components
+// Hooks
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useUserPermissions from './useUserPermissions';
+// Components
 import Anchor from '../../../../components/anchor/Anchor';
 import routeNames from '../../../../routes/routeNames';
 import CodeCard from './CodeCard';
 import Panel from '../../../../components/panel/Panel';
-
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
+import { RootState } from '../../../../store';
 // Features
 import SummaryData from './SummaryData';
 import SchematisedTags from './SchematisedTags';
 import Provenance from '../../../../components/provenance';
 import FeatureList from './FeatureList';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import Expectations from './expectations/Expectations';
 import CardBoundary from '../../../../components/error-boundary/CardBoundary';
+// Selectors
+import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 
 export interface ContentProps {
   data: FeatureGroup;
@@ -53,7 +56,17 @@ const OverviewContent: FC<ContentProps> = ({
   onClickRefresh,
   onClickEdit,
 }) => {
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { fsId } = useParams();
+
+  const { data: featurestore } = useSelector((state: RootState) =>
+    selectFeatureStoreData(state, +fsId),
+  );
+
+  const {
+    canEdit,
+    isOwnFs,
+    isLoading: isPermissionsLoading,
+  } = useUserPermissions();
 
   const apiCode = useMemo(() => {
     return [
@@ -62,7 +75,7 @@ const OverviewContent: FC<ContentProps> = ({
         language: 'python',
         code: `import hsfs
 connection = hsfs.connection()
-fs = connection.get_feature_store(name='${featureStoreData?.featurestoreName}')
+fs = connection.get_feature_store(name='${featurestore?.featurestoreName}')
 fg = fs.get_feature_group('${data.name}', version=${data.version})`,
       },
       {
@@ -70,11 +83,11 @@ fg = fs.get_feature_group('${data.name}', version=${data.version})`,
         language: 'scala',
         code: `import com.logicalclocks.hsfs._ 
 val connection = HopsworksConnection.builder().build();
-val fs = connection.getFeatureStore("${featureStoreData?.featurestoreName}");
+val fs = connection.getFeatureStore("${featurestore?.featurestoreName}");
 val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
       },
     ];
-  }, [data, featureStoreData]);
+  }, [data, featurestore]);
 
   const navigate = useNavigateRelative();
 
@@ -131,11 +144,12 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
           />
         }
         idColor="labels.orange"
+        isEditDisabled={!canEdit || isPermissionsLoading}
         onClickEdit={onClickEdit}
         onClickRefresh={onClickRefresh}
       />
       <Box mt="55px" width="100%">
-        <SummaryData data={data} />
+        <SummaryData data={data} canEdit={canEdit && !isPermissionsLoading} />
         <Anchor groupName="fgOverview" anchor={featureList}>
           <CardBoundary mt="20px" title="Feature list">
             <FeatureList data={data} />
@@ -148,7 +162,10 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
         </Anchor>
 
         <Anchor groupName="fgOverview" anchor={expectations}>
-          <Expectations data={data} />
+          <Expectations
+            data={data}
+            isOwnFs={isOwnFs && !isPermissionsLoading}
+          />
         </Anchor>
 
         <Anchor groupName="fgOverview" anchor={schematisedTags}>

@@ -25,7 +25,7 @@ const StorageConnectorsImportSample: FC = () => {
       </Text>
       <Flex mt="20px">
         <Button
-          onClick={() => navigate('/storage-connectors', 'p/:id/*')}
+          onClick={() => navigate('/storage-connectors', 'p/:id/fs/:fsId/*')}
           intent="secondary"
         >
           Use another method

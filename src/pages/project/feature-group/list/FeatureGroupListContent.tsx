@@ -27,7 +27,7 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
   hasMatchText,
   loading,
 }) => {
-  const { id } = useParams();
+  const { id, fsId } = useParams();
 
   const { isOpen, selectedId, handleSelectItem, handleClose } = useDrawer();
 
@@ -39,7 +39,7 @@ const FeatureGroupListContent: FC<FeatureGroupListContentProps> = ({
     if (fg && selectedId && hasMatchText) {
       dispatch.featureGroups.fetch({
         projectId: fg.parentProjectId,
-        featureStoreId: fg.featurestoreId,
+        featureStoreId: +fsId,
       });
     }
 

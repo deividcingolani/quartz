@@ -11,5 +11,7 @@ export interface Dataset {
   publicDataset: number;
   searchable: boolean;
   shared: boolean;
+  sharedBy: { href: string };
+  acceptedBy: { href: string };
   sharedWith: string;
 }

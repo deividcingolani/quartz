@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, useCallback } from 'react';
 import { Box, Flex } from 'rebass';
 import {
   Badge,
@@ -44,6 +44,8 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
 
   const errorJoin = joins && joins.length && joins[index];
 
+  const haveSameName = firstFg?.name === secondFg?.name;
+
   const handleAddJoinKey = () => {
     handleChange(index, 'firstFgJoinKeys', [...firstFgJoinKeys, []]);
     handleChange(index, 'secondFgJoinKeys', [...secondFgJoinKeys, []]);
@@ -59,6 +61,11 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
     handleChange(index, 'firstFgJoinKeys', firstCopy);
     handleChange(index, 'secondFgJoinKeys', secondCopy);
   };
+
+  const parseFsName = useCallback(
+    (name) => name.replace('_featurestore', ''),
+    [],
+  );
 
   const afterJoinOptions = useMemo(() => {
     const slicedArray = items.slice(0, index);
@@ -114,18 +121,25 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
               </Box>
             )}
             {!!firstFg && items.length === 1 && (
-              <Box
+              <Flex
                 p="8px"
                 backgroundColor="white"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="row"
                 sx={{
                   borderWidth: '1px',
                   borderStyle: 'solid',
                   borderColor: 'grayShade2',
-                  textAlign: 'center',
                 }}
               >
                 <Value primary>{firstFg.name}</Value>
-              </Box>
+                {haveSameName && (
+                  <Labeling gray bold ml="3px">
+                    {parseFsName(firstFg.featurestoreName)}
+                  </Labeling>
+                )}
+              </Flex>
             )}
             {items.length !== 1 && !index && (
               <Select
@@ -237,18 +251,25 @@ const InnerJoinForm: FC<SingleInnerJoinFormProps> = ({
           </Box>
           <Box flex={1}>
             {!!secondFg && items.length === 1 && (
-              <Box
+              <Flex
                 p="8px"
                 backgroundColor="white"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="row"
                 sx={{
                   borderWidth: '1px',
                   borderStyle: 'solid',
                   borderColor: 'grayShade2',
-                  textAlign: 'center',
                 }}
               >
                 <Value primary>{secondFg.name}</Value>
-              </Box>
+                {haveSameName && (
+                  <Labeling gray bold ml="3px">
+                    {parseFsName(secondFg.featurestoreName)}
+                  </Labeling>
+                )}
+              </Flex>
             )}
             {items.length !== 1 && (
               <Select

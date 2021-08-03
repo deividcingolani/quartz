@@ -12,7 +12,6 @@ import {
 
 // Types
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import {
   FeatureGroup,
   FeatureGroupStatistics,
@@ -24,7 +23,6 @@ import StatisticsTables from './StatisticsTables';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import useBasket from '../../../../hooks/useBasket';
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { Feature } from '../../../../types/feature';
 
 export interface StatisticsCardProps {
@@ -42,9 +40,7 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
 }) => {
   const { name } = data;
 
-  const { id, fgId } = useParams();
-
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { id, fgId, fsId } = useParams();
 
   const { isActiveFeature, handleBasket, isSwitch } = useBasket();
 
@@ -116,12 +112,11 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
           ) : (
             <Box width="calc((100% - 60px) / 4)" />
           )}
-          {dataType === ItemDrawerTypes.fg &&
-          featureStoreData?.featurestoreId ? (
+          {dataType === ItemDrawerTypes.fg ? (
             <StatisticsRows
               projectId={+id}
               fgId={+fgId}
-              featureStoreId={featureStoreData.featurestoreId}
+              featureStoreId={+fsId}
               featureName={name}
             />
           ) : (

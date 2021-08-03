@@ -35,8 +35,8 @@ const FeatureDrawer: FC<FeatureDrawerProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
-  const fgPageUrl = `/p/${projectId}/fg/${fgId}`;
-  const dataPreviewUrl = `/p/${projectId}/fg/${fgId}/data-preview/${feature.name}`;
+  const fgPageUrl = `/p/${projectId}/fs/${featureStoreId}/fg/${fgId}`;
+  const dataPreviewUrl = `/p/${projectId}/fs/${featureStoreId}/fg/${fgId}/data-preview/${feature.name}`;
 
   useEffect(() => {
     dispatch.featureGroupStatistics.fetch({

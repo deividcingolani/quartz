@@ -8,10 +8,12 @@ import { Dispatch, RootState } from '../../../store';
 import { ISelectData } from '../../../store/types';
 import { TrainingDataset } from '../../../types/training-dataset';
 
+export type UseTrainingDatasetsData = ISelectData<TrainingDataset[]>;
+
 const useTrainingDatasets = (
   projectId: number,
   featureStoreId?: number,
-): ISelectData<TrainingDataset[]> => {
+): UseTrainingDatasetsData => {
   const dispatch = useDispatch<Dispatch>();
 
   const { data, isLoading } = useSelector(selector.selectTrainingDatasetsData);
@@ -21,8 +23,11 @@ const useTrainingDatasets = (
   );
 
   useEffect(() => {
-    if (!data.length && featureStoreId) {
-      if (searchTds.length) {
+    if (
+      featureStoreId &&
+      (!data.length || data[0].featurestoreId !== featureStoreId)
+    ) {
+      if (searchTds.length && searchTds[0].featurestoreId === featureStoreId) {
         dispatch.trainingDatasets.fetchAfterSearch({
           projectId,
           featureStoreId,

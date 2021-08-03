@@ -30,14 +30,11 @@ import { NodeTypes } from '../../../../components/provenance/types';
 
 export interface SummaryDataProps {
   data: FeatureGroup;
+  canEdit: boolean;
 }
 
-const SummaryData: FC<SummaryDataProps> = ({ data }) => {
-  const { id: projectId, fgId: id } = useParams();
-
-  const featureStoreData = useSelector((state: RootState) =>
-    state.featureStores?.length ? state.featureStores[0] : null,
-  );
+const SummaryData: FC<SummaryDataProps> = ({ data, canEdit }) => {
+  const { id: projectId, fgId: id, fsId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();
@@ -52,31 +49,29 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
 
   const keywordsSaveHandler = useCallback(
     async (keywords) => {
-      if (featureStoreData?.featurestoreId) {
-        await dispatch.featureGroupLabels.attachLabels({
-          projectId: +projectId,
-          featureGroupId: +id,
-          featureStoreId: featureStoreData.featurestoreId,
-          data: keywords,
-        });
-      }
+      await dispatch.featureGroupLabels.attachLabels({
+        projectId: +projectId,
+        featureGroupId: +id,
+        featureStoreId: +fsId,
+        data: keywords,
+      });
     },
-    [featureStoreData, dispatch, id, projectId],
+    [dispatch, fsId, id, projectId],
   );
 
   const handleNavigate = useCallback(
     (connectorName: string, route: string) => (): void => {
       navigate(
-        route.replace(':connectorName', connectorName),
+        route.replace(':fsId', fsId).replace(':connectorName', connectorName),
         routeNames.project.view,
       );
     },
-    [navigate],
+    [fsId, navigate],
   );
 
   const handleHref = (connectorName: string, route: string): string => {
     return getHref(
-      route.replace(':connectorName', connectorName),
+      route.replace(':fsId', fsId).replace(':connectorName', connectorName),
       routeNames.project.view,
     );
   };
@@ -208,7 +203,11 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
       {isLoading ? (
         <Labeling gray>loading...</Labeling>
       ) : (
-        <KeywordsEditor onSave={keywordsSaveHandler} value={data.labels} />
+        <KeywordsEditor
+          isDisabled={!canEdit}
+          onSave={keywordsSaveHandler}
+          value={data.labels}
+        />
       )}
     </>
   );

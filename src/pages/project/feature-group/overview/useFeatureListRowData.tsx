@@ -17,7 +17,7 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
 
   const handleNavigate = useCallback(
     (route: string) => (): void => {
-      navigate(route, 'p/:id/fg/:fgId');
+      navigate(route, 'p/:id/fs/:fsId/fg/:fgId');
     },
     [navigate],
   );

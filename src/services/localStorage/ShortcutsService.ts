@@ -14,6 +14,7 @@ export interface ShortcutItem {
   id: number;
   name: string;
   type: string;
+  featurestoreId: number;
 }
 
 type ShortcutsSetter =

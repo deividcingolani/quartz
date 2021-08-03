@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useTitle from '../../../hooks/useTitle';
 import useProject from '../settings/useProject';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
+import useSharedWith from '../settings/useSharedWith';
 // Components
 import Loader from '../../../components/loader/Loader';
 import OverviewContent from './OverviewContent';
@@ -20,7 +21,16 @@ const ProjectView: FC = () => {
 
   const { project, isLoading } = useProject(+projectId);
 
+  const sharedEntities = useSelector(
+    (state: RootState) => state.multistore.with,
+  );
   const currentUser = useSelector((state: RootState) => state.profile);
+
+  const loadingCurrentUser = useSelector(
+    (state: RootState) => state.loading.effects.profile.getUser,
+  );
+
+  const { isLoading: loadingSharedProjects } = useSharedWith(+projectId);
 
   useTitle(project.projectName);
 
@@ -40,13 +50,21 @@ const ProjectView: FC = () => {
     [dispatch.project, projectId, navigate],
   );
 
-  if (isLoading || !project) {
+  if (
+    isLoading ||
+    loadingCurrentUser ||
+    !project ||
+    !currentUser.id ||
+    !sharedEntities ||
+    loadingSharedProjects
+  ) {
     return <Loader />;
   }
 
   return (
     <OverviewContent
       data={project}
+      sharedEntities={sharedEntities}
       currentUser={currentUser}
       onUpdateDescription={handleUpdateDescription}
       onClickEdit={() => navigate(`/p/${projectId}/settings`)}

@@ -16,11 +16,27 @@ export const selectFeatureGroupsData = ({
   isLoading: loading.effects.featureGroups.fetch,
 });
 
-export const selectFeatureStoreData = ({
+export const selectFeatureStoreData = (
+  { featureStores, loading }: RootState,
+  featurestoreId?: number,
+): SelectData<FeatureStore | null> => {
+  const fsIdx = featurestoreId
+    ? featureStores?.findIndex(
+        (fs: FeatureStore) => fs.featurestoreId === featurestoreId,
+      )
+    : null;
+
+  return {
+    data: featureStores?.length ? featureStores[fsIdx || 0] : null,
+    isLoading: loading.effects.featureStores.fetch,
+  };
+};
+
+export const selectFeatureStoresData = ({
   featureStores,
   loading,
-}: RootState): SelectData<FeatureStore | null> => ({
-  data: featureStores?.length ? featureStores[0] : null,
+}: RootState): SelectData<FeatureStore[] | null> => ({
+  data: featureStores,
   isLoading: loading.effects.featureStores.fetch,
 });
 

@@ -88,7 +88,7 @@ const CreateExpectation: FC = () => {
             });
 
             dispatch.featureGroupView.clear();
-            navigate(`/fg/${fgId}`, 'p/:id/*');
+            navigate(`/fg/${fgId}`, 'p/:id/fs/:fsId/*');
           }
         } else {
           const { expectation } = data;
@@ -102,7 +102,7 @@ const CreateExpectation: FC = () => {
             });
 
             dispatch.featureGroupView.clear();
-            navigate(`/fg/${fgId}`, 'p/:id/*');
+            navigate(`/fg/${fgId}`, 'p/:id/fs/:fsId/*');
           }
         }
       }

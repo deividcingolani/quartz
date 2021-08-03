@@ -18,7 +18,7 @@ import titles from '../../../../sources/titles';
 const FeatureGroupCreate: FC = () => {
   useTitle(titles.createFeatureGroup);
 
-  const { id: projectId } = useParams();
+  const { id: projectId, fsId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -29,12 +29,10 @@ const FeatureGroupCreate: FC = () => {
   );
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.schematisedTags.fetch();
-      dispatch.featureGroupLabels.fetch({
-        projectId: +projectId,
-      });
-    }
+    dispatch.schematisedTags.fetch();
+    dispatch.featureGroupLabels.fetch({
+      projectId: +projectId,
+    });
 
     return () => {
       dispatch.featureGroupView.clear();
@@ -45,40 +43,38 @@ const FeatureGroupCreate: FC = () => {
     async (data: FeatureGroupFormData) => {
       const { features, enabled, histograms, correlations, ...restData } = data;
 
-      if (featureStoreData?.featurestoreId) {
-        const id = await dispatch.featureGroups.create({
-          projectId: +projectId,
-          featureStoreId: featureStoreData?.featurestoreId,
-          data: {
-            ...restData,
-            features: mapFeatures(features),
-            statisticColumns: getEnabledStatistics(features),
-            type: 'cachedFeaturegroupDTO',
-            timeTravelFormat: restData.timeTravelFormat[0].toUpperCase(),
-            descStatsEnabled: !!getEnabledStatistics(features).length,
-            validationType: restData.validationType[0].toUpperCase(),
-            jobs: [],
-            version: 1,
-            statisticsConfig: {
-              columns: [],
-              correlations,
-              enabled,
-              histograms,
-            },
+      const id = await dispatch.featureGroups.create({
+        projectId: +projectId,
+        featureStoreId: +fsId,
+        data: {
+          ...restData,
+          features: mapFeatures(features),
+          statisticColumns: getEnabledStatistics(features),
+          type: 'cachedFeaturegroupDTO',
+          timeTravelFormat: restData.timeTravelFormat[0].toUpperCase(),
+          descStatsEnabled: !!getEnabledStatistics(features).length,
+          validationType: restData.validationType[0].toUpperCase(),
+          jobs: [],
+          version: 1,
+          statisticsConfig: {
+            columns: [],
+            correlations,
+            enabled,
+            histograms,
           },
+        },
+      });
+
+      if (id) {
+        dispatch.featureGroups.fetch({
+          projectId: +projectId,
+          featureStoreId: +fsId,
         });
 
-        if (id) {
-          dispatch.featureGroups.fetch({
-            projectId: +projectId,
-            featureStoreId: featureStoreData?.featurestoreId,
-          });
-
-          navigate(`/fg/${id}`, 'p/:id/*');
-        }
+        navigate(`/fg/${id}`, 'p/:id/fs/:fsId/*');
       }
     },
-    [dispatch, featureStoreData, navigate, projectId],
+    [dispatch, fsId, navigate, projectId],
   );
 
   const isFeatureStoreLoading = useSelector(

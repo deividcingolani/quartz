@@ -4,12 +4,12 @@ import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
 
 import { Labeling, Text } from '@logicalclocks/quartz';
+// Hooks
+import useNavigateRelative from '../../hooks/useNavigateRelative';
 // Types
 import { DataEntity } from '../../types';
 import { ItemDrawerTypes } from '../drawer/ItemDrawer';
 import { SearchState } from '../../store/models/search/search.model';
-// Hooks
-import useNavigateRelative from '../../hooks/useNavigateRelative';
 // Utils
 import filterResult, { cropResult } from './utils/filterResult';
 // Components
@@ -52,9 +52,9 @@ const SearchResults: FC<{ search?: string; data: SearchState }> = ({
   const handleNavigate = useCallback(
     (item: DataEntity) => {
       if (item.type === DTO.fg) {
-        navigate(`/fg/${item.id}`, `p/:id/*`);
+        navigate(`/fs/${item.featurestoreId}/fg/${item.id}`, `p/:id/*`);
       } else if (item.type === DTO.td) {
-        navigate(`/td/${item.id}`, `p/:id/*`);
+        navigate(`/fs/${item.featurestoreId}/td/${item.id}`, `p/:id/*`);
       }
     },
     [navigate],

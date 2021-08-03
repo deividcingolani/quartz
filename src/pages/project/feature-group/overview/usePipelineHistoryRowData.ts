@@ -17,7 +17,10 @@ const usePipelineHistoryRowData = (jobs?: Job[]) => {
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':featureId', String(id)), 'p/:id/fg/:fgId');
+      navigate(
+        route.replace(':featureId', String(id)),
+        'p/:id/fs/:fsId/fg/:fgId',
+      );
     },
     [navigate],
   );

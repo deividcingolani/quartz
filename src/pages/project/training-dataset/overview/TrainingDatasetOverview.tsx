@@ -13,14 +13,21 @@ import { TrainingDataset } from '../../../../types/training-dataset';
 import TrainingDatasetOverviewContent from './TrainingDatasetOverviewContent';
 import useTitle from '../../../../hooks/useTitle';
 import { Dispatch } from '../../../../store';
+import useProvenance from '../../../../hooks/useProvenance';
 
 const TrainingDatasetOverview: FC = () => {
-  const { tdId, id: projectId } = useParams();
+  const { tdId, fsId, id: projectId } = useParams();
 
   const { data, isLoading, fetchData } = useTrainingDatasetView(
     +projectId,
     +tdId,
   );
+
+  const { provenance } = useProvenance({
+    projectId: +projectId,
+    featureStoreId: +fsId,
+    data,
+  });
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -28,14 +35,18 @@ const TrainingDatasetOverview: FC = () => {
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':tdId', String(id)), routeNames.project.view);
+      navigate(
+        route.replace(':fsId', fsId).replace(':tdId', String(id)),
+        routeNames.project.view,
+      );
     },
-    [navigate],
+    [fsId, navigate],
   );
 
   useEffect(() => {
     return () => {
       dispatch.trainingDatasetView.clear();
+      dispatch.provenance.clear();
     };
   }, [dispatch]);
 
@@ -51,7 +62,7 @@ const TrainingDatasetOverview: FC = () => {
 
   return (
     <TrainingDatasetOverviewContent
-      data={data as TrainingDataset}
+      data={{ ...data, provenance } as TrainingDataset}
       onClickEdit={handleNavigate(+tdId, routeNames.trainingDataset.edit)}
       onClickRefresh={fetchData}
     />

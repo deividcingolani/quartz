@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import {
   Badge,
@@ -11,16 +11,26 @@ import {
   Tooltip,
   Value,
 } from '@logicalclocks/quartz';
+// Hooks
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+// Utils
 import icons from '../../../../../sources/icons';
 import { FeatureGroupBasket } from '../../../../../services/localStorage/BasketService';
 import FeatureGroupsService from '../../../../../services/project/FeatureGroupsService';
+// Types
+import { Dispatch, RootState } from '../../../../../store';
 
 export interface CollapsedFeaturesFormProps {
   isDisabled: boolean;
   featureGroups: FeatureGroupBasket[];
   handleDeleteAllFg: (index: number) => () => void;
   handleDelete: (index: number, name: string) => () => void;
-  handleOpenStatistics: (index: number, name: string) => () => void;
+  handleOpenStatistics: (
+    index: number,
+    name: string,
+    fsId: number,
+  ) => () => void;
 }
 
 export interface FgCommitCount {
@@ -37,6 +47,10 @@ const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
 }) => {
   // For each feature in the basket, if Hudi, check if they have at least one commit
   const [fgCommits, setFgCommits] = useState<Map<number, number>>();
+
+  const { id: pId } = useParams();
+  const dispatch = useDispatch<Dispatch>();
+  const currentProject = useSelector((state: RootState) => state.project);
 
   const fetchCommits = useCallback(async () => {
     const fgCommitCounts = await Promise.all(
@@ -75,10 +89,24 @@ const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
     fetchCommits();
   }, [featureGroups, fetchCommits]);
 
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const handleSetIsOpen = () => {
-  //  setIsOpen(!isOpen);
-  // };
+  useEffect(() => {
+    dispatch.project.getProject(+pId);
+  }, [dispatch.project, pId]);
+
+  const parseName = useCallback(
+    (name) => name.replace('_featurestore', ''),
+    [],
+  );
+
+  const hasMixedFS = useMemo(() => {
+    const pName = currentProject?.projectName;
+    if (!pName) return false;
+    const others = featureGroups.filter(({ fg }) => {
+      const name = parseName(fg.featurestoreName);
+      return name !== pName;
+    });
+    return !!others.length;
+  }, [currentProject?.projectName, featureGroups, parseName]);
 
   return (
     <>
@@ -101,6 +129,11 @@ const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
               title={
                 <Flex ml="8px">
                   <Value>{fg.name}</Value>
+                  {hasMixedFS && (
+                    <Labeling gray bold ml="3px">
+                      {parseName(fg.featurestoreName)}
+                    </Labeling>
+                  )}
                   <Value ml="3px" color="labels.orange">
                     #{fg.id}
                   </Value>
@@ -160,7 +193,11 @@ const CollapsedFeaturesForm: FC<CollapsedFeaturesFormProps> = ({
                                 height: '20px',
                               },
                             }}
-                            onClick={handleOpenStatistics(fg.id, name)}
+                            onClick={handleOpenStatistics(
+                              fg.id,
+                              name,
+                              fg.featurestoreId,
+                            )}
                           >
                             {icons.eye}
                           </Box>

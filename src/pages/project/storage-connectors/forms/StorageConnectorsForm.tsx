@@ -28,7 +28,6 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 // Default validators
 import * as yup from 'yup';
 import { name, shortText } from '../../../../utils/validators';
@@ -55,7 +54,6 @@ import {
 } from '../utils';
 import getInputValidation from '../../../../utils/getInputValidation';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import featureStoreService from '../../../../services/project/FeatureStoresService';
 import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
 
@@ -141,7 +139,7 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
     'directoryId', // Footer description for Azure
   ]);
 
-  const { id: projectId } = useParams();
+  const { id: projectId, fsId } = useParams();
 
   const description = useMemo(() => {
     const desc = descriptions as DescriptionsData;
@@ -149,7 +147,6 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
   }, [descriptions, protocol]);
 
   const Form = useMemo(() => getForm(protocol), [protocol]);
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   useEffect(() => {
     clearErrors();
@@ -164,15 +161,14 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
   const hasScrollOnScreen = useScreenWithScroll();
 
   const isValidName = useCallback(async () => {
-    if (featureStoreData?.featurestoreId && projectId) {
-      const { data } = await featureStoreService.getStorageConnectors(
-        +projectId,
-        featureStoreData?.featurestoreId,
-      );
-      return data.findIndex((x) => x.name === storageName) === -1;
-    }
+    const { data } = await featureStoreService.getStorageConnectors(
+      +projectId,
+      +fsId,
+    );
+    return data.findIndex((x) => x.name === storageName) === -1;
+
     return true;
-  }, [featureStoreData, projectId, storageName]);
+  }, [fsId, projectId, storageName]);
 
   const handleSubmitWithNameValidation = async () => {
     if (isEdit || (await isValidName())) {
@@ -333,7 +329,7 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
             intent="secondary"
             onClick={() =>
               navigate(
-                routeNames.storageConnector.list,
+                routeNames.storageConnector.list.replace(':fsId', fsId),
                 routeNames.project.view,
               )
             }

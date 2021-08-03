@@ -51,15 +51,18 @@ const TrainingDatasetActivityContent: FC<TrainingDatasetActivityContentProps> =
     handleLoadPreviousData,
     handleLoadFollowingData,
   }) => {
-    const { tdId } = useParams();
+    const { tdId, fsId } = useParams();
 
     const navigate = useNavigateRelative();
 
     const handleNavigate = useCallback(
       (route: string) => (): void => {
-        navigate(route.replace(':tdId', tdId), routeNames.project.view);
+        navigate(
+          route.replace(':fsId', fsId).replace(':tdId', tdId),
+          routeNames.project.view,
+        );
       },
-      [tdId, navigate],
+      [navigate, fsId, tdId],
     );
 
     const actions = useMemo(
@@ -93,7 +96,7 @@ const TrainingDatasetActivityContent: FC<TrainingDatasetActivityContentProps> =
           title={view?.name}
           idColor="labels.orange"
           onClickRefresh={handleRefreshData}
-          onClickEdit={handleNavigate(routeNames.featureGroup.edit)}
+          onClickEdit={handleNavigate(routeNames.trainingDataset.edit)}
         />
 
         <Flex justifyContent="space-between" mt="65px">

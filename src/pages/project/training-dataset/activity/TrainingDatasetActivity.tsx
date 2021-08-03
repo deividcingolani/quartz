@@ -24,7 +24,6 @@ import {
   selectTrainingDatasetActivityLoading,
   selectTrainingDatasetActivityLoadingMore,
 } from '../../../../store/models/training-dataset/activity/selectors';
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 // Hooks
 import useTitle from '../../../../hooks/useTitle';
 import useFirstLoad from '../../../../hooks/useFirstLoad';
@@ -40,7 +39,7 @@ import titles from '../../../../sources/titles';
 const batchSize = 20;
 
 const TrainingDatasetActivity: FC = () => {
-  const { id, tdId, type, to, from } = useParams();
+  const { id, fsId, tdId, type, to, from } = useParams();
 
   const navigate = useNavigateRelative();
 
@@ -49,7 +48,6 @@ const TrainingDatasetActivity: FC = () => {
 
   const dispatch = useDispatch<Dispatch>();
 
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
   const isLoadingMore = useSelector(selectTrainingDatasetActivityLoadingMore);
 
   const activity = useSelector(selectTrainingDatasetActivity);
@@ -90,74 +88,70 @@ const TrainingDatasetActivity: FC = () => {
     ) => {
       const { newEndDate, newStartDate, newEvent } = data;
 
-      if (featureStoreData?.featurestoreId) {
-        const count = await dispatch.trainingDatasetActivity.fetch({
-          projectId: +id,
-          trainingDatasetId: +tdId,
-          featureStoreId: featureStoreData.featurestoreId,
-          eventType: newEvent || event,
-          offsetOptions: {
-            offset: 0,
-            limit: batchSize,
-          },
-          timeOptions: {
-            from: newStartDate ? +newStartDate : +fromDate,
-            to: newEndDate ? +newEndDate : +toDate,
-          },
-        });
+      const count = await dispatch.trainingDatasetActivity.fetch({
+        projectId: +id,
+        trainingDatasetId: +tdId,
+        featureStoreId: +fsId,
+        eventType: newEvent || event,
+        offsetOptions: {
+          offset: 0,
+          limit: batchSize,
+        },
+        timeOptions: {
+          from: newStartDate ? +newStartDate : +fromDate,
+          to: newEndDate ? +newEndDate : +toDate,
+        },
+      });
 
-        if (count < batchSize) {
-          setHasData((prevState) => ({
-            ...prevState,
-            hasMore: false,
-            hasFollowing: true,
-            hasPrevious: true,
-          }));
-        } else {
-          setHasData((prevState) => ({
-            ...prevState,
-            hasMore: true,
-            hasFollowing: true,
-            hasPrevious: true,
-          }));
-        }
+      if (count < batchSize) {
+        setHasData((prevState) => ({
+          ...prevState,
+          hasMore: false,
+          hasFollowing: true,
+          hasPrevious: true,
+        }));
+      } else {
+        setHasData((prevState) => ({
+          ...prevState,
+          hasMore: true,
+          hasFollowing: true,
+          hasPrevious: true,
+        }));
       }
     },
-    [id, tdId, dispatch, featureStoreData, event, fromDate, toDate],
+    [id, tdId, dispatch, fsId, event, fromDate, toDate],
   );
 
   const handleLoadPreviousData = useCallback(async () => {
-    if (featureStoreData?.featurestoreId) {
-      const { count, startDate } =
-        await dispatch.trainingDatasetActivity.fetchPrevious({
-          projectId: +id,
-          trainingDatasetId: +tdId,
-          featureStoreId: featureStoreData.featurestoreId,
-          eventType: event,
-          offsetOptions: {
-            limit: batchSize,
-            offset: 0,
-          },
-          timeOptions: {
-            to: minDate - 1,
-          },
-        });
+    const { count, startDate } =
+      await dispatch.trainingDatasetActivity.fetchPrevious({
+        projectId: +id,
+        trainingDatasetId: +tdId,
+        featureStoreId: +fsId,
+        eventType: event,
+        offsetOptions: {
+          limit: batchSize,
+          offset: 0,
+        },
+        timeOptions: {
+          to: minDate - 1,
+        },
+      });
 
-      if (count < batchSize) {
-        setHasData({
-          ...hasData,
-          hasPrevious: false,
-        });
-      }
+    if (count < batchSize) {
+      setHasData({
+        ...hasData,
+        hasPrevious: false,
+      });
+    }
 
-      if (startDate > -1) {
-        setFromDate(new Date(startDate - 1));
+    if (startDate > -1) {
+      setFromDate(new Date(startDate - 1));
 
-        navigate(
-          `/${type ? 'type/' : ''}${startDate - 1}/${+toDate + 1}`,
-          'p/:id/fg/:tdId/activity/*',
-        );
-      }
+      navigate(
+        `/${type ? 'type/' : ''}${startDate - 1}/${+toDate + 1}`,
+        'p/:id/fs/:fsIdfg/:tdId/activity/*',
+      );
     }
   }, [
     id,
@@ -169,42 +163,40 @@ const TrainingDatasetActivity: FC = () => {
     navigate,
     minDate,
     dispatch,
-    featureStoreData,
+    fsId,
   ]);
 
   const handleLoadFollowingData = useCallback(async () => {
-    if (featureStoreData?.featurestoreId) {
-      const { count, endDate } =
-        await dispatch.trainingDatasetActivity.fetchFollowing({
-          projectId: +id,
-          trainingDatasetId: +tdId,
-          featureStoreId: featureStoreData.featurestoreId,
-          eventType: event,
-          offsetOptions: {
-            limit: batchSize,
-            offset: 0,
-          },
-          timeOptions: {
-            from: maxDate + 1,
-          },
-          sortType: 'asc',
-        });
+    const { count, endDate } =
+      await dispatch.trainingDatasetActivity.fetchFollowing({
+        projectId: +id,
+        trainingDatasetId: +tdId,
+        featureStoreId: +fsId,
+        eventType: event,
+        offsetOptions: {
+          limit: batchSize,
+          offset: 0,
+        },
+        timeOptions: {
+          from: maxDate + 1,
+        },
+        sortType: 'asc',
+      });
 
-      if (count < batchSize) {
-        setHasData({
-          ...hasData,
-          hasFollowing: false,
-        });
-      }
+    if (count < batchSize) {
+      setHasData({
+        ...hasData,
+        hasFollowing: false,
+      });
+    }
 
-      if (endDate > -1) {
-        setToDate(new Date(endDate + 1));
+    if (endDate > -1) {
+      setToDate(new Date(endDate + 1));
 
-        navigate(
-          `/${type ? 'type/' : ''}${+fromDate - 1}/${endDate + 1}`,
-          'p/:id/fg/:tdId/activity/*',
-        );
-      }
+      navigate(
+        `/${type ? 'type/' : ''}${+fromDate - 1}/${endDate + 1}`,
+        'p/:id/fs/:fsId/fg/:tdId/activity/*',
+      );
     }
   }, [
     id,
@@ -214,17 +206,17 @@ const TrainingDatasetActivity: FC = () => {
     maxDate,
     fromDate,
     dispatch,
-    featureStoreData,
+    fsId,
     type,
     navigate,
   ]);
 
   const handleLoadMore = useCallback(async () => {
-    if (featureStoreData?.featurestoreId && hasData.hasMore) {
+    if (hasData.hasMore) {
       const count = await dispatch.trainingDatasetActivity.fetchMore({
         projectId: +id,
         trainingDatasetId: +tdId,
-        featureStoreId: featureStoreData.featurestoreId,
+        featureStoreId: +fsId,
         eventType: event,
         offsetOptions: {
           limit: batchSize,
@@ -245,25 +237,15 @@ const TrainingDatasetActivity: FC = () => {
 
       setOffset(offset + batchSize);
     }
-  }, [
-    id,
-    tdId,
-    event,
-    offset,
-    hasData,
-    toDate,
-    dispatch,
-    fromDate,
-    featureStoreData,
-  ]);
+  }, [id, tdId, event, offset, hasData, toDate, dispatch, fromDate, fsId]);
 
   const handleLoadFirst = useCallback(async () => {
-    if (featureStoreData?.featurestoreId && hasData.hasMore) {
+    if (hasData.hasMore) {
       const { count, startDate } =
         await dispatch.trainingDatasetActivity.fetchFirst({
           projectId: +id,
           trainingDatasetId: +tdId,
-          featureStoreId: featureStoreData.featurestoreId,
+          featureStoreId: +fsId,
           eventType: event,
           offsetOptions: {
             limit: batchSize,
@@ -290,29 +272,28 @@ const TrainingDatasetActivity: FC = () => {
 
       setOffset(offset + batchSize);
     }
-  }, [id, tdId, event, offset, hasData, toDate, dispatch, featureStoreData]);
+  }, [id, tdId, event, offset, hasData, toDate, dispatch, fsId]);
 
   const handleLoadWithTime = useCallback(async () => {
-    if (featureStoreData?.featurestoreId) {
-      await dispatch.trainingDatasetActivity.fetch({
-        projectId: +id,
-        trainingDatasetId: +tdId,
-        featureStoreId: featureStoreData.featurestoreId,
-        eventType: event,
-        offsetOptions: {
-          limit: batchSize,
-          offset: 0,
-        },
-        timeOptions: {
-          to: +toDate,
-          from: +fromDate,
-        },
-      });
+    await dispatch.trainingDatasetActivity.fetch({
+      projectId: +id,
+      trainingDatasetId: +tdId,
+      featureStoreId: +fsId,
+      eventType: event,
+      offsetOptions: {
+        limit: batchSize,
+        offset: 0,
+      },
+      timeOptions: {
+        to: +toDate,
+        from: +fromDate,
+      },
+    });
 
-      setOffset(offset + batchSize);
-    }
+    setOffset(offset + batchSize);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, tdId, event, offset, hasData, toDate, dispatch, featureStoreData]);
+  }, [id, tdId, event, offset, hasData, toDate, dispatch, fsId]);
 
   const handleDateChange = useCallback(
     (data: { newStartDate?: Date; newEndDate?: Date } = {}) => {
@@ -330,7 +311,7 @@ const TrainingDatasetActivity: FC = () => {
         `/${type ? `${type}/` : ''}${
           data.newStartDate ? +data.newStartDate : +fromDate - 1
         }/${data.newEndDate ? +data.newEndDate : +toDate + 1}`,
-        'p/:id/fg/:tdId/activity/*',
+        'p/:id/fs/:fsId/fg/:tdId/activity/*',
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -358,7 +339,7 @@ const TrainingDatasetActivity: FC = () => {
       `/${type ? `${type}/` : ''}${+(!!from && creationDate
         ? new Date(creationDate)
         : twentyEventDate)}/${+new Date()}`,
-      'p/:id/fg/:tdId/activity/*',
+      'p/:id/fs/:fsId/fg/:tdId/activity/*',
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [twentyEventDate, creationDate, navigate]);
@@ -383,7 +364,7 @@ const TrainingDatasetActivity: FC = () => {
       if (newType && newType[0]) {
         navigate(
           `/${newType[0]}/${from || +twentyEventDate}/${to || +new Date()}`,
-          'p/:id/fg/:tdId/activity/*',
+          'p/:id/fs/:fsId/fg/:tdId/activity/*',
         );
       }
     },
@@ -393,15 +374,14 @@ const TrainingDatasetActivity: FC = () => {
   useInfinityLoad(loader, content, isLoadingMore, handleLoadMore);
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasetView.fetch({
-        projectId: +id,
-        trainingDatasetId: +tdId,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
-    }
+    dispatch.trainingDatasetView.fetch({
+      projectId: +id,
+      trainingDatasetId: +tdId,
+      featureStoreId: +fsId,
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, id, tdId, featureStoreData]);
+  }, [dispatch, id, tdId, fsId]);
 
   useEffect(() => {
     if (!from && !to) {

@@ -16,11 +16,22 @@ import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { FeatureGroup } from '../../../../types/feature-group';
 import useTitle from '../../../../hooks/useTitle';
 import { Dispatch } from '../../../../store';
+import useProvenance from '../../../../hooks/useProvenance';
 
 const FeatureGroupOverview: FC = () => {
-  const { fgId, id: projectId } = useParams();
+  const { id: projectId, fsId, fgId } = useParams();
 
-  const { data, isLoading, fetchData } = useFeatureGroupView(+projectId, +fgId);
+  const {
+    data: fgData,
+    isLoading: isFGLoading,
+    fetchData,
+  } = useFeatureGroupView(+projectId, +fgId, +fsId);
+
+  const { provenance } = useProvenance({
+    projectId: +projectId,
+    featureStoreId: +fsId,
+    data: fgData,
+  });
 
   const navigate = useNavigateRelative();
 
@@ -28,30 +39,34 @@ const FeatureGroupOverview: FC = () => {
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':fgId', String(id)), routeNames.project.view);
+      navigate(
+        route.replace(':fsId', fsId).replace(':fgId', String(id)),
+        routeNames.project.view,
+      );
     },
-    [navigate],
+    [fsId, navigate],
   );
 
   useEffect(() => {
     return () => {
       dispatch.featureGroupView.clear();
+      dispatch.provenance.clear();
     };
   }, [dispatch]);
 
-  useTitle(data?.name);
+  useTitle(fgData?.name);
 
-  if (isLoading) {
+  if (isFGLoading) {
     return <Loader />;
   }
 
-  if (!data) {
+  if (!fgData) {
     return <Subtitle>No data</Subtitle>;
   }
 
   return (
     <OverviewContent
-      data={data as FeatureGroup}
+      data={{ ...fgData, provenance } as FeatureGroup}
       onClickEdit={handleNavigate(+fgId, routeNames.featureGroup.edit)}
       onClickRefresh={fetchData}
     />

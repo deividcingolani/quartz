@@ -16,7 +16,6 @@ import StatisticsContent from './StatisticsContent';
 import Panel from '../../../../components/panel/Panel';
 import Loader from '../../../../components/loader/Loader';
 // Selectors
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
@@ -24,9 +23,7 @@ import titles from '../../../../sources/titles';
 const dateFormat = 'yyyy-MM-dd HH:mm:ss';
 
 const FeatureGroupStatistics: FC = () => {
-  const { id, fgId, featureName, commitTime } = useParams();
-
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { id, fsId, fgId, featureName, commitTime } = useParams();
 
   const statistics = useSelector(
     (state: RootState) => state.featureGroupStatistics?.entities.statistics,
@@ -65,26 +62,31 @@ const FeatureGroupStatistics: FC = () => {
     (state: RootState) => state.loading.effects.featureGroupStatistics.fetch,
   );
 
-  const { data, isLoading } = useFeatureGroupView(+id, +fgId);
+  const { data, isLoading } = useFeatureGroupView(+id, +fgId, +fsId);
 
   const dispatch = useDispatch<Dispatch>();
   const navigate = useNavigateRelative();
 
   const handleRefreshData = useCallback(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupStatisticsCommits.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-      });
-      dispatch.featureGroupStatistics.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-        timeCommit: commitTime,
-      });
-    }
-  }, [id, fgId, dispatch, featureStoreData, commitTime]);
+    dispatch.featureGroupStatisticsCommits.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+    });
+    dispatch.featureGroupStatistics.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+      timeCommit: commitTime,
+    });
+  }, [
+    dispatch.featureGroupStatisticsCommits,
+    dispatch.featureGroupStatistics,
+    id,
+    fsId,
+    fgId,
+    commitTime,
+  ]);
 
   const navigateToStatistics = useCallback(
     (timeString, id = fgId) => {
@@ -108,10 +110,10 @@ const FeatureGroupStatistics: FC = () => {
         if (featureName) {
           navigate(
             `/${id}/statistics/commit/${time}/f/${featureName}`,
-            'p/:id/fg/*',
+            'p/:id/fs/:fsId/fg/*',
           );
         } else {
-          navigate(`/${id}/statistics/commit/${time}`, 'p/:id/fg/*');
+          navigate(`/${id}/statistics/commit/${time}`, 'p/:id/fs/:fsId/fg/*');
         }
       }
     },
@@ -128,24 +130,22 @@ const FeatureGroupStatistics: FC = () => {
   );
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupStatisticsCommits.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-      });
-      dispatch.featureGroupStatistics.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-        timeCommit: commitTime,
-      });
-    }
+    dispatch.featureGroupStatisticsCommits.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+    });
+    dispatch.featureGroupStatistics.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+      timeCommit: commitTime,
+    });
 
     return () => {
       dispatch.featureGroupRows.clear();
     };
-  }, [id, fgId, dispatch, featureStoreData, commitTime]);
+  }, [id, fgId, dispatch, fsId, commitTime]);
 
   const latestVersion = useMemo(
     () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
@@ -190,7 +190,7 @@ const FeatureGroupStatistics: FC = () => {
         title={data?.name}
         id={data?.id}
         idColor="labels.orange"
-        onClickEdit={() => navigate(`/edit`, 'p/:id/fg/:fgId/*')}
+        onClickEdit={() => navigate(`/edit`, 'p/:id/fs/:fsId/fg/:fgId/*')}
         onClickRefresh={handleRefreshData}
         hasCommitDropdown={true}
         hasVersionDropdown={true}

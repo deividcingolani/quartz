@@ -19,7 +19,7 @@ import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 
 const FeatureGroupEdit: FC = () => {
-  const { id: projectId, fgId } = useParams();
+  const { id: projectId, fsId, fgId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -32,23 +32,20 @@ const FeatureGroupEdit: FC = () => {
   );
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupView.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-        needProvenance: false,
-      });
-      dispatch.schematisedTags.fetch();
-      dispatch.featureGroupLabels.fetch({
-        projectId: +projectId,
-      });
-    }
+    dispatch.featureGroupView.fetch({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+    });
+    dispatch.schematisedTags.fetch();
+    dispatch.featureGroupLabels.fetch({
+      projectId: +projectId,
+    });
 
     return () => {
       dispatch.featureGroupView.clear();
     };
-  }, [dispatch, projectId, featureStoreData, fgId]);
+  }, [dispatch, projectId, featureStoreData, fsId, fgId]);
 
   const featureGroup = useSelector<RootState, FeatureGroupViewState>(
     (state) => state.featureGroupView,
@@ -68,58 +65,54 @@ const FeatureGroupEdit: FC = () => {
         validationType,
       } = data;
 
-      if (featureStoreData?.featurestoreId) {
-        await dispatch.featureGroups.edit({
-          projectId: +projectId,
-          featureStoreId: featureStoreData?.featurestoreId,
-          featureGroupId: +fgId,
-          data: {
-            description,
-            keywords,
-            type: 'cachedFeaturegroupDTO',
-            features: mapFeatures(features),
-            onlineEnabled,
-            tags,
-            validationType: validationType[0],
-            prevTags: featureGroup?.tags.map(({ name }) => name),
-            statisticsConfig: {
-              columns: getEnabledStatistics(features),
-              correlations,
-              enabled,
-              histograms,
-            },
+      await dispatch.featureGroups.edit({
+        projectId: +projectId,
+        featureStoreId: +fsId,
+        featureGroupId: +fgId,
+        data: {
+          description,
+          keywords,
+          type: 'cachedFeaturegroupDTO',
+          features: mapFeatures(features),
+          onlineEnabled,
+          tags,
+          validationType: validationType[0],
+          prevTags: featureGroup?.tags.map(({ name }) => name),
+          statisticsConfig: {
+            columns: getEnabledStatistics(features),
+            correlations,
+            enabled,
+            histograms,
           },
-        });
+        },
+      });
 
-        dispatch.featureGroupView.clear();
-        dispatch.featureGroups.fetch({
-          projectId: +projectId,
-          featureStoreId: featureStoreData?.featurestoreId,
-        });
+      dispatch.featureGroupView.clear();
+      dispatch.featureGroups.fetch({
+        projectId: +projectId,
+        featureStoreId: +fsId,
+      });
 
-        navigate(`/${fgId}`, 'p/:id/fg/*');
-      }
+      navigate(`/${fgId}`, 'p/:id/fs/:fsId/fg/*');
     },
-    [dispatch, featureStoreData, navigate, projectId, fgId, featureGroup],
+    [dispatch, fsId, navigate, projectId, fgId, featureGroup],
   );
 
   const handleDelete = useCallback(async () => {
-    if (featureStoreData?.featurestoreId) {
-      handleToggle();
-      await dispatch.featureGroups.delete({
-        projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-        featureGroupId: +fgId,
-      });
+    handleToggle();
+    await dispatch.featureGroups.delete({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+    });
 
-      dispatch.featureGroups.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-      });
+    dispatch.featureGroups.fetch({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+    });
 
-      navigate('/fg', 'p/:id/*');
-    }
-  }, [dispatch, featureStoreData, projectId, navigate, fgId, handleToggle]);
+    navigate('/fg', 'p/:id/fs/:fsId/*');
+  }, [dispatch, fsId, projectId, navigate, fgId, handleToggle]);
 
   const isFeatureStoreLoading = useSelector(
     (state: RootState) => state.loading.effects.featureStores.fetch,

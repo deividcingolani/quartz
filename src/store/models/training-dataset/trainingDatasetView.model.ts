@@ -3,7 +3,6 @@ import TrainingDatasetService from '../../../services/project/TrainingDatasetSer
 import { TrainingDataset } from '../../../types/training-dataset';
 import { SchemaType } from '../feature/featureGroupView.model';
 import { TrainingDatasetLabelService } from '../../../services/project';
-import { ProvenanceState } from '../../../components/provenance/types';
 
 export type TrainingDatasetViewState = TrainingDataset | null;
 
@@ -25,12 +24,10 @@ const trainingDatasetView = createModel()({
       projectId,
       featureStoreId,
       trainingDatasetId,
-      needProvenance = true,
     }: {
       projectId: number;
       featureStoreId: number;
       trainingDatasetId: number;
-      needProvenance?: boolean;
     }): Promise<void> => {
       const data = await TrainingDatasetService.get(
         projectId,
@@ -40,7 +37,6 @@ const trainingDatasetView = createModel()({
 
       dispatch.trainingDatasetView.setData({
         ...data,
-        provenance: {} as ProvenanceState,
         versions: [{ id: data.id, version: data.version }],
         tags: [],
         labels: [],
@@ -51,7 +47,6 @@ const trainingDatasetView = createModel()({
         projectId,
         featureStoreId,
         trainingDatasetId,
-        needProvenance,
       });
     },
     loadRemainingData: async ({
@@ -59,23 +54,12 @@ const trainingDatasetView = createModel()({
       featureStoreId,
       trainingDatasetId,
       data,
-      needProvenance,
     }: {
       data: TrainingDataset;
       projectId: number;
       featureStoreId: number;
       trainingDatasetId: number;
-      needProvenance: boolean;
     }): Promise<void> => {
-      let provenance: ProvenanceState = {} as ProvenanceState;
-      if (needProvenance) {
-        provenance = await dispatch.provenance.fetch({
-          projectId,
-          featureStoreId,
-          data,
-        });
-      }
-
       const tdsWithSameName = await TrainingDatasetService.getOneByName(
         projectId,
         data.name,
@@ -117,7 +101,6 @@ const trainingDatasetView = createModel()({
 
       dispatch.trainingDatasetView.setData({
         ...data,
-        provenance,
         versions: tdsWithSameName.map(({ id, version }) => ({ id, version })),
         tags: mappedTags || [],
         labels: keywords,

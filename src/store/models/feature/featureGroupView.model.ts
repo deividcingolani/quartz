@@ -9,7 +9,6 @@ import FeatureGroupsService from '../../../services/project/FeatureGroupsService
 import FeatureGroupLabelsService from '../../../services/project/FeatureGroupLabelsService';
 import { Expectation } from '../../../types/expectation';
 import { getValidPromisesValues } from '../search/deep-search.model';
-import { ProvenanceState } from '../../../components/provenance/types';
 
 export type FeatureGroupViewState = FeatureGroup | null;
 
@@ -43,14 +42,12 @@ const featureGroupView = createModel()({
       featureGroupId,
       needMore = true,
       needExpectation = false,
-      needProvenance = true,
     }: {
       projectId: number;
       featureStoreId: number;
       featureGroupId: number;
       needMore?: boolean;
       needExpectation?: boolean;
-      needProvenance?: boolean;
     }): Promise<void> => {
       const data = await FeatureGroupsService.get(
         projectId,
@@ -67,19 +64,8 @@ const featureGroupView = createModel()({
         );
       }
 
-      let provenance: ProvenanceState = {} as ProvenanceState;
-      if (needProvenance) {
-        /* PROVENANCE */
-        provenance = await dispatch.provenance.fetch({
-          projectId,
-          featureStoreId,
-          data,
-        });
-      }
-
       const mapped = {
         ...data,
-        provenance,
         labels: [],
         tags: [],
         commits: [],
@@ -115,7 +101,6 @@ const featureGroupView = createModel()({
 
       dispatch.featureGroupView.setData({
         ...data,
-        provenance: {} as ProvenanceState,
         labels: [],
         tags: [],
         commits: [],

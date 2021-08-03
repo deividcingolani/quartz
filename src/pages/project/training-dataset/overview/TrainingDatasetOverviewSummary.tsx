@@ -23,31 +23,27 @@ import { Dispatch, RootState } from '../../../../store';
 
 export interface TdOverviewSummaryDataProps {
   data: TrainingDataset;
+  canEdit: boolean;
 }
 
 const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
   data,
+  canEdit,
 }) => {
-  const { id: projectId, tdId: id } = useParams();
-
-  const featureStoreData = useSelector((state: RootState) =>
-    state.featureStores?.length ? state.featureStores[0] : null,
-  );
+  const { id: projectId, tdId: id, fsId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
 
   const keywordsSaveHandler = useCallback(
     async (keywords) => {
-      if (featureStoreData?.featurestoreId) {
-        await dispatch.trainingDatasetLabels.attachLabels({
-          projectId: +projectId,
-          trainingDatasetId: +id,
-          featureStoreId: featureStoreData.featurestoreId,
-          data: keywords,
-        });
-      }
+      await dispatch.trainingDatasetLabels.attachLabels({
+        projectId: +projectId,
+        trainingDatasetId: +id,
+        featureStoreId: +fsId,
+        data: keywords,
+      });
     },
-    [featureStoreData, dispatch, id, projectId],
+    [fsId, dispatch, id, projectId],
   );
 
   const isLoading = useSelector(
@@ -119,7 +115,11 @@ const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
       {isLoading ? (
         <Labeling gray>loading...</Labeling>
       ) : (
-        <KeywordsEditor onSave={keywordsSaveHandler} value={data.labels} />
+        <KeywordsEditor
+          isDisabled={!canEdit}
+          onSave={keywordsSaveHandler}
+          value={data.labels}
+        />
       )}
     </>
   );

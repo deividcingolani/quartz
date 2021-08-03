@@ -18,6 +18,7 @@ import {
 import { Box, Flex } from 'rebass';
 import { format, formatDistance } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import useNavigateRelative from '../../hooks/useNavigateRelative';
 import routeNames from '../../routes/routeNames';
 import useJobRowData from '../../hooks/useJobRowData';
@@ -76,24 +77,28 @@ const ItemDrawer = <T extends DataEntity>({
   projectId,
   type = ItemDrawerTypes.fg,
 }: FeatureGroupDrawerProps<T>) => {
+  const { fsId: featurestoreId } = useParams();
+
   const navigate = useNavigateRelative();
 
   const handleNavigate = useCallback(
     (route: string) => (): void => {
       if (isSearch && projectId) {
-        navigate(`/p/${projectId}${route}`);
+        navigate(`/p/${projectId}fs/${featurestoreId}${route}`);
       } else {
-        navigate(route, routeNames.project.view);
+        navigate(`/fs/${featurestoreId}${route}`, routeNames.project.view);
       }
     },
-    [navigate, isSearch, projectId],
+    [isSearch, projectId, navigate, featurestoreId],
   );
 
   const [lastJobs, setJobs] = useState<ActivityItemData[]>([]);
 
   const [lastTrainingJobComponents, lastTrainingJobProps] = useJobRowData([]);
 
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { data: featureStoreData } = useSelector((state: RootState) =>
+    selectFeatureStoreData(state, +featurestoreId),
+  );
 
   const { commits, tds } = useSelector(
     (state: RootState) => state.featureGroupCommitsDetail,
@@ -132,12 +137,11 @@ const ItemDrawer = <T extends DataEntity>({
     if (
       it?.timeTravelFormat === 'HUDI' &&
       featureStoreData?.projectId &&
-      featureStoreData?.featurestoreId &&
       it?.id
     ) {
       dispatch.featureGroupCommitsDetail.fetch({
         projectId: featureStoreData.projectId,
-        featureStoreId: featureStoreData.featurestoreId,
+        featureStoreId: +featurestoreId,
         featureGroupId: it.id,
         limit: 10,
       });
@@ -145,17 +149,13 @@ const ItemDrawer = <T extends DataEntity>({
     return () => {
       dispatch.featureGroupCommitsDetail.clear();
     };
-  }, [dispatch, featureStoreData, item]);
+  }, [dispatch, featureStoreData, featurestoreId, item]);
 
   useEffect(() => {
-    if (
-      type === ItemDrawerTypes.fg &&
-      featureStoreData?.featurestoreId &&
-      item
-    ) {
+    if (type === ItemDrawerTypes.fg && featureStoreData && item) {
       dispatch.featureGroupSchematisedTags.fetch({
         projectId: featureStoreData.projectId,
-        featureStoreId: featureStoreData.featurestoreId,
+        featureStoreId: +featurestoreId,
         featureGroupId: item.id,
       });
       if ((item as unknown as FeatureGroup).timeTravelFormat !== 'HUDI') {
@@ -168,7 +168,7 @@ const ItemDrawer = <T extends DataEntity>({
       const loadJobs = async () => {
         const jobs = await dispatch.featureGroupView.fetchLastJobs({
           projectId: featureStoreData.projectId,
-          featureStoreId: featureStoreData.featurestoreId,
+          featureStoreId: +featurestoreId,
           featureGroupId: item.id,
         });
 
@@ -180,7 +180,7 @@ const ItemDrawer = <T extends DataEntity>({
     return () => {
       dispatch.featureGroupSchematisedTags.clear();
     };
-  }, [dispatch, featureStoreData, item, type]);
+  }, [dispatch, featureStoreData, featurestoreId, item, type]);
 
   const handleVersionChange = useCallback((values) => {
     const newId = data?.find(
@@ -380,7 +380,10 @@ const ItemDrawer = <T extends DataEntity>({
             title="Last Ingestion Job"
             action={[
               'view all jobs -->',
-              () => navigate(`/p/${projectId}/fg/${item.id}/activity/JOB`),
+              () =>
+                navigate(
+                  `/p/${projectId}/fs/${featurestoreId}/fg/${item.id}/activity/JOB`,
+                ),
             ]}
           >
             {isJobsLoading && (

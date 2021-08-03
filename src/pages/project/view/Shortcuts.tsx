@@ -2,6 +2,7 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 // Hooks
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Labeling, Subtitle } from '@logicalclocks/quartz';
 import useHistory from '../../../hooks/useHistory';
@@ -17,6 +18,7 @@ import ShortcutsService, {
 } from '../../../services/localStorage/ShortcutsService';
 // Utils
 import filterByRecentHistory from './filterByRecentHistory';
+import { selectFeatureStoreData } from '../../../store/models/feature/selectors';
 
 const MAX_RESULTS_COUNT = 10;
 
@@ -34,6 +36,8 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
   const navigate = useNavigateRelative();
 
   const { id: projectId } = useParams();
+
+  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
   const allResults = useMemo(() => {
     return filterByRecentHistory(+projectId, data, history);
@@ -86,9 +90,9 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
   const handleNavigate = useCallback(
     (item: ShortcutItem) => {
       if (item.type === DTO.fg) {
-        navigate(`/fg/${item.id}`, `p/:id/*`);
+        navigate(`/fs/${item.featurestoreId}/fg/${item.id}`, `p/:id/*`);
       } else if (item.type === DTO.td) {
-        navigate(`/td/${item.id}`, `p/:id/*`);
+        navigate(`/fs/${item.featurestoreId}/td/${item.id}`, `p/:id/*`);
       }
     },
     [navigate],
@@ -121,7 +125,7 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
           </Labeling>
         )}
         <Box my="8px" bg="grayShade2" height="1px" width="100%" />
-        <FixedShortcuts />
+        <FixedShortcuts fsId={String(featureStoreData?.featurestoreId)} />
       </Flex>
       {/* RIGHT SIDE */}
       <Flex flexDirection="column" width="50%">

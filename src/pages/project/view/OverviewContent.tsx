@@ -24,15 +24,18 @@ import getInputValidation from '../../../utils/getInputValidation';
 import { User } from '../../../types/user';
 import { Project } from '../../../types/project';
 import { RootState } from '../../../store';
+import { SharedProject } from '../../../types/multistore';
 // Components
 import DateValue from '../feature-group/list/DateValue';
 import ProjectMembers from './ProjectMembers';
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 import Shortcuts from './Shortcuts';
 import { shortText } from '../../../utils/validators';
+import { permissionsToLabelMap } from '../settings/multistore/utils';
 
 export interface ContentProps {
   data: Project;
+  sharedEntities: SharedProject[];
   currentUser: User;
   onUpdateDescription: (data: { description: string }) => void;
   onClickEdit: () => void;
@@ -40,6 +43,7 @@ export interface ContentProps {
 
 const OverviewContent: FC<ContentProps> = ({
   data,
+  sharedEntities,
   currentUser,
   onClickEdit,
   onUpdateDescription,
@@ -168,6 +172,26 @@ const OverviewContent: FC<ContentProps> = ({
             </Flex>
           </Flex>
           {!!data.projectTeam && <ProjectMembers data={data} />}
+          <Flex mt="20px" flexDirection="column">
+            <Microlabeling mb="4px" gray>
+              Feature Store shared with
+            </Microlabeling>
+            <Flex flexDirection="row">
+              {sharedEntities?.map((ent, idx) => (
+                <Flex key={ent.id} flexDirection="row">
+                  <Value primary>{ent.name}</Value>
+                  &nbsp;
+                  <Value>
+                    {`(${permissionsToLabelMap[ent.permission]})${
+                      idx !== sharedEntities.length - 1 ? ',' : ''
+                    }`}
+                    &nbsp;
+                  </Value>
+                </Flex>
+              ))}
+              {sharedEntities?.length === 0 && <Value primary>none</Value>}
+            </Flex>
+          </Flex>
         </Flex>
       </Card>
       <Shortcuts userId={currentUser.id} />

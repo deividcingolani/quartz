@@ -43,7 +43,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
   data = [],
   type = ItemDrawerTypes.fg,
 }) => {
-  const { [`${type}Id`]: id } = useParams();
+  const { [`${type}Id`]: id, fsId } = useParams();
 
   const [selected, setSelected] = useState<Tag>(data[0]);
 
@@ -54,7 +54,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
       navigate(
-        route.replace(`:${type}Id`, String(id)),
+        route.replace(':fsId', fsId).replace(`:${type}Id`, String(id)),
         routeNames.project.view,
       );
     },

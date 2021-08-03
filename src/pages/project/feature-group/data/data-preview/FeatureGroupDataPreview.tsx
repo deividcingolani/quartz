@@ -41,9 +41,9 @@ import useDrawer from '../../../../../hooks/useDrawer';
 import NoData from '../../../../../components/no-data/NoData';
 
 const FeatureGroupDataPreview: FC = () => {
-  const { id, fgId } = useParams();
+  const { id, fgId, fsId } = useParams();
 
-  const { data: featureGroupData } = useFeatureGroupView(+id, +fgId);
+  const { data: featureGroupData } = useFeatureGroupView(+id, +fgId, +fsId);
 
   const { data: featureStoreData } = useSelector(selectFeatureStoreData);
 
@@ -73,30 +73,26 @@ const FeatureGroupDataPreview: FC = () => {
 
   useEffect(() => {
     const load = async () => {
-      if (featureStoreData?.featurestoreId) {
-        await dispatch.featureGroupDataPreview.fetch({
-          projectId: +id,
-          featureStoreId: featureStoreData.featurestoreId,
-          featureGroupId: +fgId,
-          storage: storageConnectorType,
-        });
-
-        setIsFirstLoad(false);
-      }
-    };
-    load();
-  }, [id, fgId, dispatch, storageConnectorType, featureStoreData]);
-
-  const handleRefreshData = useCallback(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupDataPreview.fetch({
+      await dispatch.featureGroupDataPreview.fetch({
         projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
+        featureStoreId: +fsId,
         featureGroupId: +fgId,
         storage: storageConnectorType,
       });
-    }
-  }, [id, fgId, dispatch, storageConnectorType, featureStoreData]);
+
+      setIsFirstLoad(false);
+    };
+    load();
+  }, [id, fgId, dispatch, storageConnectorType, featureStoreData, fsId]);
+
+  const handleRefreshData = useCallback(() => {
+    dispatch.featureGroupDataPreview.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+      storage: storageConnectorType,
+    });
+  }, [dispatch.featureGroupDataPreview, id, fsId, fgId, storageConnectorType]);
 
   const view = useSelector<RootState, FeatureGroupViewState>(
     (state) => state.featureGroupView,
@@ -120,9 +116,12 @@ const FeatureGroupDataPreview: FC = () => {
 
   const handleNavigate = useCallback(
     (route: string) => (): void => {
-      navigate(route.replace(':fgId', fgId), routeNames.project.view);
+      navigate(
+        route.replace(':fsId', fsId).replace(':fgId', fgId),
+        routeNames.project.view,
+      );
     },
-    [fgId, navigate],
+    [fgId, fsId, navigate],
   );
 
   const [selectColumn, setSelectColumn] = useState(null);
@@ -205,7 +204,7 @@ const FeatureGroupDataPreview: FC = () => {
           feature={selectColumn}
           handleToggle={handleClose}
           projectId={+id}
-          featureStoreId={featureGroupData.featurestoreId}
+          featureStoreId={+fsId}
         />
       )}
       <Box

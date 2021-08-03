@@ -3,8 +3,8 @@ import React from 'react';
 export const ProjectView = React.lazy(() => import('./view/ProjectView'));
 export const Settings = React.lazy(() => import('./settings/Settings'));
 export const ProjectEdit = React.lazy(() => import('./edit/ProjectEdit'));
-export const FeatureGroupList = React.lazy(
-  () => import('./feature-group/list/FeatureGroupList'),
+export const MultiStoreFGList = React.lazy(
+  () => import('./feature-group/list/MultiStoreFGList'),
 );
 export const FeatureGroupEdit = React.lazy(
   () => import('./feature-group/edit/FeatureGroupEdit'),
@@ -24,8 +24,8 @@ export const FeatureGroupDataCorrelation = React.lazy(
 export const FeatureGroupStatistics = React.lazy(
   () => import('./feature-group/data/FeatureGroupStatistics'),
 );
-export const StorageConnectorsList = React.lazy(
-  () => import('./storage-connectors/list/StorageConnectorsList'),
+export const MultiStoreSCList = React.lazy(
+  () => import('./storage-connectors/list/MultiStoreSCList'),
 );
 export const StorageConnectorsCreate = React.lazy(
   () => import('./storage-connectors/create/StorageConnectorsCreate'),
@@ -40,8 +40,8 @@ export const StorageConnectorsImportSample = React.lazy(
 export const FeatureGroupOverview = React.lazy(
   () => import('./feature-group/overview/FeatureGroupOverview'),
 );
-export const TrainingDatasetList = React.lazy(
-  () => import('./training-dataset/list/TrainingDatasetList'),
+export const MultiStoreTDList = React.lazy(
+  () => import('./training-dataset/list/MultiStoreTDList'),
 );
 export const TrainingDatasetOverview = React.lazy(
   () => import('./training-dataset/overview/TrainingDatasetOverview'),

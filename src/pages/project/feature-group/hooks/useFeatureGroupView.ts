@@ -17,9 +17,12 @@ export interface UseFeatureGroupView {
 const useFeatureGroupView = (
   projectId: number,
   fgId: number,
+  fsId: number,
 ): UseFeatureGroupView => {
   const { commitTime } = useParams();
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { data: featureStoreData } = useSelector((state: RootState) =>
+    selectFeatureStoreData(state, fsId),
+  );
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.featureGroupView.fetch,
   );
@@ -32,17 +35,17 @@ const useFeatureGroupView = (
 
   const fetchData = useCallback(() => {
     dispatch.featureGroupStatistics.clear();
-    if (featureStoreData?.featurestoreId && !isLoading) {
+    if (featureStoreData && fsId && !isLoading) {
       dispatch.featureGroupStatistics.fetch({
         projectId: +projectId,
-        featureStoreId: featureStoreData.featurestoreId,
+        featureStoreId: fsId,
         featureGroupId: +fgId,
         timeCommit: commitTime,
       });
 
       return dispatch.featureGroupView.fetch({
         projectId,
-        featureStoreId: featureStoreData.featurestoreId,
+        featureStoreId: fsId,
         featureGroupId: fgId,
       });
     }
@@ -50,7 +53,8 @@ const useFeatureGroupView = (
   }, [
     dispatch.featureGroupStatistics,
     dispatch.featureGroupView,
-    featureStoreData?.featurestoreId,
+    featureStoreData,
+    fsId,
     isLoading,
     projectId,
     fgId,
@@ -58,10 +62,7 @@ const useFeatureGroupView = (
   ]);
 
   useEffect(() => {
-    if (
-      fgId !== data?.id ||
-      featureStoreData?.featurestoreId !== data.featurestoreId
-    ) {
+    if (fgId !== data?.id || fsId !== data.featurestoreId) {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

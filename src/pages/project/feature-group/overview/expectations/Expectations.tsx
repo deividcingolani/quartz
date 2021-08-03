@@ -40,10 +40,11 @@ import renderValidationType from './utils';
 
 export interface ExpectationsProps {
   data: FeatureGroup;
+  isOwnFs: boolean;
 }
 
-const Expectations: FC<ExpectationsProps> = ({ data }) => {
-  const { id: projectId } = useParams();
+const Expectations: FC<ExpectationsProps> = ({ data, isOwnFs }) => {
+  const { id: projectId, fsId } = useParams();
 
   const { handleSelectItem, handleClose, isOpen, selectedId } =
     useDrawer<string>();
@@ -54,10 +55,6 @@ const Expectations: FC<ExpectationsProps> = ({ data }) => {
 
   const [nameToDelete, setName] = useState<string>();
 
-  const featureStoreData = useSelector((state: RootState) =>
-    state.featureStores?.length ? state.featureStores[0] : null,
-  );
-
   const onDeleteItem = useCallback(
     (name: string) => () => {
       setName(name);
@@ -67,10 +64,10 @@ const Expectations: FC<ExpectationsProps> = ({ data }) => {
   );
 
   const handleDelete = () => {
-    if (featureStoreData?.featurestoreId && nameToDelete) {
+    if (nameToDelete) {
       dispatch.expectations.detach({
         projectId: +projectId,
-        featureStoreId: featureStoreData.featurestoreId,
+        featureStoreId: +fsId,
         featureGroupId: data.id,
         name: nameToDelete,
       });
@@ -106,8 +103,10 @@ const Expectations: FC<ExpectationsProps> = ({ data }) => {
       <Button
         p={0}
         intent="inline"
-        href={getHref(`/activity/VALIDATIONS`, '/p/:id/fg/:fgId/*')}
-        onClick={() => navigate(`/activity/VALIDATIONS`, '/p/:id/fg/:fgId/*')}
+        href={getHref(`/activity/VALIDATIONS`, '/p/:id/fs/:fdId/fg/:fgId/*')}
+        onClick={() =>
+          navigate(`/activity/VALIDATIONS`, '/p/:id/fs/:fdId/fg/:fgId/*')
+        }
       >
         see data validation activity
       </Button>
@@ -153,11 +152,15 @@ const Expectations: FC<ExpectationsProps> = ({ data }) => {
             </Labeling>
             <Tooltip
               mt="20px"
-              disabled={!!data.features.length}
-              mainText="Can't add an expectation without features"
+              disabled={!!data.features.length && isOwnFs}
+              mainText={
+                !isOwnFs
+                  ? "Can't edit expectations of shared feature groups"
+                  : "Can't add an expectation without features"
+              }
             >
               <Button
-                disabled={!data.features.length}
+                disabled={!data.features.length || !isOwnFs}
                 onClick={handleNavigate(data.id, '/expectation/attach/:fgId')}
               >
                 Attach an expectation
@@ -199,10 +202,14 @@ const Expectations: FC<ExpectationsProps> = ({ data }) => {
           </Flex>
           <Tooltip
             disabled={!!data.features.length}
-            mainText="Can't add an expectation without features"
+            mainText={
+              !isOwnFs
+                ? "Can't edit expectations of shared feature groups"
+                : "Can't add an expectation without features"
+            }
           >
             <Button
-              disabled={!data.features.length}
+              disabled={!data.features.length || !isOwnFs}
               onClick={handleNavigate(data.id, '/expectation/attach/:fgId')}
             >
               Attach an expectation

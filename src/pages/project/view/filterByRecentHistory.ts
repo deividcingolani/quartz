@@ -11,7 +11,8 @@ const filterByRecentHistory = (
 ): ShortcutItem[] => {
   const reversed = history.slice().reverse();
   const matchItems = reversed.reduce((acc: ShortcutItem[], path) => {
-    const [, , pId, type, id] = path.match(/(p)\/(\d+)\/(fg|td)\/(\d+)/) || [];
+    const [, , pId, , , type, id] =
+      path.match(/(p)\/(\d+)\/(fs)\/(\d+)\/(fg|td)\/(\d+)/) || [];
 
     let item;
     if (type && projectId === +pId && !getEntityById(+id, acc)) {
@@ -26,6 +27,7 @@ const filterByRecentHistory = (
       id: item.id,
       name: item.name,
       type: item.type,
+      featurestoreId: item.featurestoreId,
     };
 
     return reducedItem ? [...acc, reducedItem] : acc;

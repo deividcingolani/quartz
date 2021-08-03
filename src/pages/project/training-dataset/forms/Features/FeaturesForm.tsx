@@ -39,11 +39,12 @@ import { BASKET_SELECTION_HASH } from '../../../../../components/basket/utils';
 
 export interface SelectedState {
   fgId: number;
+  fsId: number;
   feature?: Feature;
 }
 
 const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
-  const { id: projectId } = useParams();
+  const { id: projectId, fsId } = useParams();
 
   const { handleSelectItem, handleClose } = useDrawer();
   const { setValue } = useFormContext();
@@ -142,15 +143,19 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
     setTimeout(() => {
       setPickLoading(false);
       navigate(
-        `/p/${projectId}/${routeNames.featureGroup.list}${BASKET_SELECTION_HASH}`,
+        `/p/${projectId}/${routeNames.featureGroup.list.replace(
+          ':fsId',
+          fsId,
+        )}${BASKET_SELECTION_HASH}`,
       );
     }, 2000);
-  }, [dispatch.basket, navigate, projectId, userId]);
+  }, [dispatch.basket, fsId, navigate, projectId, userId]);
 
   const handleOpenStatistics = useCallback(
-    (fgId: number, name: string) => () => {
+    (fgId: number, name: string, fsId: number) => () => {
       setSelected({
         fgId,
+        fsId,
         feature: featureGroups
           .find(({ fg }) => fg.id === fgId)
           ?.features.find(({ name: featureName }) => featureName === name),
@@ -177,10 +182,10 @@ const FeaturesForm: FC<{ isDisabled: boolean }> = ({ isDisabled }) => {
           <FeatureDrawer
             projectId={+projectId}
             isOpen={!!selectedFeature.fgId}
-            featureStoreId={featureStoreData.featurestoreId}
+            featureStoreId={selectedFeature.fsId}
             handleToggle={() => {
               handleClose();
-              setSelected({ fgId: 0, feature: undefined });
+              setSelected({ fgId: 0, fsId: 0, feature: undefined });
             }}
             feature={selectedFeature?.feature}
             fgId={selectedFeature?.fgId}

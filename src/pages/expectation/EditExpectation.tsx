@@ -76,7 +76,7 @@ const EditExpectation: FC = () => {
         });
 
         dispatch.featureGroupView.clear();
-        navigate(`/fg`, 'p/:id/*');
+        navigate(`/fg`, 'p/:id/fs/:fsId/*');
       }
     },
     [dispatch, featureStoreData, projectId, navigate, expectation],
@@ -91,7 +91,7 @@ const EditExpectation: FC = () => {
       });
       handleToggle();
 
-      navigate('/fg', 'p/:id/*');
+      navigate('/fg', 'p/:id/fs/:fsId/*');
     }
   }, [dispatch, featureStoreData, projectId, navigate, handleToggle, expName]);
 

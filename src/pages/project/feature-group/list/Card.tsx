@@ -54,8 +54,11 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
   const getHref = useGetHrefForRoute();
 
   const handleNavigate = useCallback(
-    (id: number, route: string) => (): void => {
-      navigate(route.replace(':fgId', String(id)), routeNames.project.view);
+    (id: number, fsId: number, route: string) => (): void => {
+      navigate(
+        route.replace(':fsId', String(fsId)).replace(':fgId', String(id)),
+        routeNames.project.view,
+      );
     },
     [navigate],
   );
@@ -81,16 +84,22 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                   e.stopPropagation();
                   e.preventDefault();
                   if (hasMatchText) {
-                    navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
+                    navigate(
+                      `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}`,
+                    );
                   } else {
-                    handleNavigate(data.id, '/fg/:fgId')();
+                    handleNavigate(
+                      data.id,
+                      data.featurestoreId,
+                      '/fs/:fsId/fg/:fgId',
+                    )();
                   }
                 }}
                 href={
                   hasMatchText
-                    ? `/p/${data.parentProjectId}/fg/${data.id}`
+                    ? `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}`
                     : getHref(
-                        '/fg/:fgId'.replace(':fgId', String(data.id)),
+                        `/fs/${data.featurestoreId}/fg/${data.id}`,
                         routeNames.project.view,
                       )
                 }
@@ -161,7 +170,11 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               p="0"
               mt="15px"
               width="fit-content"
-              onClick={handleNavigate(data.id, routeNames.featureGroup.edit)}
+              onClick={handleNavigate(
+                data.id,
+                data.featurestoreId,
+                routeNames.featureGroup.edit,
+              )}
             >
               + add a description
             </Button>
@@ -227,9 +240,15 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 <Flex
                   onClick={() => {
                     if (hasMatchText) {
-                      navigate(`/p/${data.parentProjectId}/fg/${data.id}`);
+                      navigate(
+                        `/p/${data.parentProjectId}/fs${data.featurestoreId}/fg/${data.id}`,
+                      );
                     } else {
-                      handleNavigate(data.id, '/fg/:fgId')();
+                      handleNavigate(
+                        data.id,
+                        data.featurestoreId,
+                        '/fs/:fsId/fg/:fgId',
+                      )();
                     }
                   }}
                   justifyContent="center"
@@ -264,10 +283,14 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                   onClick={(e) => {
                     if (hasMatchText) {
                       navigate(
-                        `/p/${data.parentProjectId}/fg/${data.id}/statistics`,
+                        `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}/statistics`,
                       );
                     } else if (data.statisticsConfig.enabled) {
-                      handleNavigate(data.id, '/fg/:fgId/statistics')();
+                      handleNavigate(
+                        data.id,
+                        data.featurestoreId,
+                        '/fs/:fsId/fg/:fgId/statistics',
+                      )();
                     } else {
                       e.stopPropagation();
                     }
@@ -303,10 +326,14 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                   onClick={() => {
                     if (hasMatchText) {
                       navigate(
-                        `/p/${data.parentProjectId}/fg/${data.id}/activity`,
+                        `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}/activity`,
                       );
                     } else {
-                      handleNavigate(data.id, '/fg/:fgId/activity')();
+                      handleNavigate(
+                        data.id,
+                        data.featurestoreId,
+                        '/fs/:fsId/fg/:fgId/activity',
+                      )();
                     }
                   }}
                   justifyContent="center"

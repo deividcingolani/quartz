@@ -53,7 +53,9 @@ const ProvenanceGraph: FC<ProvenanceGraphProps> = ({
           if (shiftRef.current) {
             const type = getStrType(element.type);
             if (['fg', 'td'].includes(type)) {
-              window.open(getHref(`/${type}/${element.id}`, 'p/:id/*'));
+              window.open(
+                getHref(`/${type}/${element.id}`, 'p/:id/fs/:fsId/*'),
+              );
             }
           }
           setSelected((selected) => {

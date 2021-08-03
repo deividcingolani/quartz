@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, useCallback } from 'react';
 import { Flex } from 'rebass';
 import { Labeling } from '@logicalclocks/quartz';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
@@ -15,25 +15,39 @@ export interface FixedItem {
   onClick: () => void;
 }
 
-const FixedShortcuts: FC = () => {
+const FixedShortcuts: FC<{ fsId: string }> = ({ fsId }) => {
   const getHref = useGetHrefForRoute();
   const navigate = useNavigateRelative();
 
   const { featureGroup, trainingDataset, project } = routeNames;
 
+  const buildHref = useCallback(
+    (to: string, relativeTo: string) => {
+      return getHref(to.replace(`:fsId`, fsId), relativeTo);
+    },
+    [fsId, getHref],
+  );
+
+  const handleNavigate = useCallback(
+    (to: string, relativeTo: string) => {
+      navigate(to.replace(':fsId', fsId), relativeTo);
+    },
+    [fsId, navigate],
+  );
+
   const fixedShortCuts: FixedItem[] = useMemo(
     () => [
       {
         label: 'Create New Feature Group',
-        onClick: () => navigate(featureGroup.create, project.view),
-        href: getHref(featureGroup.create, project.view),
+        onClick: () => handleNavigate(featureGroup.create, project.view),
+        href: buildHref(featureGroup.create, project.view),
         icon: icons.plus,
         key: 'fg',
       },
       {
         label: 'Create New Training Dataset',
-        onClick: () => navigate(trainingDataset.create, project.view),
-        href: getHref(trainingDataset.create, project.view),
+        onClick: () => handleNavigate(trainingDataset.create, project.view),
+        href: buildHref(trainingDataset.create, project.view),
         icon: icons.plus,
         key: 'td',
       },
@@ -48,8 +62,8 @@ const FixedShortcuts: FC = () => {
     ],
     [
       featureGroup.create,
-      getHref,
-      navigate,
+      buildHref,
+      handleNavigate,
       project.view,
       trainingDataset.create,
     ],

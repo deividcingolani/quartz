@@ -19,10 +19,10 @@ import { Project } from '../../../types/project';
 import { Dispatch, RootState } from '../../../store';
 
 export interface DangerZoneProps {
-  data: Project;
+  project: Project;
 }
 
-const DangerZone: FC<DangerZoneProps> = ({ data }) => {
+const DangerZone: FC<DangerZoneProps> = ({ project }) => {
   const [isOpen, handleToggle] = usePopup();
   const [projectConfirm, setProjectConfirm] = useState('');
   const [inputError, setInputError] = useState('');
@@ -36,16 +36,16 @@ const DangerZone: FC<DangerZoneProps> = ({ data }) => {
   const navigate = useNavigateRelative();
 
   const handleDelete = useCallback(async () => {
-    if (projectConfirm !== data.projectName) {
+    if (projectConfirm !== project.projectName) {
       setInputError('Confirmation does not match current project name');
     } else {
       setInputError('');
-      await dispatch.project.delete({ id: data.projectId as number });
+      await dispatch.project.delete({ id: project.projectId as number });
       navigate(`/`);
     }
   }, [
-    data.projectId,
-    data.projectName,
+    project.projectId,
+    project.projectName,
     dispatch.project,
     navigate,
     projectConfirm,
@@ -62,7 +62,7 @@ const DangerZone: FC<DangerZoneProps> = ({ data }) => {
         closeOnBackdropClick={!isDeleting}
         secondaryButton={['Back', handleToggle]}
         mainButton={['Delete project permanently', handleDelete]}
-        title={`Delete ${data.projectName}`}
+        title={`Delete ${project.projectName}`}
         secondaryText="Once you delete a project, there is no going back. Please be certain. To confirm, enter the name of the project."
       >
         <Input
@@ -94,7 +94,7 @@ const DangerZone: FC<DangerZoneProps> = ({ data }) => {
             <Button
               onClick={handleToggle}
               intent="alert"
-              disabled={!data?.projectId}
+              disabled={!project?.projectId}
             >
               Delete project
             </Button>

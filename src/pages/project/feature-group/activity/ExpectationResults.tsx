@@ -91,8 +91,8 @@ const ExpectationResult: FC<ExpectationResultProps> = ({
         <Button
           mr="-10px"
           intent="inline"
-          href={getHref(`/expectation/${name}`, '/p/:id/*')}
-          onClick={() => navigate(`/expectation/${name}`, '/p/:id/*')}
+          href={getHref(`/expectation/${name}`, '/p/:id/fs/:fsId/*')}
+          onClick={() => navigate(`/expectation/${name}`, '/p/:id/fs/:fsId/*')}
         >
           edit {'->'}
         </Button>

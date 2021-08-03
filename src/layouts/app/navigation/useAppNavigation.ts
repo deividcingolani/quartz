@@ -12,7 +12,6 @@ import routeNames from '../../../routes/routeNames';
 import useOS, { OSNames } from '../../../hooks/useOS';
 import useAnchor from '../../../components/anchor/useAnchor';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
-
 // Svg
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 import icons from '../../../sources/icons';
@@ -24,6 +23,10 @@ const useAppNavigation = (): TreeNode[] => {
   const navigateRelative = useNavigateRelative();
 
   const navigate = useNavigateRelative();
+
+  const featurestore = useSelector((state: RootState) =>
+    state.featureStores?.length ? state.featureStores[0] : null,
+  );
 
   const handleShortcut = useCallback(
     (e) => {
@@ -37,15 +40,20 @@ const useAppNavigation = (): TreeNode[] => {
             break;
           }
           case '1': {
-            navigate('/fg', 'p/:id/*');
+            navigate(`/fs/${featurestore?.featurestoreId}/fg`, 'p/:id/*');
             break;
           }
           case '2': {
-            navigate('/td', 'p/:id/*');
+            navigate(`/fs/${featurestore?.featurestoreId}/td`, 'p/:id/*');
+
             break;
           }
           case '3': {
-            navigate('/storage-connectors', 'p/:id/*');
+            navigate(
+              `/fs/${featurestore?.featurestoreId}/storage-connectors`,
+              'p/:id/*',
+            );
+
             break;
           }
           case '4': {
@@ -63,7 +71,7 @@ const useAppNavigation = (): TreeNode[] => {
         e.preventDefault();
       }
     },
-    [navigate],
+    [featurestore?.featurestoreId, navigate],
   );
 
   useEffect(() => {
@@ -81,6 +89,17 @@ const useAppNavigation = (): TreeNode[] => {
     [navigateRelative],
   );
 
+  const handleNavigateMultiStore = useCallback(
+    (to: string, relativeTo: string) => (): void => {
+      if (featurestore?.featurestoreId) {
+        navigate(
+          to.replace(':fsId', String(featurestore?.featurestoreId)),
+          relativeTo,
+        );
+      }
+    },
+    [featurestore?.featurestoreId, navigate],
+  );
   const handleJumpToAnchor = useCallback(
     (anchor: string) => () => {
       window.location.hash = `#${anchor}`;
@@ -190,23 +209,23 @@ const useAppNavigation = (): TreeNode[] => {
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 1`,
         icon: icons.fg,
-        onClick: handleNavigateRelative(
+        onClick: handleNavigateMultiStore(
           routeNames.featureGroup.list,
           routeNames.project.view,
         ),
         href: getHref(routeNames.featureGroup.list, routeNames.project.view),
         isActive: isActive([
-          '/p/:id/fg',
-          '/p/:id/expectation/attach/:fgId',
-          '/p/:id/expectation/:expId',
+          '/p/:id/fs/:fsId/fg',
+          '/p/:id/fs/:fsId/expectation/attach/:fgId',
+          '/p/:id/fs/:fsId/expectation/:expId',
         ]),
         children: [
           {
             id: 'fgOverview',
             title: 'Overview',
-            href: getHref('/', '/p/:id/fg/:fgId/*'),
-            isActive: isActive('/p/:id/fg/:fgId', ['new']),
-            onClick: handleNavigateRelative('/', '/p/:id/fg/:fgId/*'),
+            href: getHref('/', '/p/:id/fs/:fsId/fg/:fgId/*'),
+            isActive: isActive('/p/:id/fs/:fsId/fg/:fgId', ['new']),
+            onClick: handleNavigateRelative('/', '/p/:id/fs/:fsId/fg/:fgId/*'),
             children: [
               createFgAnchorLink('Feature List', featureList, 'fgFeatures'),
               createFgAnchorLink('Provenance', provenance, 'fgProvenance'),
@@ -222,12 +241,12 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgDataPreview',
             title: 'Data preview',
-            href: getHref('/data-preview', '/p/:id/fg/:fgId/*'),
+            href: getHref('/data-preview', '/p/:id/fs/:fsId/fg/:fgId/*'),
             disabled: disabledTabs.dataPreviewDisabled,
-            isActive: isActive('p/:id/fg/:fgId/data-preview/*'),
+            isActive: isActive('p/:id/fs/:fsId/fg/:fgId/data-preview/*'),
             onClick: handleNavigateRelative(
               '/data-preview',
-              '/p/:id/fg/:fgId/*',
+              '/p/:id/fs/:fsId/fg/:fgId/*',
             ),
           },
           {
@@ -236,20 +255,23 @@ const useAppNavigation = (): TreeNode[] => {
             tooltipText: disabledTabs.fgStatisticsDisabled
               ? 'Statistics are disabled'
               : '',
-            href: getHref('/statistics', '/p/:id/fg/:fgId/*'),
+            href: getHref('/statistics', '/p/:id/fs/:fsId/fg/:fgId/*'),
             disabled: disabledTabs.fgStatisticsDisabled,
-            isActive: isActive('/p/:id/fg/:fgId/statistics/*'),
-            onClick: handleNavigateRelative('/statistics', '/p/:id/fg/:fgId/*'),
+            isActive: isActive('/p/:id/fs/:fsId/fg/:fgId/statistics/*'),
+            onClick: handleNavigateRelative(
+              '/statistics',
+              '/p/:id/fs/:fsId/fg/:fgId/*',
+            ),
           },
           {
             id: 'fgCorrelation',
             title: 'Feature correlations',
-            href: getHref('/correlation', '/p/:id/fg/:fgId/*'),
+            href: getHref('/correlation', '/p/:id/fs/:fsId/fg/:fgId/*'),
             disabled: disabledTabs.fgCorrelationsDisabled,
-            isActive: isActive('/p/:id/fg/:fgId/correlation/*'),
+            isActive: isActive('/p/:id/fs/:fsId/fg/:fgId/correlation/*'),
             onClick: handleNavigateRelative(
               '/correlation',
-              '/p/:id/fg/:fgId/*',
+              '/p/:id/fs/:fsId/fg/:fgId/*',
             ),
             tooltipText: disabledTabs.fgCorrelationsDisabled
               ? 'Correlation are disabled'
@@ -258,13 +280,16 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgActivity',
             title: 'Activity',
-            href: getHref('/activity', '/p/:id/fg/:fgId/*'),
-            onClick: handleNavigateRelative('/activity', '/p/:id/fg/:fgId/*'),
+            href: getHref('/activity', '/p/:id/fs/:fsId/fg/:fgId/*'),
+            onClick: handleNavigateRelative(
+              '/activity',
+              '/p/:id/fs/:fsId/fg/:fgId/*',
+            ),
             isActive: isActive([
-              '/p/:id/fg/:fgId/activity',
-              '/p/:id/fg/:fgId/activity/:type',
-              '/p/:id/fg/:fgId/activity/:type/:from/:to',
-              '/p/:id/fg/:fgId/activity/:from/:to',
+              '/p/:id/fs/:fsId/fg/:fgId/activity',
+              '/p/:id/fs/:fsId/fg/:fgId/activity/:type',
+              '/p/:id/fs/:fsId/fg/:fgId/activity/:type/:from/:to',
+              '/p/:id/fs/:fsId/fg/:fgId/activity/:from/:to',
             ]),
           },
         ],
@@ -276,9 +301,9 @@ const useAppNavigation = (): TreeNode[] => {
           osName === OSNames.MAC ? '⌘' : 'Ctrl'
         } + 2`,
         icon: icons.td,
-        isActive: isActive('/p/:id/td'),
+        isActive: isActive('/p/:id/fs/:fsId/td'),
         href: getHref(routeNames.trainingDataset.list, routeNames.project.view),
-        onClick: handleNavigateRelative(
+        onClick: handleNavigateMultiStore(
           routeNames.trainingDataset.list,
           routeNames.project.view,
         ),
@@ -286,9 +311,9 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdOverview',
             title: 'Overview',
-            href: getHref('/', '/p/:id/td/:tdId/*'),
-            isActive: isActive('/p/:id/td/:tdId', ['new']),
-            onClick: handleNavigateRelative('/', '/p/:id/td/:tdId/*'),
+            href: getHref('/', '/p/:id/fs/:fsId/td/:tdId/*'),
+            isActive: isActive('/p/:id/fs/:fsId/td/:tdId', ['new']),
+            onClick: handleNavigateRelative('/', '/p/:id/fs/:fsId/td/:tdId/*'),
             children: [
               createTdAnchorLink('Feature List', featureList, 'tdFeatures'),
               createTdAnchorLink('Provenance', provenance, 'tdProvenance'),
@@ -299,11 +324,14 @@ const useAppNavigation = (): TreeNode[] => {
           },
           {
             id: 'tdStats',
-            href: getHref('/statistics', '/p/:id/td/:tdId/*'),
+            href: getHref('/statistics', '/p/:id/fs/:fsId/td/:tdId/*'),
             title: 'Feature statistics',
             disabled: disabledTabs.tdStatisticsDisabled,
-            isActive: isActive('/p/:id/td/:tdId/statistics/*'),
-            onClick: handleNavigateRelative('/statistics', '/p/:id/td/:tdId/*'),
+            isActive: isActive('/p/:id/fs/:fsId/td/:tdId/statistics/*'),
+            onClick: handleNavigateRelative(
+              '/statistics',
+              '/p/:id/fs/:fsId/td/:tdId/*',
+            ),
             tooltipText: disabledTabs.tdStatisticsDisabled
               ? 'Statistics are disabled'
               : '',
@@ -311,12 +339,12 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdCorrelation',
             title: 'Feature correlations',
-            href: getHref('/correlation', '/p/:id/td/:tdId/*'),
+            href: getHref('/correlation', '/p/:id/fs/:fsId/td/:tdId/*'),
             disabled: disabledTabs.tdCorrelationsDisabled,
             isActive: isActive(routeNames.trainingDataset.correlation),
             onClick: handleNavigateRelative(
               '/correlation',
-              '/p/:id/td/:tdId/*',
+              '/p/:id/fs/:fsId/td/:tdId/*',
             ),
             tooltipText: disabledTabs.tdCorrelationsDisabled
               ? 'Correlation are disabled'
@@ -325,9 +353,12 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'tdActivity',
             title: 'Activity',
-            href: getHref('/activity', '/p/:id/td/:tdId/*'),
-            onClick: handleNavigateRelative('/activity', '/p/:id/td/:tdId/*'),
-            isActive: isActive('/p/:id/td/:tdId/activity'),
+            href: getHref('/activity', '/p/:id/fs/:fsId/td/:tdId/*'),
+            onClick: handleNavigateRelative(
+              '/activity',
+              '/p/:id/fs/:fsId/td/:tdId/*',
+            ),
+            isActive: isActive('/p/:id/fs/:fsId/td/:tdId/activity'),
           },
         ],
       },
@@ -342,8 +373,8 @@ const useAppNavigation = (): TreeNode[] => {
           routeNames.storageConnector.list,
           routeNames.project.view,
         ),
-        isActive: location.pathname.includes(routeNames.storageConnector.list),
-        onClick: handleNavigateRelative(
+        isActive: isActive('/p/:id/fs/:fsId/storage-connectors'),
+        onClick: handleNavigateMultiStore(
           routeNames.storageConnector.list,
           routeNames.project.view,
         ),
@@ -464,7 +495,7 @@ const useAppNavigation = (): TreeNode[] => {
     disabledTabs.tdStatisticsDisabled,
     disabledTabs.tdCorrelationsDisabled,
     createTdAnchorLink,
-    location.pathname,
+    handleNavigateMultiStore,
   ]);
 };
 

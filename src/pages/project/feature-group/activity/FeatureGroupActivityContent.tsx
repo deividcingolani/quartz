@@ -55,7 +55,7 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
   handleLoadPreviousData,
   handleLoadFollowingData,
 }) => {
-  const { fgId } = useParams();
+  const { fgId, fsId } = useParams();
 
   const navigate = useNavigateRelative();
 
@@ -63,9 +63,12 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
 
   const handleNavigate = useCallback(
     (route: string) => (): void => {
-      navigate(route.replace(':fgId', fgId), routeNames.project.view);
+      navigate(
+        route.replace(':fsId', fsId).replace(':fgId', fgId),
+        routeNames.project.view,
+      );
     },
-    [fgId, navigate],
+    [fgId, fsId, navigate],
   );
 
   const [selected, setSelected] = useState<ActivityItemData>();
@@ -76,7 +79,9 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
         [
           ActivityType.statistics,
           (commitTime: number) =>
-            handleNavigate(`/fg/:fgId/statistics/commit/${commitTime}`)(),
+            handleNavigate(
+              `/fs/:fsId/fg/:fgId/statistics/commit/${commitTime}`,
+            )(),
         ],
         [
           ActivityType.validations,

@@ -2,9 +2,9 @@ import { Dataset } from '../../types/dataset';
 import BaseApiService, { RequestType } from '../BaseApiService';
 
 class DatasetService extends BaseApiService {
-  getList = (projectId: number) =>
+  getList = (projectId: number, expandUsers = false) =>
     this.request<GetDatasets>({
-      url: `${projectId}/dataset`,
+      url: `${projectId}/dataset${expandUsers ? '?expand=users' : ''}`,
       type: RequestType.get,
     });
 

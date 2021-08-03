@@ -10,10 +10,12 @@ import {
   selectFeatureGroupsData,
 } from '../../../../store/models/feature/selectors';
 
+export type UseFeatureGroupsData = SelectData<FeatureGroup[]>;
+
 const useFeatureGroups = (
   projectId: number,
   featureStoreId?: number,
-): SelectData<FeatureGroup[]> => {
+): UseFeatureGroupsData => {
   const { data, isLoading } = useSelector(selectFeatureGroupsData);
 
   const dispatch = useDispatch<Dispatch>();
@@ -23,8 +25,11 @@ const useFeatureGroups = (
   );
 
   useEffect(() => {
-    if (!data.length && featureStoreId) {
-      if (searchFgs.length) {
+    if (
+      featureStoreId &&
+      (!data.length || data[0].featurestoreId !== featureStoreId)
+    ) {
+      if (searchFgs.length && searchFgs[0].featurestoreId === featureStoreId) {
         dispatch.featureGroups.fetchAfterSearch({
           projectId,
           featureStoreId,

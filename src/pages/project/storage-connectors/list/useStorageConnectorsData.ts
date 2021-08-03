@@ -18,6 +18,7 @@ export interface UseStorageConnectorsData {
 
 const useStorageConnectorsData = (
   projectId: number,
+  featureStoreId: number,
 ): UseStorageConnectorsData => {
   const data = useSelector(selectFeatureStoreStorageConnectors);
   const isStorageConnectorsLoading = useSelector(
@@ -32,13 +33,11 @@ const useStorageConnectorsData = (
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
-    if (!data.length && featureStoreData?.featurestoreId) {
-      dispatch.featureStoreStorageConnectors.fetch({
-        projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-      });
-    }
-  }, [projectId, featureStoreData, data.length, dispatch]);
+    dispatch.featureStoreStorageConnectors.fetch({
+      projectId,
+      featureStoreId,
+    });
+  }, [projectId, featureStoreData, data.length, dispatch, featureStoreId]);
 
   return useMemo(
     () => ({

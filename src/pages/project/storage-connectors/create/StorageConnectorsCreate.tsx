@@ -20,7 +20,7 @@ import titles from '../../../../sources/titles';
 const StorageConnectorsCreate: FC = () => {
   useTitle(titles.createStorageConnector);
 
-  const { protocol, id: projectId } = useParams();
+  const { protocol, id: projectId, fsId } = useParams();
 
   const isSubmit = useSelector(
     (state: RootState) =>
@@ -29,9 +29,6 @@ const StorageConnectorsCreate: FC = () => {
   const error = useSelector(
     (state: RootState) =>
       state.error.effects.featureStoreStorageConnectors.create,
-  );
-  const featureStoreData = useSelector((state: RootState) =>
-    state.featureStores?.length ? state.featureStores[0] : null,
   );
   const isFeatureStoreLoading = useSelector(
     (state: RootState) => state.loading.effects.featureStores.fetch,
@@ -56,39 +53,36 @@ const StorageConnectorsCreate: FC = () => {
         ...restData
       } = data;
 
-      if (featureStoreData?.featurestoreId) {
-        dispatch.error.clear({
-          name: 'featureStoreStorageConnectors',
-          action: 'create',
-        });
+      dispatch.error.clear({
+        name: 'featureStoreStorageConnectors',
+        action: 'create',
+      });
 
-        await dispatch.featureStoreStorageConnectors.create({
-          projectId: +projectId,
-          featureStoreId: featureStoreData?.featurestoreId,
-          data: {
-            // JDBC, REDSHIFT keyvalue (arguments)
-            ...([
-              StorageConnectorProtocol.jdbc,
-              StorageConnectorProtocol.redshift,
-            ].includes(storageConnectorType) && {
-              arguments: formatArguments(args),
-            }),
-            // SNOWFLAKE keyvalue (sfOtions)
-            ...(storageConnectorType === StorageConnectorProtocol.snowflake && {
-              sfOptions,
-            }),
-            type: getDtoType(storageConnectorType),
-            storageConnectorType:
-              protocolOptions.getByKey(storageConnectorType),
-            ...restData,
-          },
-        });
+      await dispatch.featureStoreStorageConnectors.create({
+        projectId: +projectId,
+        featureStoreId: +fsId,
+        data: {
+          // JDBC, REDSHIFT keyvalue (arguments)
+          ...([
+            StorageConnectorProtocol.jdbc,
+            StorageConnectorProtocol.redshift,
+          ].includes(storageConnectorType) && {
+            arguments: formatArguments(args),
+          }),
+          // SNOWFLAKE keyvalue (sfOtions)
+          ...(storageConnectorType === StorageConnectorProtocol.snowflake && {
+            sfOptions,
+          }),
+          type: getDtoType(storageConnectorType),
+          storageConnectorType: protocolOptions.getByKey(storageConnectorType),
+          ...restData,
+        },
+      });
 
-        dispatch.featureStoreStorageConnectors.clear();
-        navigate('/storage-connectors', 'p/:id/*');
-      }
+      dispatch.featureStoreStorageConnectors.clear();
+      navigate('/storage-connectors', 'p/:id/fs/:fsId/*');
     },
-    [dispatch, navigate, projectId, featureStoreData],
+    [dispatch, navigate, projectId, fsId],
   );
 
   if (isFeatureStoreLoading) {
@@ -100,7 +94,7 @@ const StorageConnectorsCreate: FC = () => {
       error={error}
       initialProtocol={initialProtocol}
       isLoading={isSubmit}
-      isDisabled={!featureStoreData?.featurestoreId}
+      isDisabled={!fsId} // TODO: review if this is necessary
       onSubmit={handleSubmit}
     />
   );

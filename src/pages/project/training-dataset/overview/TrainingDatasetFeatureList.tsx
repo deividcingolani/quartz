@@ -59,8 +59,10 @@ const TrainingDatasetFeatureList: FC<TrainingDatasetFeatureListProps> = ({
           <Button
             p={0}
             intent="inline"
-            href={getHref('/statistics', '/p/:id/td/:tdId/*')}
-            onClick={() => navigate('/statistics', '/p/:id/td/:tdId/*')}
+            href={getHref('/statistics', '/p/:id/fs/:fsId/td/:tdId/*')}
+            onClick={() =>
+              navigate('/statistics', '/p/:id/fs/:fsId/td/:tdId/*')
+            }
           >
             inspect data
           </Button>

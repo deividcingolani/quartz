@@ -9,23 +9,20 @@ import NoData from '../../../../components/no-data/NoData';
 
 // Types
 import { Dispatch, RootState } from '../../../../store';
+import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 // Hooks
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useTitle from '../../../../hooks/useTitle';
+import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
 // Components
 import Panel from '../../../../components/panel/Panel';
 import Loader from '../../../../components/loader/Loader';
-// Selectors
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
-import useTrainingDatasetView from '../hooks/useTrainingDatasetView';
 import StatisticsContent from '../../feature-group/data/StatisticsContent';
-import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
-import useTitle from '../../../../hooks/useTitle';
+// Utils
 import titles from '../../../../sources/titles';
 
 const TrainingDatasetStatistics: FC = () => {
-  const { id, tdId, featureName, commitTime } = useParams();
-
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { id, fsId, tdId, featureName, commitTime } = useParams();
 
   const statistics = useSelector(
     (state: RootState) => state.trainingDatasetStatistics?.entities.statistics,
@@ -72,24 +69,22 @@ const TrainingDatasetStatistics: FC = () => {
   const navigate = useNavigateRelative();
 
   const handleRefreshData = useCallback(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasets.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-      });
-      dispatch.trainingDatasetStatisticsCommits.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        trainingDatasetId: +tdId,
-      });
-      dispatch.trainingDatasetStatistics.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        trainingDatasetId: +tdId,
-        timeCommit: commitTime,
-      });
-    }
-  }, [id, tdId, dispatch, featureStoreData, commitTime]);
+    dispatch.trainingDatasets.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+    });
+    dispatch.trainingDatasetStatisticsCommits.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+    });
+    dispatch.trainingDatasetStatistics.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+      timeCommit: commitTime,
+    });
+  }, [id, tdId, dispatch, fsId, commitTime]);
 
   const navigateToStatistics = useCallback(
     (timeString, id = +tdId) => {
@@ -113,13 +108,13 @@ const TrainingDatasetStatistics: FC = () => {
         if (featureName) {
           navigate(
             `/${id}/statistics/commit/${time}/f/${featureName}`,
-            'p/:id/td/*',
+            'p/:id/fs/:fsId/td/*',
           );
         } else {
-          navigate(`/${id}/statistics/commit/${time}`, 'p/:id/td/*');
+          navigate(`/${id}/statistics/commit/${time}`, 'p/:id/fs/:fsId/td/*');
         }
       } else if (id !== tdId) {
-        navigate(`/${id}/statistics`, 'p/:id/td/*');
+        navigate(`/${id}/statistics`, 'p/:id/fs/:fsId/td/*');
       }
     },
     [featureName, commits, navigate, tdId, commit],
@@ -135,24 +130,22 @@ const TrainingDatasetStatistics: FC = () => {
   );
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasetStatisticsCommits.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        trainingDatasetId: +tdId,
-      });
-      dispatch.trainingDatasetStatistics.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        trainingDatasetId: +tdId,
-        timeCommit: commitTime,
-      });
-    }
+    dispatch.trainingDatasetStatisticsCommits.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+    });
+    dispatch.trainingDatasetStatistics.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+      timeCommit: commitTime,
+    });
 
     return () => {
       dispatch.trainingDatasetStatistics.clear();
     };
-  }, [id, tdId, dispatch, featureStoreData, commitTime]);
+  }, [id, tdId, dispatch, fsId, commitTime]);
 
   const latestVersion = useMemo(
     () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
@@ -192,7 +185,12 @@ const TrainingDatasetStatistics: FC = () => {
       <NoData mainText="No Features" secondaryText="">
         <Button
           intent="secondary"
-          onClick={() => navigate(routeNames.trainingDataset.list, 'p/:id/*')}
+          onClick={() =>
+            navigate(
+              routeNames.trainingDataset.list.replace(':fsId', fsId),
+              routeNames.project.view,
+            )
+          }
         >
           Training Datasets
         </Button>
@@ -205,7 +203,12 @@ const TrainingDatasetStatistics: FC = () => {
       <NoData mainText="No Feature Statistics" secondaryText="">
         <Button
           intent="secondary"
-          onClick={() => navigate(routeNames.trainingDataset.list, 'p/:id/*')}
+          onClick={() =>
+            navigate(
+              routeNames.trainingDataset.list.replace(':fsId', fsId),
+              routeNames.project.view,
+            )
+          }
         >
           Training Datasets
         </Button>

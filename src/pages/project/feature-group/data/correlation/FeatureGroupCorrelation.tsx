@@ -6,6 +6,7 @@ import { Select } from '@logicalclocks/quartz';
 
 // Types
 import { Dispatch, RootState } from '../../../../../store';
+import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
 // Components
 import Panel from '../../../../../components/panel/Panel';
 import Loader from '../../../../../components/loader/Loader';
@@ -14,17 +15,12 @@ import Correlation from '../../../../../components/correlation/Correlation';
 // Hooks
 import useFeatureGroupView from '../../hooks/useFeatureGroupView';
 import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
-// Selectors
-import { selectFeatureStoreData } from '../../../../../store/models/feature/selectors';
-
 import useTitle from '../../../../../hooks/useTitle';
+// Utils
 import titles from '../../../../../sources/titles';
-import { ItemDrawerTypes } from '../../../../../components/drawer/ItemDrawer';
 
 const FeatureGroupCorrelation: FC = () => {
-  const { id, fgId } = useParams();
-
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { id, fsId, fgId } = useParams();
 
   const statistics = useSelector(
     (state: RootState) => state.featureGroupStatistics?.entities.statistics,
@@ -34,35 +30,31 @@ const FeatureGroupCorrelation: FC = () => {
     (state: RootState) => state.loading.effects.featureGroupStatistics.fetch,
   );
 
-  const { isLoading, data } = useFeatureGroupView(+id, +fgId);
+  const { isLoading, data } = useFeatureGroupView(+id, +fgId, +fsId);
 
   const navigate = useNavigateRelative();
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupStatistics.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-      });
-    }
+    dispatch.featureGroupStatistics.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+    });
 
     return () => {
       dispatch.featureGroupStatistics.clear();
       dispatch.featureGroupRows.clear();
     };
-  }, [id, fgId, dispatch, featureStoreData]);
+  }, [id, fgId, dispatch, fsId]);
 
   const handleRefreshData = useCallback(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroupStatistics.fetch({
-        projectId: +id,
-        featureStoreId: featureStoreData.featurestoreId,
-        featureGroupId: +fgId,
-      });
-    }
-  }, [id, fgId, dispatch, featureStoreData]);
+    dispatch.featureGroupStatistics.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      featureGroupId: +fgId,
+    });
+  }, [id, fgId, dispatch, fsId]);
 
   const latestVersion = useMemo(
     () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
@@ -91,7 +83,7 @@ const FeatureGroupCorrelation: FC = () => {
       const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
-        navigate(`/${newId}/correlation`, '/p/:id/fg/*');
+        navigate(`/${newId}/correlation`, '/p/:id/fs/:fdId/fg/*');
       }
     },
     [data, navigate],
@@ -116,7 +108,7 @@ const FeatureGroupCorrelation: FC = () => {
         title={data.name}
         id={data.id}
         idColor="labels.orange"
-        onClickEdit={() => navigate(`/edit`, 'p/:id/fg/:fgId/*')}
+        onClickEdit={() => navigate(`/edit`, 'p/:id/fs/:fsId/fg/:fgId/*')}
         onClickRefresh={handleRefreshData}
         hasVersionDropdown={true}
         versionDropdown={

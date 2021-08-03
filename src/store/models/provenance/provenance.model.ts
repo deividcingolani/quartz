@@ -74,21 +74,13 @@ const getEntryName = (entry: Entry) => {
 };
 
 const provenance = createModel()({
-  state: {} as ProvenanceState,
+  state: null as ProvenanceState,
   reducers: {
-    setProvenance: (
-      _: ProvenanceState,
-      payload: ProvenanceState,
-    ): ProvenanceState => payload,
-    clear: () =>
-      ({
-        upstream: { nodes: [], links: [] },
-        downstream: { nodes: [], links: [] },
-        root: {} as ProvenanceNode,
-        count: 0,
-      } as ProvenanceState),
+    set: (_: ProvenanceState, payload: ProvenanceState): ProvenanceState =>
+      payload,
+    clear: () => null as ProvenanceState,
   },
-  effects: (__dispatch) => ({
+  effects: (dispatch) => ({
     fetch: async ({
       projectId,
       featureStoreId,
@@ -169,12 +161,16 @@ const provenance = createModel()({
         return result;
       };
 
-      if (!data) return {} as ProvenanceState;
+      if (!data) {
+        dispatch.provenance.set({});
+        return {} as ProvenanceState;
+      }
       const root = getRootProvenance(data);
       const upstream = await getProvenance(data, Direction.in);
       const downstream = await getProvenance(data, Direction.out);
       const count = upstream.nodes.length + downstream.nodes.length;
       const provenance = { upstream, downstream, root, count };
+      dispatch.provenance.set(provenance);
       return provenance;
     },
   }),

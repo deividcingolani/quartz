@@ -15,7 +15,10 @@ const useTdFeatureListRowData = (features: Feature[]) => {
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
       // Is this route correct
-      navigate(route.replace(':featureId', String(id)), 'p/:id/td/:tdId');
+      navigate(
+        route.replace(':featureId', String(id)),
+        'p/:id/fs/:fsId/td/:tdId',
+      );
     },
     [navigate],
   );

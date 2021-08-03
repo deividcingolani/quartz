@@ -9,41 +9,54 @@ import {
   Select,
   Value,
   usePopup,
+  Divider,
 } from '@logicalclocks/quartz';
 import routeNames from '../../../../routes/routeNames';
+import BasketTutoPopup from '../../../../components/basket/BasketTutoPopup';
 // Types
 import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroup } from '../../../../types/feature-group';
+import { SharedDataset } from '../../../../store/models/projects/multistore.model';
 // Utils
-import useFeatureGroups from '../hooks/useFeatureGroups';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { sortOptions, filterFG, sortFG, searchFGText } from '../utils';
+import { isSelectionActive } from '../../../../components/basket/utils';
 // Selectors
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
 import NoData from '../../../../components/no-data/NoData';
 import FeatureGroupListContent from './FeatureGroupListContent';
 import Loader from '../../../../components/loader/Loader';
-import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import icons from '../../../../sources/icons';
-import BasketTutoPopup from '../../../../components/basket/BasketTutoPopup';
-import { isSelectionActive } from '../../../../components/basket/utils';
+// Hooks
+import useFeatureGroups, {
+  UseFeatureGroupsData,
+} from '../hooks/useFeatureGroups';
+import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useTitle from '../../../../hooks/useTitle';
+import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+import useMultiStoreSelect from '../../../../hooks/useMultiStoreSelect';
+import useUserPermissions from '../overview/useUserPermissions';
 
-const FeatureGroupList: FC = () => {
-  const { id: projectId } = useParams();
+export interface FeatureGroupListProps {
+  sharedFrom: SharedDataset[];
+}
 
+const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
+  const { id: projectId, fsId } = useParams();
   const [filter, setFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
   const [search, setSearch] = useState<string>('');
   const navigate = useNavigateRelative();
 
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
+  const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
 
-  const { data, isLoading } = useFeatureGroups(
-    +projectId,
-    featureStoreData?.featurestoreId,
-  );
+  const {
+    selectFSValue,
+    selectFSOptions,
+    handleFSSelectionChange,
+    data,
+    isLoading,
+    hasSharedFS,
+  } = useMultiStoreSelect<UseFeatureGroupsData>(useFeatureGroups, sharedFrom);
 
   const isKeywordsAndLastUpdateLoading = useSelector(
     (state: RootState) =>
@@ -52,7 +65,7 @@ const FeatureGroupList: FC = () => {
 
   const maxVersionsData = useMemo(
     () =>
-      data.reduce((acc: FeatureGroup[], featureGroup) => {
+      (data as FeatureGroup[]).reduce((acc: FeatureGroup[], featureGroup) => {
         if (!acc.find(({ name }) => name === featureGroup.name)) {
           return [...acc, featureGroup];
         }
@@ -88,19 +101,17 @@ const FeatureGroupList: FC = () => {
 
   // Handlers
   const handleRefresh = useCallback(() => {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.featureGroups.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-      });
-    }
-  }, [dispatch, projectId, featureStoreData]);
+    dispatch.featureGroups.fetch({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+    });
+  }, [dispatch.featureGroups, projectId, fsId]);
 
   const handleRouteChange = useCallback(
     (url: string) => () => {
-      navigate(url, routeNames.project.view);
+      navigate(url.replace(':fsId', fsId), routeNames.project.view);
     },
-    [navigate],
+    [navigate, fsId],
   );
 
   const handleResetFilters = useCallback(() => {
@@ -109,8 +120,17 @@ const FeatureGroupList: FC = () => {
   }, []);
 
   const handleCreate = useCallback(() => {
-    navigate(routeNames.featureGroup.create, routeNames.project.view);
-  }, [navigate]);
+    navigate(
+      routeNames.featureGroup.create.replace(':fsId', fsId),
+      routeNames.project.view,
+    );
+  }, [navigate, fsId]);
+
+  const buildHref = useCallback(
+    (to: string, relativeTo: string) =>
+      getHref(to.replace(':fsId', fsId), relativeTo),
+    [getHref, fsId],
+  );
 
   const handleSearchChange = ({
     target,
@@ -143,19 +163,19 @@ const FeatureGroupList: FC = () => {
         isOpen={isOpenTutoPopup}
         handleToggle={handleToggleTutoPopup}
       />
-      <Flex flexGrow={1} flexDirection="column">
+      <Flex flexDirection="column">
         <Flex alignItems="center">
           <Input
+            labelProps={{ flexGrow: 1, mr: '8px' }}
             variant="white"
             disabled={!maxVersionsData.length}
             value={search}
-            width="180px"
             placeholder="Find a feature group..."
             onChange={handleSearchChange}
           />
           {!!labels.length && (
             <Tooltip
-              ml="8px"
+              mr="8px"
               mt="7px"
               disabled={!isFilterDisabled}
               mainText="No keywords defined"
@@ -179,7 +199,70 @@ const FeatureGroupList: FC = () => {
               />
             </Tooltip>
           )}
+          {hasSharedFS && (
+            <Select
+              mr="8px"
+              width="auto"
+              variant="white"
+              listWidth="max-content"
+              placeholder="feature store"
+              value={selectFSValue}
+              options={selectFSOptions}
+              onChange={handleFSSelectionChange}
+            />
+          )}
+          <Box ml="32px">
+            <Tooltip
+              mainText="You have no edit right on the feature store"
+              disabled={canEdit && !isPermissionsLoading}
+            >
+              <Button
+                href={getHref(
+                  routeNames.featureGroup.create,
+                  routeNames.project.view,
+                )}
+                disabled={!canEdit || isPermissionsLoading}
+                onClick={handleCreate}
+              >
+                New Feature Group
+              </Button>
+            </Tooltip>
+          </Box>
+        </Flex>
+        <Divider
+          mt="10px"
+          mb="10px"
+          ml="0px"
+          width="100%"
+          sx={{ backgroundColor: 'grayShade2', height: '3px' }}
+        />
+        <Flex mb="20px" justifyContent="space-between" alignItems="center">
+          <Flex>
+            {!isLoading && (
+              <>
+                <Value primary px="5px">
+                  {dataResult.length}
+                </Value>
+                <Value>out of</Value>
+                <Value primary px="5px">
+                  {maxVersionsData.length}
+                </Value>
+                <Value>feature groups displayed</Value>
+              </>
+            )}
+          </Flex>
           <Flex ml="auto" alignItems="center">
+            <Select
+              width="150px"
+              variant="white"
+              value={sort}
+              listWidth="100%"
+              mr="10px"
+              disabled={isKeywordsAndLastUpdateLoading || isLoading}
+              options={Object.keys(sortOptions)}
+              placeholder="sort by"
+              onChange={setSort}
+            />
             <Tooltip mainText="Refresh">
               <Flex
                 onClick={handleRefresh}
@@ -203,43 +286,7 @@ const FeatureGroupList: FC = () => {
                 {icons.refresh}
               </Flex>
             </Tooltip>
-            <Select
-              width="150px"
-              variant="white"
-              value={sort}
-              listWidth="100%"
-              ml="10px"
-              disabled={isKeywordsAndLastUpdateLoading || isLoading}
-              options={Object.keys(sortOptions)}
-              placeholder="sort by"
-              onChange={setSort}
-            />
           </Flex>
-        </Flex>
-        <Flex mt="20px" mb="20px">
-          {!isLoading && (
-            <>
-              <Value primary px="5px">
-                {dataResult.length}
-              </Value>
-              <Value>out of</Value>
-              <Value primary px="5px">
-                {maxVersionsData.length}
-              </Value>
-              <Value>feature groups displayed</Value>
-            </>
-          )}
-          <Box ml="auto">
-            <Button
-              href={getHref(
-                routeNames.featureGroup.create,
-                routeNames.project.view,
-              )}
-              onClick={handleCreate}
-            >
-              New Feature Group
-            </Button>
-          </Box>
         </Flex>
         {isLoading && <Loader />}
         {!isLoading && (
@@ -252,8 +299,16 @@ const FeatureGroupList: FC = () => {
         )}
         {!isLoading && !maxVersionsData.length && (
           <NoData
-            mainText="No Feature Groups"
-            secondaryText="You can create a feature group from the UI or in a program"
+            mainText={
+              hasSharedFS
+                ? 'No Feature Groups for the selected feature store'
+                : 'No Feature Groups'
+            }
+            secondaryText={
+              hasSharedFS
+                ? 'You can create a feature group from the UI or in a program. You can also select another feature store'
+                : 'You can create a feature group from the UI or in a program'
+            }
           >
             <Button
               intent="secondary"
@@ -274,15 +329,21 @@ const FeatureGroupList: FC = () => {
             >
               Feature Group Documentation
             </Button>
-            <Button
-              href={getHref(
-                routeNames.featureGroup.create,
-                routeNames.project.view,
-              )}
-              onClick={handleCreate}
+            <Tooltip
+              mainText="You have no edit right on the feature store"
+              disabled={canEdit && !isPermissionsLoading}
             >
-              New Feature Group
-            </Button>
+              <Button
+                href={buildHref(
+                  routeNames.featureGroup.create,
+                  routeNames.project.view,
+                )}
+                disabled={!canEdit || isPermissionsLoading}
+                onClick={handleCreate}
+              >
+                New Feature Group
+              </Button>
+            </Tooltip>
           </NoData>
         )}
       </Flex>

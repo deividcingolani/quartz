@@ -14,6 +14,7 @@ import useBasket from '../../hooks/useBasket';
 import icons from '../../sources/icons';
 
 export interface PanelProps {
+  isEditDisabled?: boolean;
   onClickEdit: () => void;
   onClickRefresh: () => void;
   title?: string;
@@ -47,6 +48,7 @@ const panelStyles = {
 const Panel: FC<PanelProps> = ({
   onClickEdit,
   onClickRefresh,
+  isEditDisabled,
   title,
   id,
   idColor,
@@ -89,9 +91,18 @@ const Panel: FC<PanelProps> = ({
         {hasCommitDropdown && commitDropdown}
       </Flex>
       <Flex ml="auto">
-        <Button intent="ghost" onClick={onClickEdit}>
-          edit
-        </Button>
+        <Tooltip
+          disabled={!isEditDisabled}
+          mainText="You have no edit right on the feature store"
+        >
+          <Button
+            intent="ghost"
+            disabled={isEditDisabled}
+            onClick={onClickEdit}
+          >
+            edit
+          </Button>
+        </Tooltip>
         <Box ml="15px" mr="50px">
           <Tooltip mainText="Refresh">
             <Flex

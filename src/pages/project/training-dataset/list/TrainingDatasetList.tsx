@@ -1,9 +1,17 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useMemo, useState, ChangeEvent } from 'react';
 import { Box, Flex } from 'rebass';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Input, Tooltip, Select, Value } from '@logicalclocks/quartz';
+import {
+  Button,
+  Input,
+  Tooltip,
+  Select,
+  Value,
+  Divider,
+} from '@logicalclocks/quartz';
 
 // Types
 import { Dispatch, RootState } from '../../../../store';
@@ -13,10 +21,14 @@ import Loader from '../../../../components/loader/Loader';
 import NoData from '../../../../components/no-data/NoData';
 // Hooks
 import useTitle from '../../../../hooks/useTitle';
-import useTrainingDatasets from '../useTrainingDatasets';
+import useTrainingDatasets, {
+  UseTrainingDatasetsData,
+} from '../useTrainingDatasets';
 import TrainingDatasetListContent from './TrainingDatasetListContent';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import useMultiStoreSelect from '../../../../hooks/useMultiStoreSelect';
+import useUserPermissions from '../../feature-group/overview/useUserPermissions';
 // Utils
 import { SortDirection } from '../../../../utils/sort';
 import {
@@ -29,7 +41,7 @@ import {
 import icons from '../../../../sources/icons';
 import titles from '../../../../sources/titles';
 import routeNames from '../../../../routes/routeNames';
-import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import { SharedDataset } from '../../../../store/models/projects/multistore.model';
 import TdInfoService from '../../../../services/localStorage/TdInfoService';
 
 export const sortOptions: { [key: string]: keyof TrainingDataset } = {
@@ -38,13 +50,16 @@ export const sortOptions: { [key: string]: keyof TrainingDataset } = {
   name: 'name',
 };
 
-const TrainingDatasetList: FC = () => {
-  useTitle(titles.trainingDatasets);
+export interface TrainingDatasetListProps {
+  sharedFrom: SharedDataset[];
+}
 
-  const { id: projectId } = useParams();
+const TrainingDatasetList: FC<TrainingDatasetListProps> = ({ sharedFrom }) => {
+  useTitle(titles.trainingDatasets);
 
   const dispatch = useDispatch<Dispatch>();
 
+  const { id: projectId, fsId } = useParams();
   const { id: userId } = useSelector((state: RootState) => state.profile);
 
   const getHref = useGetHrefForRoute();
@@ -53,10 +68,18 @@ const TrainingDatasetList: FC = () => {
   const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
   const [search, setSearch] = useState<string>('');
 
-  const { data: featureStoreData } = useSelector(selectFeatureStoreData);
-  const { data, isLoading } = useTrainingDatasets(
-    +projectId,
-    featureStoreData?.featurestoreId,
+  const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
+
+  const {
+    selectFSValue,
+    selectFSOptions,
+    handleFSSelectionChange,
+    data,
+    isLoading,
+    hasSharedFS,
+  } = useMultiStoreSelect<UseTrainingDatasetsData>(
+    useTrainingDatasets,
+    sharedFrom,
   );
 
   const isKeywordsAndLastUpdateLoading = useSelector(
@@ -66,19 +89,22 @@ const TrainingDatasetList: FC = () => {
 
   const maxVersionsData = useMemo(
     () =>
-      data.reduce((acc: TrainingDataset[], trainingDateset) => {
-        if (!acc.find(({ name }) => name === trainingDateset.name)) {
-          return [...acc, trainingDateset];
-        }
-        const index = acc.findIndex(
-          ({ name }) => name === trainingDateset.name,
-        );
-        if (acc[index].version < trainingDateset.version) {
-          acc[index] = trainingDateset;
+      (data as TrainingDataset[]).reduce(
+        (acc: TrainingDataset[], trainingDateset) => {
+          if (!acc.find(({ name }) => name === trainingDateset.name)) {
+            return [...acc, trainingDateset];
+          }
+          const index = acc.findIndex(
+            ({ name }) => name === trainingDateset.name,
+          );
+          if (acc[index].version < trainingDateset.version) {
+            acc[index] = trainingDateset;
+            return acc;
+          }
           return acc;
-        }
-        return acc;
-      }, []),
+        },
+        [],
+      ),
     [data],
   );
 
@@ -99,12 +125,10 @@ const TrainingDatasetList: FC = () => {
     isLoading || !labels?.length || isKeywordsAndLastUpdateLoading;
 
   function handleRefresh(): void {
-    if (featureStoreData?.featurestoreId) {
-      dispatch.trainingDatasets.fetch({
-        projectId: +projectId,
-        featureStoreId: featureStoreData?.featurestoreId,
-      });
-    }
+    dispatch.trainingDatasets.fetch({
+      projectId: +projectId,
+      featureStoreId: +fsId,
+    });
   }
 
   const navigate = useNavigateRelative();
@@ -119,12 +143,12 @@ const TrainingDatasetList: FC = () => {
       projectId: +projectId,
       userId,
     });
-    navigate('/new', '/p/:id/td/');
+    navigate('/new', '/p/:id/fs/:fsId/td/');
   }
 
   function handleGoBack(): void {
     dispatch.basket.switch({ userId, projectId: +projectId, active: true });
-    navigate('/new', '/p/:id/td/');
+    navigate('/new', '/p/:id/fs/:fsId/td/');
   }
 
   function handleResetFilters(): void {
@@ -137,7 +161,10 @@ const TrainingDatasetList: FC = () => {
   }
 
   function handleClickFG() {
-    navigate(routeNames.featureGroup.list, 'p/:id/*');
+    navigate(
+      routeNames.featureGroup.list.replace(':fsId', fsId),
+      routeNames.project.view,
+    );
   }
 
   const dataResult = useMemo(() => {
@@ -158,20 +185,20 @@ const TrainingDatasetList: FC = () => {
   const hasActiveTD = TdInfoService.getInfo({ userId, projectId: +projectId });
 
   return (
-    <Flex mb="40px" flexGrow={1} flexDirection="column">
+    <Flex mb="40px" flexDirection="column">
       <Flex alignItems="center">
         <Input
+          labelProps={{ flexGrow: 1, mr: '8px' }}
           variant="white"
           label=""
           value={search}
-          width="180px"
           disabled={!maxVersionsData.length}
           placeholder="Find a training dataset..."
           onChange={handleSearchChange}
         />
         {!!labels.length && (
           <Tooltip
-            ml="8px"
+            mr="8px"
             mt="7px"
             disabled={!isFilterDisabled}
             mainText="No keywords defined."
@@ -195,7 +222,81 @@ const TrainingDatasetList: FC = () => {
             />
           </Tooltip>
         )}
+        {hasSharedFS && (
+          <Select
+            mr="8px"
+            width="auto"
+            variant="white"
+            listWidth="max-content"
+            placeholder="feature store"
+            value={selectFSValue}
+            options={selectFSOptions}
+            onChange={handleFSSelectionChange}
+          />
+        )}
+        <Box ml="32px">
+          <Tooltip
+            mainText="You have no edit right on the feature store"
+            disabled={canEdit && !isPermissionsLoading}
+          >
+            <Button
+              onClick={handleCreate}
+              disabled={!canEdit || isPermissionsLoading}
+              href={getHref('/new', '/p/:id/fs/:fsId/td/')}
+              intent={hasActiveTD ? 'secondary' : 'primary'}
+            >
+              New Training Dataset
+            </Button>
+          </Tooltip>
+        </Box>
+        {hasActiveTD && (
+          <Box ml="10px">
+            <Tooltip
+              mainText="You have no edit right on the feature store"
+              disabled={canEdit && !isPermissionsLoading}
+            >
+              <Button
+                onClick={handleGoBack}
+                disabled={!canEdit || isPermissionsLoading}
+                href={getHref('/new', '/p/:id/fs/:fsId/td/')}
+              >
+                Back to Training Dataset
+              </Button>
+            </Tooltip>
+          </Box>
+        )}
+      </Flex>
+      <Divider
+        mt="10px"
+        mb="10px"
+        ml="0px"
+        width="100%"
+        sx={{ backgroundColor: 'grayShade2', height: '3px' }}
+      />
+      <Flex mb="20px" justifyContent="space-between" alignItems="center">
+        <Flex>
+          {!isLoading && (
+            <>
+              <Value primary mr="5px">
+                {dataResult.length}
+              </Value>
+              <Value>training datasets</Value>
+            </>
+          )}
+        </Flex>
+
         <Flex ml="auto" alignItems="center">
+          <Select
+            width="150px"
+            variant="white"
+            value={sort}
+            listWidth="100%"
+            disabled={isKeywordsAndLastUpdateLoading || isLoading}
+            mr="10px"
+            options={Object.keys(sortOptions)}
+            placeholder="sort by"
+            onChange={setSort}
+          />
           <Tooltip mainText="Refresh">
             <Flex
               onClick={handleRefresh}
@@ -219,56 +320,6 @@ const TrainingDatasetList: FC = () => {
               {icons.refresh}
             </Flex>
           </Tooltip>
-          <Select
-            width="150px"
-            variant="white"
-            value={sort}
-            listWidth="100%"
-            disabled={isKeywordsAndLastUpdateLoading || isLoading}
-            ml="10px"
-            options={Object.keys(sortOptions)}
-            placeholder="sort by"
-            onChange={setSort}
-          />
-        </Flex>
-      </Flex>
-      <Flex
-        mt="20px"
-        mb="20px"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Flex>
-          {!isLoading && (
-            <>
-              <Value primary mr="5px">
-                {dataResult.length}
-              </Value>
-              <Value>training datasets</Value>
-            </>
-          )}
-        </Flex>
-        <Flex>
-          <Box ml="auto">
-            <Button
-              onClick={handleCreate}
-              href={getHref('/new', '/p/:id/td/')}
-              intent={hasActiveTD ? 'secondary' : 'primary'}
-            >
-              New Training Dataset
-            </Button>
-          </Box>
-
-          {hasActiveTD && (
-            <Box ml="10px">
-              <Button
-                onClick={handleGoBack}
-                href={getHref('/new', '/p/:id/td/')}
-              >
-                Back to Training Dataset
-              </Button>
-            </Box>
-          )}
         </Flex>
       </Flex>
       {isLoading && <Loader />}
@@ -282,18 +333,26 @@ const TrainingDatasetList: FC = () => {
       )}
       {!isLoading && !maxVersionsData.length && (
         <NoData
-          mainText="No Training Dataset"
-          secondaryText="Create one from feature groups"
+          mainText={
+            hasSharedFS
+              ? 'No Training Datasets for the selected feature store'
+              : 'No Training Datasets'
+          }
+          secondaryText={
+            hasSharedFS
+              ? 'Create one from feature groups or select another feature store'
+              : 'Create one from feature groups'
+          }
         >
           <Button
-            href={getHref(routeNames.featureGroup.list, 'p/:id/*')}
+            href={getHref(routeNames.featureGroup.list, 'p/:id/fs/:fsId/*')}
             intent="secondary"
             onClick={handleClickFG}
           >
             Feature Groups
           </Button>
           <Button
-            href={getHref('/new', '/p/:id/td/')}
+            href={getHref('/new', '/p/:id/fs/:fsId/td/')}
             intent="primary"
             ml="20px"
             onClick={handleCreate}
