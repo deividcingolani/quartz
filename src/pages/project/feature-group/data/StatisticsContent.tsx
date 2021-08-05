@@ -110,13 +110,7 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
 
   return (
     <>
-      <Flex
-        mt="67px"
-        width="100%"
-        height="100%"
-        flexDirection="column"
-        alignItems="center"
-      >
+      <Flex mt="67px" width="100%" flexDirection="column" alignItems="center">
         <Flex width="100%">
           <Input
             variant="white"
@@ -140,82 +134,114 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
             placeholder="type"
             onChange={onTypeFiltersChange}
           />
-          <Box
-            sx={{
-              label: {
-                div: {
-                  backgroundColor: '#ffffff',
-                },
-                'div:hover': {
-                  div: {
-                    backgroundColor: 'grayShade3',
-                    borderColor: 'transparent',
-                  },
-                },
-              },
-            }}
-          >
-            <ToggleButton
-              ml="15px"
-              height="35px"
-              checked={keyFilter === KeyFilters.primary}
-              onChange={onToggleKey(KeyFilters.primary)}
-            >
+          {type === ItemDrawerTypes.fg && (
+            <>
               <Box
-                p="0 !important"
-                ml="-10px"
-                mr="4px"
-                mt="-3px"
                 sx={{
-                  svg: {
-                    width: '20px',
-                    height: '20px',
+                  label: {
+                    div: {
+                      backgroundColor: 'white',
+                    },
+                    'div:hover': {
+                      div: {
+                        backgroundColor: 'grayShade3',
+                        borderColor: 'transparent',
+                      },
+                    },
                   },
                 }}
               >
-                {icons.primary}
+                <ToggleButton
+                  ml="15px"
+                  height="35px"
+                  checked={keyFilter === KeyFilters.primary}
+                  onChange={onToggleKey(KeyFilters.primary)}
+                >
+                  <Box
+                    p="0 !important"
+                    ml="-10px"
+                    mr="4px"
+                    mt="-3px"
+                    sx={{
+                      svg: {
+                        width: '20px',
+                        height: '20px',
+                      },
+                    }}
+                  >
+                    {icons.primary}
+                  </Box>
+                  Primary Keys Only
+                </ToggleButton>
               </Box>
-              Primary Keys Only
-            </ToggleButton>
-          </Box>
-          <Box
-            sx={{
-              label: {
-                div: {
-                  backgroundColor: '#ffffff',
-                },
-                'div:hover': {
-                  div: {
-                    backgroundColor: 'grayShade3',
-                    borderColor: 'transparent',
-                  },
-                },
-              },
-            }}
-          >
-            <ToggleButton
-              ml="15px"
-              height="35px"
-              checked={keyFilter === KeyFilters.partition}
-              onChange={onToggleKey(KeyFilters.partition)}
-            >
               <Box
-                p="0 !important"
-                ml="-10px"
-                mr="4px"
-                mt="-3px"
                 sx={{
-                  svg: {
-                    width: '20px',
-                    height: '20px',
+                  label: {
+                    div: {
+                      backgroundColor: 'white',
+                    },
+                    'div:hover': {
+                      div: {
+                        backgroundColor: 'grayShade3',
+                        borderColor: 'transparent',
+                      },
+                    },
                   },
                 }}
               >
-                {icons.partition}
+                <ToggleButton
+                  ml="15px"
+                  height="35px"
+                  checked={keyFilter === KeyFilters.partition}
+                  onChange={onToggleKey(KeyFilters.partition)}
+                >
+                  <Box
+                    p="0 !important"
+                    ml="-10px"
+                    mr="4px"
+                    mt="-3px"
+                    sx={{
+                      svg: {
+                        width: '20px',
+                        height: '20px',
+                      },
+                    }}
+                  >
+                    {icons.partition}
+                  </Box>
+                  Partition Keys Only
+                </ToggleButton>
               </Box>
-              Partition Keys Only
-            </ToggleButton>
-          </Box>
+            </>
+          )}
+          {type === ItemDrawerTypes.td && (
+            <>
+              <Box
+                sx={{
+                  label: {
+                    div: {
+                      backgroundColor: 'white',
+                    },
+                    'div:hover': {
+                      div: {
+                        backgroundColor: 'grayShade3',
+                        borderColor: 'transparent',
+                      },
+                    },
+                  },
+                }}
+              >
+                <ToggleButton
+                  ml="15px"
+                  height="35px"
+                  checked={keyFilter === KeyFilters.label}
+                  onChange={onToggleKey(KeyFilters.label)}
+                >
+                  Target features only
+                </ToggleButton>
+              </Box>
+            </>
+          )}
           <Select
             width="max-content"
             variant="white"
@@ -317,14 +343,14 @@ const StatisticsContent: FC<StatisticsContentProps> = ({
             />
           </Label>
         )}
+        {isFiltered && (
+          <FilterResult
+            subject="features"
+            result={dataFiltered.length}
+            onReset={onReset}
+          />
+        )}
       </Flex>
-      {isFiltered && (
-        <FilterResult
-          subject="features"
-          result={dataFiltered.length}
-          onReset={onReset}
-        />
-      )}
     </>
   );
 };

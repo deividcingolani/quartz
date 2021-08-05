@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Select } from '@logicalclocks/quartz';
+import { Button, dateFormat, Select } from '@logicalclocks/quartz';
 import routeNames from '../../../../routes/routeNames';
 import NoData from '../../../../components/no-data/NoData';
 
@@ -20,48 +20,59 @@ import Loader from '../../../../components/loader/Loader';
 import StatisticsContent from '../../feature-group/data/StatisticsContent';
 // Utils
 import titles from '../../../../sources/titles';
+import { TrainingDatasetStatistics as TdStatisticsType } from '../../../../store/models/training-dataset/statistics/trainingDatasetStatistics.model';
 
 const TrainingDatasetStatistics: FC = () => {
-  const { id, fsId, tdId, featureName, commitTime } = useParams();
+  const { id, fsId, tdId, featureName, commitTime, split } = useParams();
 
-  const statistics = useSelector(
-    (state: RootState) => state.trainingDatasetStatistics?.entities.statistics,
+  const statisticsState = useSelector(
+    (state: RootState) => state.trainingDatasetStatistics,
+  );
+
+  const isStatisticsLoading = useSelector(
+    (state: RootState) => state.loading.effects.trainingDatasetStatistics.fetch,
   );
 
   const commits = useSelector(
     (state: RootState) => state.trainingDatasetStatisticsCommits,
   );
 
-  const lastCommit = useMemo(() => {
-    return commits.sort((c1, c2) => -c1.localeCompare(c2))[0];
-  }, [commits]);
-
   const choices = useMemo(
     () =>
       commits.map(
         (c) =>
-          `${format(+c, 'M.d.yyyy - HH:mm:ss')}${
-            c === lastCommit ? ' (latest)' : ''
-          }`,
+          `${format(+c, dateFormat)}${c === commits[0] ? ' (latest)' : ''}`,
       ),
-    [commits, lastCommit],
+    [commits],
   );
 
   const commit = useMemo(() => {
     let time = commitTime;
-    if (lastCommit) {
-      if (!time || time === lastCommit) {
-        time = `${format(+lastCommit, 'M.d.yyyy - HH:mm:ss')} (latest)`;
+    if (commits.length > 0) {
+      if (!time || time === commits[0]) {
+        time = `${format(+commits[0], dateFormat)} (latest)`;
       } else if (Number.isInteger(+time)) {
-        time = format(+time, 'M.d.yyyy - HH:mm:ss');
+        time = format(+time, dateFormat);
       }
     }
     return time;
-  }, [commitTime, lastCommit]);
+  }, [commitTime, commits]);
 
-  const isStatisticsLoading = useSelector(
-    (state: RootState) => state.loading.effects.trainingDatasetStatistics.fetch,
-  );
+  const splitNames =
+    statisticsState && statisticsState instanceof Map
+      ? Array.from(statisticsState.keys()).sort((a, b) => (a > b ? 1 : -1))
+      : [];
+
+  let statistics = null;
+  if (statisticsState) {
+    if (statisticsState instanceof Map) {
+      statistics = (statisticsState as Map<string, TdStatisticsType>).get(
+        split || splitNames[0],
+      )?.entities.statistics;
+    } else {
+      statistics = (statisticsState as TdStatisticsType)?.entities.statistics;
+    }
+  }
 
   const { data, isLoading } = useTrainingDatasetView(+id, +tdId);
 
@@ -87,7 +98,7 @@ const TrainingDatasetStatistics: FC = () => {
   }, [id, tdId, dispatch, fsId, commitTime]);
 
   const navigateToStatistics = useCallback(
-    (timeString, id = +tdId) => {
+    (timeString, splitName, id = +tdId) => {
       let normalizedTime = timeString;
 
       if (timeString.includes('(latest)')) {
@@ -95,38 +106,46 @@ const TrainingDatasetStatistics: FC = () => {
       }
 
       const time = commits.find(
-        (c) => format(+c, 'M.d.yyyy - HH:mm:ss') === normalizedTime,
+        (c) => format(+c, dateFormat) === normalizedTime,
       );
 
-      const currentTime = commits.find((c) => {
-        const formatted = format(+c, 'M.d.yyyy - HH:mm:ss');
-
-        return formatted === commit || `${formatted} (latest)` === commit;
-      });
-
-      if (time && currentTime !== time) {
-        if (featureName) {
-          navigate(
-            `/${id}/statistics/commit/${time}/f/${featureName}`,
-            'p/:id/fs/:fsId/td/*',
-          );
-        } else {
-          navigate(`/${id}/statistics/commit/${time}`, 'p/:id/fs/:fsId/td/*');
+      let targetUri = `/${id}/statistics`;
+      if (id !== +tdId) {
+        // version change ignore commit/split settings
+        navigate(targetUri, 'p/:id/fs/:fsId/td/*');
+      } else {
+        if (time) {
+          targetUri = `${targetUri}/commit/${time}`;
         }
-      } else if (id !== tdId) {
-        navigate(`/${id}/statistics`, 'p/:id/fs/:fsId/td/*');
+        if (splitName) {
+          targetUri = `${targetUri}/split/${splitName}`;
+        }
+        if (featureName) {
+          targetUri = `${targetUri}/f/${featureName}`;
+        }
+
+        navigate(targetUri, 'p/:id/fs/:fsId/td/*');
       }
     },
-    [featureName, commits, navigate, tdId, commit],
+    [featureName, commits, navigate, tdId],
   );
 
   const handleCommitChange = useCallback(
     (values) => {
       const [timeString] = values;
 
-      navigateToStatistics(timeString);
+      navigateToStatistics(timeString, split);
     },
-    [navigateToStatistics],
+    [navigateToStatistics, split],
+  );
+
+  const handleSplitChange = useCallback(
+    (values) => {
+      const [splitName] = values;
+
+      navigateToStatistics(commit, splitName);
+    },
+    [navigateToStatistics, commit],
   );
 
   useEffect(() => {
@@ -169,9 +188,9 @@ const TrainingDatasetStatistics: FC = () => {
 
       const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
-      navigateToStatistics(commit, newId);
+      navigateToStatistics(commit, split, newId);
     },
-    [data, commit, navigateToStatistics],
+    [data, commit, split, navigateToStatistics],
   );
 
   useTitle(`${titles.statistics}${data?.name ? ` - ${data.name}` : ''}`);
@@ -226,6 +245,7 @@ const TrainingDatasetStatistics: FC = () => {
         onClickRefresh={handleRefreshData}
         hasCommitDropdown={true}
         hasVersionDropdown={true}
+        hasSplitDropdown={splitNames.length > 0}
         versionDropdown={
           <Select
             mb="-5px"
@@ -245,6 +265,7 @@ const TrainingDatasetStatistics: FC = () => {
         commitDropdown={
           <Select
             mb="-5px"
+            mr="10px"
             width="280px"
             listWidth="100%"
             value={[commit]}
@@ -252,6 +273,21 @@ const TrainingDatasetStatistics: FC = () => {
             placeholder="commit time"
             onChange={handleCommitChange}
           />
+        }
+        splitDropdown={
+          splitNames ? (
+            <Select
+              mb="-5px"
+              width="140px"
+              listWidth="100%"
+              value={[split || splitNames[0]]}
+              options={splitNames}
+              placeholder="split"
+              onChange={handleSplitChange}
+            />
+          ) : (
+            <></>
+          )
         }
       />
       {isStatisticsLoading ? (

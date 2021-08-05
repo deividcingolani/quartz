@@ -77,9 +77,16 @@ const routeNames = {
     statistics: '/fs/:fsId/td/:tdId/statistics',
     statisticsViewOne: '/fs/:fsId/td/:tdId/statistics/f/:featureName',
     statisticsViewCommit: '/fs/:fsId/td/:tdId/statistics/commit/:commitTime',
+    statisticsViewCommitSplit:
+      '/fs/:fsId/td/:tdId/statistics/commit/:commitTime/split/:split',
     statisticsViewCommitAndOne:
       '/fs/:fsId/td/:tdId/statistics/commit/:commitTime/f/:featureName',
+    statisticsViewCommitSplitAndOne:
+      '/fs/:fsId/td/:tdId/statistics/commit/:commitTime/split/:split/f/:featureName',
     correlation: '/fs/:fsId/td/:tdId/correlation',
+    correlationViewCommit: '/fs/:fsId/td/:tdId/correlation/commit/:commitTime',
+    correlationViewCommitSplit:
+      '/fs/:fsId/td/:tdId/correlation/commit/:commitTime/split/:split',
     activity: '/fs/:fsId/td/:tdId/activity',
     activityType: '/fs/:fsId/td/:tdId/activity/:type',
     activityTypeAndFromAndTo: '/fs/:fsId/td/:tdId/activity/:type/:from/:to',

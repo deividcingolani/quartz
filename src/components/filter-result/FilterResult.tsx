@@ -13,7 +13,7 @@ const FilterResult: FC<FilterResultProps> = ({ subject, result, onReset }) => {
   if (!result) {
     return (
       <Flex
-        my="auto"
+        mt="40px"
         alignItems="center"
         justifyContent="center"
         flexDirection="column"

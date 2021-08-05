@@ -286,10 +286,16 @@ class FeatureGroupsService extends BaseApiService {
 
 export default new FeatureGroupsService('/project');
 
+export interface StatisticsSplitData {
+  name: string;
+  content: string;
+}
+
 export interface GetStatisticsData {
   items?: {
     content: string;
     commitTime: number;
+    splitStatistics: StatisticsSplitData[];
   }[];
 }
 

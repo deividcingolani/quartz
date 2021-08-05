@@ -27,10 +27,8 @@ export default {
   },
   horizontal: {
     chartWrapper: {
-      maxHeight: '205px',
       overflowY: 'auto',
       position: 'relative',
-      marginLeft: '70px',
       borderTopWidth: '1px',
       borderLeftWidth: '0px',
       borderRightWidth: '0px',
@@ -41,8 +39,7 @@ export default {
         display: 'flex',
         alignItems: 'flex-end',
         pr: '3px',
-        marginTop: '-5px',
-        marginBottom: '-5px',
+        marginBottom: '15px',
         flexDirection: 'column',
         justifyContent: 'space-between',
       },

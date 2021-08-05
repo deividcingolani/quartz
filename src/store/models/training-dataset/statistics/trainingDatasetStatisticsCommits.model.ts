@@ -22,7 +22,7 @@ const trainingDatasetStatisticsCommits = createModel()({
       featureStoreId: number;
       trainingDatasetId: number;
     }): Promise<void> => {
-      const { data } = await TrainingDatasetService.getCommits(
+      const { data } = await TrainingDatasetService.getStatisticsCommits(
         projectId,
         featureStoreId,
         trainingDatasetId,

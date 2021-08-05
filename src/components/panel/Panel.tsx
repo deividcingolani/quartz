@@ -23,6 +23,8 @@ export interface PanelProps {
   commitDropdown?: React.ReactElement;
   hasVersionDropdown?: boolean;
   versionDropdown?: React.ReactElement;
+  hasSplitDropdown?: boolean;
+  splitDropdown?: React.ReactElement;
   idColor: string;
   type?: ItemDrawerTypes;
   data?: any;
@@ -56,6 +58,8 @@ const Panel: FC<PanelProps> = ({
   commitDropdown,
   hasVersionDropdown = false,
   versionDropdown,
+  hasSplitDropdown = false,
+  splitDropdown,
   type = ItemDrawerTypes.td,
   data,
 }) => {
@@ -89,6 +93,7 @@ const Panel: FC<PanelProps> = ({
 
         {hasVersionDropdown && versionDropdown}
         {hasCommitDropdown && commitDropdown}
+        {hasSplitDropdown && splitDropdown}
       </Flex>
       <Flex ml="auto">
         <Tooltip

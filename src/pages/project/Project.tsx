@@ -194,7 +194,23 @@ const Project: FC = () => {
         element={<TrainingDatasetStatistics />}
       />
       <Route
+        path={routeNames.trainingDataset.statisticsViewCommitSplit}
+        element={<TrainingDatasetStatistics />}
+      />
+      <Route
+        path={routeNames.trainingDataset.statisticsViewCommitSplitAndOne}
+        element={<TrainingDatasetStatistics />}
+      />
+      <Route
         path={routeNames.trainingDataset.correlation}
+        element={<TrainingDatasetCorrelation />}
+      />
+      <Route
+        path={routeNames.trainingDataset.correlationViewCommit}
+        element={<TrainingDatasetCorrelation />}
+      />
+      <Route
+        path={routeNames.trainingDataset.correlationViewCommitSplit}
         element={<TrainingDatasetCorrelation />}
       />
       <Route

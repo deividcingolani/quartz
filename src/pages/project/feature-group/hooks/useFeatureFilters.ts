@@ -102,11 +102,9 @@ const useFeatureFilter = (
       'onlineType',
     );
 
-    result.filter(({ name }) =>
+    return result.filter(({ name }) =>
       name.toLowerCase().includes(search.toLowerCase()),
     );
-
-    return result;
   }, [data, search, keyFilter, typeFilters, onlineTypeFilters]);
 
   return useMemo(

@@ -14,7 +14,6 @@ export interface Feature {
   label: boolean;
   index: number;
   featuregroup: FeatureGroup;
-  basefeaturegroup: FeatureGroup;
   version: number;
   created?: string;
   parentProjectName: string;

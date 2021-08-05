@@ -2,7 +2,7 @@
 import React, { FC, useMemo } from 'react';
 
 // Types
-import { Flex } from 'rebass';
+import { Box, Flex } from 'rebass';
 import StatsTable, {
   StatsTableItem,
 } from '../../../../components/stats-table/StatsTable';
@@ -72,6 +72,7 @@ const StatisticsTables: FC<StatisticsTablesProps> = ({ data, isDrawer }) => {
       {detailsData && (
         <StatsTable data={detailsData} width="calc((100% - 60px) / 4)" />
       )}
+      {!summaryData && <Box width="calc((100% - 60px) / 4)" />}
     </>
   );
 };

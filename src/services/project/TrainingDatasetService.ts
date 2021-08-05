@@ -95,13 +95,13 @@ class TrainingDatasetService extends BaseApiService {
       type: RequestType.get,
     });
 
-  getCommits = (
+  getStatisticsCommits = (
     projectId: number,
     featureStoreId: number,
     trainingDatasetId: number,
   ) =>
     this.request<GetStatisticsData>({
-      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/statistics`,
+      url: `${projectId}/featurestores/${featureStoreId}/trainingdatasets/${trainingDatasetId}/statistics?sort_by=commit_time:desc`,
       type: RequestType.get,
     });
 

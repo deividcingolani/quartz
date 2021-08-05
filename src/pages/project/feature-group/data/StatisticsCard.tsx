@@ -1,14 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
-import {
-  Badge,
-  Card,
-  Labeling,
-  Subtitle,
-  Symbol,
-  Value,
-} from '@logicalclocks/quartz';
+import { Badge, Card, Labeling, Subtitle, Symbol } from '@logicalclocks/quartz';
 
 // Types
 import { useParams } from 'react-router-dom';
@@ -24,6 +17,7 @@ import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import { TrainingDataset } from '../../../../types/training-dataset';
 import useBasket from '../../../../hooks/useBasket';
 import { Feature } from '../../../../types/feature';
+import TdFeatureGroupHandle from '../../training-dataset/overview/TdFeatureGroupHandle';
 
 export interface StatisticsCardProps {
   data: Feature;
@@ -74,15 +68,13 @@ const StatisticsCard: FC<StatisticsCardProps> = ({
               <Badge ml="20px" value={statistics.dataType} variant="bold" />
             </Flex>
             <Flex mt="5px">
-              {data.basefeaturegroup ? (
-                <>
-                  <Labeling gray>from</Labeling>
-                  <Value ml="5px">{data?.basefeaturegroup?.name}</Value>
-                  <Value ml="5px" sx={{ color: 'labels.orange' }}>
-                    #{data?.basefeaturegroup?.id}
-                  </Value>
-                  <Value ml="5px">(v{data?.basefeaturegroup?.version})</Value>
-                </>
+              {data.featuregroup ? (
+                <Flex>
+                  <Labeling bold gray mr="5px">
+                    from
+                  </Labeling>
+                  <TdFeatureGroupHandle featureGroup={data?.featuregroup} />
+                </Flex>
               ) : (
                 <Labeling bold gray>
                   unavailable origin feature group

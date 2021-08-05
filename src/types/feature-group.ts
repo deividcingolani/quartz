@@ -15,7 +15,7 @@ export enum StatisticsFeatureType {
   int = 'int',
   intFractional = 'Fractional',
   bigInt = 'Integral',
-  string = 'float',
+  string = 'String',
   boolean = 'Boolean',
 }
 
