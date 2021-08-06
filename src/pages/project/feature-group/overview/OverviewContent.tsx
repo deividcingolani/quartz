@@ -114,10 +114,10 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
       const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
-        navigate(`/fg/${newId}`, routeNames.project.view);
+        navigate(`/fs/${fsId}/fg/${newId}`, routeNames.project.view);
       }
     },
-    [data, navigate],
+    [data, navigate, fsId],
   );
 
   return (

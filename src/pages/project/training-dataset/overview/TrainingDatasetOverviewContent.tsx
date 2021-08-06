@@ -100,10 +100,10 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
       const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
-        navigate(`/td/${newId}`, routeNames.project.view);
+        navigate(`/fs/${fsId}/td/${newId}`, routeNames.project.view);
       }
     },
-    [data, navigate],
+    [data?.versions, fsId, navigate],
   );
 
   return (
