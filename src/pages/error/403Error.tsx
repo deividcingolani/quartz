@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 // Components
 import Error from '../../components/error/Error';
 import Loader from '../../components/loader/Loader';
-import ProfileService from '../../services/ProfileService';
 // Types
 import { RootState, Dispatch } from '../../store';
 
@@ -32,8 +31,8 @@ const Error403: FC = () => {
     >
       <Flex flexDirection="column" alignItems="center">
         <User
-          name={project.owner.fname}
-          photo={ProfileService.avatar(project.owner.email)}
+          firstName={project.owner.fname}
+          lastName={project.owner.lname}
           secondaryText={project.owner.email}
           isTooltipActive={false}
         />

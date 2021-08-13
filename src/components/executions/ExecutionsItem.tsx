@@ -20,7 +20,6 @@ import { format, formatDuration, intervalToDuration } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import setStatus from '../../pages/project/jobs/utils/setStatus';
-import ProfileService from '../../services/ProfileService';
 import useNavigateRelative from '../../hooks/useNavigateRelative';
 import icons from '../../sources/icons';
 import JobsExecutionsPopup from '../../pages/project/jobs/executions/JobsExecutionsPopup';
@@ -321,10 +320,8 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                 <Flex justifyContent="space-between" mt="10px">
                   <Flex>
                     <User
-                      photo={ProfileService.avatar(
-                        String(execution.user.email),
-                      )}
-                      name={execution.user.firstname}
+                      firstName={execution.user.firstname}
+                      lastName={execution.user.lastname}
                     />
                     <Flex flexDirection="column" mx="20px">
                       <Labeling

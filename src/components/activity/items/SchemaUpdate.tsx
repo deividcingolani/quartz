@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import { Labeling, User, Value } from '@logicalclocks/quartz';
 import { ActivityItemData } from '../../../types/feature-group';
-import ProfileService from '../../../services/ProfileService';
 import icons from '../../../sources/icons';
 
 export interface SchemaUpdateProps {
@@ -30,8 +29,8 @@ const SchemaUpdate: FC<SchemaUpdateProps> = ({ activity }) => {
 
       <Box mr="20px">
         <User
-          photo={ProfileService.avatar(String(activity.user.email))}
-          name={activity.user.firstname}
+          firstName={activity.user.firstname}
+          lastName={activity.user.lastname}
         />
       </Box>
     </Flex>

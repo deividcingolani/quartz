@@ -26,7 +26,11 @@ export interface DataEntity {
   featCorrEnabled: boolean;
   featHistEnabled: boolean;
   onlineEnabled: boolean;
-  creator: string;
+  creator: {
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
   description: string;
   features: Feature[];
   labels: string[];

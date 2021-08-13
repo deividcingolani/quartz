@@ -18,7 +18,6 @@ import { Flex, Box } from 'rebass';
 
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import ProfileService from '../../../../services/ProfileService';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { HoverableCardProps } from '../../../../types';
 import styles from '../../styles/hoverable-card';
@@ -129,8 +128,8 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
 
           <Flex mt="15px" alignItems="center">
             <User
-              name={data.creator}
-              photo={ProfileService.avatar(data.creator)}
+              firstName={data.creator.firstName}
+              lastName={data.creator.lastName}
             />
             <Flex flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>

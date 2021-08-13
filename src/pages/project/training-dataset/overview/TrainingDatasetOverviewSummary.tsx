@@ -17,7 +17,6 @@ import {
   TrainingDatasetType,
 } from '../../../../types/training-dataset';
 import DateValue from '../../feature-group/list/DateValue';
-import ProfileService from '../../../../services/ProfileService';
 import KeywordsEditor from '../../../../components/keywords-editor/KeywordsEditor';
 import { Dispatch, RootState } from '../../../../store';
 
@@ -55,8 +54,8 @@ const TrainingDatasetOverviewSummary: FC<TdOverviewSummaryDataProps> = ({
     <>
       <Flex>
         <User
-          name={data?.creator}
-          photo={ProfileService.avatar(data?.creator)}
+          firstName={data?.creator.firstName}
+          lastName={data?.creator.lastName}
         />
         <DateValue
           ml="23px"

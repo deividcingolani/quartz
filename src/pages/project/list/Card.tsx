@@ -28,7 +28,6 @@ import { Project } from '../../../types/project';
 import useNavigateRelative from '../../../hooks/useNavigateRelative';
 
 import routeNames from '../../../routes/routeNames';
-import ProfileService from '../../../services/ProfileService';
 import { Dispatch, RootState } from '../../../store';
 import getInputValidation from '../../../utils/getInputValidation';
 import { shortText } from '../../../utils/validators';
@@ -182,9 +181,8 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               secondaryText="author"
             >
               <User
-                name=""
-                isTooltipActive={false}
-                photo={ProfileService.avatar(project.user.email)}
+                firstName={project.user.firstname}
+                lastName={project.user.lastname}
               />
             </Tooltip>
           </Flex>

@@ -3,7 +3,6 @@ import React, { FC, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import { Tooltip, Labeling, User, Value } from '@logicalclocks/quartz';
 import { format } from 'date-fns';
-import ProfileService from '../../../services/ProfileService';
 import { ActivityItemData } from '../../../types/feature-group';
 import icons from '../../../sources/icons';
 
@@ -43,8 +42,8 @@ const NewStatistics: FC<NewStatisticsProps> = ({ activity, onButtonClick }) => {
       <Flex>
         <Box mr="29px">
           <User
-            photo={ProfileService.avatar(String(activity.user.email))}
-            name={activity.user.firstname}
+            firstName={activity.user.firstname}
+            lastName={activity.user.lastname}
           />
         </Box>
         <Tooltip mt="5px" mr="21px" mainText="open statistics">

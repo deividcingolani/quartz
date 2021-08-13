@@ -12,8 +12,7 @@ import HelpDropdown from './HelpDropdown';
 import UserDropdown from './UserDropdown';
 // Types
 import { RootState } from '../../../store';
-// Services
-import ProfileService from '../../../services/ProfileService';
+
 // Selectors
 import selectProjectId from '../../../store/models/localManagement/store.selectors';
 import Search from '../../../components/search/Search';
@@ -65,7 +64,7 @@ const AppHeader: FC<AppHeaderProps> = ({
         <>
           {firstname && email && lastname ? (
             <UserDropdown>
-              <User name={firstname} photo={ProfileService.avatar(email)} />
+              <User firstName={firstname} lastName={lastname} />
               <Label ml="10px" pointer>{`${firstname} ${lastname}`}</Label>
             </UserDropdown>
           ) : (

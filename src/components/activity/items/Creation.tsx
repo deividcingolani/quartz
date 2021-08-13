@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import { Labeling, Value, User } from '@logicalclocks/quartz';
 import { ActivityItemData } from '../../../types/feature-group';
-import ProfileService from '../../../services/ProfileService';
 import icons from '../../../sources/icons';
 
 export interface CreationProps {
@@ -28,8 +27,8 @@ const Creation: FC<CreationProps> = ({ activity }) => {
 
       <Box mr="76px">
         <User
-          photo={ProfileService.avatar(String(activity.user.email))}
-          name={activity.user.firstname}
+          firstName={activity.user.firstname}
+          lastName={activity.user.lastname}
         />
       </Box>
     </Flex>

@@ -24,8 +24,6 @@ import { Dispatch, RootState } from '../../../../store';
 import { AuthError } from '../../login/Login';
 // Utils
 import { shortRequiredText } from '../../../../utils/validators';
-// Services
-import ProfileService from '../../../../services/ProfileService';
 
 import NotificationContent from '../../../../utils/notifications/notificationValue';
 import NotificationBadge from '../../../../utils/notifications/notificationBadge';
@@ -91,10 +89,7 @@ const ProfileForm: FC = () => {
       <Card width="100%" title="Edit profile">
         <Flex flexDirection="column">
           <Flex>
-            <User
-              name={user.firstname}
-              photo={ProfileService.avatar(user.email)}
-            />
+            <User firstName={user.firstname} lastName={user.lastname} />
             <Flex mt="3px" flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>
                 Username

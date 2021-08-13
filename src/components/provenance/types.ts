@@ -55,7 +55,11 @@ export interface ProvenanceNodeData {
   name: string;
   features: number;
   updated: string;
-  owner: string;
+  owner: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 export interface ProvenanceNode {
   id: number;

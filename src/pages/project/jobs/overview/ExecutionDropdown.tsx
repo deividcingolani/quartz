@@ -12,7 +12,6 @@ import { Box, Flex } from 'rebass';
 import { useParams } from 'react-router-dom';
 import icons from '../../../../sources/icons';
 import JobsExecutionsPopup from '../executions/JobsExecutionsPopup';
-import ProfileService from '../../../../services/ProfileService';
 
 const ExecutionDropdown = ({ executionId, jobName, userInfo }: any) => {
   const buttonRef = useRef(null);
@@ -54,10 +53,7 @@ const ExecutionDropdown = ({ executionId, jobName, userInfo }: any) => {
           projectId={+id}
         />
       )}
-      <User
-        photo={ProfileService.avatar(userInfo.email)}
-        name={userInfo.firstname}
-      />
+      <User firstName={userInfo.firstName} lastName={userInfo.lastName} />
       <Flex
         onClick={() => handleToggleMore()}
         backgroundColor="#FFFFFF"

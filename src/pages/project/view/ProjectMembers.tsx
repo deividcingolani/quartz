@@ -7,7 +7,6 @@ import { Flex } from 'rebass';
 import { useNavigate } from 'react-router-dom';
 // Types
 import { Project, TeamMember } from '../../../types/project';
-import ProfileService from '../../../services/ProfileService';
 
 export interface StorageConnectorListContentProps {
   data: Project;
@@ -47,10 +46,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
           <Flex flexDirection="row">
             {projectTeam['Data owner']?.map(({ user }) => (
               <Flex key={user.email} mr="5px">
-                <User
-                  name={user.email}
-                  photo={ProfileService.avatar(user.email)}
-                />
+                <User firstName={user.fname} lastName={user.lname} />
               </Flex>
             ))}
           </Flex>
@@ -64,10 +60,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
           <Flex flexDirection="row">
             {projectTeam['Data scientist']?.map(({ user }) => (
               <Flex key={user.email} mr="5px">
-                <User
-                  name={user.email}
-                  photo={ProfileService.avatar(user.email)}
-                />
+                <User firstName={user.fname} lastName={user.lname} />
               </Flex>
             ))}
           </Flex>

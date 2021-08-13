@@ -8,9 +8,6 @@ import {
   Value,
 } from '@logicalclocks/quartz';
 
-// Services
-import ProfileService from '../../../../services/ProfileService';
-
 // Components
 import DateValue from '../../list/DateValue';
 import getAVGtime from '../utils/getAVGtime';
@@ -28,9 +25,9 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
     <>
       <Flex>
         <User
-          name={String(data.creator.firstname)}
+          firstName={data.creator.firstName}
+          lastName={data.creator.lastName}
           isTooltipActive
-          photo={ProfileService.avatar(String(data.creator.email))}
         />
         <DateValue
           ml="23px"

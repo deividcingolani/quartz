@@ -23,8 +23,6 @@ import { useParams } from 'react-router-dom';
 import routeNames from '../../../../routes/routeNames';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
-// Services
-import ProfileService from '../../../../services/ProfileService';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
 // Utils
@@ -182,8 +180,8 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
 
           <Flex mt="15px" alignItems="center">
             <User
-              name={data.creator}
-              photo={ProfileService.avatar(data.creator)}
+              firstName={data.creator.firstName}
+              lastName={data.creator.lastName}
             />
             <Flex flexDirection="column" ml="20px">
               <Microlabeling mb="3px" gray>

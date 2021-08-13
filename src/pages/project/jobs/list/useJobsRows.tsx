@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { formatDistance } from 'date-fns/esm';
 import icons from '../../../../sources/icons';
-import ProfileService from '../../../../services/ProfileService';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 
@@ -61,9 +60,9 @@ const useJobsListRowData = (jobs: any) => {
       {
         children: (
           <User
-            name={String(job.creator.firstname)}
+            firstName={String(job.creator.firstname)}
+            lastName={String(job.creator.lastname)}
             isTooltipActive
-            photo={ProfileService.avatar(job.creator.email)}
           />
         ),
       },

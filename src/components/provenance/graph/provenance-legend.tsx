@@ -11,7 +11,6 @@ import {
   EventTarget,
 } from '../types';
 import getColor from '../utils/legendUtils';
-import ProfileService from '../../../services/ProfileService';
 
 export interface selectedNode {
   type: EventTarget;
@@ -87,10 +86,8 @@ const ProvenanceLegend: FC<ProvenanceLegendProps> = ({
             </Flex>
             {showExtra && (
               <User
-                name={selected.element.data.owner}
-                photo={ProfileService.avatar(
-                  String(selected.element.data.owner),
-                )}
+                firstName={selected.element.data.owner.firstName}
+                lastName={selected.element.data.owner.lastName}
               />
             )}
           </Flex>

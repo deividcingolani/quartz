@@ -2,7 +2,6 @@
 import React, { FC } from 'react';
 import { Box, Flex } from 'rebass';
 import { Badge, Labeling, User, Value } from '@logicalclocks/quartz';
-import ProfileService from '../../../services/ProfileService';
 import { ActivityItemData } from '../../../types/feature-group';
 import icons from '../../../sources/icons';
 
@@ -38,8 +37,8 @@ const JobExecution: FC<JobExecutionProps> = ({ activity }) => {
 
       <Box mr="76px">
         <User
-          photo={ProfileService.avatar(String(activity.user.email))}
-          name={activity.user.firstname}
+          firstName={activity.user.firstname}
+          lastName={activity.user.lastname}
         />
       </Box>
     </Flex>

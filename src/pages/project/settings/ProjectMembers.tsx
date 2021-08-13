@@ -29,8 +29,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Project } from '../../../types/project';
 import { Dispatch, RootState } from '../../../store';
 import { User as UserType } from '../../../types/user';
-// Services
-import ProfileService from '../../../services/ProfileService';
 // Styles
 import styles from './members.list.styles';
 // Selectors
@@ -193,9 +191,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ project }) => {
     if (isEditMembers) {
       return projectTeam.map(({ user, teamRole }, index) => [
         {
-          children: (
-            <User name={user.email} photo={ProfileService.avatar(user.email)} />
-          ),
+          children: <User firstName={user.fname} lastName={user.lname} />,
         },
         {
           variant: 'bold',
@@ -232,9 +228,7 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ project }) => {
     }
     return projectTeam.map(({ user, teamRole }) => [
       {
-        children: (
-          <User name={user.email} photo={ProfileService.avatar(user.email)} />
-        ),
+        children: <User firstName={user.fname} lastName={user.lname} />,
       },
       {
         variant: 'bold',

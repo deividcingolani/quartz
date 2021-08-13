@@ -16,7 +16,6 @@ import {
 // Services
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import ProfileService from '../../../../services/ProfileService';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
 // Components
@@ -93,8 +92,8 @@ const SummaryData: FC<SummaryDataProps> = ({ data, canEdit }) => {
     <>
       <Flex>
         <User
-          photo={ProfileService.avatar(String(data.creator))}
-          name="data.creator.firstName"
+          firstName={data.creator.firstName}
+          lastName={data.creator.lastName}
         />
         <DateValue
           ml="23px"

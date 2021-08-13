@@ -3,7 +3,6 @@ import React, { FC, ReactNode } from 'react';
 import { Flex } from 'rebass';
 import { Badge, Labeling, User, Value } from '@logicalclocks/quartz';
 import { headerStyles, rowStyles } from './accessRightTable.styles';
-import ProfileService from '../../../../services/ProfileService';
 import { PermissionTypes, SharedProject } from '../../../../types/multistore';
 import {
   getDatasetType,
@@ -93,8 +92,8 @@ const AccessRightsTable: FC<AccessRightsTableProps> = ({
                       <Flex mr="5px">
                         <User
                           title={team.teamRole}
-                          name={`${team.user.fname} ${team.user.lname}`}
-                          photo={ProfileService.avatar(team.user.email)}
+                          firstName={team.user.fname}
+                          lastName={team.user.lname}
                         />
                       </Flex>
                     </Flex>
