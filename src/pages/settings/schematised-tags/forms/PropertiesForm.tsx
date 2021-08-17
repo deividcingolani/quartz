@@ -6,12 +6,10 @@ import {
   CalloutTypes,
   EditableTable,
   Label,
+  FGRow,
 } from '@logicalclocks/quartz';
 import { Box } from 'rebass';
 
-// Types
-// eslint-disable-next-line import/no-unresolved
-import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
 import propertiesColumns from './PropertiesColumns';
 
 const PropertiesForm: FC<any> = ({

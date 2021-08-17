@@ -2,10 +2,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Box } from 'rebass';
 import { useFormContext } from 'react-hook-form';
-import { EditableTable, CardSecondary } from '@logicalclocks/quartz';
-// eslint-disable-next-line import/no-unresolved
-import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
-
+import { EditableTable, CardSecondary, FGRow } from '@logicalclocks/quartz';
 import tableStyles from './table.styles';
 import featuresColumns from './featuresColumns';
 import { createStatistics } from '../utils';

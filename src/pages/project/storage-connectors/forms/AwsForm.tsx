@@ -1,13 +1,17 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useEffect, useMemo } from 'react';
-import { Input, Label, RadioGroup, Select } from '@logicalclocks/quartz';
+import {
+  Input,
+  Label,
+  RadioGroup,
+  Select,
+  ITheme,
+} from '@logicalclocks/quartz';
 import { Controller } from 'react-hook-form';
 import { Flex } from 'rebass';
 import { useTheme } from 'emotion-theming';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-// eslint-disable-next-line import/no-unresolved
-import { ITheme } from '@logicalclocks/quartz/dist/theme/types';
 // Utils
 import { Dispatch, RootState } from '../../../../store';
 import getInputValidation from '../../../../utils/getInputValidation';

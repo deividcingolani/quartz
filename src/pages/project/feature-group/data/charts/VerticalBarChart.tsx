@@ -2,10 +2,8 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Flex } from 'rebass';
 import { useTheme } from 'emotion-theming';
-import { Labeling } from '@logicalclocks/quartz';
+import { Labeling, ITheme } from '@logicalclocks/quartz';
 import { Bar, BarChart, Cell, Tooltip } from 'recharts';
-// eslint-disable-next-line import/no-unresolved
-import { ITheme } from '@logicalclocks/quartz/dist/theme/types';
 
 // Utils
 import randomArrayString from '../../../../../utils/randomArrayString';

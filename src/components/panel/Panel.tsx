@@ -8,7 +8,6 @@ import {
   Symbol,
   SymbolMode,
 } from '@logicalclocks/quartz';
-// eslint-disable-next-line import/no-unresolved
 import { ItemDrawerTypes } from '../drawer/ItemDrawer';
 import useBasket from '../../hooks/useBasket';
 import icons from '../../sources/icons';

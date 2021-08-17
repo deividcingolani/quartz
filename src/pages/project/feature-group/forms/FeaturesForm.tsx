@@ -2,11 +2,9 @@
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { Box } from 'rebass';
 import { useFormContext } from 'react-hook-form';
-import { Button, EditableTable, Label } from '@logicalclocks/quartz';
+import { Button, EditableTable, Label, FGRow } from '@logicalclocks/quartz';
 
 // Types
-// eslint-disable-next-line import/no-unresolved
-import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
 import { useSelector } from 'react-redux';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useParams } from 'react-router';

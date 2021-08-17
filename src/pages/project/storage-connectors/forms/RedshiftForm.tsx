@@ -11,13 +11,12 @@ import {
   Select,
   Tooltip,
   TooltipPositions,
+  ITheme,
 } from '@logicalclocks/quartz';
 import { Controller, Ref, useFieldArray } from 'react-hook-form';
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'emotion-theming';
-// eslint-disable-next-line import/no-unresolved
-import { ITheme } from '@logicalclocks/quartz/dist/theme/types';
 
 import * as yup from 'yup';
 // Utils

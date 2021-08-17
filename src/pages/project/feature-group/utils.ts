@@ -1,8 +1,4 @@
-import {
-  FGItem,
-  FGRow,
-  // eslint-disable-next-line import/no-unresolved
-} from '@logicalclocks/quartz/dist/components/table/type';
+import { FGItem, FGRow } from '@logicalclocks/quartz';
 import { format, isToday } from 'date-fns';
 import {
   ActivityItem,

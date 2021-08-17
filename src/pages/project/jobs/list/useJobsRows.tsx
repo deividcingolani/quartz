@@ -2,10 +2,10 @@
 import React, { useCallback, useMemo } from 'react';
 import { Value, Badge, Tooltip, User } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
-import { formatDuration, intervalToDuration } from 'date-fns';
+import { formatDuration, intervalToDuration, formatDistance } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { formatDistance } from 'date-fns/esm';
+
 import icons from '../../../../sources/icons';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';

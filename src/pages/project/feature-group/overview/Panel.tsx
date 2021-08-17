@@ -1,9 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Flex } from 'rebass';
-import { Subtitle, Value, Button, IconButton } from '@logicalclocks/quartz';
-// eslint-disable-next-line import/no-unresolved
-import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
+import {
+  Subtitle,
+  Value,
+  Button,
+  IconButton,
+  TooltipProps,
+} from '@logicalclocks/quartz';
 
 export interface PanelProps {
   onClickEdit: () => void;

@@ -1,8 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo } from 'react';
 import { matchPath, useLocation } from 'react-router-dom';
-// eslint-disable-next-line import/no-unresolved
-import { TreeNode } from '@logicalclocks/quartz/dist/components/navigation/types';
+import { TreeNode } from '@logicalclocks/quartz';
 
 // Types
 import { RootState } from '../../../store';

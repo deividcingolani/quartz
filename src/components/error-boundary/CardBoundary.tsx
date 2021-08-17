@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { Flex } from 'rebass';
-import { Labeling, Value, Button, Card } from '@logicalclocks/quartz';
+import {
+  Labeling,
+  Value,
+  Button,
+  Card,
+  CardProps,
+} from '@logicalclocks/quartz';
 
 import { Location } from 'history';
-// eslint-disable-next-line import/no-unresolved
-import { CardProps } from '@logicalclocks/quartz/dist/components/card';
 import withRouter from './withRouter';
 
 interface CardBoundaryState {

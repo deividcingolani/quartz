@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
-import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
+import { FGRow } from '@logicalclocks/quartz';
 import { Property, SchematisedTagEntity } from '../../../types/feature-group';
 import { getColumnValueByName } from '../../project/feature-group/utils';
 import labelValueMap from '../../../utils/labelValueBind';

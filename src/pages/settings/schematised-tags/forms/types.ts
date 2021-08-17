@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
-import { FGRow } from '@logicalclocks/quartz/dist/components/table/type';
+import { FGRow } from '@logicalclocks/quartz';
 import { SchematisedTagEntity } from '../../../../types/feature-group';
 
 export interface SchematisedTagFormData {
