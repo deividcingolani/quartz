@@ -195,7 +195,8 @@ const useAppNavigation = (): TreeNode[] => {
         title: 'Home',
         icon: icons.home,
         hasDivider: true,
-        tooltipText: `Home ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 0`,
+        mainTooltipText: 'Home',
+        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 0`,
         isActive: isActive('/p/:id/view'),
         href: getHref('/view', routeNames.project.view),
         onClick: handleNavigateRelative('/view', routeNames.project.view),
@@ -204,9 +205,8 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: 'fg',
         title: 'Feature Groups',
-        tooltipText: `Feature Groups ${
-          osName === OSNames.MAC ? '⌘' : 'Ctrl'
-        } + 1`,
+        mainTooltipText: 'Feature Groups',
+        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 1`,
         icon: icons.fg,
         onClick: handleNavigateMultiStore(
           routeNames.featureGroup.list,
@@ -251,7 +251,7 @@ const useAppNavigation = (): TreeNode[] => {
           {
             id: 'fgStats',
             title: 'Feature statistics',
-            tooltipText: disabledTabs.fgStatisticsDisabled
+            secondaryTooltipText: disabledTabs.fgStatisticsDisabled
               ? 'Statistics are disabled'
               : '',
             href: getHref('/statistics', '/p/:id/fs/:fsId/fg/:fgId/*'),
@@ -272,7 +272,7 @@ const useAppNavigation = (): TreeNode[] => {
               '/correlation',
               '/p/:id/fs/:fsId/fg/:fgId/*',
             ),
-            tooltipText: disabledTabs.fgCorrelationsDisabled
+            secondaryTooltipText: disabledTabs.fgCorrelationsDisabled
               ? 'Correlation are disabled'
               : '',
           },
@@ -296,9 +296,8 @@ const useAppNavigation = (): TreeNode[] => {
       {
         id: 'td',
         title: 'Training Datasets',
-        tooltipText: `Training Datasets ${
-          osName === OSNames.MAC ? '⌘' : 'Ctrl'
-        } + 2`,
+        mainTooltipText: 'Training Datasets',
+        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 2`,
         icon: icons.td,
         isActive: isActive('/p/:id/fs/:fsId/td'),
         href: getHref(routeNames.trainingDataset.list, routeNames.project.view),
@@ -331,7 +330,7 @@ const useAppNavigation = (): TreeNode[] => {
               '/statistics',
               '/p/:id/fs/:fsId/td/:tdId/*',
             ),
-            tooltipText: disabledTabs.tdStatisticsDisabled
+            secondaryTooltipText: disabledTabs.tdStatisticsDisabled
               ? 'Statistics are disabled'
               : '',
           },
@@ -345,7 +344,7 @@ const useAppNavigation = (): TreeNode[] => {
               '/correlation',
               '/p/:id/fs/:fsId/td/:tdId/*',
             ),
-            tooltipText: disabledTabs.tdCorrelationsDisabled
+            secondaryTooltipText: disabledTabs.tdCorrelationsDisabled
               ? 'Correlation are disabled'
               : '',
           },
@@ -365,9 +364,8 @@ const useAppNavigation = (): TreeNode[] => {
         id: 'sc',
         title: 'Storage Connectors',
         icon: icons.sc,
-        tooltipText: `Storage Connectors ${
-          osName === OSNames.MAC ? '⌘' : 'Ctrl'
-        } + 3`,
+        mainTooltipText: 'Storage Connectors',
+        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 3`,
         href: getHref(
           routeNames.storageConnector.list,
           routeNames.project.view,
@@ -386,7 +384,8 @@ const useAppNavigation = (): TreeNode[] => {
         id: 'job',
         title: 'Jobs',
         icon: icons.jobs,
-        tooltipText: `Jobs ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 4`,
+        mainTooltipText: 'Jobs',
+        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 4`,
         href: getHref(routeNames.jobs.list, routeNames.project.view),
         isActive: isActive('/p/:id/jobs'),
         onClick: handleNavigateRelative(
@@ -421,9 +420,8 @@ const useAppNavigation = (): TreeNode[] => {
         id: 'psettings',
         title: 'Project settings',
         icon: icons.settings,
-        tooltipText: `Project settings ${
-          osName === OSNames.MAC ? '⌘' : 'Ctrl'
-        } + 5`,
+        mainTooltipText: 'Project settings',
+        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 5`,
         isActive: isActive('/p/:id/settings'),
         href: getHref('/settings', routeNames.project.view),
         onClick: handleNavigateRelative('/settings', routeNames.project.view),
@@ -474,7 +472,7 @@ const useAppNavigation = (): TreeNode[] => {
         id: 'oldui',
         title: 'Back to current Hopsworks',
         icon: icons.back,
-        tooltipText: `Back to current Hopsworks`,
+        mainTooltipText: `Back to current Hopsworks`,
         href: '/hopsworks',
         isActive: false,
         onClick: () => {
