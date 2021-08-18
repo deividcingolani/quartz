@@ -25,6 +25,7 @@ import useCloseNotifications from '../hooks/useCloseNotifications';
 import useLoadAfterOther from '../hooks/useLoadAfterOther';
 import LastPathService from '../services/localStorage/LastPathService';
 import { LS_BASKET_KEY } from '../services/localStorage/constants';
+import getHrefNoMatching from '../utils/getHrefNoMatching';
 
 // Pages
 const DeepSearch = React.lazy(() => import('../pages/search/DeepSearch'));
@@ -209,10 +210,21 @@ const Routes: FC = () => {
           {/* Search Routes */}
           <SearchLayout>
             <RouterRoutes>
-              <Route path={routeNames.search.view} element={<DeepSearch />} />
               <Route
-                path="search"
-                element={<Redirect to="/search/features" />}
+                path={`${routeNames.search.value}*`}
+                element={<DeepSearch />}
+              />
+              <Route
+                path={routeNames.search.value.slice(0, -1)}
+                element={
+                  <Redirect
+                    to={getHrefNoMatching(
+                      routeNames.search.searchAllProjectsFeaturesWithoutSearch,
+                      routeNames.search.value,
+                      true,
+                    )}
+                  />
+                }
               />
             </RouterRoutes>
           </SearchLayout>

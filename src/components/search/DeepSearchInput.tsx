@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import icons from '../../sources/icons';
 import useDebounce from '../../hooks/useDebounce';
 
-const DeepSearch: FC<{
+const DeepSearchInput: FC<{
   width?: string;
   deepSearchButtons?: boolean;
 }> = ({ width }) => {
@@ -90,4 +90,4 @@ const DeepSearch: FC<{
   );
 };
 
-export default DeepSearch;
+export default DeepSearchInput;

@@ -3,6 +3,8 @@ import React, { FC, useCallback } from 'react';
 import { Box, Flex } from 'rebass';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Text } from '@logicalclocks/quartz';
+import routeNames from '../../routes/routeNames';
+import getHrefNoMatching from '../../utils/getHrefNoMatching';
 
 const DeepSearchButtons: FC<{ search: string; activeIndex: number }> = ({
   search,
@@ -15,9 +17,23 @@ const DeepSearchButtons: FC<{ search: string; activeIndex: number }> = ({
     (isAllProjects = false) =>
       () => {
         if (!isAllProjects && projectId) {
-          navigate(`/search/p/${projectId}/features/${search}`);
+          navigate(
+            getHrefNoMatching(
+              routeNames.search.searchOneProjectFeatures,
+              routeNames.search.value,
+              true,
+              { id: projectId, searchText: search },
+            ),
+          ); // `/search/p/${projectId}/features/${search}`
         } else {
-          navigate(`/search/features/${search}`);
+          navigate(
+            getHrefNoMatching(
+              routeNames.search.searchAllProjectsFeatures,
+              routeNames.search.value,
+              true,
+              { searchText: search },
+            ),
+          ); // `/search/features/${search}`
         }
       },
     [navigate, projectId, search],

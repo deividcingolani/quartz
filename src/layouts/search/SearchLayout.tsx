@@ -11,7 +11,7 @@ import AppAlternativeHeader from './alternative-header/AppAlternativeHeader';
 // Styles
 import styles from './settings-styles';
 
-import DeepSearch from '../../components/search/DeepSearchInput';
+import DeepSearchInput from '../../components/search/DeepSearchInput';
 import RightContent from './alternative-header/RightContent';
 
 export interface SettingsLayoutProps {
@@ -43,7 +43,7 @@ const SearchLayout: FC<SettingsLayoutProps> = ({
               flexDirection="row"
               alignItems="flex-end"
             >
-              <DeepSearch width="100%" deepSearchButtons={false} />
+              <DeepSearchInput width="100%" deepSearchButtons={false} />
               <RightContent />
             </Flex>
           </Flex>

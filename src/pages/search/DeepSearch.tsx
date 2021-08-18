@@ -11,6 +11,7 @@ import {
   FeatureGroupsDeepSearch,
   TrainingDatasetsDeepSearch,
 } from './lazyComponents';
+import getHrefNoMatching from '../../utils/getHrefNoMatching';
 
 const DeepSearch: FC = () => {
   return (
@@ -64,10 +65,14 @@ const DeepSearch: FC = () => {
         element={<TrainingDatasetsDeepSearch />}
       />
       <Route
-        path={routeNames.search.view}
+        path="*"
         element={
           <Redirect
-            to={`/${routeNames.search.searchAllProjectsFeatureGroups}`}
+            to={getHrefNoMatching(
+              routeNames.search.searchAllProjectsFeatureGroupsWithoutSearch,
+              routeNames.search.value,
+              true,
+            )}
           />
         }
       />

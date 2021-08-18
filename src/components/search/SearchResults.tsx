@@ -17,6 +17,8 @@ import SearchHelp from './SearchHelp';
 import SearchItemCard from './SearchItemCard';
 import useHistory from '../../hooks/useHistory';
 import DeepSearchButtons from './DeepSearchButtons';
+import getHrefNoMatching from '../../utils/getHrefNoMatching';
+import routeNames from '../../routes/routeNames';
 
 export enum DTO {
   'fg' = 'cachedFeaturegroupDTO',
@@ -71,13 +73,27 @@ const SearchResults: FC<{ search?: string; data: SearchState }> = ({
         }
       }
       if (activeIndex === -1) {
-        navigate(`/search/p/${projectId}/fg/${search}`);
+        navigate(
+          getHrefNoMatching(
+            routeNames.search.searchOneProjectFeatureGroups,
+            routeNames.search.value,
+            true,
+            { id: projectId, searchText: search },
+          ),
+        ); // /search/p/${projectId}/fg/${search}`);
         return;
       }
 
       if (activeIndex > itemsLength - 1) {
         if (activeIndex - itemsLength === 1) {
-          navigate(`/search/p/${projectId}/fg/${search}`);
+          navigate(
+            getHrefNoMatching(
+              routeNames.search.searchOneProjectFeatureGroups,
+              routeNames.search.value,
+              true,
+              { id: projectId, searchText: search },
+            ),
+          ); // /search/p/${projectId}/fg/${search}`);
         }
         return;
       }

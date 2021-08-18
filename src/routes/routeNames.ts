@@ -29,7 +29,7 @@ const routeNames = {
   },
 
   project: {
-    view: 'p/:id/*',
+    view: 'p/:id/*', // used for pattern matching in useNavigateRelative
     viewHome: 'p/:id/view',
     list: '/',
     edit: 'p/:id/edit',
@@ -50,6 +50,7 @@ const routeNames = {
     spark: 'spark',
   },
 
+  // relative to project.view
   featureGroup: {
     list: '/fs/:fsId/fg',
     overview: '/fs/:fsId/fg/:fgId/*',
@@ -69,6 +70,7 @@ const routeNames = {
     correlation: '/fs/:fsId/fg/:fgId/correlation',
   },
 
+  // relative to project.view
   trainingDataset: {
     list: '/fs/:fsId/td',
     overview: '/fs/:fsId/td/:tdId',
@@ -93,6 +95,7 @@ const routeNames = {
     activityFromAndTo: '/fs/:fsId/td/:tdId/activity/:from/:to',
   },
 
+  // relative to project.view
   storageConnector: {
     list: '/fs/:fsId/storage-connectors',
     create: '/fs/:fsId/storage-connectors/new/',
@@ -101,6 +104,7 @@ const routeNames = {
     createWithProtocol: '/fs/:fsId/storage-connectors/new/:protocol',
   },
 
+  // relative to project.view
   jobs: {
     list: '/jobs',
     overview: '/jobs/:jobId',
@@ -125,7 +129,7 @@ const routeNames = {
   },
 
   search: {
-    view: 'search/*',
+    value: 'search/',
     searchAllProjectsFeatures: 'features/:searchText',
     searchOneProjectFeatures: 'p/:id/features/:searchText',
     searchAllProjectsFeaturesWithoutSearch: 'features',
