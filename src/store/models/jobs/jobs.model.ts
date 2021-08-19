@@ -1,20 +1,46 @@
 import { createModel } from '@rematch/core';
-import { Jobs, ProjectJobs } from '../../../types/jobs';
+import { ProjectJobs } from '../../../types/jobs';
 import JobsService from '../../../services/project/JobsService';
 
-export type JobsState = ProjectJobs;
-
 const jobs = createModel()({
-  state: { projectId: 0, jobs: [] } as ProjectJobs,
+  state: { projectId: 0, jobs: [], jobCount: 0 } as ProjectJobs,
   reducers: {
-    set: (_: JobsState, projectId: number, payload: Jobs[]): JobsState => {
-      return { jobs: payload, projectId };
+    set: (_: ProjectJobs, payload: ProjectJobs): ProjectJobs => {
+      return payload;
     },
   },
   effects: (dispatch) => ({
-    fetch: async ({ projectId }: { projectId: number }): Promise<void> => {
-      const data = await JobsService.getList(projectId);
-      dispatch.jobs.set(projectId, data.items || []);
+    fetch: async ({
+      projectId,
+      limit,
+      offset,
+      sortBy,
+      types,
+      nameFilter,
+      lastExecState,
+    }: {
+      projectId: number;
+      limit: number;
+      offset: number;
+      sortBy: string | null;
+      types: string[];
+      nameFilter: string;
+      lastExecState: string;
+    }): Promise<void> => {
+      const data = await JobsService.getList(
+        projectId,
+        limit,
+        offset,
+        sortBy,
+        types,
+        nameFilter,
+        lastExecState,
+      );
+      dispatch.jobs.set({
+        projectId,
+        jobs: data.items || [],
+        jobCount: data.count,
+      });
     },
     run: async ({
       argumentsData,

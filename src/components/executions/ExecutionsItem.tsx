@@ -295,7 +295,7 @@ const ExecutionsDataItem: FC<ExecutionsItemProps> = ({
                           )
                         }
                       >
-                        Kbana ↗
+                        Kibana ↗
                       </Button>
                     </Box>
                     <Box

@@ -53,7 +53,7 @@ const ExecutionDropdown = ({ executionId, jobName, userInfo }: any) => {
           projectId={+id}
         />
       )}
-      <User firstName={userInfo.firstName} lastName={userInfo.lastName} />
+      <User firstName={userInfo.firstname} lastName={userInfo.lastname} />
       <Flex
         onClick={() => handleToggleMore()}
         backgroundColor="#FFFFFF"
@@ -90,7 +90,9 @@ const ExecutionDropdown = ({ executionId, jobName, userInfo }: any) => {
               Spark UI ↗
             </ListItem>
             <ListItem onClick={() => console.log('RM UI ↗')}>RM UI ↗</ListItem>
-            <ListItem onClick={() => console.log('Kbana ↗')}>Kbana ↗</ListItem>
+            <ListItem onClick={() => console.log('Kibana ↗')}>
+              Kibana ↗
+            </ListItem>
             <ListItem onClick={handleOpenLogs}>Logs</ListItem>
           </List>
         </Box>

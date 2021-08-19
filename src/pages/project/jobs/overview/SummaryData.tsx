@@ -25,8 +25,8 @@ const SummaryData: FC<SummaryDataProps> = ({ data }) => {
     <>
       <Flex>
         <User
-          firstName={data.creator.firstName}
-          lastName={data.creator.lastName}
+          firstName={data.creator.firstname}
+          lastName={data.creator.lastname}
           isTooltipActive
         />
         <DateValue

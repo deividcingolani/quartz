@@ -98,9 +98,23 @@ export const getSortParam = (eventType: ExecutionsTypeSortOptions): string => {
 };
 
 class JobsService extends BaseApiService {
-  getList = async (projectId: number): Promise<any> => {
+  getList = async (
+    projectId: number,
+    limit: number,
+    offset: number,
+    sortBy: string | null,
+    types: string[],
+    nameFilter: string,
+    lastExecState: string,
+  ): Promise<any> => {
     const { data } = await this.request<void>({
-      url: `${projectId}/jobs?sort_by=submissiontime:desc&expand=creator&limit=20&offset=0&expand=executions(sort_by=submissiontime:desc)`,
+      url: `${projectId}/jobs?${sortBy ? `sort_by=${sortBy}&` : ''}${
+        types.length > 0 ? `filter_by=jobtype:${types.join(',')}&` : ''
+      }${nameFilter !== '' ? `filter_by=name:${nameFilter}&` : ''}${
+        lastExecState !== ''
+          ? `filter_by=latest_execution_state:${lastExecState}&`
+          : ''
+      }expand=creator&limit=${limit}&offset=${offset}&expand=executions(sort_by=submissiontime:desc;offset=0;limit=1)`,
       type: RequestType.get,
     });
 

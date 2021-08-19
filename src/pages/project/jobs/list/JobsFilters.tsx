@@ -4,6 +4,7 @@ import { Box, Flex } from 'rebass';
 import { Input, Select, ToggleButton, Tooltip } from '@logicalclocks/quartz';
 import icons from '../../../../sources/icons';
 import { JobType } from '../../../../types/jobs';
+import { JobListSortType } from '../types';
 
 export enum KeyFilters {
   null,
@@ -14,8 +15,8 @@ export interface JobsListContentProps {
   handleRefresh: () => void;
   onChangeSort: any;
   onSearchChange: any;
-  sortOptions: string[];
-  sortKey: string[];
+  sortOptions: JobListSortType[];
+  sortKey: JobListSortType[];
   search?: string;
   typeFilters: string[];
   onTypeFiltersChange: any;

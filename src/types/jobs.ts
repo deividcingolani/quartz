@@ -14,6 +14,7 @@ export enum FrameworkType {
 export interface ProjectJobs {
   jobs: Jobs[];
   projectId: number;
+  jobCount: number;
 }
 
 export interface Jobs {

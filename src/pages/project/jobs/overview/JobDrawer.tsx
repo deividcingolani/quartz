@@ -327,7 +327,7 @@ const JobDrawer = <T extends Jobs>({
                                 fontSize: '10px',
                               }}
                             >
-                              Submited at
+                              Submitted at
                             </Labeling>
                             <Value
                               sx={{

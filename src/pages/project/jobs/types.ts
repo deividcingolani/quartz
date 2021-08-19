@@ -49,3 +49,8 @@ export interface ActiveFile {
     underConstruction: boolean;
   };
 }
+
+export enum JobListSortType {
+  SUBMISSION_TIME = 'last run',
+  CREATION_TIME = 'last created',
+}
