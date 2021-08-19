@@ -163,17 +163,19 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               </Microlabeling>
               <Value primary>{project.trainingDatasetsCount}</Value>
             </Flex>
-            <Flex width="max-content" flexDirection="column" ml="30px">
-              <Microlabeling gray mb="3px" width="100%">
-                Last updated
-              </Microlabeling>
-              <Flex alignItems="center">
-                <FreshnessBar time={project.created.replace('T', ' ')} />
-                <Value fontFamily="Inter" ml="5px" primary>
-                  {formatDistance(new Date(project.created), new Date())} ago
-                </Value>
+            {project?.opened && (
+              <Flex width="max-content" flexDirection="column" ml="30px">
+                <Microlabeling gray mb="3px" width="100%">
+                  Last opened
+                </Microlabeling>
+                <Flex alignItems="center">
+                  <FreshnessBar time={project?.opened.replace('T', ' ')} />
+                  <Value fontFamily="Inter" ml="5px" primary>
+                    {formatDistance(new Date(project.opened), new Date())} ago
+                  </Value>
+                </Flex>
               </Flex>
-            </Flex>
+            )}
             <Tooltip
               ml="40px"
               mt="10px"

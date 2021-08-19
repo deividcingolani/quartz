@@ -35,6 +35,7 @@ export interface Project {
   projectTeam: TeamMember[];
   featureGroupsCount?: number;
   trainingDatasetsCount?: number;
+  opened: string; // only a frontend property.
 }
 
 export interface CrossUserProject {

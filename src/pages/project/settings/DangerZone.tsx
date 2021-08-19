@@ -17,6 +17,7 @@ import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Types
 import { Project } from '../../../types/project';
 import { Dispatch, RootState } from '../../../store';
+import ProjectsVisitService from '../../../services/localStorage/ProjectsVisitService';
 
 export interface DangerZoneProps {
   project: Project;
@@ -40,7 +41,10 @@ const DangerZone: FC<DangerZoneProps> = ({ project }) => {
       setInputError('Confirmation does not match current project name');
     } else {
       setInputError('');
-      await dispatch.project.delete({ id: project.projectId as number });
+      if (project.projectId) {
+        await dispatch.project.delete({ id: project.projectId as number });
+        ProjectsVisitService.delete(project.projectId);
+      }
       navigate(`/`);
     }
   }, [

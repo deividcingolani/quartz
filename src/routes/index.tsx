@@ -25,6 +25,7 @@ import useCloseNotifications from '../hooks/useCloseNotifications';
 import useLoadAfterOther from '../hooks/useLoadAfterOther';
 import LastPathService from '../services/localStorage/LastPathService';
 import { LS_BASKET_KEY } from '../services/localStorage/constants';
+import ProjectsVisitService from '../services/localStorage/ProjectsVisitService';
 import getHrefNoMatching from '../utils/getHrefNoMatching';
 
 // Pages
@@ -87,6 +88,11 @@ const Routes: FC = () => {
     ) {
       if (projectId) {
         LastPathService.setInfo({ userId, data: projectId });
+        ProjectsVisitService.setVisit({
+          userId,
+          projectId: +projectId,
+          time: new Date().toISOString(),
+        });
       } else {
         LastPathService.delete(userId);
       }

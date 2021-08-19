@@ -1,14 +1,11 @@
+// User specific
 export interface LSUserContent<T> {
   [key: number]: T;
 }
+
+// User-Project specific
 export interface LSObject<T> {
   [key: number]: LSUserContent<T>;
-}
-
-export interface LSDataEntity {
-  id: number;
-  name: string;
-  type: string;
 }
 
 class LocalStorageService<T> {
@@ -19,12 +16,12 @@ class LocalStorageService<T> {
   }
 
   protected getAll(): LSObject<T> {
-    const shortcutsStr = localStorage.getItem(this.localStorageKey);
-    const shortcuts = shortcutsStr ? JSON.parse(shortcutsStr) : null;
-    return shortcuts;
+    const strItem = localStorage.getItem(this.localStorageKey);
+    const item = strItem ? JSON.parse(strItem) : null;
+    return item;
   }
 
-  private getByUser(userId: number) {
+  private getByUser(userId: number): LSUserContent<T> {
     return this.getAll()?.[userId];
   }
 

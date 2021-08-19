@@ -15,9 +15,10 @@ import Button from './project-button.styles';
 // Types
 import { Dispatch, RootState } from '../../../store';
 import LastPathService from '../../../services/localStorage/LastPathService';
+import useSortedProjects from '../../../pages/project/list/hooks/useSortedProjects';
 
 const ProjectsDropdown: FC = () => {
-  const projects = useSelector((state: RootState) => state.projectsList);
+  const projects = useSortedProjects();
   const isLoading = useSelector(
     (state: RootState) => state.loading.effects.projectsList.getProjects,
   );
