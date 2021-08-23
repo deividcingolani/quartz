@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router-dom';
 // Types
 import { Project, TeamMember } from '../../../types/project';
 
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
+import routeNames from '../../../routes/routeNames';
+
 export interface StorageConnectorListContentProps {
   data: Project;
 }
@@ -33,7 +36,14 @@ const ProjectMembers: FC<StorageConnectorListContentProps> = ({ data }) => {
   }, [data]);
 
   const handleNavigate = useCallback(() => {
-    navigate(`/p/${data.projectId}/settings`);
+    navigate(
+      getHrefNoMatching(
+        routeNames.project.settings.settings,
+        routeNames.project.value,
+        true,
+        { id: data.projectId },
+      ),
+    ); // `/p/${data.projectId}/settings`
   }, [data, navigate]);
 
   return (

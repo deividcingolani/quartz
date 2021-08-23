@@ -1,6 +1,13 @@
 import { useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo } from 'react';
-import { matchPath, useLocation } from 'react-router-dom';
+
+import {
+  matchPath,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+
 import { TreeNode } from '@logicalclocks/quartz';
 
 // Types
@@ -14,14 +21,15 @@ import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Svg
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 import icons from '../../../sources/icons';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
 
 const useAppNavigation = (): TreeNode[] => {
   const location = useLocation();
   const fgOverviewAnchors = useAnchor('fgOverview');
   const tdOverviewAnchors = useAnchor('tdOverview');
   const navigateRelative = useNavigateRelative();
-
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   const featurestore = useSelector((state: RootState) =>
     state.featureStores?.length ? state.featureStores[0] : null,
@@ -35,32 +43,67 @@ const useAppNavigation = (): TreeNode[] => {
       ) {
         switch (e.key) {
           case '0': {
-            navigate('/view', 'p/:id/*');
+            navigate(
+              getHrefNoMatching(routeNames.project.viewHome, '', true, { id }),
+            );
             break;
           }
           case '1': {
-            navigate(`/fs/${featurestore?.featurestoreId}/fg`, 'p/:id/*');
+            navigate(
+              getHrefNoMatching(
+                routeNames.featureGroup.list,
+                routeNames.project.value,
+                true,
+                { id, fsId: featurestore?.featurestoreId },
+              ),
+            );
+
             break;
           }
           case '2': {
-            navigate(`/fs/${featurestore?.featurestoreId}/td`, 'p/:id/*');
+            navigate(
+              getHrefNoMatching(
+                routeNames.trainingDataset.list,
+                routeNames.project.value,
+                true,
+                { id, fsId: featurestore?.featurestoreId },
+              ),
+            );
 
             break;
           }
           case '3': {
             navigate(
-              `/fs/${featurestore?.featurestoreId}/storage-connectors`,
-              'p/:id/*',
+              getHrefNoMatching(
+                routeNames.storageConnector.list,
+                routeNames.project.value,
+                true,
+                { id, fsId: featurestore?.featurestoreId },
+              ),
             );
 
             break;
           }
           case '4': {
-            navigate('/jobs', 'p/:id/*');
+            navigate(
+              getHrefNoMatching(
+                routeNames.jobs.list,
+                routeNames.project.value,
+                true,
+                { id, fsId: featurestore?.featurestoreId },
+              ),
+            );
             break;
           }
           case '5': {
-            navigate('/settings/general', 'p/:id/*');
+            navigate(
+              getHrefNoMatching(
+                routeNames.project.settings.general,
+                routeNames.project.value,
+                true,
+                { id },
+              ),
+            );
             break;
           }
           default:
@@ -70,7 +113,7 @@ const useAppNavigation = (): TreeNode[] => {
         e.preventDefault();
       }
     },
-    [featurestore?.featurestoreId, navigate],
+    [id, navigate, featurestore?.featurestoreId],
   );
 
   useEffect(() => {
@@ -88,16 +131,21 @@ const useAppNavigation = (): TreeNode[] => {
     [navigateRelative],
   );
 
+  const handleNavigate = useCallback(
+    (to: string) => (): void => navigate(to),
+    [navigate],
+  );
+
   const handleNavigateMultiStore = useCallback(
     (to: string, relativeTo: string) => (): void => {
       if (featurestore?.featurestoreId) {
-        navigate(
+        navigateRelative(
           to.replace(':fsId', String(featurestore?.featurestoreId)),
           relativeTo,
         );
       }
     },
-    [featurestore?.featurestoreId, navigate],
+    [featurestore?.featurestoreId, navigateRelative],
   );
   const handleJumpToAnchor = useCallback(
     (anchor: string) => () => {
@@ -422,48 +470,126 @@ const useAppNavigation = (): TreeNode[] => {
         icon: icons.settings,
         mainTooltipText: 'Project settings',
         secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 5`,
-        isActive: isActive('/p/:id/settings'),
-        href: getHref('/settings', routeNames.project.view),
-        onClick: handleNavigateRelative('/settings', routeNames.project.view),
+        isActive: isActive(
+          getHrefNoMatching(
+            routeNames.project.settings.settings,
+            routeNames.project.value,
+            true,
+          ),
+        ),
+        href: getHrefNoMatching(
+          routeNames.project.settings.settings,
+          routeNames.project.value,
+          true,
+          { id },
+        ),
+        onClick: handleNavigate(
+          getHrefNoMatching(
+            routeNames.project.settings.settings,
+            routeNames.project.value,
+            true,
+            { id },
+          ),
+        ),
         children: [
           {
             id: 'general',
             title: 'General',
-            isActive: isActive(routeNames.settings.general),
-            href: getHref('/settings/general', routeNames.project.view),
-            onClick: handleNavigateRelative(
-              '/settings/general',
-              routeNames.project.view,
+            isActive: isActive(
+              getHrefNoMatching(
+                routeNames.project.settings.general,
+                routeNames.project.value,
+                true,
+              ),
+            ),
+            href: getHrefNoMatching(
+              routeNames.project.settings.general,
+              routeNames.project.value,
+              true,
+              { id },
+            ),
+            onClick: handleNavigate(
+              getHrefNoMatching(
+                routeNames.project.settings.general,
+                routeNames.project.value,
+                true,
+                { id },
+              ),
             ),
           },
           {
             id: 'python',
             title: 'Python libraries',
-            isActive: isActive(routeNames.settings.python),
-            href: getHref('/settings/python', routeNames.project.view),
-            onClick: handleNavigateRelative(
-              '/settings/python',
-              routeNames.project.view,
+            isActive: isActive(
+              getHrefNoMatching(
+                routeNames.project.settings.python,
+                routeNames.project.value,
+                true,
+              ),
+            ),
+            href: getHrefNoMatching(
+              routeNames.project.settings.python,
+              routeNames.project.value,
+              true,
+              { id },
+            ),
+            onClick: handleNavigate(
+              getHrefNoMatching(
+                routeNames.project.settings.python,
+                routeNames.project.value,
+                true,
+                { id },
+              ),
             ),
           },
           {
             id: 'alerts',
             title: 'Alerts',
-            isActive: isActive(routeNames.settings.alert),
-            href: getHref('/settings/alerts', routeNames.project.view),
-            onClick: handleNavigateRelative(
-              '/settings/alerts',
-              routeNames.project.view,
+            isActive: isActive(
+              getHrefNoMatching(
+                routeNames.project.settings.alert,
+                routeNames.project.value,
+                true,
+              ),
+            ),
+            href: getHrefNoMatching(
+              routeNames.project.settings.alert,
+              routeNames.project.value,
+              true,
+              { id },
+            ),
+            onClick: handleNavigate(
+              getHrefNoMatching(
+                routeNames.project.settings.alert,
+                routeNames.project.value,
+                true,
+                { id },
+              ),
             ),
           },
           {
             id: 'integrations',
             title: 'Integrations',
-            isActive: isActive(routeNames.settings.integrations),
-            href: getHref('/settings/integrations', routeNames.project.view),
-            onClick: handleNavigateRelative(
-              '/settings/integrations',
-              routeNames.project.view,
+            isActive: isActive(
+              getHrefNoMatching(
+                routeNames.project.settings.integrations,
+                routeNames.project.value,
+                true,
+              ),
+            ),
+            href: getHrefNoMatching(
+              routeNames.project.settings.integrations,
+              routeNames.project.value,
+              true,
+              { id },
+            ),
+            onClick: handleNavigate(
+              getHrefNoMatching(
+                routeNames.project.settings.integrations,
+                routeNames.project.value,
+                true,
+                { id },
+              ),
             ),
           },
         ],
@@ -481,10 +607,12 @@ const useAppNavigation = (): TreeNode[] => {
       },
     ];
   }, [
+    id,
     osName,
     isActive,
     getHref,
     handleNavigateRelative,
+    handleNavigate,
     createFgAnchorLink,
     disabledTabs.dataPreviewDisabled,
     disabledTabs.fgStatisticsDisabled,

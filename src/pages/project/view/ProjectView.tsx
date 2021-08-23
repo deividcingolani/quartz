@@ -12,6 +12,8 @@ import Loader from '../../../components/loader/Loader';
 import OverviewContent from './OverviewContent';
 // Types
 import { Dispatch, RootState } from '../../../store';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
+import routeNames from '../../../routes/routeNames';
 
 const ProjectView: FC = () => {
   const { id: projectId } = useParams();
@@ -67,7 +69,16 @@ const ProjectView: FC = () => {
       sharedEntities={sharedEntities}
       currentUser={currentUser}
       onUpdateDescription={handleUpdateDescription}
-      onClickEdit={() => navigate(`/p/${projectId}/settings`)}
+      onClickEdit={() =>
+        navigate(
+          getHrefNoMatching(
+            routeNames.project.settings.settings,
+            routeNames.project.value,
+            true,
+            { id: projectId },
+          ),
+        )
+      } // `/p/${projectId}/settings`
     />
   );
 };

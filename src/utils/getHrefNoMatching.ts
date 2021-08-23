@@ -8,7 +8,8 @@ const getHrefNoMatching = (
   absolute = false,
   params?: any,
 ) => {
-  const path = generatePath(`${relativeTo}${to}`, params);
+  const pattern = `${relativeTo}${to}`;
+  const path = params ? generatePath(pattern, params) : pattern;
   return path.length > 0 && path.charAt(0) !== '/' && absolute
     ? `/${path}`
     : path;

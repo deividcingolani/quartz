@@ -6,7 +6,6 @@ import { Route, Routes, useLocation, useParams } from 'react-router-dom';
 import routeNames from '../../routes/routeNames';
 // Components
 import Loader from '../../components/loader/Loader';
-import Redirect from '../../components/redirect/Redirect';
 import Error404 from '../error/404Error';
 // Types
 import { Dispatch, RootState } from '../../store';
@@ -26,7 +25,7 @@ import {
   FeatureGroupOverview,
   MultiStoreTDList,
   ProjectView,
-  Settings,
+  GeneralSettings,
   ProjectEdit,
   TrainingDatasetOverview,
   TrainingDatasetStatistics,
@@ -43,9 +42,9 @@ import {
   ExpectationEdit,
 } from './lazyComponents';
 import Integrations from './settings/Integrations';
-import GeneralSettings from './settings/GeneralSettings';
 import Python from './settings/Python';
 import Alerts from './settings/Alerts';
+import Redirect from '../../components/redirect/Redirect';
 
 const Project: FC = () => {
   const { id } = useParams();
@@ -87,11 +86,20 @@ const Project: FC = () => {
     <Routes>
       <Route path="/view" element={<ProjectView />} />
       <Route path="/edit" element={<ProjectEdit />} />
-      <Route path="/settings" element={<GeneralSettings />} />
-      <Route path="/settings/general" element={<Settings />} />
-      <Route path="/settings/python" element={<Python />} />
-      <Route path="/settings/alerts" element={<Alerts />} />
-      <Route path="/settings/integrations" element={<Integrations />} />
+      <Route
+        path={routeNames.project.settings.settings}
+        element={<Redirect to={routeNames.project.settings.general} />}
+      />
+      <Route
+        path={routeNames.project.settings.general}
+        element={<GeneralSettings />}
+      />
+      <Route path={routeNames.project.settings.python} element={<Python />} />
+      <Route path={routeNames.project.settings.alert} element={<Alerts />} />
+      <Route
+        path={routeNames.project.settings.integrations}
+        element={<Integrations />}
+      />
       <Route
         path={routeNames.featureGroup.edit}
         element={<FeatureGroupEdit />}

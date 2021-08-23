@@ -28,10 +28,11 @@ import { SharedProject } from '../../../types/multistore';
 // Components
 import DateValue from '../feature-group/list/DateValue';
 import ProjectMembers from './ProjectMembers';
-import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 import Shortcuts from './Shortcuts';
 import { shortText } from '../../../utils/validators';
 import { permissionsToLabelMap } from '../settings/multistore/utils';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
+import routeNames from '../../../routes/routeNames';
 
 export interface ContentProps {
   data: Project;
@@ -49,8 +50,6 @@ const OverviewContent: FC<ContentProps> = ({
   onUpdateDescription,
 }) => {
   const [isOpen, handleToggle] = usePopup();
-
-  const getHref = useGetHrefForRoute();
 
   const userRole = useMemo(() => {
     const userInTeam = data.projectTeam?.find(
@@ -100,7 +99,12 @@ const OverviewContent: FC<ContentProps> = ({
       <Card
         actions={
           <Button
-            href={getHref(`/p/${data.projectId}/settings`)}
+            href={getHrefNoMatching(
+              routeNames.project.settings.settings,
+              routeNames.project.value,
+              true,
+              { id: data.projectId },
+            )} // `/p/${data.projectId}/settings`
             mr="-10px"
             intent="inline"
             onClick={onClickEdit}

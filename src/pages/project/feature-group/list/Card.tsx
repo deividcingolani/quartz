@@ -55,7 +55,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
     (id: number, fsId: number, route: string) => (): void => {
       navigate(
         route.replace(':fsId', String(fsId)).replace(':fgId', String(id)),
-        routeNames.project.view,
+        `/${routeNames.project.view}`,
       );
     },
     [navigate],
@@ -98,7 +98,7 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                     ? `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}`
                     : getHref(
                         `/fs/${data.featurestoreId}/fg/${data.id}`,
-                        routeNames.project.view,
+                        `/${routeNames.project.view}`,
                       )
                 }
                 sx={{

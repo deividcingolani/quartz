@@ -29,11 +29,20 @@ const routeNames = {
   },
 
   project: {
+    value: 'p/:id',
     view: 'p/:id/*', // used for pattern matching in useNavigateRelative
     viewHome: 'p/:id/view',
     list: '/',
     edit: 'p/:id/edit',
     create: 'p/new',
+    // relative to project.value
+    settings: {
+      settings: '/settings',
+      general: '/settings/general',
+      python: '/settings/python',
+      alert: '/settings/alert',
+      integrations: '/settings/integrations',
+    },
   },
 
   overviewAnchors: {
@@ -50,7 +59,7 @@ const routeNames = {
     spark: 'spark',
   },
 
-  // relative to project.view
+  // relative to project.value
   featureGroup: {
     list: '/fs/:fsId/fg',
     overview: '/fs/:fsId/fg/:fgId/*',
@@ -70,7 +79,7 @@ const routeNames = {
     correlation: '/fs/:fsId/fg/:fgId/correlation',
   },
 
-  // relative to project.view
+  // relative to project.value
   trainingDataset: {
     list: '/fs/:fsId/td',
     overview: '/fs/:fsId/td/:tdId',
@@ -95,7 +104,7 @@ const routeNames = {
     activityFromAndTo: '/fs/:fsId/td/:tdId/activity/:from/:to',
   },
 
-  // relative to project.view
+  // relative to project.value
   storageConnector: {
     list: '/fs/:fsId/storage-connectors',
     create: '/fs/:fsId/storage-connectors/new/',
@@ -104,7 +113,7 @@ const routeNames = {
     createWithProtocol: '/fs/:fsId/storage-connectors/new/:protocol',
   },
 
-  // relative to project.view
+  // relative to project.value
   jobs: {
     list: '/jobs',
     overview: '/jobs/:jobId',
@@ -118,10 +127,6 @@ const routeNames = {
 
   settings: {
     view: 'settings/*',
-    general: 'p/:id/settings/general',
-    python: 'p/:id/settings/python',
-    alert: 'p/:id/settings/alert',
-    integrations: 'p/:id/settings/integrations',
     schematisedTags: {
       list: 'settings/schematised-tags',
       create: 'settings/schematised-tags/new',

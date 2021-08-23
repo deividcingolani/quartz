@@ -1,7 +1,9 @@
 import React from 'react';
 
 export const ProjectView = React.lazy(() => import('./view/ProjectView'));
-export const Settings = React.lazy(() => import('./settings/Settings'));
+export const GeneralSettings = React.lazy(
+  () => import('./settings/GeneralSettings'),
+);
 export const ProjectEdit = React.lazy(() => import('./edit/ProjectEdit'));
 export const MultiStoreFGList = React.lazy(
   () => import('./feature-group/list/MultiStoreFGList'),

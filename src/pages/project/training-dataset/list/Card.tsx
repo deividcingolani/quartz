@@ -40,7 +40,7 @@ const Card: FC<HoverableCardProps<TrainingDataset>> = ({
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':tdId', String(id)), 'p/:id/fs/:fsId/*');
+      navigate(route.replace(':tdId', String(id)), '/p/:id/fs/:fsId/*');
     },
     [navigate],
   );
