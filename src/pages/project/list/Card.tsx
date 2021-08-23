@@ -183,8 +183,8 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
               secondaryText="author"
             >
               <User
-                firstName={project.user.firstname}
-                lastName={project.user.lastname}
+                firstName={project.user.fname}
+                lastName={project.user.lname}
               />
             </Tooltip>
           </Flex>
