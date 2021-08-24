@@ -1,26 +1,22 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import {
   Button,
   Card,
-  CardSecondary,
-  Checkbox,
   FileLoader,
   Input,
   Popup,
   RadioGroup,
   Value,
+  CardSecondary,
+  Callout,
+  CalloutTypes,
 } from '@logicalclocks/quartz';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {
-  DynamicAllocation,
-  FrameworkTypeUI,
-  JobsFormProps,
-  sourceFrom,
-} from '../types';
+import { FormProps, sourceFrom, FormType } from '../types';
 import Loader from '../../../../components/loader/Loader';
 import JobsStickySummary from './JobsStickySummary';
 // Utils
@@ -33,8 +29,7 @@ import {
   FileExplorerOptions,
   UploadFiles,
 } from '../../../../components/file-explorer/types';
-import { FrameworkType, JobsConfig } from '../../../../types/jobs';
-import { setFrameworkType, setFrameworkUIType } from '../utils/setTypeOfJobs';
+import { FrameworkType, Jobs, JobsConfig } from '../../../../types/jobs';
 import FileUploader from '../../../../components/file-uploader/fileUploader';
 import {
   addDependencies,
@@ -42,26 +37,46 @@ import {
   filterFields,
   flatData,
 } from '../utils/jobFormHelpers';
+import AdvancedConfig from './AdvancedConfig';
+import { JupyterSettings } from '../../../../types/jupiter';
 
-const JobsForm: FC<JobsFormProps> = ({
+const JobsForm: FC<FormProps<Jobs | JupyterSettings>> = ({
+  // Fix this any
+  formType = FormType.JOB,
   isDisabled,
   isLoading,
   isEdit = false,
   initialData,
   submitHandler,
   onDelete,
+  canSave = true,
 }) => {
   const [type, setType] = useState(FrameworkType.SPARK);
   const [activeJobFile, setActiveJobFile] = useState<UploadFiles | null>(null);
-  const [advancedConfiguration, setAdvancedConfiguration] = useState(false);
+
+  const isJobs = formType === FormType.JOB;
+  const isJupyter = formType === FormType.JUPYTER;
+
   const schema = yup.object().shape({
-    appName: name.label('Name'),
-    appPath: yup
-      .string()
-      .test(`${activeJobFile?.path}`, 'File is required', () => {
-        return !!activeJobFile;
-      }),
+    ...(isJobs && {
+      appName: name.label('Name'),
+      appPath: yup
+        .string()
+        .test(`${activeJobFile?.path}`, 'File is required', () => {
+          return !!activeJobFile;
+        }),
+    }),
   });
+
+  // Homogenize jobs and jupyter initial data.
+  const preparedInitial = useMemo(() => {
+    if (initialData?.config) {
+      return initialData;
+    }
+    return initialData?.jobConfig
+      ? { ...initialData, config: initialData.jobConfig, jobConfig: null }
+      : null;
+  }, [initialData]);
 
   const [additionalArchives, setAdditionalArchives] = useState<
     UploadFiles[] | null
@@ -245,7 +260,7 @@ const JobsForm: FC<JobsFormProps> = ({
   const methods = useForm({
     defaultValues: {
       type: FrameworkType.SPARK,
-      appName: initialData?.name,
+      appName: preparedInitial?.name,
       // Spark
       mainClass: '',
       'spark.executor.instances': 1,
@@ -262,28 +277,29 @@ const JobsForm: FC<JobsFormProps> = ({
         cores: 1,
         memory: 1024,
       },
-      ...(!!initialData && {
-        type: initialData.config.type,
-        appName: initialData.config.appName,
-        defaultArgs: initialData.config.defaultArgs,
+      ...(!!preparedInitial && {
+        type: preparedInitial.config.type,
+        appName: preparedInitial.config.appName,
+        defaultArgs: preparedInitial.config.defaultArgs,
         // Spark
-        amMemory: +initialData.config.amMemory,
-        amVCores: +initialData.config.amVCores,
-        appPath: initialData.config.appPath,
-        mainClass: initialData.config.mainClass,
+        amMemory: +preparedInitial.config.amMemory,
+        amVCores: +preparedInitial.config.amVCores,
+        appPath: preparedInitial.config.appPath,
+        mainClass: preparedInitial.config.mainClass,
         'spark.executor.instances':
-          initialData.config['spark.executor.instances'],
-        'spark.executor.cores': initialData.config['spark.executor.cores'],
-        'spark.executor.memory': +initialData.config['spark.executor.memory'],
+          preparedInitial.config['spark.executor.instances'],
+        'spark.executor.cores': preparedInitial.config['spark.executor.cores'],
+        'spark.executor.memory':
+          +preparedInitial.config['spark.executor.memory'],
         'spark.dynamicAllocation.enabled':
-          initialData.config['spark.dynamicAllocation.enabled'],
+          preparedInitial.config['spark.dynamicAllocation.enabled'],
         'spark.dynamicAllocation.minExecutors':
-          initialData.config['spark.dynamicAllocation.minExecutors'],
+          preparedInitial.config['spark.dynamicAllocation.minExecutors'],
         'spark.dynamicAllocation.maxExecutors':
-          initialData.config['spark.dynamicAllocation.maxExecutors'],
-        properties: initialData.config.properties,
+          preparedInitial.config['spark.dynamicAllocation.maxExecutors'],
+        properties: preparedInitial.config.properties,
         // Python and Docker
-        resourceConfig: initialData.config.resourceConfig,
+        resourceConfig: preparedInitial.config.resourceConfig,
       }),
     },
 
@@ -306,8 +322,6 @@ const JobsForm: FC<JobsFormProps> = ({
     clearErrors,
     handleSubmit,
   } = methods;
-
-  const dynamicAllocation = watch('spark.dynamicAllocation.enabled', true);
 
   useEffect(() => {
     if (activeJobFile) {
@@ -382,9 +396,9 @@ const JobsForm: FC<JobsFormProps> = ({
   }, [activeJobFile]);
 
   useEffect(() => {
-    if (initialData) {
-      if (initialData.config.appPath) {
-        const path = initialData.config.appPath.replace('hdfs://', '');
+    if (preparedInitial) {
+      if (preparedInitial?.config?.appPath) {
+        const path = preparedInitial.config.appPath.replace('hdfs://', '');
         const pathSplits = path.split('/');
         const fileName = pathSplits.pop();
         setActiveJobFile((prevState: any) => ({
@@ -395,54 +409,94 @@ const JobsForm: FC<JobsFormProps> = ({
         }));
       }
 
-      if (initialData.config['spark.yarn.dist.pyFiles']) {
-        initialData.config['spark.yarn.dist.pyFiles']
+      if (preparedInitial?.config?.['spark.yarn.dist.pyFiles']) {
+        preparedInitial.config['spark.yarn.dist.pyFiles']
           .split(',')
-          .forEach((f) => handleInitialFile(f, 'isPython'));
+          .forEach((f: string) => handleInitialFile(f, 'isPython'));
       }
 
-      if (initialData.config['spark.yarn.dist.jars']) {
-        initialData.config['spark.yarn.dist.jars']
+      if (preparedInitial?.config?.['spark.yarn.dist.jars']) {
+        preparedInitial.config['spark.yarn.dist.jars']
           .split(',')
-          .forEach((f) => handleInitialFile(f, 'isJars'));
+          .forEach((f: string) => handleInitialFile(f, 'isJars'));
       }
 
-      if (initialData.config['spark.yarn.dist.files']) {
-        initialData.config['spark.yarn.dist.files']
+      if (preparedInitial?.config?.['spark.yarn.dist.files']) {
+        preparedInitial.config['spark.yarn.dist.files']
           .split(',')
-          .forEach((f) => handleInitialFile(f, 'isFile'));
+          .forEach((f: string) => handleInitialFile(f, 'isFile'));
       }
 
-      if (initialData.config['spark.yarn.dist.archives']) {
-        initialData.config['spark.yarn.dist.archives']
+      if (preparedInitial?.config?.['spark.yarn.dist.archives']) {
+        preparedInitial.config['spark.yarn.dist.archives']
           .split(',')
-          .forEach((f) => handleInitialFile(f, 'isArchives'));
+          .forEach((f: string) => handleInitialFile(f, 'isArchives'));
       }
 
       // For python
-      if (initialData.config.files) {
-        initialData.config.files
+      if (preparedInitial?.config?.files) {
+        preparedInitial.config.files
           .split(',')
-          .forEach((f) => handleInitialFile(f, 'isFile'));
+          .forEach((f: string) => handleInitialFile(f, 'isFile'));
       }
 
-      setType(initialData.config.type);
+      if (preparedInitial?.config?.type) {
+        setType(preparedInitial.config.type);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialData]);
+  }, [preparedInitial]);
 
-  const handleSetAdvConfigurations = () => {
-    setAdvancedConfiguration(!advancedConfiguration);
+  const title = useMemo(() => {
+    if (isJobs) {
+      return !isEdit ? 'Create new job' : 'Edit job';
+    }
+    if (isJupyter) {
+      return 'Jupyter server configuration';
+    }
+    return '';
+  }, [isEdit, isJobs, isJupyter]);
+
+  const advancedConfigProps = {
+    formType,
+    isLoading,
+    isEdit,
+    activeJobFile,
+    onDelete,
+    register,
+    watch,
+    errors,
+    control,
+    type,
+    setType,
+    setIsOpenExplorer,
+    setFileExplorerOptions,
+    setFileExplorerMode,
+    additionalArchives,
+    setAdditionalArchives,
+    additionalJars,
+    setAdditionalJars,
+    additionalPython,
+    setAdditionalPython,
+    additionalFiles,
+    setAdditionalFiles,
+    helperForNewArr,
+    canSave,
   };
 
   return (
     <FormProvider {...methods}>
-      <Card
-        title={!isEdit ? 'Create new job' : 'Edit job'}
-        contentProps={{ pb: 20 }}
-      >
+      <Card title={title} contentProps={{ pb: 20 }}>
         <Flex flexDirection="column">
-          {!isEdit && (
+          {isJupyter && !canSave && (
+            <Flex mb="20px">
+              <Callout
+                content="You cannot edit the Jupyter server configuration while it is running"
+                type={CalloutTypes.warning}
+              />
+            </Flex>
+          )}
+          {isJobs && !isEdit && (
             <Flex>
               <RadioGroup
                 mr="8px"
@@ -453,7 +507,7 @@ const JobsForm: FC<JobsFormProps> = ({
               />
             </Flex>
           )}
-          {sourceFromExistingJob === sourceFrom.existingJob && (
+          {isJobs && sourceFromExistingJob === sourceFrom.existingJob && (
             <Flex mt="20px" width="400px" flexWrap="wrap">
               <FileUploader
                 key={1}
@@ -464,587 +518,37 @@ const JobsForm: FC<JobsFormProps> = ({
               />
             </Flex>
           )}
-          <Flex flexDirection="column" mt={isEdit ? '0px' : '20px'}>
-            <Value>File</Value>
-            <Flex mt="8px" mb="20px">
-              {isOpenExplorer && (
-                <Popup
-                  left="40px"
-                  right="40px"
-                  top="20px"
-                  bottom="20px"
-                  isOpen={isOpenExplorer}
-                  onClose={() => handleCloseExplorer()}
-                >
-                  <FileExplorer
-                    handleCloseExplorer={handleCloseExplorer}
-                    handleSelectFile={handleSelectFile}
-                    mode={fileExplorerMode}
-                    activeFile={activeJobFile}
-                  />
-                </Popup>
-              )}
-              <Flex flexDirection="column">
-                <Flex width="400px" flexWrap="wrap">
-                  <Button
-                    intent="secondary"
-                    mr="8px"
-                    disabled={isDisabledProjectButton}
-                    onClick={() => {
-                      setFileExplorerOptions(FileExplorerOptions.app);
-                      setFileExplorerMode(FileExplorerMode.oneFile);
-                      setIsOpenExplorer(true);
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        height: '16px',
-                        overflow: 'hidden',
-                        display: 'inline-block',
-                        svg: {
-                          mr: '9px',
-                          path: {
-                            fill: 'primary',
-                          },
-                        },
-                      }}
-                    >
-                      {icons.folder}
-                    </Box>
-                    From project
-                  </Button>
-                  <FileUploader
-                    key={2}
-                    fromFile
-                    isEdit
-                    options="isJobFile"
-                    helperForNewArr={helperForNewArr}
-                    isDisabledUploadButton={isDisabledUploadButton}
-                  />
-                </Flex>
-                <Input
-                  {...getInputValidation('appPath', errors)}
-                  sx={{
-                    display: 'none',
-                  }}
-                />
-                {!!activeJobFile && (
-                  <Box mt="20px">
-                    <FileLoader
-                      removeHandler={(_: any) => helperForClose('isJobFile')}
-                      isLoading={!activeJobFile}
-                      id={activeJobFile.id}
-                      fileName={activeJobFile.name}
-                      located={activeJobFile.path
-                        .split('/')
-                        .slice(0, activeJobFile.path.split('/').length - 1)
-                        .join('/')}
-                    >
-                      located in
-                    </FileLoader>
-                  </Box>
-                )}
-              </Flex>
-            </Flex>
-          </Flex>
-          <Flex flexDirection="column">
-            <Input
-              name="appName"
-              ref={register}
-              readOnly={isEdit}
-              placeholder="name"
-              label="Name"
-              labelProps={{ width: '180px', mb: '20px' }}
-              {...getInputValidation('appName', errors)}
-            />
-            <Input
-              name="defaultArgs"
-              ref={register}
-              optional
-              placeholder="args"
-              label="Default arguments"
-              labelProps={{ width: '100%' }}
-              disabled={isLoading}
-            />
-          </Flex>
-        </Flex>
-      </Card>
-      <CardSecondary
-        mt="20px"
-        mb={isEdit && onDelete ? '20px' : '100px'}
-        title="Advanced configuration"
-        sx={{ width: '100%' }}
-      >
-        <Flex flexDirection="column">
-          <Controller
-            control={control}
-            name="type"
-            defaultValue={FrameworkType.SPARK}
-            render={({ onChange, value }) => (
-              <RadioGroup
-                flexDirection="row"
-                mr="30px"
-                value={setFrameworkUIType(value)}
-                options={[FrameworkTypeUI.SPARK, FrameworkTypeUI.PYTHON]}
-                onChange={(value) => {
-                  setType(setFrameworkType(value));
-                  return onChange(setFrameworkType(value));
-                }}
+          {/* FILE EXPLORER POPUP */}
+          {isOpenExplorer && (
+            <Popup
+              left="40px"
+              right="40px"
+              top="20px"
+              bottom="20px"
+              isOpen={isOpenExplorer}
+              onClose={() => handleCloseExplorer()}
+            >
+              <FileExplorer
+                handleCloseExplorer={handleCloseExplorer}
+                handleSelectFile={handleSelectFile}
+                mode={fileExplorerMode}
+                activeFile={activeJobFile}
               />
-            )}
-          />
-          {type === FrameworkType.SPARK && activeJobFile?.extension === 'jar' && (
-            <Box mt="20px">
-              <Input
-                name="mainClass"
-                ref={register}
-                placeholder="com.logicalclocks.example.FeatureStoreExample"
-                label="Main class"
-                labelProps={{ width: '100%' }}
-                disabled={isLoading}
-              />
-            </Box>
+            </Popup>
           )}
-          <Box my="20px">
-            <Checkbox
-              checked={advancedConfiguration}
-              label="Advanced configuration"
-              onChange={handleSetAdvConfigurations}
-            />
-          </Box>
-          {advancedConfiguration && type === FrameworkType.SPARK && (
-            <Flex flexDirection="column">
-              <Flex
-                sx={{
-                  mb: '20px',
-                }}
-              >
-                <Input
-                  name="amMemory"
-                  ref={register({
-                    setValueAs: (value) => (value ? parseInt(value, 10) : 2048),
-                  })}
-                  placeholder=""
-                  label="Driver  memory (MB)"
-                  labelProps={{ width: '190px', mr: '20px' }}
-                  disabled={isLoading}
-                />
-                <Input
-                  name="amVCores"
-                  ref={register({
-                    setValueAs: (value) => (value ? parseInt(value, 10) : 1),
-                  })}
-                  placeholder=""
-                  label="Driver virtual cores"
-                  labelProps={{ width: '190px' }}
-                  disabled={isLoading}
-                />
-              </Flex>
-              <Flex
-                sx={{
-                  mb: '20px',
-                }}
-              >
-                <Input
-                  name="spark.executor.memory"
-                  ref={register({
-                    required: false,
-                    setValueAs: (value) => (value ? parseInt(value, 10) : 2048),
-                  })}
-                  placeholder=""
-                  label="Executor  memory (MB)"
-                  labelProps={{ width: '190px', mr: '20px' }}
-                  disabled={isLoading}
-                  {...getInputValidation('spark.executor.memory', errors)}
-                />
-                <Input
-                  name="spark.executor.cores"
-                  ref={register({
-                    setValueAs: (value) => (value ? parseInt(value, 10) : 1),
-                  })}
-                  placeholder=""
-                  label="Executor virtual cores"
-                  labelProps={{ width: '190px' }}
-                  disabled={isLoading}
-                />
-              </Flex>
-              <Flex>
-                <Controller
-                  control={control}
-                  name="spark.dynamicAllocation.enabled"
-                  defaultValue={DynamicAllocation.DYNAMIC}
-                  render={({ onChange, value }) => (
-                    <RadioGroup
-                      flexDirection="row"
-                      mr="30px"
-                      value={
-                        value
-                          ? DynamicAllocation.DYNAMIC
-                          : DynamicAllocation.STATIC
-                      }
-                      options={[
-                        DynamicAllocation.DYNAMIC,
-                        DynamicAllocation.STATIC,
-                      ]}
-                      onChange={(value) =>
-                        onChange(value === DynamicAllocation.DYNAMIC)
-                      }
-                    />
-                  )}
-                />
-              </Flex>
-              {dynamicAllocation ? (
-                <Flex
-                  sx={{
-                    my: '20px',
-                  }}
-                >
-                  <Input
-                    name="spark.dynamicAllocation.minExecutors"
-                    ref={register({
-                      setValueAs: (value) => (value ? parseInt(value, 10) : 1),
-                    })}
-                    placeholder=""
-                    label="Min executors"
-                    labelProps={{ width: '190px', mr: '20px' }}
-                    disabled={isLoading}
-                  />
-                  <Input
-                    name="spark.dynamicAllocation.maxExecutors"
-                    ref={register({
-                      setValueAs: (value) => (value ? parseInt(value, 10) : 1),
-                    })}
-                    placeholder=""
-                    label="Max executors"
-                    labelProps={{ width: '190px' }}
-                    disabled={isLoading}
-                  />
-                </Flex>
-              ) : (
-                <Input
-                  name="spark.executor.instances"
-                  ref={register({
-                    setValueAs: (value) => (value ? parseInt(value, 10) : 1),
-                  })}
-                  placeholder=""
-                  label="Number of executors"
-                  labelProps={{ width: '190px', my: '20px' }}
-                  disabled={isLoading}
-                />
-              )}
-            </Flex>
-          )}
-          {advancedConfiguration && type === FrameworkType.SPARK && (
-            <>
-              <Flex flexDirection="column">
-                <Value>Additional archives</Value>
-                <Flex mt="8px">
-                  <Button
-                    intent="secondary"
-                    mr="8px"
-                    onClick={() => {
-                      setFileExplorerOptions(FileExplorerOptions.archives);
-                      setFileExplorerMode(FileExplorerMode.nFiles);
-                      setIsOpenExplorer(true);
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        height: '16px',
-                        overflow: 'hidden',
-                        display: 'inline-block',
-                        svg: {
-                          mr: '9px',
-                          path: {
-                            fill: 'primary',
-                          },
-                        },
-                      }}
-                    >
-                      {icons.folder}
-                    </Box>
-                    From project
-                  </Button>
-                  <FileUploader
-                    key={3}
-                    fromFile
-                    options="isArchives"
-                    helperForNewArr={helperForNewArr}
-                  />
-                </Flex>
-                {additionalArchives &&
-                  additionalArchives.map((el: UploadFiles) => {
-                    return (
-                      <Box mt="20px" key={el.id}>
-                        <FileLoader
-                          removeHandler={(id: any) => {
-                            const newArr = additionalArchives.filter(
-                              (item: any) => id !== item.id,
-                            );
-                            setAdditionalArchives(newArr);
-                          }}
-                          isLoading={!additionalArchives}
-                          fileName={el.name}
-                          id={el.id}
-                          located={el.path
-                            .split('/')
-                            .slice(0, el.path.split('/').length - 1)
-                            .join('/')}
-                        >
-                          located in
-                        </FileLoader>
-                      </Box>
-                    );
-                  })}
-              </Flex>
-              <Flex flexDirection="column" mt="20px">
-                <Value>No additional jars</Value>
-                <Flex mt="8px">
-                  <Button
-                    intent="secondary"
-                    mr="8px"
-                    onClick={() => {
-                      setFileExplorerOptions(FileExplorerOptions.jars);
-                      setFileExplorerMode(FileExplorerMode.nFiles);
-                      setIsOpenExplorer(true);
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        height: '16px',
-                        overflow: 'hidden',
-                        display: 'inline-block',
-                        svg: {
-                          mr: '9px',
-                          path: {
-                            fill: 'primary',
-                          },
-                        },
-                      }}
-                    >
-                      {icons.folder}
-                    </Box>
-                    From project
-                  </Button>
-                  <FileUploader
-                    key={4}
-                    fromFile
-                    options="isJars"
-                    helperForNewArr={helperForNewArr}
-                  />
-                </Flex>
-                {additionalJars &&
-                  additionalJars.map((el: UploadFiles) => {
-                    return (
-                      <Box mt="20px">
-                        <FileLoader
-                          removeHandler={(id: any) => {
-                            const newArr = additionalJars.filter(
-                              (item: UploadFiles) => id !== item.id,
-                            );
-                            setAdditionalJars(newArr);
-                          }}
-                          isLoading={!el}
-                          fileName={el.name}
-                          id={el.id}
-                          located={el.path
-                            .split('/')
-                            .slice(0, el.path.split('/').length - 1)
-                            .join('/')}
-                        >
-                          located in
-                        </FileLoader>
-                      </Box>
-                    );
-                  })}
-              </Flex>
-              <Flex flexDirection="column" mt="20px">
-                <Value>No additional python dependencies</Value>
-                <Flex mt="8px">
-                  <Button
-                    intent="secondary"
-                    mr="8px"
-                    onClick={() => {
-                      setFileExplorerOptions(FileExplorerOptions.python);
-                      setFileExplorerMode(FileExplorerMode.nFiles);
-                      setIsOpenExplorer(true);
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        height: '16px',
-                        overflow: 'hidden',
-                        display: 'inline-block',
-                        svg: {
-                          mr: '9px',
-                          path: {
-                            fill: 'primary',
-                          },
-                        },
-                      }}
-                    >
-                      {icons.folder}
-                    </Box>
-                    From project
-                  </Button>
-                  <FileUploader
-                    key={5}
-                    fromFile
-                    options="isPython"
-                    helperForNewArr={helperForNewArr}
-                  />
-                </Flex>
-                {additionalPython &&
-                  additionalPython.map((el: UploadFiles) => {
-                    return (
-                      <Box mt="20px">
-                        <FileLoader
-                          removeHandler={(id: any) => {
-                            const newArr = additionalPython.filter(
-                              (item: UploadFiles) => id !== item.id,
-                            );
-                            setAdditionalPython(newArr);
-                          }}
-                          isLoading={!additionalPython}
-                          fileName={el.name}
-                          id={el.id}
-                          located={el.path
-                            .split('/')
-                            .slice(0, el.path.split('/').length - 1)
-                            .join('/')}
-                        >
-                          located in
-                        </FileLoader>
-                      </Box>
-                    );
-                  })}
-              </Flex>
-              <Flex flexDirection="column" my="20px">
-                <Value>No additional files</Value>
-                <Flex mt="8px">
-                  <Button
-                    intent="secondary"
-                    mr="8px"
-                    onClick={() => {
-                      setFileExplorerOptions(FileExplorerOptions.files);
-                      setFileExplorerMode(FileExplorerMode.nFiles);
-                      setIsOpenExplorer(true);
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        height: '16px',
-                        overflow: 'hidden',
-                        display: 'inline-block',
-                        svg: {
-                          mr: '9px',
-                          path: {
-                            fill: 'primary',
-                          },
-                        },
-                      }}
-                    >
-                      {icons.folder}
-                    </Box>
-                    From project
-                  </Button>
-                  <FileUploader
-                    key={6}
-                    fromFile
-                    options="isFile"
-                    helperForNewArr={helperForNewArr}
-                  />
-                </Flex>
-                {!!additionalFiles &&
-                  additionalFiles.map((el: UploadFiles) => {
-                    return (
-                      <Box mt="20px">
-                        <FileLoader
-                          removeHandler={(id: any) => {
-                            const newArr = additionalFiles.filter(
-                              (item: UploadFiles) => id !== item.id,
-                            );
-                            setAdditionalFiles(newArr);
-                          }}
-                          isLoading={!additionalFiles}
-                          fileName={el.name}
-                          id={el.id}
-                          located={el.path
-                            .split('/')
-                            .slice(0, el.path.split('/').length - 1)
-                            .join('/')}
-                        >
-                          located in
-                        </FileLoader>
-                      </Box>
-                    );
-                  })}
-              </Flex>
-              <Box mt="20px">
-                <Controller
-                  control={control}
-                  name="properties"
-                  render={({ onChange, value }) => (
-                    <Input
-                      name="properties"
-                      type="textarea"
-                      placeholder="enter properties and values"
-                      label="Properties"
-                      sx={{
-                        width: '100%',
-                        borderWidth: 0,
-                        p: '8px',
-                        fontFamily: 'Inter',
-                        fontStyle: 'normal',
-                        fontWeight: 500,
-                        fontSize: '12px',
-                      }}
-                      labelProps={{ width: '100%' }}
-                      disabled={isLoading}
-                      value={value}
-                      onChange={(value: any) => onChange(value)}
-                    />
-                  )}
-                />
-              </Box>
-            </>
-          )}
-
-          {advancedConfiguration && type === FrameworkType.PYTHON && (
-            <>
-              <Flex flexDirection="column">
-                <Flex>
-                  <Input
-                    name="resourceConfig.memory"
-                    ref={register({
-                      setValueAs: (value) =>
-                        value ? parseInt(value, 10) : 2048,
-                    })}
-                    placeholder=""
-                    label="Container memory"
-                    labelProps={{ width: '190px', mr: '20px' }}
-                    disabled={isLoading}
-                  />
-                  <Input
-                    name="resourceConfig.cores"
-                    ref={register({
-                      setValueAs: (value) => (value ? parseInt(value, 10) : 1),
-                    })}
-                    placeholder=""
-                    label="Container cores"
-                    labelProps={{ width: '190px' }}
-                    disabled={isLoading}
-                  />
-                </Flex>
-                <Flex flexDirection="column" my="20px">
-                  <Value>No additional files</Value>
-                  <Flex mt="8px">
+          {isJobs && (
+            <Flex flexDirection="column" mt={isEdit ? '0px' : '20px'}>
+              <Value>File</Value>
+              <Flex mt="8px" mb="20px">
+                <Flex flexDirection="column">
+                  <Flex width="400px" flexWrap="wrap">
                     <Button
                       intent="secondary"
                       mr="8px"
+                      disabled={isDisabledProjectButton}
                       onClick={() => {
-                        setFileExplorerOptions(FileExplorerOptions.files);
-                        setFileExplorerMode(FileExplorerMode.nFiles);
+                        setFileExplorerOptions(FileExplorerOptions.app);
+                        setFileExplorerMode(FileExplorerMode.oneFile);
                         setIsOpenExplorer(true);
                       }}
                     >
@@ -1066,42 +570,76 @@ const JobsForm: FC<JobsFormProps> = ({
                       From project
                     </Button>
                     <FileUploader
-                      key={6}
+                      key={2}
                       fromFile
-                      options="isFile"
+                      isEdit
+                      options="isJobFile"
                       helperForNewArr={helperForNewArr}
+                      isDisabledUploadButton={isDisabledUploadButton}
                     />
                   </Flex>
-                  {additionalFiles &&
-                    additionalFiles.map((el: UploadFiles) => {
-                      return (
-                        <Box mt="20px">
-                          <FileLoader
-                            removeHandler={(id: any) => {
-                              const newArr = additionalFiles.filter(
-                                (item: UploadFiles) => id !== item.id,
-                              );
-                              setAdditionalFiles(newArr);
-                            }}
-                            isLoading={!additionalFiles}
-                            fileName={el.name}
-                            id={el.id}
-                            located={el.path
-                              .split('/')
-                              .slice(0, el.path.split('/').length - 1)
-                              .join('/')}
-                          >
-                            located in
-                          </FileLoader>
-                        </Box>
-                      );
-                    })}
+                  <Input
+                    {...getInputValidation('appPath', errors)}
+                    sx={{
+                      display: 'none',
+                    }}
+                  />
+                  {!!activeJobFile && (
+                    <Box mt="20px">
+                      <FileLoader
+                        removeHandler={(_: any) => helperForClose('isJobFile')}
+                        isLoading={!activeJobFile}
+                        id={activeJobFile.id}
+                        fileName={activeJobFile.name}
+                        located={activeJobFile.path
+                          .split('/')
+                          .slice(0, activeJobFile.path.split('/').length - 1)
+                          .join('/')}
+                      >
+                        located in
+                      </FileLoader>
+                    </Box>
+                  )}
                 </Flex>
               </Flex>
-            </>
+            </Flex>
+          )}
+          {isJobs && (
+            <Flex flexDirection="column">
+              <Input
+                name="appName"
+                ref={register}
+                readOnly={isEdit}
+                placeholder="name"
+                label="Name"
+                labelProps={{ width: '180px', mb: '20px' }}
+                {...getInputValidation('appName', errors)}
+              />
+              <Input
+                name="defaultArgs"
+                ref={register}
+                optional
+                placeholder="args"
+                label="Default arguments"
+                labelProps={{ width: '100%' }}
+                disabled={isLoading}
+              />
+            </Flex>
           )}
         </Flex>
-      </CardSecondary>
+        {isJupyter && <AdvancedConfig {...advancedConfigProps} />}
+      </Card>
+      {isJobs && (
+        <CardSecondary
+          mt="20px"
+          mb={isEdit && onDelete ? '20px' : '100px'}
+          title="Advanced configuration"
+          sx={{ width: '100%' }}
+        >
+          <AdvancedConfig {...advancedConfigProps} />
+        </CardSecondary>
+      )}
+
       {isLoading && <Loader />}
       {isEdit && onDelete && (
         <CardSecondary title="Danger zone" mb="100px">
@@ -1114,11 +652,14 @@ const JobsForm: FC<JobsFormProps> = ({
           </Button>
         </CardSecondary>
       )}
+      <Box pb="100px" />
       <JobsStickySummary
+        formType={formType}
         errorsValue={errorsValue}
         isEdit={isEdit}
         onSubmit={onSubmit}
         disabled={isLoading || isDisabled}
+        canSave={canSave}
       />
     </FormProvider>
   );

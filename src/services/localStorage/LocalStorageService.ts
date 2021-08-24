@@ -33,8 +33,25 @@ class LocalStorageService<T> {
     return this.getByUserProject(userId, projectId);
   }
 
-  protected clear(): void {
-    localStorage.removeItem(this.localStorageKey);
+  public clear({
+    userId,
+    projectId,
+  }: {
+    userId: number;
+    projectId: number;
+  }): void {
+    const all = this.getAll();
+    const userProjects = all?.[userId];
+    if (userProjects?.[projectId]) {
+      delete userProjects[projectId];
+    }
+    const updated = {
+      ...all,
+      [userId]: {
+        ...userProjects,
+      },
+    };
+    localStorage.setItem(this.localStorageKey, JSON.stringify(updated));
   }
 }
 

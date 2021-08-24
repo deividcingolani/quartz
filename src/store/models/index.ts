@@ -50,6 +50,7 @@ import provenance from './provenance/provenance.model';
 import { trainingDatasetModel } from './training-dataset/training-dataset.model';
 import databricks from './databricks/databricks.model';
 import expectations from './expectations/expectations.model';
+import jupyter from './jupyter/jupyter.model';
 
 export interface RootModel extends Models<RootModel> {
   api: typeof api;
@@ -101,6 +102,7 @@ export interface RootModel extends Models<RootModel> {
   crossProject: typeof crossProject;
   multistore: typeof multistore;
   provenance: typeof provenance;
+  jupyter: typeof jupyter;
 }
 
 const models: RootModel = {
@@ -153,6 +155,7 @@ const models: RootModel = {
   crossProject,
   multistore,
   provenance,
+  jupyter,
 };
 
 export default models;

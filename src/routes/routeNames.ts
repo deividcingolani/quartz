@@ -113,6 +113,11 @@ const routeNames = {
     createWithProtocol: '/fs/:fsId/storage-connectors/new/:protocol',
   },
 
+  jupyter: {
+    overview: '/jupyter',
+    settings: '/jupyter/settings',
+  },
+
   // relative to project.value
   jobs: {
     list: '/jobs',

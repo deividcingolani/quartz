@@ -4,18 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import { useFormContext } from 'react-hook-form';
 import { Button, StickySummary } from '@logicalclocks/quartz';
 import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
+import { FormType } from '../types';
 
 export interface JobsStickySummaryProps {
   onSubmit: () => void;
   isEdit?: boolean;
   disabled: boolean;
   errorsValue: string;
+  formType: FormType;
+  canSave?: boolean;
 }
 
 const JobsStickySummary: FC<JobsStickySummaryProps> = ({
   onSubmit,
   isEdit,
+  formType,
   disabled,
+  canSave,
   errorsValue,
 }) => {
   const { watch } = useFormContext();
@@ -24,17 +29,19 @@ const JobsStickySummary: FC<JobsStickySummaryProps> = ({
   const { appName } = watch(['appName']);
   const hasScrollOnScreen = useScreenWithScroll();
 
+  const isJob = formType === FormType.JOB;
+
   return (
     <StickySummary
       mainButton={
         <Button
-          disabled={disabled}
+          disabled={disabled || !canSave}
           intent="primary"
           type="submit"
           onClick={onSubmit}
         >
-          {!isEdit && 'Create New Job'}
-          {isEdit && 'Save'}
+          {isJob && (isEdit ? 'Save' : 'Create New Job')}
+          {!isJob && 'Save'}
         </Button>
       }
       secondaryButton={

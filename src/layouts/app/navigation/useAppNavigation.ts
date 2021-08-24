@@ -39,7 +39,7 @@ const useAppNavigation = (): TreeNode[] => {
     (e) => {
       if (
         (e.ctrlKey || e.metaKey) &&
-        ['0', '1', '2', '3', '4', '5'].includes(e.key)
+        ['0', '1', '2', '3', '4', '5', '6'].includes(e.key)
       ) {
         switch (e.key) {
           case '0': {
@@ -87,15 +87,26 @@ const useAppNavigation = (): TreeNode[] => {
           case '4': {
             navigate(
               getHrefNoMatching(
-                routeNames.jobs.list,
+                routeNames.jupyter.overview,
                 routeNames.project.value,
                 true,
-                { id, fsId: featurestore?.featurestoreId },
+                { id },
               ),
             );
             break;
           }
           case '5': {
+            navigate(
+              getHrefNoMatching(
+                routeNames.jobs.list,
+                routeNames.project.value,
+                true,
+                { id },
+              ),
+            );
+            break;
+          }
+          case '6': {
             navigate(
               getHrefNoMatching(
                 routeNames.project.settings.general,
@@ -429,11 +440,23 @@ const useAppNavigation = (): TreeNode[] => {
         title: 'Compute',
       },
       {
+        id: 'jupyter',
+        title: 'Jupyter',
+        icon: icons.jupyter,
+        tooltipText: `Jupyter ${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 4`,
+        href: getHref(routeNames.jupyter.overview, routeNames.project.view),
+        isActive: isActive('/p/:id/jupyter/*'),
+        onClick: handleNavigateRelative(
+          routeNames.jupyter.overview,
+          routeNames.project.view,
+        ),
+      },
+      {
         id: 'job',
         title: 'Jobs',
         icon: icons.jobs,
         mainTooltipText: 'Jobs',
-        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 4`,
+        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 5`,
         href: getHref(routeNames.jobs.list, routeNames.project.view),
         isActive: isActive('/p/:id/jobs'),
         onClick: handleNavigateRelative(
@@ -469,7 +492,7 @@ const useAppNavigation = (): TreeNode[] => {
         title: 'Project settings',
         icon: icons.settings,
         mainTooltipText: 'Project settings',
-        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 5`,
+        secondaryTooltipText: `${osName === OSNames.MAC ? '⌘' : 'Ctrl'} + 6`,
         isActive: isActive(
           getHrefNoMatching(
             routeNames.project.settings.settings,

@@ -40,6 +40,8 @@ import {
   JobsExecutions,
   ExpectationAttach,
   ExpectationEdit,
+  JupyterOverview,
+  JupyterSettings,
 } from './lazyComponents';
 import Integrations from './settings/Integrations';
 import Python from './settings/Python';
@@ -280,6 +282,9 @@ const Project: FC = () => {
         path={routeNames.storageConnector.createWithProtocol}
         element={<StorageConnectorsCreate />}
       />
+      <Route path={routeNames.jupyter.overview} element={<JupyterOverview />} />
+      <Route path={routeNames.jupyter.settings} element={<JupyterSettings />} />
+
       <Route
         path={routeNames.expectation.attach}
         element={<ExpectationAttach />}

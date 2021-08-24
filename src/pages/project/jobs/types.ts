@@ -1,4 +1,4 @@
-import { Jobs, JobsConfig } from '../../../types/jobs';
+import { JobsConfig } from '../../../types/jobs';
 
 export const sourceFrom = {
   scratch: 'New job from scratch',
@@ -16,18 +16,25 @@ export enum FrameworkTypeUI {
   FLINK = 'FLINK',
 }
 
+export enum FormType {
+  JOB = 'JOB',
+  JUPYTER = 'JUPYTER',
+}
+
 export interface ArgumentsForRun {
   defaultArgs?: string;
 }
 
-export interface JobsFormProps {
+export interface FormProps<T> {
   isLoading: boolean;
   isDisabled: boolean;
   submitHandler: (data: JobsConfig) => void;
   onDelete?: () => void;
   isEdit?: boolean;
-  initialData?: Jobs;
+  initialData?: T;
   fileName?: string;
+  formType?: FormType;
+  canSave?: boolean;
 }
 
 export interface ActiveFile {

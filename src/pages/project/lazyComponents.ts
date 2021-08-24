@@ -88,3 +88,11 @@ export const ExpectationAttach = React.lazy(
 export const ExpectationEdit = React.lazy(
   () => import('../expectation/EditExpectation'),
 );
+
+export const JupyterOverview = React.lazy(
+  () => import('./jupyter/overview/JupyterOverview'),
+);
+
+export const JupyterSettings = React.lazy(
+  () => import('./jupyter/settings/JupyterSettings'),
+);

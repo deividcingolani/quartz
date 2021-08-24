@@ -57,6 +57,9 @@ const titles = {
 
   expectationAttach: 'Attach an expectation',
   expectationEdit: 'Edit an expectation',
+
+  jupyter: 'Jupyter',
+  jupyterSettings: 'Jupyter settings',
 };
 
 export default titles;
