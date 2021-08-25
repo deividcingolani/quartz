@@ -309,12 +309,13 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
       {isLog && !isStop && (
         <TinyPopup
           px="0px"
-          width="1440px"
+          width="100%"
           height="calc(100vh - 40px)"
           isOpen={isOpenPopup}
           onClose={() => handleTogglePopup(!isOpenPopup)}
           title=""
           secondaryText=""
+          contentHeight="calc(100% - 90px)"
         >
           <Box sx={{ mt: '-40px', position: 'relative' }}>
             <Tooltip

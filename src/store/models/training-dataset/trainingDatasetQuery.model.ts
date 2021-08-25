@@ -27,7 +27,14 @@ const trainingDatasetQuery = createModel()({
         projectId,
         featureStoreId,
         trainingDatasetId,
-      );
+      ).catch((err) => {
+        if (err.response?.data?.errorCode) {
+          if (err.response.data.errorCode === 270111) {
+            return null;
+          }
+        }
+        throw err;
+      });
 
       dispatch.trainingDatasetQuery.setData(data);
     },

@@ -12,7 +12,6 @@ import HelpDropdown from './HelpDropdown';
 import UserDropdown from './UserDropdown';
 // Types
 import { RootState } from '../../../store';
-
 // Selectors
 import selectProjectId from '../../../store/models/localManagement/store.selectors';
 import Search from '../../../components/search/Search';

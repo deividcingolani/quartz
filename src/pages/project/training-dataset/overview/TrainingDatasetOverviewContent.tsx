@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, memo, useCallback, useMemo } from 'react';
+import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { Box } from 'rebass';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // Hooks
 import { useParams } from 'react-router-dom';
 // Components
@@ -26,7 +26,7 @@ import { useVersionsSort } from '../utils';
 // Selectors
 import useUserPermissions from '../../feature-group/overview/useUserPermissions';
 // Types
-import { RootState } from '../../../../store';
+import { Dispatch, RootState } from '../../../../store';
 
 export interface TrainingDatasetContentProps {
   data: TrainingDataset;
@@ -45,21 +45,54 @@ const action = (
   </Button>
 );
 
-const { featureList, provenance, schematisedTags, splitGraph, api } =
-  routeNames.overviewAnchors;
+const {
+  featureList,
+  provenance,
+  schematisedTags,
+  splitGraph,
+  api,
+  runningCode,
+} = routeNames.overviewAnchors;
 
 const TrainingDatasetOverviewContent: FC<TrainingDatasetContentProps> = ({
   data,
   onClickRefresh,
   onClickEdit,
 }) => {
-  const { fsId } = useParams();
+  const { id, tdId, fsId } = useParams();
+  const dispatch = useDispatch<Dispatch>();
 
   const { data: featureStoreData } = useSelector((state: RootState) =>
     selectFeatureStoreData(state, +fsId),
   );
 
   const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
+
+  const query = useSelector(
+    (state: RootState) => state.trainingDatasetQuery?.query,
+  );
+
+  useEffect(() => {
+    dispatch.trainingDatasetQuery.fetch({
+      projectId: +id,
+      featureStoreId: +fsId,
+      trainingDatasetId: +tdId,
+    });
+
+    return () => {
+      dispatch.trainingDatasetQuery.clear();
+    };
+  }, [fsId, id, tdId, dispatch]);
+
+  const queryCode = useMemo(() => {
+    return [
+      {
+        title: 'Query',
+        code: query || '',
+        language: '',
+      },
+    ];
+  }, [query]);
 
   const apiCode = useMemo(() => {
     return [
@@ -154,6 +187,12 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
             <SchematisedTags type={ItemDrawerTypes.td} data={data.tags} />
           </CardBoundary>
         </Anchor>
+
+        {query && (
+          <Anchor groupName="tdOverview" anchor={runningCode}>
+            <CodeCard mt="30px" title="Query" content={queryCode} />
+          </Anchor>
+        )}
 
         <Anchor groupName="tdOverview" anchor={api}>
           <CardBoundary mt="20px" title="API">

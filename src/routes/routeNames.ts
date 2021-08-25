@@ -57,6 +57,7 @@ const routeNames = {
     code: 'code',
     databricks: 'databricks',
     spark: 'spark',
+    runningCode: 'running-code',
   },
 
   // relative to project.value

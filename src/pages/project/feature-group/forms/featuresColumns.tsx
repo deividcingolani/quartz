@@ -123,7 +123,7 @@ export const featuresColumns = (
       render: ({ value, onChange }) => (
         <BlurInput
           width="100%"
-          minWidth="300px"
+          minWidth="500px"
           placeholder="feature description"
           defaultValue={value}
           onChange={onChange}

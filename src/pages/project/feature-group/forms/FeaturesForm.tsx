@@ -150,7 +150,7 @@ const FeaturesForm: FC<FeatureFormProps> = ({ isEdit, isDisabled }) => {
   };
 
   return (
-    <Box mt="20px" mb="-10px">
+    <Box mt="20px" mb="20px">
       <Label mb="20px">Features</Label>
       <Button disabled={isDisabled} mb="20px" onClick={handleAddRow}>
         Add a feature
@@ -158,7 +158,7 @@ const FeaturesForm: FC<FeatureFormProps> = ({ isEdit, isDisabled }) => {
       {!!features.length && (
         <EditableTable
           sx={{ table: { whiteSpace: 'nowrap' } }}
-          minWidth="100%"
+          maxWidth="100%"
           columns={featuresColumns(isEdit, offlineTypes, onlineTypes)}
           values={features}
           onChangeData={handleChangeData}
