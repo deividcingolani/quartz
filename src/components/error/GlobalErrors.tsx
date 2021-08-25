@@ -17,6 +17,13 @@ import ConnectionError from '../../pages/error/ConnectionError';
 // Utils
 import NotificationContent from '../../utils/notifications/notificationValue';
 import NotificationTitle from '../../utils/notifications/notificationBadge';
+import {
+  UNAUTHORIZED,
+  FORBIDDEN,
+  NOT_FOUND,
+  isClientError,
+  isServerError,
+} from './errorCodes';
 // Services
 import TokenService from '../../services/TokenService';
 
@@ -24,10 +31,10 @@ const getErrorTitle = (error: AxiosError) => {
   if (error.message === 'Network Error') {
     return 'Network issue';
   }
-  if (error.response?.status && error.response.status >= 500) {
+  if (error.response?.status && isServerError(error.response.status)) {
     return 'Server Error';
   }
-  if (error.response?.status && error.response.status >= 400) {
+  if (error.response?.status && isClientError(error.response.status)) {
     return 'Client Error';
   }
   return 'Error';
@@ -54,12 +61,18 @@ const getErrorContent = (
       element: ServerErrorContent,
     };
   }
-  if (error.response?.status && error.response.status >= 500) {
+  if (error.response?.status && isServerError(error.response.status)) {
+    const msg = error.response.data?.usrMsg
+      ? error.response.data?.usrMsg
+      : error.response.data?.errorMsg;
     return {
-      message: 'This page can not reach the server',
+      message:
+        msg && msg !== 'A generic error occurred.'
+          ? msg
+          : 'This page can not reach the server',
     };
   }
-  if (error.response?.status && error.response.status >= 400) {
+  if (error.response?.status && isClientError(error.response.status)) {
     const msg = error.response.data?.usrMsg
       ? error.response.data?.usrMsg
       : error.response.data?.errorMsg;
@@ -90,8 +103,8 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
   useEffect(() => {
     if (
       error &&
-      error.response?.status !== 401 &&
-      error.response?.status !== 403
+      error.response?.status !== UNAUTHORIZED &&
+      error.response?.status !== FORBIDDEN
     ) {
       NotificationsManager.create({
         type: <NotificationTitle message={getErrorTitle(error)} />,
@@ -116,7 +129,10 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
     if (error?.message === 'Network Error') {
       navigate('/');
     }
-    if (error && [error.response?.status, error?.status].includes(401)) {
+    if (
+      error &&
+      [error.response?.status, error?.status].includes(UNAUTHORIZED)
+    ) {
       logout();
     }
     // eslint-disable-next-line
@@ -124,9 +140,9 @@ const GlobalErrors: FC<{ children: ReactElement }> = ({ children }) => {
 
   if (globalError && globalError.config?.method === 'get') {
     switch (globalError.status || globalError.response?.status) {
-      case 404:
+      case NOT_FOUND:
         return <Error404 />;
-      case 403:
+      case FORBIDDEN:
         return <Error403 />;
       default:
         return <ConnectionError />;
