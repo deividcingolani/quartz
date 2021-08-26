@@ -20,7 +20,7 @@ import {
   Label,
   Pagination,
 } from '@logicalclocks/quartz';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -36,7 +36,6 @@ import jobsListStyles from './jobsListStyles';
 import useJobsRows from './useJobsRows';
 
 import JobDrawer from '../overview/JobDrawer';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import FileExplorer from '../../../../components/file-explorer/fileExplorer';
 import {
   FileExplorerMode,
@@ -50,6 +49,8 @@ import titles from '../../../../sources/titles';
 import FileUploader from '../../../../components/file-uploader/fileUploader';
 import { JobListSortType } from '../types';
 import getJobListSortStr from '../utils/getJobListSortStr';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const JobsList: FC = () => {
   const dispatch = useDispatch<Dispatch>();
@@ -75,6 +76,7 @@ const JobsList: FC = () => {
   const [page, setPage] = useState(1);
 
   const { id: projectId } = useParams();
+  const navigate = useNavigate();
   const { data, isLoading } = useJobs(
     +projectId,
     jobsPage,
@@ -82,7 +84,6 @@ const JobsList: FC = () => {
     sort,
     typeFilters,
   );
-  const navigate = useNavigateRelative();
   const [search, setSearch] = useState<string>('');
   const [keyFilter, setKeyFilter] = useState<KeyFilters>(KeyFilters.null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
@@ -211,17 +212,27 @@ const JobsList: FC = () => {
         appPath: activeJobFile?.path,
         mainClass: 'org.apache.spark.deploy.PythonRunner',
       };
-      const id = await dispatch.jobs.create({
+      const jobId = await dispatch.jobs.create({
         projectId: +projectId,
         data: req,
       });
-      if (id) {
+      if (jobId) {
         dispatch.jobsView.fetch({
           projectId: +projectId,
           jobsName: data.appName,
         });
 
-        navigate(`/jobs/${id}`, 'p/:id/*');
+        navigate(
+          getHrefNoMatching(
+            routeNames.jobs.overview,
+            routeNames.project.value,
+            true,
+            {
+              id: projectId,
+              jobId,
+            },
+          ),
+        );
       }
     }),
     [activeJobFile],
@@ -288,7 +299,6 @@ const JobsList: FC = () => {
             itemId={selectedId}
             isOpen={isOpen}
             handleToggle={handleClose}
-            navigateTo={(id: number) => `/jobs/${id}`}
           />
         )}
         {isOpenExplorer && !isLoading && (
@@ -385,7 +395,18 @@ const JobsList: FC = () => {
                 {...getInputValidation('appName', errors)}
               />
               <Button
-                onClick={() => navigate(`/p/${projectId}/jobs/new`)}
+                onClick={() =>
+                  navigate(
+                    getHrefNoMatching(
+                      routeNames.jobs.create,
+                      routeNames.project.value,
+                      true,
+                      {
+                        id: projectId,
+                      },
+                    ),
+                  )
+                }
                 intent="inline"
                 sx={{
                   fontFamily: 'Inter',
@@ -527,7 +548,18 @@ const JobsList: FC = () => {
           >
             <Button
               intent="primary"
-              onClick={() => navigate(`/p/${projectId}/jobs/new`)}
+              onClick={() =>
+                navigate(
+                  getHrefNoMatching(
+                    routeNames.jobs.create,
+                    routeNames.project.value,
+                    true,
+                    {
+                      id: projectId,
+                    },
+                  ),
+                )
+              }
             >
               New job
             </Button>

@@ -12,6 +12,8 @@ import getDatePickerTime from '../utils/getDatepickerTime';
 import JobsExecutionsPopup from './JobsExecutionsPopup';
 import NoData from '../../../../components/no-data/NoData';
 import { JobsViewExecutions } from '../../../../store/models/jobs/executions/jobsExecutions.model';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
   data,
@@ -37,7 +39,7 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
     hasPrevious: false,
     hasFollowing: false,
   });
-  const { id } = useParams();
+  const { id, jobId } = useParams();
 
   useEffect(() => {
     if (executions && !isLoading) {
@@ -76,7 +78,17 @@ const JobsExecutionsContent: FC<JobsExecutionContentProps> = ({
     const resetData = executionData && Object.keys(executionData).pop();
     if (resetData) setStartDate(new Date(resetData));
     loadPrimaryExecutionsData();
-    navigate('/p/119/jobs/38/executions');
+    navigate(
+      getHrefNoMatching(
+        routeNames.jobs.executions,
+        routeNames.project.value,
+        true,
+        {
+          id,
+          jobId,
+        },
+      ),
+    );
   };
 
   const [isOpenPopupForLogs, handleTogglePopupForLogs] = usePopup();

@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { Flex } from 'rebass';
-import { Button, Labeling, Value } from '@logicalclocks/quartz';
+import { Button, Value } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
 // Types
 import { Dispatch, RootState } from '../../../store';
@@ -66,12 +66,7 @@ const ProjectList: FC = () => {
               <Value primary px="5px">
                 {projects.length}
               </Value>
-              <Value pr="5px">
-                active project{projects.length > 1 ? 's' : ''}
-              </Value>
-              <Labeling gray bold>
-                sorted by last opened
-              </Labeling>
+              <Value px="5px">projects</Value>
             </Flex>
             <Button onClick={handleCreate}>Create new project</Button>
           </Flex>

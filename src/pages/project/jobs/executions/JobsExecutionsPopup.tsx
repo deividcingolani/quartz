@@ -22,9 +22,9 @@ import { useDispatch } from 'react-redux';
 import { format } from 'date-fns';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router-dom';
 import { ArgumentsForRun } from '../types';
 import icons from '../../../../sources/icons';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import NotificationBadge from '../../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../../utils/notifications/notificationValue';
 import { name } from '../../../../utils/validators';
@@ -34,6 +34,8 @@ import DatasetService, {
 } from '../../../../services/project/DatasetService';
 import Loader from '../../../../components/loader/Loader';
 import { JobsConfig } from '../../../../types/jobs';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 export interface JobsExecutionsPopupProps {
   projectId: number;
@@ -57,9 +59,8 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
   isStop = false,
 }: JobsExecutionsPopupProps) => {
   const dispatch = useDispatch();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
   const [disabledQuickRunButton, setDisabledQuickRunButton] = useState(false);
-
   const [dataLog, setDataLog] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -157,7 +158,7 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
       item.config.appName = data.appName;
 
       handleTogglePopup(!isOpenPopup);
-      const id = await dispatch.jobs.create({
+      const jobId = await dispatch.jobs.create({
         projectId: +projectId,
         data: item.config,
       });
@@ -166,7 +167,18 @@ const JobsExecutionsPopup: FC<JobsExecutionsPopupProps> = ({
         projectId: +projectId,
         jobsName: data.appName,
       });
-      navigate(`/jobs/${id}`, 'p/:id/*');
+
+      navigate(
+        getHrefNoMatching(
+          routeNames.jobs.overview,
+          routeNames.project.value,
+          true,
+          {
+            id: projectId,
+            jobId,
+          },
+        ),
+      );
     }),
     [projectId],
   );

@@ -8,8 +8,7 @@ import {
 } from '@logicalclocks/quartz';
 // Hooks
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { useNavigate, useParams } from 'react-router-dom';
 import useTitle from '../../../../hooks/useTitle';
 // Types
 import { RootState } from '../../../../store';
@@ -21,11 +20,13 @@ import JobsForm from '../form/JobsForm';
 import titles from '../../../../sources/titles';
 import NotificationTitle from '../../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../../utils/notifications/notificationValue';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const JobsEdit: FC = () => {
   const { id: projectId } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const item = useSelector<RootState, JobsViewState>((state) => state.jobsView);
 
@@ -50,19 +51,29 @@ const JobsEdit: FC = () => {
 
   const handleUpdateSubmit = useCallback(
     async (data: JobsConfig) => {
-      const id = await dispatch.jobs.update({
+      const jobId = await dispatch.jobs.update({
         projectId: +projectId,
         data,
         oldName: !!item && item.name,
       });
 
-      if (id) {
+      if (jobId) {
         dispatch.jobsView.fetch({
           projectId: +projectId,
           jobsName: data.appName,
         });
 
-        navigate(`/jobs/${id}`, 'p/:id/*');
+        navigate(
+          getHrefNoMatching(
+            routeNames.jobs.overview,
+            routeNames.project.value,
+            true,
+            {
+              id: projectId,
+              jobId,
+            },
+          ),
+        );
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,7 +88,16 @@ const JobsEdit: FC = () => {
       });
 
       handleToggle();
-      navigate('/jobs', 'p/:id/*');
+      navigate(
+        getHrefNoMatching(
+          routeNames.jobs.list,
+          routeNames.project.value,
+          true,
+          {
+            id: projectId,
+          },
+        ),
+      );
 
       await dispatch.jobs.fetch({
         projectId: +projectId,

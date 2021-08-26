@@ -2,24 +2,23 @@
 import React, { FC } from 'react';
 import { Button, Card, Divider, Labeling, Value } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Jobs } from '../../../../types/jobs';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import icons from '../../../../sources/icons';
 import DatasetService, {
   DatasetType,
 } from '../../../../services/project/DatasetService';
+import routeNames from '../../../../routes/routeNames';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 export interface ContentProps {
   job: Jobs;
 }
 
 const PythonConfigurationOverview: FC<ContentProps> = ({ job }) => {
-  const navigate = useNavigateRelative();
-  const getHref = useGetHrefForRoute();
+  const navigate = useNavigate();
 
-  const { id } = useParams();
+  const { id, jobId } = useParams();
 
   const handleDownloadDependency = (path: string) => {
     DatasetService.download(
@@ -39,8 +38,28 @@ const PythonConfigurationOverview: FC<ContentProps> = ({ job }) => {
           <Button
             p={0}
             intent="inline"
-            href={getHref('/edit', '/p/:id/jobs/:jobId/*')}
-            onClick={() => navigate('/edit', '/p/:id/jobs/:jobId/*')}
+            href={getHrefNoMatching(
+              routeNames.jobs.edit,
+              routeNames.project.value,
+              true,
+              {
+                id,
+                jobId,
+              },
+            )}
+            onClick={() =>
+              navigate(
+                getHrefNoMatching(
+                  routeNames.jobs.edit,
+                  routeNames.project.value,
+                  true,
+                  {
+                    id,
+                    jobId,
+                  },
+                ),
+              )
+            }
           >
             edit configuration
           </Button>

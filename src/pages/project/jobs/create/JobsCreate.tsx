@@ -2,17 +2,18 @@
 import React, { FC } from 'react';
 import { Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import JobsForm from '../form/JobsForm';
 import { RootState } from '../../../../store';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 import { JobsConfig } from '../../../../types/jobs';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const JobsCreate: FC = () => {
   const { id: projectId } = useParams();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
   useTitle(titles.createJob);
 
   const dispatch = useDispatch();
@@ -26,18 +27,28 @@ const JobsCreate: FC = () => {
   );
 
   const handleSubmit = async (data: JobsConfig) => {
-    const id = await dispatch.jobs.create({
+    const jobId = await dispatch.jobs.create({
       projectId: +projectId,
       data,
     });
 
-    if (id) {
+    if (jobId) {
       dispatch.jobsView.fetch({
         projectId: +projectId,
         jobsName: data.appName,
       });
 
-      navigate(`/jobs/${id}`, 'p/:id/*');
+      navigate(
+        getHrefNoMatching(
+          routeNames.jobs.overview,
+          routeNames.project.value,
+          true,
+          {
+            id: projectId,
+            jobId,
+          },
+        ),
+      );
     }
   };
 

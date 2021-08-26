@@ -12,7 +12,7 @@ import {
 import { Box, Flex } from 'rebass';
 import { format, formatDuration, intervalToDuration } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { useNavigate, useParams } from 'react-router-dom';
 import routeNames from '../../../../routes/routeNames';
 import Loader from '../../../../components/loader/Loader';
 import { Dispatch, RootState } from '../../../../store';
@@ -27,12 +27,12 @@ import ExecutionDropdown from './ExecutionDropdown';
 import NotificationBadge from '../../../../utils/notifications/notificationBadge';
 import NotificationContent from '../../../../utils/notifications/notificationValue';
 import executionDurationLocale from '../utils/durationLocale';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 export interface JobsDrawerProps<T extends Jobs> {
   itemId: number;
   data: T[];
   handleToggle: () => void;
-  navigateTo: (to: number) => string;
   isOpen: boolean;
   isSearch?: boolean;
   projectId?: number;
@@ -43,26 +43,27 @@ const JobDrawer = <T extends Jobs>({
   handleToggle,
   data,
   isOpen,
-  navigateTo,
   isSearch,
   projectId,
 }: JobsDrawerProps<T>) => {
-  const navigate = useNavigateRelative();
-
+  const navigate = useNavigate();
+  const { id } = useParams();
   const dispatch = useDispatch<Dispatch>();
-
-  const handleNavigate = useCallback(
-    (route: string) => (): void => {
-      dispatch.jobsExecutions.clear();
-      if (isSearch && projectId) {
-        navigate(`/p/${projectId}${route}`);
-      } else {
-        navigate(route, routeNames.project.view);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [navigate, isSearch, projectId],
-  );
+  const handleNavigateToJob = useCallback(() => {
+    dispatch.jobsExecutions.clear();
+    const theProjectId = isSearch && projectId ? projectId : id;
+    navigate(
+      getHrefNoMatching(
+        routeNames.jobs.overview,
+        routeNames.project.value,
+        true,
+        {
+          id: theProjectId,
+          jobId: itemId,
+        },
+      ),
+    );
+  }, [id, itemId, dispatch.jobsExecutions, navigate, isSearch, projectId]);
 
   const isJobsLoading = useSelector(
     (state: RootState) => state.loading.effects.jobs.fetch,
@@ -162,7 +163,17 @@ const JobDrawer = <T extends Jobs>({
 
   const handleNavigateToExecutions = () => {
     dispatch.jobsExecutions.clear();
-    navigate(`/p/${projectId}/jobs/${itemId}/executions`);
+    navigate(
+      getHrefNoMatching(
+        routeNames.jobs.executions,
+        routeNames.project.value,
+        true,
+        {
+          id: projectId,
+          jobId: itemId,
+        },
+      ),
+    );
   };
 
   if (!item) {
@@ -172,7 +183,7 @@ const JobDrawer = <T extends Jobs>({
         bottom="20px"
         closeOnBackdropClick={false}
         isOpen={isOpen}
-        bottomButton={[`Open Jobs Page ->`, handleNavigate(navigateTo(itemId))]}
+        bottomButton={[`Open Jobs Page ->`, handleNavigateToJob]}
         onClose={handleToggle}
       >
         <Loader />
@@ -221,10 +232,7 @@ const JobDrawer = <T extends Jobs>({
             </Flex>
           </Box>
         }
-        bottomButton={[
-          `Open job overview ->`,
-          handleNavigate(navigateTo(itemId)),
-        ]}
+        bottomButton={[`Open job overview ->`, handleNavigateToJob]}
         onClose={handleToggle}
       >
         <Box maxHeight="100%" overflowY="auto">

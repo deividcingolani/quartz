@@ -3,29 +3,32 @@ import React, { useCallback, useMemo } from 'react';
 import { Value, Badge, Tooltip, User } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
 import { formatDuration, intervalToDuration, formatDistance } from 'date-fns';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-
 import icons from '../../../../sources/icons';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import routeNames from '../../../../routes/routeNames';
 
 // utils
 import setStatus from '../utils/setStatus';
 import executionDurationLocale from '../utils/durationLocale';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const useJobsListRowData = (jobs: any) => {
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
   const handleNavigate = useCallback(
     (jobId: number, route: string) => (): void => {
       dispatch.jobsExecutions.clear();
-      navigate(route.replace(':jobId', String(jobId)), routeNames.project.view);
+      navigate(
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          id,
+          jobId,
+        }),
+      );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [navigate],
+    [id, navigate, dispatch.jobsExecutions],
   );
 
   const jobsComponents = useMemo(() => {
@@ -47,15 +50,11 @@ const useJobsListRowData = (jobs: any) => {
       {
         children: `#${job.id}`,
         gray: true,
-        onClick: () => {
-          handleNavigate(job.id, routeNames.jobs.overview)();
-        },
+        onClick: handleNavigate(job.id, routeNames.jobs.overview),
       },
       {
         children: job.name,
-        onClick: () => {
-          handleNavigate(job.id, routeNames.jobs.overview)();
-        },
+        onClick: handleNavigate(job.id, routeNames.jobs.overview),
       },
       {
         children: (
@@ -141,9 +140,7 @@ const useJobsListRowData = (jobs: any) => {
             </Tooltip>
             <Tooltip ml="20px" mainText="Overview">
               <Flex
-                onClick={() => {
-                  handleNavigate(job.id, routeNames.jobs.overview)();
-                }}
+                onClick={handleNavigate(job.id, routeNames.jobs.overview)}
                 justifyContent="center"
                 alignItems="center"
                 width="32px"
@@ -166,10 +163,7 @@ const useJobsListRowData = (jobs: any) => {
             </Tooltip>
             <Tooltip ml="6px" mainText="Executions">
               <Flex
-                onClick={() => {
-                  dispatch.jobsExecutions.clear();
-                  navigate(`/p/${id}/jobs/${job.id}/executions`);
-                }}
+                onClick={handleNavigate(job.id, routeNames.jobs.executions)}
                 justifyContent="center"
                 alignItems="center"
                 width="32px"
@@ -194,7 +188,7 @@ const useJobsListRowData = (jobs: any) => {
         ),
       },
     ]);
-  }, [jobs, handleNavigate, dispatch.jobsExecutions, navigate, id]);
+  }, [jobs, handleNavigate]);
 
   return useMemo(() => {
     return [jobsComponents, jobsProps];

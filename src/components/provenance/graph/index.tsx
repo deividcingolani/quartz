@@ -3,6 +3,8 @@ import React, { FC, useState, useRef, useMemo } from 'react';
 import { Flex } from 'rebass';
 // Hooks
 import { useTheme } from 'emotion-theming';
+// eslint-disable-next-line import/no-unresolved
+import { ITheme, IThemeColors } from '@logicalclocks/quartz/dist/theme/types';
 import useKeyPress from '../../../hooks/useKeyPress';
 import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
 // Components
@@ -29,11 +31,12 @@ const ProvenanceGraph: FC<ProvenanceGraphProps> = ({
 
   const getHref = useGetHrefForRoute();
 
-  const theme = useTheme<any>();
+  const theme = useTheme<ITheme>();
 
   const themedColors = useMemo(() => {
     return Object.keys(colorsMap).reduce((acc, key) => {
-      acc[key] = theme.colors.labels[(colorsMap as any)[key]];
+      const col = (colorsMap as any)[key] as keyof IThemeColors['labels'];
+      acc[key] = theme.colors.labels[col];
       return acc;
     }, {} as any);
   }, [theme.colors.labels]);

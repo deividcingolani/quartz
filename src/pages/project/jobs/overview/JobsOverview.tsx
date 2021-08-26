@@ -1,27 +1,33 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { useCallback, useEffect } from 'react';
 import { Box } from 'rebass';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useJobs from '../list/useJobs';
 import { RootState } from '../../../../store';
 import routeNames from '../../../../routes/routeNames';
 import OverviewContent from './OverviewContent';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import Loader from '../../../../components/loader/Loader';
 import useTitle from '../../../../hooks/useTitle';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const JobsOverview = () => {
   const { id: projectId, jobId } = useParams();
 
   const dispatch = useDispatch();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':jobId', String(id)), routeNames.project.view);
+      navigate(
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          id: projectId,
+          jobId: id,
+        }),
+      );
     },
-    [navigate],
+
+    [navigate, projectId],
   );
 
   const { data } = useJobs(+projectId);

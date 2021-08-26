@@ -2,6 +2,9 @@
 import React, { FC, useMemo, useState } from 'react';
 import { Flex } from 'rebass';
 
+// eslint-disable-next-line import/no-unresolved
+import { ITheme } from '@logicalclocks/quartz/dist/theme/types';
+import { useTheme } from 'emotion-theming';
 import CommitLegend from './commit-legend';
 import BarChart, { CommitDetails } from './bar-chart';
 
@@ -25,6 +28,9 @@ const CommitGraph: FC<CommitGraphProps> = ({
   type,
   ...props
 }: CommitGraphProps) => {
+  const theme = useTheme<ITheme>();
+  console.log('theme Commit Graph');
+  console.log(theme);
   const [selected, setSelected] = useState<number | null>(null);
   const preparedData = useMemo(() => {
     // Keep the bars with the same disposition even if there are less than 10;

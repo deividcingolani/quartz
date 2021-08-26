@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { parse } from 'date-fns';
 import JobsExecutionsContent from './JobsExecutionsContent';
@@ -10,15 +10,15 @@ import { JobsViewExecutions } from '../../../../store/models/jobs/executions/job
 import useJobs from '../list/useJobs';
 import Loader from '../../../../components/loader/Loader';
 import routeNames from '../../../../routes/routeNames';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { ExecutionsTypeSortOptions } from './types';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 import NoData from '../../../../components/no-data/NoData';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const JobsExecutions: FC = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const { id, jobId, type, from, to } = useParams();
 
@@ -188,15 +188,24 @@ const JobsExecutions: FC = () => {
 
       handleRefreshData(data);
 
+      const routeTo = type
+        ? routeNames.jobs.executionsTypeAndFromAndTo
+        : routeNames.jobs.executionsFromAndTo;
+
+      const params = {
+        type,
+        from: data.newStartDate ? +data.newStartDate : +fromDate - 1,
+        to: data.newEndDate ? +data.newEndDate : +toDate + 1,
+        id,
+        jobId,
+      };
+
       navigate(
-        `/${type ? `${type}/` : ''}${
-          data.newStartDate ? +data.newStartDate : +fromDate - 1
-        }/${data.newEndDate ? +data.newEndDate : +toDate + 1}`,
-        'p/:id/jobs/:jobId/executions/*',
+        getHrefNoMatching(routeTo, routeNames.project.value, true, params),
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [type, fromDate, toDate],
+    [type, fromDate, toDate, id, jobId],
   );
 
   const handleEventChange = useCallback(
@@ -217,20 +226,37 @@ const JobsExecutions: FC = () => {
       );
 
       if (newType && newType[0]) {
+        const params = {
+          type: newType[0],
+          from: from || +twentyEventDate,
+          to: to || +new Date(),
+          id,
+          jobId,
+        };
+
         navigate(
-          `/${newType[0]}/${from || +twentyEventDate}/${to || +new Date()}`,
-          'p/:id/jobs/:jobId/executions/*',
+          getHrefNoMatching(
+            routeNames.jobs.executionsTypeAndFromAndTo,
+            routeNames.project.value,
+            true,
+            params,
+          ),
         );
       }
     },
-    [handleRefreshData, from, to, twentyEventDate, navigate],
+    [handleRefreshData, from, to, twentyEventDate, navigate, id, jobId],
   );
 
   const handleNavigate = useCallback(
-    (id: number, route: string) => (): void => {
-      navigate(route.replace(':jobId', String(id)), routeNames.project.view);
+    (jobId: number, route: string) => (): void => {
+      navigate(
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          id,
+          jobId,
+        }),
+      );
     },
-    [navigate],
+    [id, navigate],
   );
 
   if (isLoading) {

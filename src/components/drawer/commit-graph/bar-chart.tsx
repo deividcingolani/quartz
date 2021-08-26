@@ -11,6 +11,7 @@ import React, {
 import * as d3 from 'd3';
 import { ScaleBand, ScaleLinear } from 'd3';
 import { useTheme } from 'emotion-theming';
+import { ITheme, IThemeColors } from '@logicalclocks/quartz';
 
 interface IObjectKeys {
   [key: string]: string | number | null | undefined;
@@ -48,7 +49,7 @@ const BarChart: FC<BarChartProps> = ({
   onSelect,
   type,
 }: BarChartProps) => {
-  const theme = useTheme<any>();
+  const theme = useTheme<ITheme>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const margin = {
@@ -75,13 +76,14 @@ const BarChart: FC<BarChartProps> = ({
   }, [values, type, typeForActivity.executions]);
 
   const [themedColors, themedBackground] = useMemo(() => {
-    const themeColors = colors.map(
-      (x: string) => theme.colors.labels[x.split('.')[1]],
-    );
+    const themeColors = colors.map((x: string) => {
+      const col = x.split('.')[1] as keyof IThemeColors['labels'];
+      return theme.colors.labels[col];
+    });
     const colorsRange = d3.scaleOrdinal().range(themeColors);
 
-    return [colorsRange, theme.colors.backgroundColor];
-  }, [colors, theme.colors.backgroundColor, theme.colors.labels]);
+    return [colorsRange, backgroundColor];
+  }, [colors, theme.colors, backgroundColor]);
 
   const aspectRatio = 4;
   const min = 0;
