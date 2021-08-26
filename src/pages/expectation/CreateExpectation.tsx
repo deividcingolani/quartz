@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Components
@@ -12,7 +12,6 @@ import { Dispatch, RootState } from '../../store';
 import { FeatureGroupViewState } from '../../store/models/feature/featureGroupView.model';
 // Hooks
 import useTitle from '../../hooks/useTitle';
-import useNavigateRelative from '../../hooks/useNavigateRelative';
 // Selectors
 import {
   selectExpectationAttachLoading,
@@ -23,15 +22,17 @@ import {
 import { mapRules } from './utilts';
 
 import titles from '../../sources/titles';
+import getHrefNoMatching from '../../utils/getHrefNoMatching';
+import routeNames from '../../routes/routeNames';
 
 const CreateExpectation: FC = () => {
-  const { id: projectId, fgId } = useParams();
+  const { id: projectId, fgId, fsId } = useParams();
 
   useTitle(titles.expectationAttach);
 
   const dispatch = useDispatch<Dispatch>();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const featureStoreData = useSelector((state: RootState) =>
     state.featureStores?.length ? state.featureStores[0] : null,
@@ -88,7 +89,14 @@ const CreateExpectation: FC = () => {
             });
 
             dispatch.featureGroupView.clear();
-            navigate(`/fg/${fgId}`, 'p/:id/fs/:fsId/*');
+            navigate(
+              getHrefNoMatching(
+                routeNames.featureGroup.overview,
+                routeNames.project.value,
+                true,
+                { id: projectId, fsId, fgId },
+              ),
+            );
           }
         } else {
           const { expectation } = data;
@@ -102,12 +110,19 @@ const CreateExpectation: FC = () => {
             });
 
             dispatch.featureGroupView.clear();
-            navigate(`/fg/${fgId}`, 'p/:id/fs/:fsId/*');
+            navigate(
+              getHrefNoMatching(
+                routeNames.featureGroup.overview,
+                routeNames.project.value,
+                true,
+                { id: projectId, fsId, fgId },
+              ),
+            );
           }
         }
       }
     },
-    [dispatch, featureStoreData, projectId, navigate, fgId],
+    [dispatch, featureStoreData, projectId, navigate, fgId, fsId],
   );
 
   const isSubmit = useSelector(selectExpectationCreateLoading);

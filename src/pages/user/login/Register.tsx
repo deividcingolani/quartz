@@ -29,6 +29,7 @@ import LoginHelp from './LoginHelp';
 import styles from './styles';
 import icons from '../../../sources/icons';
 import RegisterSuccess from './RegisterSuccess';
+import routeNames from '../../../routes/routeNames';
 
 export const schema = yup.object().shape({
   email: yup.string().email().required().label('Email'),
@@ -85,7 +86,7 @@ const Register: FC = () => {
   const { password } = watch(['password']);
 
   if (isSuccess) {
-    return <RegisterSuccess onClick={() => navigate('/login')} />;
+    return <RegisterSuccess onClick={() => navigate(routeNames.auth.login)} />;
   }
   return (
     <>
@@ -178,7 +179,10 @@ const Register: FC = () => {
             mt="20px"
             width="466px"
             actions={
-              <Button intent="secondary" onClick={() => navigate('/login')}>
+              <Button
+                intent="secondary"
+                onClick={() => navigate(routeNames.auth.login)}
+              >
                 Login
               </Button>
             }

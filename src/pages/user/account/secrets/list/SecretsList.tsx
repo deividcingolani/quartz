@@ -30,6 +30,7 @@ import { Dispatch } from '../../../../../store';
 import useSecretsListRowsData from './useSecretsListRowsData';
 import useTitle from '../../../../../hooks/useTitle';
 import titles from '../../../../../sources/titles';
+import routeNames from '../../../../../routes/routeNames';
 
 const Row = memo(QRow);
 
@@ -123,7 +124,7 @@ const SecretsList: FC = () => {
             <Button
               mt="40px"
               minWidth="105px"
-              onClick={() => navigate('/account/secrets/new')}
+              onClick={() => navigate(routeNames.account.secrets.create)}
             >
               New Secret
             </Button>
@@ -163,7 +164,7 @@ const SecretsList: FC = () => {
           </Flex>
           <Button
             minWidth="105px"
-            onClick={() => navigate('/account/secrets/new')}
+            onClick={() => navigate(routeNames.account.secrets.create)}
           >
             New Secret
           </Button>

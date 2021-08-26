@@ -30,6 +30,7 @@ import LoginHelp from './LoginHelp';
 import titles from '../../../sources/titles';
 import useTitle from '../../../hooks/useTitle';
 import icons from '../../../sources/icons';
+import routeNames from '../../../routes/routeNames';
 
 export const schema = yup.object().shape({
   email: alphanumUnlimited.label('Email'),
@@ -145,7 +146,7 @@ const Login: FC = () => {
               alignSelf="flex-end"
               intent="inline"
               type="button"
-              onClick={() => navigate('/forgot')}
+              onClick={() => navigate(routeNames.auth.recover)}
             >
               Forgot password?
             </Button>
@@ -167,7 +168,10 @@ const Login: FC = () => {
           mt="20px"
           width="466px"
           actions={
-            <Button intent="secondary" onClick={() => navigate('/register')}>
+            <Button
+              intent="secondary"
+              onClick={() => navigate(routeNames.auth.register)}
+            >
               Register
             </Button>
           }

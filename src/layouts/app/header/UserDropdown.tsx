@@ -15,6 +15,7 @@ import LastPathService from '../../../services/localStorage/LastPathService';
 // Types
 import { Dispatch, RootState } from '../../../store';
 import isAdmin from '../../../utils/userRole';
+import routeNames from '../../../routes/routeNames';
 
 const UserDropdown: FC = ({ children }) => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const UserDropdown: FC = ({ children }) => {
               Account settings
             </ListItem>
             {isAdmin(decodedToken) && (
-              <ListItem onClick={() => navigate('/settings')}>
+              <ListItem onClick={() => navigate(routeNames.settings.view)}>
                 Cluster settings
               </ListItem>
             )}

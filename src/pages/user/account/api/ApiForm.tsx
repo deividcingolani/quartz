@@ -27,6 +27,7 @@ import { selectScopes } from '../../../../store/models/scope/scope.selectors';
 // Types
 import { Api } from '../../../../types/api';
 import { Dispatch } from '../../../../store';
+import routeNames from '../../../../routes/routeNames';
 
 export interface ApiFormProps {
   isEdit?: boolean;
@@ -77,7 +78,7 @@ const ApiForm: FC<ApiFormProps> = ({
     if (initialData?.name) {
       await dispatch.api.delete(initialData.name);
       handleToggle();
-      navigate('/account/api');
+      navigate(routeNames.account.api.list);
     }
   }, [dispatch.api, handleToggle, initialData, navigate]);
 
@@ -161,7 +162,7 @@ const ApiForm: FC<ApiFormProps> = ({
               type="button"
               disabled={isLoading}
               intent="secondary"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(routeNames.account.api.list)}
             >
               Back
             </Button>

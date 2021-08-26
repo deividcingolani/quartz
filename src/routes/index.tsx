@@ -170,11 +170,9 @@ const Routes: FC = () => {
                 element={<SchematisedTagCreate />}
               />
               <Route
-                path={routeNames.settings.view}
+                path={`${routeNames.settings.view}/*`}
                 element={
-                  <Redirect
-                    to={`/${routeNames.settings.schematisedTags.list}`}
-                  />
+                  <Redirect to={routeNames.settings.schematisedTags.list} />
                 }
               />
             </RouterRoutes>

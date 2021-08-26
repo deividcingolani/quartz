@@ -7,7 +7,6 @@ import { Flex } from 'rebass';
 import { useNavigate } from 'react-router-dom';
 // Types
 import { Project, TeamMember } from '../../../types/project';
-
 import getHrefNoMatching from '../../../utils/getHrefNoMatching';
 import routeNames from '../../../routes/routeNames';
 

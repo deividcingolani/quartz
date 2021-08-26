@@ -37,6 +37,7 @@ import expectationListStyles from './expectationListStyles';
 
 // utils
 import renderValidationType from './utils';
+import getHrefNoMatching from '../../../../../utils/getHrefNoMatching';
 
 export interface ExpectationsProps {
   data: FeatureGroup;
@@ -88,9 +89,15 @@ const Expectations: FC<ExpectationsProps> = ({ data, isOwnFs }) => {
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
-      navigate(route.replace(':fgId', String(id)), routeNames.project.view);
+      navigate(
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          fgId: id,
+          id: projectId,
+          fsId,
+        }),
+      );
     },
-    [navigate],
+    [navigate, projectId, fsId],
   );
 
   const isLoading = useSelector(
@@ -161,7 +168,7 @@ const Expectations: FC<ExpectationsProps> = ({ data, isOwnFs }) => {
             >
               <Button
                 disabled={!data.features.length || !isOwnFs}
-                onClick={handleNavigate(data.id, '/expectation/attach/:fgId')}
+                onClick={handleNavigate(data.id, routeNames.expectation.attach)}
               >
                 Attach an expectation
               </Button>
@@ -210,7 +217,7 @@ const Expectations: FC<ExpectationsProps> = ({ data, isOwnFs }) => {
           >
             <Button
               disabled={!data.features.length || !isOwnFs}
-              onClick={handleNavigate(data.id, '/expectation/attach/:fgId')}
+              onClick={handleNavigate(data.id, routeNames.expectation.attach)}
             >
               Attach an expectation
             </Button>

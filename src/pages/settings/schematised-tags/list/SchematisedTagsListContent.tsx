@@ -4,12 +4,13 @@ import { Row, Card, Labeling, Value, Button } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 
 // Styles
+import { useNavigate } from 'react-router-dom';
 import styles from './list-styles';
 // Hooks
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { SchematisedTagEntity } from '../../../../types/feature-group';
 import useSchematisedTagsListRows from './useSchematisedTagsListRows';
 import SchematisedTagDrawer from './SchematisedTagDrawer';
+import routeNames from '../../../../routes/routeNames';
 
 export interface SchematisedTagsListContentProps {
   data: SchematisedTagEntity[];
@@ -24,10 +25,10 @@ const SchematisedTagsListContent: FC<SchematisedTagsListContentProps> = ({
 }) => {
   const [selectedTag, setSelectedTag] = useState<SchematisedTagEntity>();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const handleCreate = useCallback(() => {
-    navigate('new');
+    navigate(routeNames.settings.schematisedTags.create);
   }, [navigate]);
 
   const handleView = useCallback(

@@ -8,9 +8,9 @@ const routeNames = {
   },
 
   expectation: {
-    attach: '/expectation/attach/:fgId/*',
-    edit: '/expectation/:expName',
-    editWithFrom: '/expectation/:expName/:from',
+    attach: '/fs/:fsId/expectation/attach/:fgId',
+    edit: '/fs/:fsId/expectation/:expName',
+    editWithFrom: '/fs/:fsId/expectation/:expName/:from',
   },
 
   account: {
@@ -132,10 +132,10 @@ const routeNames = {
   },
 
   settings: {
-    view: 'settings/*',
+    view: '/settings',
     schematisedTags: {
-      list: 'settings/schematised-tags',
-      create: 'settings/schematised-tags/new',
+      list: '/settings/schematised-tags',
+      create: '/settings/schematised-tags/new',
     },
   },
 

@@ -5,6 +5,8 @@ import { Value, Labeling, IconButton, IconName } from '@logicalclocks/quartz';
 import { format } from 'date-fns';
 import { Api } from '../../../../../types/api';
 import { cropText } from '../../../../project/storage-connectors/utils';
+import getHrefNoMatching from '../../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../../routes/routeNames';
 
 const useApiListRowData = (data: Api[], scope: string[]) => {
   const navigate = useNavigate();
@@ -53,7 +55,10 @@ const useApiListRowData = (data: Api[], scope: string[]) => {
         intent: 'ghost',
         icon: IconName.edit,
         tooltip: 'Edit',
-        onClick: () => navigate(`/account/api/${name}/edit`),
+        onClick: () =>
+          navigate(
+            getHrefNoMatching(routeNames.account.api.edit, '', true, { name }),
+          ),
       },
     ]);
   }, [data, navigate, scope]);

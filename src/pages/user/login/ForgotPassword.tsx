@@ -22,6 +22,7 @@ import Hero from '../Hero';
 import getInputValidation from '../../../utils/getInputValidation';
 // Types
 import { Dispatch } from '../../../store';
+import routeNames from '../../../routes/routeNames';
 
 export const schema = yup.object().shape({
   email: yup.string().email().required().label('Email'),
@@ -90,7 +91,10 @@ const ForgotPassword: FC = () => {
               </Flex>
             </Flex>
             <Flex justifyContent="flex-end" mt="20px">
-              <Button intent="secondary" onClick={() => navigate('/login')}>
+              <Button
+                intent="secondary"
+                onClick={() => navigate(routeNames.auth.login)}
+              >
                 Login
               </Button>
             </Flex>
@@ -110,7 +114,7 @@ const ForgotPassword: FC = () => {
               <Button
                 mr="20px"
                 intent="secondary"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate(routeNames.auth.login)}
               >
                 Login
               </Button>

@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 
@@ -12,7 +12,6 @@ import { ExpectationData } from './types';
 import { Dispatch, RootState } from '../../store';
 // Hooks
 import useTitle from '../../hooks/useTitle';
-import useNavigateRelative from '../../hooks/useNavigateRelative';
 // Selectors
 import {
   selectExpectationView,
@@ -23,15 +22,17 @@ import {
 import { mapRules } from './utilts';
 
 import titles from '../../sources/titles';
+import routeNames from '../../routes/routeNames';
+import getHrefNoMatching from '../../utils/getHrefNoMatching';
 
 const EditExpectation: FC = () => {
-  const { from, id: projectId, expName } = useParams();
+  const { from, id: projectId, expName, fsId } = useParams();
 
   const [isPopupOpen, handleToggle] = usePopup();
 
   const dispatch = useDispatch<Dispatch>();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const featureStoreData = useSelector((state: RootState) =>
     state.featureStores?.length ? state.featureStores[0] : null,
@@ -76,10 +77,17 @@ const EditExpectation: FC = () => {
         });
 
         dispatch.featureGroupView.clear();
-        navigate(`/fg`, 'p/:id/fs/:fsId/*');
+        navigate(
+          getHrefNoMatching(
+            routeNames.featureGroup.list,
+            routeNames.project.value,
+            true,
+            { id: projectId, fsId },
+          ),
+        );
       }
     },
-    [dispatch, featureStoreData, projectId, navigate, expectation],
+    [dispatch, featureStoreData, projectId, navigate, expectation, fsId],
   );
 
   const handleDelete = useCallback(async () => {
@@ -91,9 +99,24 @@ const EditExpectation: FC = () => {
       });
       handleToggle();
 
-      navigate('/fg', 'p/:id/fs/:fsId/*');
+      navigate(
+        getHrefNoMatching(
+          routeNames.featureGroup.list,
+          routeNames.project.value,
+          true,
+          { id: projectId, fsId },
+        ),
+      );
     }
-  }, [dispatch, featureStoreData, projectId, navigate, handleToggle, expName]);
+  }, [
+    dispatch,
+    featureStoreData,
+    projectId,
+    navigate,
+    handleToggle,
+    expName,
+    fsId,
+  ]);
 
   const isExpectationLoading = useSelector(selectExpectationViewLoading);
 

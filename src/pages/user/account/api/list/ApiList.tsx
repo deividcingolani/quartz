@@ -27,6 +27,7 @@ import { Dispatch } from '../../../../../store';
 import useApiListRowsData from './useApiListRowsData';
 import useTitle from '../../../../../hooks/useTitle';
 import titles from '../../../../../sources/titles';
+import routeNames from '../../../../../routes/routeNames';
 
 const Row = memo(QRow);
 
@@ -79,7 +80,10 @@ const ApiList: FC = () => {
             <Value primary>0</Value>
             <Value ml="5px">API keys</Value>
           </Flex>
-          <Button minWidth="105px" onClick={() => navigate('/account/api/new')}>
+          <Button
+            minWidth="105px"
+            onClick={() => navigate(routeNames.account.api.create)}
+          >
             New API key
           </Button>
         </Flex>
@@ -122,7 +126,10 @@ const ApiList: FC = () => {
               {apiKeys.length > 1 ? ' API keys' : ' API key'}
             </Value>
           </Flex>
-          <Button minWidth="105px" onClick={() => navigate('/account/api/new')}>
+          <Button
+            minWidth="105px"
+            onClick={() => navigate(routeNames.account.api.create)}
+          >
             New API key
           </Button>
         </Flex>

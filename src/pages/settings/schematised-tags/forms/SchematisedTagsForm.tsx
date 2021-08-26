@@ -21,6 +21,7 @@ import { SchematisedTagFormData, SchematisedTagFormProps } from './types';
 import { name, shortText } from '../../../../utils/validators';
 import getInputValidation from '../../../../utils/getInputValidation';
 import { mapPropertiesToTable } from '../utils';
+import routeNames from '../../../../routes/routeNames';
 
 export const schema = yup.object().shape({
   name: name.label('Name'),
@@ -76,7 +77,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
         ml="-12px"
         intent="inline"
         alignSelf="flex-start"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate(routeNames.settings.schematisedTags.list)}
       >
         &#8701; all schemas
       </Button>

@@ -21,6 +21,7 @@ import NotificationTitle from '../../../../utils/notifications/notificationBadge
 import NotificationContent from '../../../../utils/notifications/notificationValue';
 import { schematisedTagAddEvent } from '../../../../store/models/localManagement/store.model';
 import { randomArrayString } from '../../../../utils';
+import routeNames from '../../../../routes/routeNames';
 
 const SchematisedTagsCreate: FC = () => {
   const isLoading = useSelector(selectSchematisedTagCreate);
@@ -66,7 +67,7 @@ const SchematisedTagsCreate: FC = () => {
 
       localStorage.setItem(schematisedTagAddEvent, randomArrayString(20)[0]);
 
-      navigate('/settings');
+      navigate(routeNames.settings.view);
     },
     [dispatch, navigate, tags],
   );

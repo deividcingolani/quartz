@@ -24,6 +24,7 @@ import getInputValidation from '../../../../utils/getInputValidation';
 import { Dispatch, RootState } from '../../../../store';
 import { Secret, SecretsVisibility } from '../../../../types/secrets';
 import { Project } from '../../../../types/project';
+import routeNames from '../../../../routes/routeNames';
 
 export interface SecretsFormData {
   name: string;
@@ -187,7 +188,7 @@ const SecretsForm: FC<SecretsFormProps> = ({
               type="button"
               disabled={isLoading}
               intent="secondary"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(routeNames.account.secrets.list)}
             >
               Back
             </Button>

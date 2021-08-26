@@ -13,9 +13,8 @@ import {
   Value,
 } from '@logicalclocks/quartz';
 
-// Hooks
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Types
+import { useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../../../store';
 import { ExpectationTypeMatch } from '../types';
 import { Expectation } from '../../../types/expectation';
@@ -27,13 +26,16 @@ import {
   getMatchingFeatures,
   getNotMatchingFeatures,
 } from '../utilts';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
+import routeNames from '../../../routes/routeNames';
 
 const SelectExistingExpectationForm = () => {
   const [matchType, setMatchType] = useState<ExpectationTypeMatch>(
     ExpectationTypeMatch.matching,
   );
 
-  const navigate = useNavigateRelative();
+  const { id, fsId } = useParams();
+  const navigate = useNavigate();
 
   const { control, watch } = useFormContext();
 
@@ -169,8 +171,17 @@ const SelectExistingExpectationForm = () => {
           intent="ghost"
           onClick={() =>
             navigate(
-              `/${selectedExpectation.name}/${featureGroup?.name}`,
-              '/p/:id/expectation/*',
+              getHrefNoMatching(
+                routeNames.expectation.editWithFrom,
+                routeNames.project.value,
+                true,
+                {
+                  id,
+                  fsId,
+                  expName: selectedExpectation.name,
+                  from: featureGroup?.name,
+                },
+              ),
             )
           }
         >
