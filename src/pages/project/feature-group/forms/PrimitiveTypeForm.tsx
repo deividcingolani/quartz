@@ -2,43 +2,68 @@
 import React, { FC, memo, useCallback } from 'react';
 import { Box, Flex } from 'rebass';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Input, Labeling, RadioGroup, Value } from '@logicalclocks/quartz';
+
+import {
+  Icon,
+  Input,
+  Labeling,
+  RadioGroup,
+  Tooltip,
+  Value,
+} from '@logicalclocks/quartz';
 
 // Types
 import { TypeFormProps } from '../types';
 // Utils
-import { isServerBooleanType } from '../utils';
+import {
+  backendTagTypeToFrontEndTageType,
+  isFloatType,
+  isIntType,
+  isServerBooleanType,
+} from '../utils';
 import getInputValidation from '../../../../utils/getInputValidation';
 
 const PrimitiveTypeForm: FC<TypeFormProps> = ({
   type,
   tag,
   name,
+  description,
   isDisabled,
 }) => {
   const { setValue, control, errors, getValues } = useFormContext();
 
   const isBoolean = isServerBooleanType(type);
+  const isFloat = isFloatType(type);
+  const isInt = isIntType(type);
 
   const propertyName = `tags.${tag.name}.${name}`;
 
   const handleChange = useCallback(
     ({ target: { value } }) => {
-      setValue(propertyName, value);
+      let typedValue = value;
+      if (isFloat) typedValue = parseFloat(value);
+      if (isInt) typedValue = parseInt(value, 10);
+      setValue(propertyName, typedValue);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setValue, propertyName],
   );
 
   return (
-    <Box ml="20px" mt="20px">
-      <Flex mb="5px">
+    <Box>
+      <Flex mb="8px">
         <Value>
-          {name} ({type})
+          {name}: {backendTagTypeToFrontEndTageType(String(type))}
         </Value>
         {!tag.required.includes(name) && (
           <Labeling ml="5px" gray>
             optional
           </Labeling>
+        )}
+        {!!description && (
+          <Tooltip mainText={description} ml="5px">
+            <Icon icon="info-circle" size="sm" />
+          </Tooltip>
         )}
       </Flex>
       {isBoolean ? (
@@ -52,7 +77,8 @@ const PrimitiveTypeForm: FC<TypeFormProps> = ({
                 mr="25px"
                 value={value ? 'True' : 'False'}
                 onChange={(val) => {
-                  onChange(val === 'True');
+                  const normVal = val === 'True';
+                  onChange(normVal);
                 }}
                 options={['True', 'False']}
               />
@@ -66,6 +92,8 @@ const PrimitiveTypeForm: FC<TypeFormProps> = ({
           onChange={handleChange}
           disabled={isDisabled}
           {...getInputValidation(name, (errors.tags || {})[tag.name])}
+          type={isFloat || isInt ? 'number' : 'text'}
+          step={isFloat ? '0.00000000000000001' : undefined}
         />
       )}
     </Box>

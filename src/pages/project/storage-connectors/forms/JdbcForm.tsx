@@ -2,7 +2,7 @@
 import React, { FC, useEffect } from 'react';
 import * as yup from 'yup';
 import { Flex } from 'rebass';
-import { Input, IconButton } from '@logicalclocks/quartz';
+import { Input, IconButton, IconName } from '@logicalclocks/quartz';
 import { useFieldArray, Ref } from 'react-hook-form';
 
 // Utils
@@ -99,7 +99,7 @@ const JdbcForm: FC<StorageConnectorFormProps> = ({
                 tooltip="Add"
                 disabled={isDisabled}
                 onClick={() => append({ key: '', value: '' })}
-                icon="plus"
+                icon={IconName.plus}
               />
             ) : (
               <IconButton
@@ -108,7 +108,7 @@ const JdbcForm: FC<StorageConnectorFormProps> = ({
                 tooltipProps={tooltipProps}
                 tooltip="Remove"
                 onClick={() => remove(index)}
-                icon="minus"
+                icon={IconName.cross}
               />
             )}
           </Flex>

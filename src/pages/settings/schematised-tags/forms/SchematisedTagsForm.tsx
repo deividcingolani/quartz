@@ -93,7 +93,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
         </Box>
       )}
 
-      <Card mt="10px" width="100%" title="Create new tag schemas">
+      <Card mt="10px" width="100%" title="Create new tag schema">
         <Flex flexDirection="column">
           <Flex flexDirection="column">
             <Flex>
@@ -130,7 +130,7 @@ const SchematisedTagsForm: FC<SchematisedTagFormProps> = ({
             mt="20px"
             alignSelf="flex-end"
           >
-            {isEdit ? 'Save' : 'Create new tag template'}
+            {isEdit ? 'Save' : 'Create new tag schema'}
           </Button>
         </Flex>
       </Card>

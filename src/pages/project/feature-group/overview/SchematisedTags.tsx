@@ -1,20 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, {
-  ComponentType,
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import {
-  Button,
-  Card,
-  Labeling,
-  Row as QRow,
-  Select,
-  Value,
-} from '@logicalclocks/quartz';
+import React, { FC, useCallback } from 'react';
+import { Button, Card, Labeling } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
 import { Box, Flex } from 'rebass';
 
@@ -22,10 +8,9 @@ import { Box, Flex } from 'rebass';
 import { useSelector } from 'react-redux';
 import { Tag } from '../../../../types';
 // Hooks
-import useSchematisedTagsListRowData from './useSchematisedTagsListRowData';
+import SchematisedTagListRowData from './SchematisedTagsListRowData';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Styles
-import tagsListStyles from './tags-list-styles';
 
 import routeNames from '../../../../routes/routeNames';
 import { RootState } from '../../../../store';
@@ -37,15 +22,11 @@ export interface SchematisedTagsProps {
   type?: ItemDrawerTypes;
 }
 
-const Row = memo(QRow);
-
 const SchematisedTags: FC<SchematisedTagsProps> = ({
   data = [],
   type = ItemDrawerTypes.fg,
 }) => {
   const { [`${type}Id`]: id, fsId } = useParams();
-
-  const [selected, setSelected] = useState<Tag>(data[0]);
 
   const navigate = useNavigateRelative();
 
@@ -62,21 +43,6 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
     [navigate],
   );
 
-  const onChange = useCallback(
-    (value) => {
-      const tag = data.find(({ name }) => name === value[0]);
-      if (tag) {
-        setSelected(tag);
-      }
-    },
-    [data],
-  );
-
-  useEffect(() => {
-    setSelected(data[0]);
-  }, [data]);
-
-  const [groupComponents, groupProps] = useSchematisedTagsListRowData(selected);
   const isLoadingTD = useSelector(
     (state: RootState) =>
       state.loading.effects.trainingDatasetView.loadRemainingData,
@@ -104,7 +70,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
             )}
             onClick={handleNavigate(+id, routeNames[groupType].edit)}
           >
-            edit
+            add/remove tags
           </Button>
         }
       >
@@ -122,7 +88,7 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
   return (
     <Card
       mt="20px"
-      title="Tag schemas"
+      title="Tags"
       actions={
         <Button
           p={0}
@@ -138,44 +104,37 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
       }
     >
       {!data.length && (
-        <Flex mt="20px" mb="20px" justifyContent="center">
+        <Flex
+          mt="20px"
+          mb="20px"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+        >
           <Labeling gray fontSize="18px">
-            {type === ItemDrawerTypes.fg
-              ? 'There are no tags added to this feature group'
-              : 'There are no tags added to this training dataset'}
+            There are no tags attached
           </Labeling>
+          <Button
+            mt="20px"
+            href={getHref(
+              routeNames[groupType].edit.replace(`:${type}Id`, String(+id)),
+              routeNames.project.view,
+            )}
+            onClick={handleNavigate(+id, routeNames[groupType].edit)}
+          >
+            Add tags
+          </Button>
         </Flex>
       )}
 
-      {!!data.length && (
-        <>
-          <Flex>
-            <Value primary>{data.length}</Value>
-            <Labeling ml="5px" gray mr="5px">
-              {data.length > 1
-                ? 'tag schemas attached:'
-                : 'tag schema attached:'}
-            </Labeling>
-            <Value primary>{data.map(({ name }) => name).join(', ')}</Value>
-          </Flex>
-
-          <Select
-            mt="20px"
-            listWidth="100%"
-            options={data.map(({ name }) => name)}
-            value={[selected?.name || 'none']}
-            placeholder="schema"
-            onChange={onChange}
-          />
-          <Box mt="20px" mx="-20px" sx={tagsListStyles}>
-            <Row
-              middleColumn={1}
-              groupComponents={groupComponents as ComponentType<any>[][]}
-              groupProps={groupProps}
-            />
-          </Box>
-        </>
-      )}
+      {!!data.length &&
+        data.map((tag: Tag, index: number) => {
+          return (
+            <Box key={tag.name}>
+              <SchematisedTagListRowData tag={tag} index={index} type={type} />
+            </Box>
+          );
+        })}
     </Card>
   );
 };

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Value, Labeling, IconButton } from '@logicalclocks/quartz';
+import { Value, Labeling, IconButton, IconName } from '@logicalclocks/quartz';
 
 import { format } from 'date-fns';
 import { Api } from '../../../../../types/api';
@@ -51,7 +51,7 @@ const useApiListRowData = (data: Api[], scope: string[]) => {
       },
       {
         intent: 'ghost',
-        icon: 'pen',
+        icon: IconName.edit,
         tooltip: 'Edit',
         onClick: () => navigate(`/account/api/${name}/edit`),
       },

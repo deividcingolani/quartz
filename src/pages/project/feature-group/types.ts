@@ -47,7 +47,11 @@ export interface FeatureGroupFormProps {
 
 export interface TypeFormProps {
   type?: string;
+  itemType?: string;
   tag: SchematisedTagEntity;
   name: string;
+  description?: string;
   isDisabled: boolean;
+  isFirstItem?: boolean;
+  isInputOnly?: boolean;
 }

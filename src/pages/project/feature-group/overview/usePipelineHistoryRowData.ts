@@ -1,7 +1,7 @@
 import formatDistance from 'date-fns/formatDistance';
 import { useCallback, useMemo } from 'react';
 
-import { Badge, Value, FreshnessBar, IconButton } from '@logicalclocks/quartz';
+import { Badge, Value, FreshnessBar, IconButton, IconName } from '@logicalclocks/quartz';
 
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import { Job } from '../../../../types/job';
@@ -58,7 +58,7 @@ const usePipelineHistoryRowData = (jobs?: Job[]) => {
       },
       {
         intent: 'ghost',
-        icon: 'search',
+        icon: IconName.more_zoom,
         tooltip: 'Activity',
         onClick: handleNavigate(1, '/activity'),
       },

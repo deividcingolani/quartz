@@ -217,8 +217,8 @@ export const mapFeaturesToTable = (featureGroup?: FeatureGroup): FGRow[] => {
 export const mapTags = (item?: DataEntity) => {
   if (item) {
     const { tags } = item;
-
-    return tags.reduce(
+    // console.log(tags);
+    const r = tags.reduce(
       (acc, { name, tags: nestedTags }) => ({
         ...acc,
         ...{
@@ -235,11 +235,15 @@ export const mapTags = (item?: DataEntity) => {
       }),
       {},
     );
+    // console.log(r);
+    return r;
   }
   return {};
 };
 
 export const isServerBooleanType = (type?: string) => type === 'boolean';
+export const isFloatType = (type?: string) => type === 'number';
+export const isIntType = (type?: string) => type === 'integer';
 
 export const getNormalizedValue = (value: any) => {
   if (typeof value === 'boolean') {
@@ -251,9 +255,9 @@ export const getNormalizedValue = (value: any) => {
   if (value === '') {
     return null;
   }
-  // if (!isNaN(value)) {
-  //   return +value;
-  // }
+  if (!Number.isNaN(value)) {
+    return +value;
+  }
   return value;
 };
 
@@ -400,4 +404,8 @@ export const getMaxDate = (activity: ActivityItem) => {
 
     return maxDate > acc ? maxDate : acc;
   }, +new Date());
+};
+
+export const backendTagTypeToFrontEndTageType = (backendType: string) => {
+  return backendType === 'number' ? 'float' : backendType;
 };

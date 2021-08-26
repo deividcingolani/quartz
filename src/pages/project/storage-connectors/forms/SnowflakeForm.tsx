@@ -12,6 +12,7 @@ import {
   Value,
   Tooltip,
   TooltipPositions,
+  IconName,
 } from '@logicalclocks/quartz';
 import * as yup from 'yup';
 import { Controller, Ref, useFieldArray } from 'react-hook-form';
@@ -318,7 +319,7 @@ const SnowflakeForm: FC<StorageConnectorFormProps> = ({
                 tooltip="Add"
                 disabled={isDisabled}
                 onClick={() => append({ name: '', value: '' })}
-                icon="plus"
+                icon={IconName.plus}
               />
             ) : (
               <IconButton
@@ -327,7 +328,7 @@ const SnowflakeForm: FC<StorageConnectorFormProps> = ({
                 tooltipProps={tooltipProps}
                 tooltip="Remove"
                 onClick={() => remove(index)}
-                icon="minus"
+                icon={IconName.cross}
               />
             )}
           </Flex>

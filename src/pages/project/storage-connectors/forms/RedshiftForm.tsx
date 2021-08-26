@@ -12,6 +12,7 @@ import {
   Tooltip,
   TooltipPositions,
   ITheme,
+  IconName,
 } from '@logicalclocks/quartz';
 import { Controller, Ref, useFieldArray } from 'react-hook-form';
 import { Box, Flex } from 'rebass';
@@ -228,7 +229,7 @@ const RedshiftForm: FC<StorageConnectorFormProps> = ({
                   tooltip="Add"
                   disabled={isDisabled}
                   onClick={() => append({ key: '' })}
-                  icon="plus"
+                  icon={IconName.plus}
                 />
               ) : (
                 <IconButton
@@ -239,7 +240,7 @@ const RedshiftForm: FC<StorageConnectorFormProps> = ({
                   }}
                   tooltip="Remove"
                   onClick={() => remove(index)}
-                  icon="minus"
+                  icon={IconName.cross}
                 />
               )}
             </Flex>

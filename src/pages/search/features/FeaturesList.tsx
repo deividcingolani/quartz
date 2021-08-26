@@ -7,6 +7,7 @@ import {
   Labeling,
   Value,
   ProjectBadge,
+  IconName,
 } from '@logicalclocks/quartz';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -129,7 +130,7 @@ const FeaturesList: FC<FeaturesListProps> = ({ data }) => {
                       },
                     }}
                   >
-                    <IconButton tooltip="Open drawer" icon={['far', 'eye']} />
+                    <IconButton tooltip="Open drawer" icon={IconName.eye} />
                   </Box>
                 </Flex>
               </Flex>

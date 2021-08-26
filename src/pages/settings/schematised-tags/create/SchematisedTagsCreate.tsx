@@ -47,7 +47,6 @@ const SchematisedTagsCreate: FC = () => {
       }
 
       const { properties, ...restData } = data;
-
       await dispatch.schematisedTagView.create({
         data: {
           ...restData,
@@ -57,7 +56,7 @@ const SchematisedTagsCreate: FC = () => {
 
       NotificationsManager.create({
         isError: false,
-        type: <NotificationTitle message="New template created" />,
+        type: <NotificationTitle message="New schema created" />,
         content: (
           <NotificationContent message={`${restData.name} has been added`} />
         ),

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { format } from 'date-fns';
 // Components
-import { Value, Labeling, IconButton } from '@logicalclocks/quartz';
+import { Value, Labeling, IconButton, IconName } from '@logicalclocks/quartz';
 // Types
 import { Secret, SecretsVisibility } from '../../../../../types/secrets';
 import { Project } from '../../../../../types/project';
@@ -44,14 +44,14 @@ const useSecretListRowData = (
       },
       {
         intent: 'ghost',
-        icon: 'eye',
+        icon: IconName.eye,
         tooltip: 'Read',
         disabled: !secret,
         onClick: () => handleRead({ name, secret }),
       },
       {
         intent: 'ghost',
-        icon: ['far', 'trash-alt'],
+        icon: IconName.bin,
         tooltip: 'Delete',
         onClick: () => handleDelete({ name, secret }),
       },

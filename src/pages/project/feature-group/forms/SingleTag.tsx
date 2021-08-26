@@ -1,9 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
-import { Flex } from 'rebass';
-import { Button, Select, Value, Divider } from '@logicalclocks/quartz';
 
-import routeNames from '../../../../routes/routeNames';
+import { Flex } from 'rebass';
+import {
+  Button,
+  Select,
+  Divider,
+  IconButton,
+  IconName,
+} from '@logicalclocks/quartz';
+
 // Components
 import PrimitiveTypeForm from './PrimitiveTypeForm';
 import ArrayTypeForm from './ArrayTypeForm';
@@ -17,6 +23,7 @@ export interface SingleTagProps {
   isDisabled: boolean;
   isLastItem: boolean;
   isFirstItem: boolean;
+  isFirstAddTagSchemas: boolean;
   descriptions: string[];
   onRemove: () => void;
   onChange: (selected: string[]) => void;
@@ -25,7 +32,6 @@ export interface SingleTagProps {
 const SingleTag: FC<SingleTagProps> = ({
   item: { selected, tag },
   onAdd,
-  hasNext,
   options,
   onChange,
   onRemove,
@@ -37,56 +43,58 @@ const SingleTag: FC<SingleTagProps> = ({
   return (
     <>
       <Flex mb="20px" width="100%" flexDirection="column">
-        <Flex width="100%" flexDirection="column">
-          <Flex justifyContent="space-between">
-            {isFirstItem && <Value mt="10px">Tags</Value>}
-            {isFirstItem && (
-              <Button
-                mr="-15px"
-                onClick={() =>
-                  window.open(
-                    `/${routeNames.settings.schematisedTags.create}`,
-                    '_blank',
-                  )
-                }
-                disabled={isDisabled}
-                intent="inline"
-              >
-                Create a new tag schema ↗
-              </Button>
-            )}
+        <Flex width="100%">
+          <Flex flex="1">
+            <Select
+              needSwap
+              listWidth="100%"
+              width="100%"
+              options={options}
+              value={selected}
+              placeholder={
+                selected.length ? tag!.description : 'pick a tag schema'
+              }
+              additionalTexts={descriptions}
+              onChange={onChange}
+              deletabled={true}
+            />
           </Flex>
-
-          <Select
-            disabled={hasNext || isDisabled}
-            listWidth="100%"
-            width="100%"
-            options={options}
-            value={selected}
-            placeholder={selected.length ? '' : 'pick a tag schema'}
-            additionalTexts={descriptions}
-            onChange={onChange}
-            deletabled={true}
-          />
+          <Flex ml="8px">
+            <IconButton
+              icon={IconName.bin}
+              intent="primary"
+              onClick={onRemove}
+              tooltip="Remove"
+            />
+          </Flex>
         </Flex>
         {!!tag && (
           <Flex
             flexDirection="column"
-            mt="0px"
-            m="20px"
-            pl="20px"
-            style={{ borderLeft: '1px solid #E2E2E2' }}
+            ml="8px"
+            mt="20px"
+            pl="8px"
+            sx={{
+              borderLeftStyle: 'solid',
+              borderLeftWidth: '1px',
+              borderLeftColor: 'grayShade2',
+              gap: '20px',
+            }}
           >
             {Object.keys(tag.properties).map((key) => {
               const { type } = tag.properties[key];
+              const { description } = tag.properties[key];
               if (type === 'array') {
                 return (
                   <ArrayTypeForm
                     tag={tag}
                     name={key}
+                    description={description}
                     isDisabled={isDisabled}
                     key={`${tag.name}-${key}`}
-                    type={tag.properties[key].items?.type}
+                    type={tag.properties[key].type}
+                    itemType={tag.properties[key].items?.type}
+                    isFirstItem={isFirstItem}
                   />
                 );
               }
@@ -97,32 +105,21 @@ const SingleTag: FC<SingleTagProps> = ({
                   type={type}
                   isDisabled={isDisabled}
                   key={`${tag.name}-${key}`}
+                  description={description}
                 />
               );
             })}
           </Flex>
         )}
-        {isLastItem && !!tag && !!options.length && (
+        {isLastItem && !!options.length && (
           <Button
-            mt="10px"
+            mt="20px"
             disabled={isDisabled}
             alignSelf="flex-start"
             onClick={onAdd}
-            intent="secondary"
+            intent="ghost"
           >
             Add another tag
-          </Button>
-        )}
-
-        {hasNext && (
-          <Button
-            mt="10px"
-            intent="ghost"
-            alignSelf="flex-end"
-            onClick={onRemove}
-            disabled={isDisabled}
-          >
-            Remove tag schema
           </Button>
         )}
       </Flex>

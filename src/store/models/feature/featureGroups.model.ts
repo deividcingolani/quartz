@@ -1,6 +1,5 @@
 import { createModel } from '@rematch/core';
 
-import { getNormalizedValue } from '../../../pages/project/feature-group/utils';
 // Types
 import { FeatureGroup } from '../../../types/feature-group';
 // Services
@@ -18,39 +17,40 @@ const attachTags = async (
   tags = {},
 ) => {
   const mapped = Object.entries(tags).map(([key, property]) => {
+    const formattedArray = {};
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const data = Object.entries(property)
-      .map(([key, nestProperty]) => ({
-        [key]: Array.isArray(nestProperty)
-          ? nestProperty.map(({ value }) => getNormalizedValue(value))
-          : getNormalizedValue(nestProperty),
-      }))
-      .reduce((acc, next) => {
-        const value = Object.values(next)[0];
-
-        return value !== null && value[0] !== null ? { ...acc, ...next } : acc;
-      }, {});
+    Object.keys(property).map(function (key, index) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      formattedArray[key] = Array.isArray(property[key])
+        ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          property[key].map((object: any) => object.value)
+        : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          property[key];
+      return false;
+    });
 
     return {
       key,
-      data,
+      formattedArray,
     };
   });
 
-  Object.keys(mapped).forEach((key, data) => {
-    FeatureGroupsService.attachTag(projectId, featureStoreId, id, key, data);
-  });
-
-  /*   for (const { key, data } of mapped) {
-    await FeatureGroupsService.attachTag(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+  Object.keys(mapped).forEach((i, key) => {
+    const name = mapped[key].key;
+    const property = mapped[key].formattedArray;
+    FeatureGroupsService.attachTag(
       projectId,
       featureStoreId,
       id,
-      key,
-      data,
+      name,
+      property,
     );
-  } */
+  });
 };
 
 const featureGroups = createModel()({

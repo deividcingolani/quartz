@@ -1,13 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC } from 'react';
 import { Flex } from 'rebass';
-import {
-  Subtitle,
-  Value,
-  Button,
-  IconButton,
-  TooltipProps,
-} from '@logicalclocks/quartz';
+import { Subtitle, Value, Button, IconButton, IconName } from '@logicalclocks/quartz';
+// eslint-disable-next-line import/no-unresolved
+import { TooltipProps } from '@logicalclocks/quartz/dist/components/tooltip';
 
 export interface PanelProps {
   onClickEdit: () => void;
@@ -48,7 +44,7 @@ const Panel: FC<PanelProps> = ({ onClickEdit, onClickRefresh, title, id }) => (
       </Button>
       <IconButton
         tooltip="Refresh"
-        icon="sync-alt"
+        icon={IconName.refresh}
         tooltipProps={{ ml: '15px', mr: '50px' } as TooltipProps}
         onClick={onClickRefresh}
       />

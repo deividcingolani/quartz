@@ -36,9 +36,12 @@ export const mapProperties = (data: FGRow[]): CreateProperties => {
             type: propertiesMap.getByKey(itemType),
           },
         };
+      } else if (description) {
+        acc.properties[name] = {
+          type: propertiesMap.getByKey(type),
+        };
       } else {
         acc.properties[name] = {
-          description,
           type: propertiesMap.getByKey(type),
         };
       }
@@ -72,7 +75,7 @@ export const mapPropertiesToTable = (data: SchematisedTagEntity): FGRow[] => {
         },
         {
           columnName: 'Description',
-          columnValue: description,
+          columnValue: !!description && description,
         },
       ],
     };

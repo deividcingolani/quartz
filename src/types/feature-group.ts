@@ -92,7 +92,7 @@ export interface Provenance {
 }
 
 export interface PropertyValue {
-  description: string;
+  description?: string;
   type: string;
   items?: {
     type: string;

@@ -11,6 +11,7 @@ import {
   Callout,
   CalloutTypes,
   IconButton,
+  IconName,
 } from '@logicalclocks/quartz';
 import { argumentRowStyles } from '../../storage-connectors/forms/jdbc-form.styles';
 
@@ -139,7 +140,7 @@ const SplitsForm: FC<SplitsFormProps> = ({ isDisabled }) => {
                 <IconButton
                   tooltip="Remove"
                   intent="ghost"
-                  icon="times"
+                  icon={IconName.cross}
                   onClick={() => remove(index)}
                 />
               </Box>

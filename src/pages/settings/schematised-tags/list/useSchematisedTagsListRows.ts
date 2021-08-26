@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { IconButton, Value } from '@logicalclocks/quartz';
+import { IconButton, IconName, Value } from '@logicalclocks/quartz';
 import { SchematisedTagEntity } from '../../../../types/feature-group';
 
 const useSchematisedTagsListRows = (
@@ -24,7 +24,7 @@ const useSchematisedTagsListRows = (
       },
       {
         intent: 'ghost',
-        icon: 'eye',
+        icon: IconName.eye,
         tooltip: 'View',
         onClick: () => onView(tag.name),
       },

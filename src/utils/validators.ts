@@ -52,10 +52,13 @@ export const integer = yup.string().matches(/[0-9]/, {
 
 export const string = yup.string().max(50);
 
-export const floatRequired = yup.string().required().matches(/[0-9]/, {
-  message: 'Only float number',
-  excludeEmptyString: false,
-});
+export const floatRequired = yup
+  .string()
+  .required()
+  .matches(/^\d*\.{1}\d*$/, {
+    message: 'Only float number',
+    excludeEmptyString: false,
+  });
 
 export const executorMemory = yup
   .string()

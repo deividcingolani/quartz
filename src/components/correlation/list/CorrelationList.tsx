@@ -7,6 +7,7 @@ import { ListRowProps } from 'react-virtualized/dist/es/List';
 import {
   Card,
   IconButton,
+  IconName,
   Label,
   TooltipPositions,
 } from '@logicalclocks/quartz';
@@ -125,7 +126,7 @@ const CorrelationList: FC<CorrelationListProps> = ({
           <Flex width="40%">
             <Box mr="20px">
               <IconButton
-                icon={isPicked ? 'minus' : 'plus'}
+                icon={isPicked ? IconName.cross : IconName.plus}
                 onClick={() => {
                   onPickCorrelation(correlationToPick);
                 }}

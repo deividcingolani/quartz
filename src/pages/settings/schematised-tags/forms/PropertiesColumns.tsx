@@ -13,7 +13,7 @@ const propertiesColumns: TableColumn[] = [
     render: ({ value, onChange }) => (
       <BlurInput
         width="100%"
-        minWidth="100px"
+        minWidth="180px"
         placeholder="property name"
         defaultValue={value}
         onChange={onChange}
@@ -65,7 +65,7 @@ const propertiesColumns: TableColumn[] = [
     render: ({ value, onChange }) => (
       <BlurInput
         width="100%"
-        minWidth="300px"
+        minWidth="400px"
         placeholder="property description"
         defaultValue={value}
         onChange={onChange}

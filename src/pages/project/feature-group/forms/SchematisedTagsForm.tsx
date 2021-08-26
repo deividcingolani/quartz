@@ -11,6 +11,7 @@ import {
   Labeling,
 } from '@logicalclocks/quartz';
 import { useParams } from 'react-router-dom';
+
 // Types
 import { FeatureFormProps } from '../types';
 import { ListItem } from '../../../../types/feature-group';
@@ -63,11 +64,6 @@ const SchematisedTags: FC<FeatureFormProps> = ({
       accumulator.set(name, description);
       return accumulator;
     }, new Map<string, string>());
-
-    // return tags.forEach(({ name, description }) =>
-
-    //   description ? `${name} - ${description}` : name,
-    // );
   }, [tags]);
 
   const initialTags = (): ListItem[] => {
@@ -104,9 +100,6 @@ const SchematisedTags: FC<FeatureFormProps> = ({
         if (index > -1) {
           copy[index].selected = selected;
           if (selected[0] !== '') {
-            // const spaceIndex = selected[0].indexOf(' ');
-            // const tagName =
-            // spaceIndex > -1 ? selected[0].slice(0, spaceIndex) : selected[0];
             copy[index].tag = tags.find(({ name }) => name === selected[0]);
           } else {
             copy[index].tag = undefined;
@@ -168,6 +161,8 @@ const SchematisedTags: FC<FeatureFormProps> = ({
     [setValue, getValues],
   );
 
+  const [isFirstAddTagSchemas, setIsFirstAddTagSchemas] = useState(true);
+
   useEffect(() => {
     const infoTD: { [key: string]: string } | any = TdInfoService.getInfo({
       userId,
@@ -187,7 +182,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
     const serverTags =
       type === ItemDrawerTypes.fg ? featureGroup?.tags : trainingDataset?.tags;
 
-    if (serverTags && serverTags?.length) {
+    if (serverTags && !!tags && serverTags?.length) {
       setList(() => {
         return serverTags
           .map(({ name }) => name)
@@ -221,7 +216,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
     return (
       <Box>
         <Flex mb="10px">
-          <Value>Tags schemas</Value>
+          <Value>Tags</Value>
         </Flex>
         <Labeling gray>loading...</Labeling>
       </Box>
@@ -236,11 +231,11 @@ const SchematisedTags: FC<FeatureFormProps> = ({
         </Flex>
 
         <Callout
-          content="There are no tags schemas"
+          content="There are no tag schema defined"
           type={CalloutTypes.neutral}
           cta={
             <Button
-              intent="ghost"
+              intent="secondary"
               onClick={() =>
                 window.open(
                   `/${routeNames.settings.schematisedTags.create}`,
@@ -248,7 +243,7 @@ const SchematisedTags: FC<FeatureFormProps> = ({
                 )
               }
             >
-              Create a new tag schema ↗
+              Create a schematised tag
             </Button>
           }
         />
@@ -258,21 +253,50 @@ const SchematisedTags: FC<FeatureFormProps> = ({
 
   return (
     <>
-      {listTags.map((item, index) => (
-        <SingleTag
-          item={item}
-          key={item.id}
-          options={Array.from(options.keys())}
-          descriptions={Array.from(options.values())}
-          onAdd={handleAddTag}
-          isFirstItem={!index}
-          isDisabled={isDisabled}
-          onRemove={handleRemove(index)}
-          onChange={handleChangeTag(item.id)}
-          hasNext={index < listTags.length - 1}
-          isLastItem={index === listTags.length - 1}
-        />
-      ))}
+      <Flex justifyContent="space-between" alignItems="center">
+        <Value>Tags</Value>
+        <Button
+          mr="-15px"
+          onClick={() =>
+            window.open(
+              `/${routeNames.settings.schematisedTags.create}`,
+              '_blank',
+            )
+          }
+          disabled={isDisabled}
+          intent="inline"
+        >
+          Create a new tag schema ↗
+        </Button>
+      </Flex>
+      {listTags.length !== 0 &&
+        listTags.map((item, index) => (
+          <SingleTag
+            item={item}
+            key={item.id}
+            options={Array.from(options.keys())}
+            descriptions={Array.from(options.values())}
+            onAdd={handleAddTag}
+            isFirstItem={!index}
+            isDisabled={isDisabled}
+            onRemove={handleRemove(index)}
+            onChange={handleChangeTag(item.id)}
+            hasNext={index < listTags.length - 1}
+            isLastItem={index === listTags.length - 1}
+            isFirstAddTagSchemas={isFirstAddTagSchemas}
+          />
+        ))}
+      {listTags.length === 0 && (
+        <Button
+          intent="secondary"
+          onClick={() => {
+            setList([{ id: randomArrayString(10)[0], selected: [] }]);
+            return setIsFirstAddTagSchemas(false);
+          }}
+        >
+          Add a tag
+        </Button>
+      )}
     </>
   );
 };

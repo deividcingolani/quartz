@@ -68,6 +68,11 @@ const SchematisedTagsListContent: FC<SchematisedTagsListContentProps> = ({
           </Flex>
           <Box mx="-20px" sx={styles}>
             <Row
+              onRowClick={(_, index) => {
+                const { name } = data[index];
+
+                handleView(name);
+              }}
               middleColumn={2}
               groupComponents={groupComponents as ComponentType<any>[][]}
               groupProps={groupProps}
