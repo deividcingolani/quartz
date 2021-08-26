@@ -47,6 +47,7 @@ import Integrations from './settings/Integrations';
 import Python from './settings/Python';
 import Alerts from './settings/Alerts';
 import Redirect from '../../components/redirect/Redirect';
+import getHrefNoMatching from '../../utils/getHrefNoMatching';
 
 const Project: FC = () => {
   const { id } = useParams();
@@ -90,7 +91,16 @@ const Project: FC = () => {
       <Route path="/edit" element={<ProjectEdit />} />
       <Route
         path={routeNames.project.settings.settings}
-        element={<Redirect to={routeNames.project.settings.general} />}
+        element={
+          <Redirect
+            to={getHrefNoMatching(
+              routeNames.project.settings.general,
+              routeNames.project.value,
+              true,
+              { id },
+            )}
+          />
+        }
       />
       <Route
         path={routeNames.project.settings.general}
