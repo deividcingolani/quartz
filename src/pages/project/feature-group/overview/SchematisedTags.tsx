@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, Labeling } from '@logicalclocks/quartz';
-import { useParams } from 'react-router-dom';
 import { Box, Flex } from 'rebass';
 
 // Types
@@ -9,13 +9,12 @@ import { useSelector } from 'react-redux';
 import { Tag } from '../../../../types';
 // Hooks
 import SchematisedTagListRowData from './SchematisedTagsListRowData';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Styles
 
 import routeNames from '../../../../routes/routeNames';
 import { RootState } from '../../../../store';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 export interface SchematisedTagsProps {
   data: Tag[];
@@ -26,21 +25,27 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
   data = [],
   type = ItemDrawerTypes.fg,
 }) => {
-  const { [`${type}Id`]: id, fsId } = useParams();
+  const { [`${type}Id`]: id, fsId, id: projectId } = useParams();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
-  const getHref = useGetHrefForRoute();
-
-  const handleNavigate = useCallback(
-    (id: number, route: string) => (): void => {
-      navigate(
-        route.replace(':fsId', fsId).replace(`:${type}Id`, String(id)),
-        routeNames.project.view,
+  const getHref = useCallback(
+    (id: number, groupType: 'featureGroup' | 'trainingDataset') => {
+      return getHrefNoMatching(
+        routeNames[groupType].edit,
+        routeNames.project.value,
+        true,
+        { fsId, id: projectId, [`${type}Id`]: String(id) },
       );
     },
-    // eslint-disable-next-line
-    [navigate],
+    [fsId, projectId, type],
+  );
+
+  const handleNavigate = useCallback(
+    (id: number, groupType: 'featureGroup' | 'trainingDataset') => (): void => {
+      navigate(getHref(id, groupType));
+    },
+    [getHref, navigate],
   );
 
   const isLoadingTD = useSelector(
@@ -64,11 +69,8 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
           <Button
             p={0}
             intent="inline"
-            href={getHref(
-              routeNames[groupType].edit.replace(`:${type}Id`, String(+id)),
-              routeNames.project.view,
-            )}
-            onClick={handleNavigate(+id, routeNames[groupType].edit)}
+            href={getHref(+id, groupType)}
+            onClick={handleNavigate(+id, groupType)}
           >
             add/remove tags
           </Button>
@@ -92,12 +94,9 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
       actions={
         <Button
           p={0}
-          href={getHref(
-            routeNames[groupType].edit.replace(`:${type}Id`, String(+id)),
-            routeNames.project.view,
-          )}
+          href={getHref(+id, groupType)}
           intent="inline"
-          onClick={handleNavigate(+id, routeNames[groupType].edit)}
+          onClick={handleNavigate(+id, groupType)}
         >
           edit
         </Button>
@@ -116,11 +115,8 @@ const SchematisedTags: FC<SchematisedTagsProps> = ({
           </Labeling>
           <Button
             mt="20px"
-            href={getHref(
-              routeNames[groupType].edit.replace(`:${type}Id`, String(+id)),
-              routeNames.project.view,
-            )}
-            onClick={handleNavigate(+id, routeNames[groupType].edit)}
+            href={getHref(+id, groupType)}
+            onClick={handleNavigate(+id, groupType)}
           >
             Add tags
           </Button>

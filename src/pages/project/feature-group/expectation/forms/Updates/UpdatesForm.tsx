@@ -7,7 +7,7 @@ import { CardSecondary } from '@logicalclocks/quartz';
 import Rules from './Rules';
 import Attached from './Attached';
 import Features from './Features';
-import { Expectation } from '../../../../types/expectation';
+import { Expectation } from '../../../../../../types/expectation';
 
 export interface UpdatesFormProps {
   data: Expectation;

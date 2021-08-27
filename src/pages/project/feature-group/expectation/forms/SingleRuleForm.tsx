@@ -15,9 +15,9 @@ import RuleFormByType from './RuleFormByType';
 
 import { FormRule, rulesMap, RuleTypes, RuleTypesStrong } from '../types';
 import { getRuleDescription } from '../utilts';
-import getInputValidation from '../../../utils/getInputValidation';
+import getInputValidation from '../../../../../utils/getInputValidation';
 
-import icons from '../../../sources/icons';
+import icons from '../../../../../sources/icons';
 
 export interface SingleRuleFormProps {
   rules: FormRule[];

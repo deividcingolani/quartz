@@ -23,23 +23,23 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import RulesForm from './RulesForm';
 import MatchingError from './MatchingError';
 import UpdatesForm from './Updates/UpdatesForm';
-import Loader from '../../../components/loader/Loader';
+import Loader from '../../../../../components/loader/Loader';
 import ExpectationDetailsForm from './ExpectationDetailsForm';
 // Types
-import { RootState } from '../../../store';
+import { RootState } from '../../../../../store';
 import { ExpectationData, ExpectationType } from '../types';
-import { Expectation } from '../../../types/expectation';
-import { FeatureGroup } from '../../../types/feature-group';
+import { Expectation } from '../../../../../types/expectation';
+import { FeatureGroup } from '../../../../../types/feature-group';
 // Utils
 import { mapRulesToForm, validateRules } from '../utilts';
-import getInputValidation from '../../../utils/getInputValidation';
-import { nameNotRequired, shortText } from '../../../utils/validators';
+import getInputValidation from '../../../../../utils/getInputValidation';
+import { nameNotRequired, shortText } from '../../../../../utils/validators';
 // Selectors
 import SelectExistingExpectationForm from './SelectExistingExpectationForm';
 import {
   selectExpectationAttachLoading,
   selectExpectations,
-} from '../../../store/models/expectations/expectations.selectors';
+} from '../../../../../store/models/expectations/expectations.selectors';
 import ExpectationSummary from './ExpectationSummary';
 
 export interface ExpectationFormProps {

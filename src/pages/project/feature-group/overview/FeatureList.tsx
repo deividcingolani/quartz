@@ -13,6 +13,7 @@ import {
 } from '@logicalclocks/quartz';
 
 // Types
+import { useNavigate, useParams } from 'react-router-dom';
 import { FeatureGroup } from '../../../../types/feature-group';
 // Hooks
 import useFeatureFilter, { KeyFilters } from '../hooks/useFeatureFilters';
@@ -20,8 +21,8 @@ import useFeatureListRowData from './useFeatureListRowData';
 // Styles
 import featureListStyles from './feature-lists-styles';
 import icons from '../../../../sources/icons';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 export interface FeatureListProps {
   data: FeatureGroup;
@@ -43,10 +44,8 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
     onReset,
   } = useFeatureFilter(data.features, '', data.onlineEnabled);
 
-  const navigate = useNavigateRelative();
-
-  const getHref = useGetHrefForRoute();
-
+  const navigate = useNavigate();
+  const { id, fsId, fgId } = useParams();
   const [groupComponents, groupProps] = useFeatureListRowData(
     dataFiltered,
     data,
@@ -66,12 +65,21 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
             <Button
               p={0}
               intent="inline"
-              href={getHref(
-                '/statistics',
-                'data.onlineEnabled ? "offline type" : "type"/p/:id/fs/:fdId/fg/:fgId/*',
+              href={getHrefNoMatching(
+                routeNames.featureGroup.statistics,
+                routeNames.project.value,
+                true,
+                { id, fsId, fgId },
               )}
               onClick={() =>
-                navigate('/statistics', '/p/:id/fs/:fdId/fg/:fgId/*')
+                navigate(
+                  getHrefNoMatching(
+                    routeNames.featureGroup.statistics,
+                    routeNames.project.value,
+                    true,
+                    { id, fsId, fgId },
+                  ),
+                )
               }
             >
               inspect data
@@ -101,9 +109,21 @@ const FeatureList: FC<FeatureListProps> = ({ data }) => {
           <Button
             p={0}
             intent="inline"
-            href={getHref('/statistics', '/p/:id/fs/:fdId/fg/:fgId/*')}
+            href={getHrefNoMatching(
+              routeNames.featureGroup.statistics,
+              routeNames.project.value,
+              true,
+              { id, fsId, fgId },
+            )}
             onClick={() =>
-              navigate('/statistics', '/p/:id/fs/:fdId/fg/:fgId/*')
+              navigate(
+                getHrefNoMatching(
+                  routeNames.featureGroup.statistics,
+                  routeNames.project.value,
+                  true,
+                  { id, fsId, fgId },
+                ),
+              )
             }
           >
             inspect data

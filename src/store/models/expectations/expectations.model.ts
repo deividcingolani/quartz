@@ -2,7 +2,7 @@ import { createModel } from '@rematch/core';
 import { Expectation } from '../../../types/expectation';
 import ExpectationService from '../../../services/project/ExpectationService';
 import { FeatureGroup } from '../../../types/feature-group';
-import { ExpectationData } from '../../../pages/expectation/types';
+import { ExpectationData } from '../../../pages/project/feature-group/expectation/types';
 
 export type ExpectationsState = Expectation[];
 

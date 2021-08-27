@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Select } from '@logicalclocks/quartz';
 
@@ -14,10 +14,11 @@ import NoData from '../../../../../components/no-data/NoData';
 import Correlation from '../../../../../components/correlation/Correlation';
 // Hooks
 import useFeatureGroupView from '../../hooks/useFeatureGroupView';
-import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../../hooks/useTitle';
 // Utils
 import titles from '../../../../../sources/titles';
+import getHrefNoMatching from '../../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../../routes/routeNames';
 
 const FeatureGroupCorrelation: FC = () => {
   const { id, fsId, fgId } = useParams();
@@ -32,7 +33,7 @@ const FeatureGroupCorrelation: FC = () => {
 
   const { isLoading, data } = useFeatureGroupView(+id, +fgId, +fsId);
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
@@ -83,10 +84,17 @@ const FeatureGroupCorrelation: FC = () => {
       const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
-        navigate(`/${newId}/correlation`, '/p/:id/fs/:fdId/fg/*');
+        navigate(
+          getHrefNoMatching(
+            routeNames.featureGroup.correlation,
+            routeNames.project.value,
+            true,
+            { id, fsId, fgId: newId },
+          ),
+        );
       }
     },
-    [data, navigate],
+    [data, navigate, fsId, id],
   );
 
   useTitle(`${titles.correlation} ${data?.name ? data.name : 'Feature group'}`);
@@ -108,7 +116,16 @@ const FeatureGroupCorrelation: FC = () => {
         title={data.name}
         id={data.id}
         idColor="labels.orange"
-        onClickEdit={() => navigate(`/edit`, 'p/:id/fs/:fsId/fg/:fgId/*')}
+        onClickEdit={() =>
+          navigate(
+            getHrefNoMatching(
+              routeNames.featureGroup.edit,
+              routeNames.project.value,
+              true,
+              { id, fsId, fgId },
+            ),
+          )
+        }
         onClickRefresh={handleRefreshData}
         hasVersionDropdown={true}
         versionDropdown={

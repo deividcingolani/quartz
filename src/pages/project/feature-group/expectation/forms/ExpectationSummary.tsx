@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormContext } from 'react-hook-form';
 import { Button, StickySummary } from '@logicalclocks/quartz';
-import useScreenWithScroll from '../../../hooks/useScreenWithScroll';
+import useScreenWithScroll from '../../../../../hooks/useScreenWithScroll';
 import { ExpectationType } from '../types';
 
 export interface ExpectationSummaryProps {

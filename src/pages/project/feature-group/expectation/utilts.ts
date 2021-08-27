@@ -4,7 +4,7 @@ import { FieldName } from 'react-hook-form/dist/types/fields';
 import { ErrorOption } from 'react-hook-form/dist/types/errors';
 
 import { MatchTypes } from './forms/RuleFormByType';
-import { Expectation, ServerRule } from '../../types/expectation';
+import { Expectation, ServerRule } from '../../../../types/expectation';
 import {
   ExpectationData,
   FormRule,
@@ -12,7 +12,7 @@ import {
   RuleTypes,
   RuleTypesStrong,
 } from './types';
-import { FeatureGroupViewState } from '../../store/models/feature/featureGroupView.model';
+import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 
 const getRestRuleData = (data: Omit<FormRule, 'severity'>) => {
   const typesMap = [

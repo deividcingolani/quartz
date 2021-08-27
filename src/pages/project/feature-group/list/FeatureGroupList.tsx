@@ -1,7 +1,7 @@
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { FC, useCallback, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button,
   Input,
@@ -30,11 +30,10 @@ import icons from '../../../../sources/icons';
 import useFeatureGroups, {
   UseFeatureGroupsData,
 } from '../hooks/useFeatureGroups';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import useMultiStoreSelect from '../../../../hooks/useMultiStoreSelect';
 import useUserPermissions from '../overview/useUserPermissions';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 export interface FeatureGroupListProps {
   sharedFrom: SharedDataset[];
@@ -45,7 +44,7 @@ const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
   const [filter, setFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
   const [search, setSearch] = useState<string>('');
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
 
@@ -97,8 +96,6 @@ const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
 
   const dispatch = useDispatch<Dispatch>();
 
-  const getHref = useGetHrefForRoute();
-
   // Handlers
   const handleRefresh = useCallback(() => {
     dispatch.featureGroups.fetch({
@@ -108,29 +105,30 @@ const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
   }, [dispatch.featureGroups, projectId, fsId]);
 
   const handleRouteChange = useCallback(
-    (url: string) => () => {
-      navigate(url.replace(':fsId', fsId), routeNames.project.view);
+    (route: string) => () => {
+      navigate(
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          fsId,
+          id: projectId,
+        }),
+      );
     },
-    [navigate, fsId],
+    [projectId, navigate, fsId],
+  );
+
+  const buildHref = useCallback(
+    (to: string) =>
+      getHrefNoMatching(to, routeNames.project.value, true, {
+        id: projectId,
+        fsId,
+      }),
+    [fsId, projectId],
   );
 
   const handleResetFilters = useCallback(() => {
     setFilter([]);
     setSearch('');
   }, []);
-
-  const handleCreate = useCallback(() => {
-    navigate(
-      routeNames.featureGroup.create.replace(':fsId', fsId),
-      routeNames.project.view,
-    );
-  }, [navigate, fsId]);
-
-  const buildHref = useCallback(
-    (to: string, relativeTo: string) =>
-      getHref(to.replace(':fsId', fsId), relativeTo),
-    [getHref, fsId],
-  );
 
   const handleSearchChange = ({
     target,
@@ -217,12 +215,9 @@ const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
               disabled={canEdit && !isPermissionsLoading}
             >
               <Button
-                href={getHref(
-                  routeNames.featureGroup.create,
-                  routeNames.project.view,
-                )}
+                href={buildHref(routeNames.featureGroup.create)}
                 disabled={!canEdit || isPermissionsLoading}
-                onClick={handleCreate}
+                onClick={handleRouteChange(routeNames.featureGroup.create)}
               >
                 New Feature Group
               </Button>
@@ -313,16 +308,13 @@ const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
             <Button
               intent="secondary"
               onClick={handleRouteChange(routeNames.storageConnector.list)}
-              href={getHref(
-                routeNames.storageConnector.list,
-                routeNames.project.view,
-              )}
+              href={buildHref(routeNames.storageConnector.list)}
               mr="14px"
             >
               All Storage Connectors
             </Button>
             <Button
-              href={getHref('', routeNames.project.view)}
+              href={buildHref('')}
               intent="secondary"
               onClick={handleRouteChange('')}
               mr="14px"
@@ -334,12 +326,9 @@ const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
               disabled={canEdit && !isPermissionsLoading}
             >
               <Button
-                href={buildHref(
-                  routeNames.featureGroup.create,
-                  routeNames.project.view,
-                )}
+                href={buildHref(routeNames.featureGroup.create)}
                 disabled={!canEdit || isPermissionsLoading}
-                onClick={handleCreate}
+                onClick={handleRouteChange(routeNames.featureGroup.create)}
               >
                 New Feature Group
               </Button>

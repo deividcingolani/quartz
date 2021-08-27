@@ -67,6 +67,7 @@ const routeNames = {
     edit: '/fs/:fsId/fg/:fgId/edit',
     create: '/fs/:fsId/fg/new',
     activity: '/fs/:fsId/fg/:fgId/activity',
+    activityValidations: '/fs/:fsId/fg/:fgId/activity/VALIDATIONS',
     activityType: '/fs/:fsId/fg/:fgId/activity/:type',
     activityTypeAndFromAndTo: '/fs/:fsId/fg/:fgId/activity/:type/:from/:to',
     activityFromAndTo: '/fs/:fsId/fg/:fgId/activity/:from/:to',

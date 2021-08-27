@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 
 import Result from './Result';
 import Unchanged from './Unchanged';
-import { FeatureGroup } from '../../../../types/feature-group';
+import { FeatureGroup } from '../../../../../../types/feature-group';
 
 export interface AttachedProps {
   data: FeatureGroup[];

@@ -9,11 +9,11 @@ import {
   Microlabeling,
 } from '@logicalclocks/quartz';
 
-import icons from '../../../sources/icons';
+import icons from '../../../../../sources/icons';
 import featureListStyles from './featureListStyles';
-import { Expectation } from '../../../types/expectation';
+import { Expectation } from '../../../../../types/expectation';
 import useExpectationFeatureListData from './useExpectationFeatureListData';
-import { FeatureGroup } from '../../../types/feature-group';
+import { FeatureGroup } from '../../../../../types/feature-group';
 import { rulesMapToShort } from '../types';
 import { getShortRuleValue } from '../utilts';
 

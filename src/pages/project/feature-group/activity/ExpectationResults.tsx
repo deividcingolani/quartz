@@ -3,15 +3,16 @@ import React, { ComponentType, FC, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import { Button, Microlabeling, Row, Value } from '@logicalclocks/quartz';
 
+import { useNavigate, useParams } from 'react-router-dom';
 import LastValidation from '../overview/expectations/LastValidation';
-import { getShortRuleValue } from '../../../expectation/utilts';
+import { getShortRuleValue } from '../expectation/utilts';
 import { getStatusCount } from '../../../../components/activity/utils';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 import { Expectation } from '../../../../types/expectation';
-import { rulesMapToShort } from '../../../expectation/types';
+import { rulesMapToShort } from '../expectation/types';
 import { ActivityItemData } from '../../../../types/feature-group';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 export interface ExpectationResultProps {
   name: string;
@@ -26,9 +27,8 @@ const ExpectationResult: FC<ExpectationResultProps> = ({
   data,
   results,
 }) => {
-  const navigate = useNavigateRelative();
-
-  const getHref = useGetHrefForRoute();
+  const navigate = useNavigate();
+  const { id, fsId } = useParams();
 
   const rules = useMemo(() => results[0].expectation.rules, [results]);
 
@@ -91,8 +91,22 @@ const ExpectationResult: FC<ExpectationResultProps> = ({
         <Button
           mr="-10px"
           intent="inline"
-          href={getHref(`/expectation/${name}`, '/p/:id/fs/:fsId/*')}
-          onClick={() => navigate(`/expectation/${name}`, '/p/:id/fs/:fsId/*')}
+          href={getHrefNoMatching(
+            routeNames.expectation.edit,
+            routeNames.project.value,
+            true,
+            { id, fsId, expName: name },
+          )}
+          onClick={() =>
+            navigate(
+              getHrefNoMatching(
+                routeNames.expectation.edit,
+                routeNames.project.value,
+                true,
+                { id, fsId, expName: name },
+              ),
+            )
+          }
         >
           edit {'->'}
         </Button>

@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
@@ -34,14 +34,15 @@ import { ContentContext } from '../../../../layouts/app/AppLayout';
 import { getMaxDate, getMinDate } from '../utils';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import routeNames from '../../../../routes/routeNames';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const batchSize = 20;
 
 const FeatureGroupActivity: FC = () => {
   const { id, fsId, fgId, type, to, from } = useParams();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const { current: content } = useContext(ContentContext);
   const loader = useRef<HTMLButtonElement>(null);
@@ -149,10 +150,22 @@ const FeatureGroupActivity: FC = () => {
     if (startDate > -1) {
       setFromDate(new Date(startDate - 1));
 
+      const route = type
+        ? routeNames.featureGroup.activityTypeAndFromAndTo
+        : routeNames.featureGroup.activityFromAndTo;
+
+      const params = {
+        type,
+        id,
+        fsId,
+        fgId,
+        from: startDate - 1,
+        to: +toDate + 1,
+      };
       navigate(
-        `/${type ? 'type/' : ''}${startDate - 1}/${+toDate + 1}`,
-        'p/:id/fs/:fsId/fg/:fgId/activity/*',
+        getHrefNoMatching(route, routeNames.project.value, true, params),
       );
+      // `p/:id/fs/:fsId/fg/:fgId/activity/${type || ''}${startDate - 1}/${+toDate + 1}`;
     }
   }, [
     dispatch.featureGroupActivity,
@@ -194,9 +207,20 @@ const FeatureGroupActivity: FC = () => {
     if (endDate > -1) {
       setToDate(new Date(endDate + 1));
 
+      const route = type
+        ? routeNames.featureGroup.activityTypeAndFromAndTo
+        : routeNames.featureGroup.activityFromAndTo;
+
+      const params = {
+        type,
+        id,
+        fsId,
+        fgId,
+        from: +fromDate - 1,
+        to: endDate + 1,
+      };
       navigate(
-        `/${type ? 'type/' : ''}${+fromDate - 1}/${endDate + 1}`,
-        'p/:id/fs/:fsId/fg/:fgId/activity/*',
+        getHrefNoMatching(route, routeNames.project.value, true, params),
       );
     }
   }, [
@@ -326,11 +350,20 @@ const FeatureGroupActivity: FC = () => {
 
       handleRefreshData(data);
 
+      const route = type
+        ? routeNames.featureGroup.activityTypeAndFromAndTo
+        : routeNames.featureGroup.activityFromAndTo;
+
+      const params = {
+        type,
+        id,
+        fsId,
+        fgId,
+        from: data.newStartDate ? +data.newStartDate : +fromDate - 1,
+        to: data.newEndDate ? +data.newEndDate : +toDate + 1,
+      };
       navigate(
-        `/${type ? `${type}/` : ''}${
-          data.newStartDate ? +data.newStartDate : +fromDate - 1
-        }/${data.newEndDate ? +data.newEndDate : +toDate + 1}`,
-        'p/:id/fs/:fsId/fg/:fgId/activity/*',
+        getHrefNoMatching(route, routeNames.project.value, true, params),
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -354,14 +387,32 @@ const FeatureGroupActivity: FC = () => {
         !!from && creationDate ? new Date(creationDate) : twentyEventDate,
     });
 
-    navigate(
-      `/${type ? `${type}/` : ''}${+(!!from && creationDate
+    const route = type
+      ? routeNames.featureGroup.activityTypeAndFromAndTo
+      : routeNames.featureGroup.activityFromAndTo;
+
+    const params = {
+      type,
+      id,
+      fsId,
+      fgId,
+      from: +(!!from && creationDate
         ? new Date(creationDate)
-        : twentyEventDate)}/${+new Date()}`,
-      'p/:id/fs/:fsId/fg/:fgId/activity/*',
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [twentyEventDate, creationDate, navigate]);
+        : twentyEventDate),
+      to: +new Date(),
+    };
+    navigate(getHrefNoMatching(route, routeNames.project.value, true, params));
+  }, [
+    fgId,
+    id,
+    from,
+    handleRefreshData,
+    type,
+    fsId,
+    twentyEventDate,
+    creationDate,
+    navigate,
+  ]);
 
   const handleEventChange = useCallback(
     (event: ActivityTypeSortOptions) => {
@@ -381,13 +432,25 @@ const FeatureGroupActivity: FC = () => {
       );
 
       if (newType && newType[0]) {
+        const params = {
+          type: newType[0],
+          id,
+          fsId,
+          fgId,
+          from: from || +twentyEventDate,
+          to: to || +new Date(),
+        };
         navigate(
-          `/${newType[0]}/${from || +twentyEventDate}/${to || +new Date()}`,
-          'p/:id/fs/:fsId/fg/:fgId/activity/*',
+          getHrefNoMatching(
+            routeNames.featureGroup.activityTypeAndFromAndTo,
+            routeNames.project.value,
+            true,
+            params,
+          ),
         );
       }
     },
-    [handleRefreshData, navigate, from, to, twentyEventDate],
+    [fsId, fgId, id, handleRefreshData, navigate, from, to, twentyEventDate],
   );
 
   useInfinityLoad(loader, content, isLoadingMore, handleLoadMore);

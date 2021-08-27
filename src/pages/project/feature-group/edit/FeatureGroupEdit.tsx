@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // Types
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
@@ -10,20 +10,20 @@ import { FeatureGroupFormData } from '../types';
 // Components
 import Loader from '../../../../components/loader/Loader';
 import FeatureGroupForm from '../forms/FeatureGroupForm';
-// Hooks
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Utils
 import { mapFeatures, getEnabledStatistics } from '../utils';
 import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const FeatureGroupEdit: FC = () => {
   const { id: projectId, fsId, fgId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const [isPopupOpen, handleToggle] = usePopup();
 
@@ -93,7 +93,14 @@ const FeatureGroupEdit: FC = () => {
         featureStoreId: +fsId,
       });
 
-      navigate(`/${fgId}`, 'p/:id/fs/:fsId/fg/*');
+      navigate(
+        getHrefNoMatching(
+          routeNames.featureGroup.overview,
+          routeNames.project.value,
+          true,
+          { id: projectId, fsId, fgId },
+        ),
+      );
     },
     [dispatch, fsId, navigate, projectId, fgId, featureGroup],
   );
@@ -111,7 +118,14 @@ const FeatureGroupEdit: FC = () => {
       featureStoreId: +fsId,
     });
 
-    navigate('/fg', 'p/:id/fs/:fsId/*');
+    navigate(
+      getHrefNoMatching(
+        routeNames.featureGroup.list,
+        routeNames.project.value,
+        true,
+        { id: projectId, fsId },
+      ),
+    );
   }, [dispatch, fsId, projectId, navigate, fgId, handleToggle]);
 
   const isFeatureStoreLoading = useSelector(

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Value, Badge, Labeling } from '@logicalclocks/quartz';
-import { FeatureGroup } from '../../../types/feature-group';
+import { FeatureGroup } from '../../../../../types/feature-group';
 
 const useExpectationFeatureListData = (
   features: string[],

@@ -1,10 +1,12 @@
 import formatDistance from 'date-fns/formatDistance';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { Badge, Value, FreshnessBar, IconButton, IconName } from '@logicalclocks/quartz';
 
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Job } from '../../../../types/job';
+import routeNames from '../../../../routes/routeNames';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const statusMap = new Map<string, 'bold' | 'fail' | 'success'>([
   ['Succeeded', 'success'],
@@ -13,17 +15,8 @@ const statusMap = new Map<string, 'bold' | 'fail' | 'success'>([
 ]);
 
 const usePipelineHistoryRowData = (jobs?: Job[]) => {
-  const navigate = useNavigateRelative();
-
-  const handleNavigate = useCallback(
-    (id: number, route: string) => (): void => {
-      navigate(
-        route.replace(':featureId', String(id)),
-        'p/:id/fs/:fsId/fg/:fgId',
-      );
-    },
-    [navigate],
-  );
+  const navigate = useNavigate();
+  const { id, fsId, fgId } = useParams();
 
   const groupComponents = useMemo(() => {
     return jobs?.map(() => [
@@ -60,10 +53,21 @@ const usePipelineHistoryRowData = (jobs?: Job[]) => {
         intent: 'ghost',
         icon: IconName.more_zoom,
         tooltip: 'Activity',
-        onClick: handleNavigate(1, '/activity'),
+        onClick: () => {
+          // TODO Refactored, but doesn't make much sense,
+          // as there is no featureId param (PipelineHistory isn't used yet tho)
+          navigate(
+            getHrefNoMatching(
+              routeNames.featureGroup.activity,
+              routeNames.project.value,
+              true,
+              { featureId: 1, fsId, fgId, id },
+            ),
+          );
+        },
       },
     ]);
-  }, [jobs, handleNavigate]);
+  }, [navigate, fgId, fsId, id, jobs]);
 
   return useMemo(() => {
     return [groupComponents, groupProps];

@@ -4,11 +4,8 @@ import { Flex } from 'rebass';
 import { Value } from '@logicalclocks/quartz';
 
 import { Expectation } from '../../../../../../types/expectation';
-import {
-  rulesMapToShort,
-  RuleTypesStrong,
-} from '../../../../../expectation/types';
-import { getShortRuleValue } from '../../../../../expectation/utilts';
+import { rulesMapToShort, RuleTypesStrong } from '../../../expectation/types';
+import { getShortRuleValue } from '../../../expectation/utilts';
 
 const useRulesListRowData = (data: Expectation) => {
   const groupComponents = useMemo(() => {

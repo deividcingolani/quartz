@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 import { Input, Select } from '@logicalclocks/quartz';
 
 import { FormRule, RuleTypes } from '../types';
-import getInputValidation from '../../../utils/getInputValidation';
+import getInputValidation from '../../../../../utils/getInputValidation';
 
 export interface RuleFormByTypeProps {
   index: number;

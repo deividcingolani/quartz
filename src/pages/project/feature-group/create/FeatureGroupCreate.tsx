@@ -1,19 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // Types
 import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroupFormData } from '../types';
 // Components
 import FeatureGroupForm from '../forms/FeatureGroupForm';
-// Hooks
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Utils
 import { mapFeatures, getEnabledStatistics } from '../utils';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const FeatureGroupCreate: FC = () => {
   useTitle(titles.createFeatureGroup);
@@ -22,7 +22,7 @@ const FeatureGroupCreate: FC = () => {
 
   const dispatch = useDispatch<Dispatch>();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const featureStoreData = useSelector((state: RootState) =>
     state.featureStores?.length ? state.featureStores[0] : null,
@@ -71,7 +71,14 @@ const FeatureGroupCreate: FC = () => {
           featureStoreId: +fsId,
         });
 
-        navigate(`/fg/${id}`, 'p/:id/fs/:fsId/*');
+        navigate(
+          getHrefNoMatching(
+            routeNames.featureGroup.overview,
+            routeNames.project.value,
+            true,
+            { fgId: id, fsId, id: projectId },
+          ),
+        );
       }
     },
     [dispatch, fsId, navigate, projectId],

@@ -1,23 +1,23 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // Types
 import { Dispatch, RootState } from '../../../store';
 import { ProjectFormData } from '../forms/types';
-// Hooks
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Components
 import ProjectForm from '../forms/ProjectForm';
 import Loader from '../../../components/loader/Loader';
 import useTitle from '../../../hooks/useTitle';
 import titles from '../../../sources/titles';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
+import routeNames from '../../../routes/routeNames';
 
 const ProjectEdit: FC = () => {
   const { id: projectId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch.project.getProject(+projectId);
@@ -51,7 +51,11 @@ const ProjectEdit: FC = () => {
         id: +projectId,
       });
 
-      navigate(`/p/${projectId}/view`);
+      navigate(
+        getHrefNoMatching(routeNames.project.viewHome, '', true, {
+          id: projectId,
+        }),
+      );
     },
     [dispatch, navigate, projectId],
   );

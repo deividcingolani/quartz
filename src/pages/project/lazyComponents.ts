@@ -83,10 +83,10 @@ export const ProjectSpark = React.lazy(
 );
 
 export const ExpectationAttach = React.lazy(
-  () => import('../expectation/CreateExpectation'),
+  () => import('./feature-group/expectation/CreateExpectation'),
 );
 export const ExpectationEdit = React.lazy(
-  () => import('../expectation/EditExpectation'),
+  () => import('./feature-group/expectation/EditExpectation'),
 );
 
 export const JupyterOverview = React.lazy(

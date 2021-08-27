@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { format } from 'date-fns';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Select } from '@logicalclocks/quartz';
 import NoData from '../../../../components/no-data/NoData';
@@ -10,7 +10,6 @@ import NoData from '../../../../components/no-data/NoData';
 import { Dispatch, RootState } from '../../../../store';
 // Hooks
 import useFeatureGroupView from '../hooks/useFeatureGroupView';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Components
 import StatisticsContent from './StatisticsContent';
 import Panel from '../../../../components/panel/Panel';
@@ -19,6 +18,8 @@ import Loader from '../../../../components/loader/Loader';
 import { ItemDrawerTypes } from '../../../../components/drawer/ItemDrawer';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import routeNames from '../../../../routes/routeNames';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const dateFormat = 'yyyy-MM-dd HH:mm:ss';
 
@@ -65,7 +66,7 @@ const FeatureGroupStatistics: FC = () => {
   const { data, isLoading } = useFeatureGroupView(+id, +fgId, +fsId);
 
   const dispatch = useDispatch<Dispatch>();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const handleRefreshData = useCallback(() => {
     dispatch.featureGroupStatisticsCommits.fetch({
@@ -107,17 +108,19 @@ const FeatureGroupStatistics: FC = () => {
       });
 
       if (time && currentTime !== time) {
-        if (featureName) {
-          navigate(
-            `/${id}/statistics/commit/${time}/f/${featureName}`,
-            'p/:id/fs/:fsId/fg/*',
-          );
-        } else {
-          navigate(`/${id}/statistics/commit/${time}`, 'p/:id/fs/:fsId/fg/*');
-        }
+        const route = featureName
+          ? routeNames.featureGroup.statisticsViewCommit
+          : routeNames.featureGroup.statisticsViewCommitAndOne;
+        const params = featureName
+          ? { id, fsId, fgId, commitTime: time, featureName }
+          : { id, fsId, fgId, commitTime: time };
+
+        navigate(
+          getHrefNoMatching(route, routeNames.project.value, true, params),
+        );
       }
     },
-    [featureName, commits, navigate, fgId, commit],
+    [fsId, featureName, commits, navigate, fgId, commit],
   );
 
   const handleCommitChange = useCallback(
@@ -190,7 +193,16 @@ const FeatureGroupStatistics: FC = () => {
         title={data?.name}
         id={data?.id}
         idColor="labels.orange"
-        onClickEdit={() => navigate(`/edit`, 'p/:id/fs/:fsId/fg/:fgId/*')}
+        onClickEdit={() =>
+          navigate(
+            getHrefNoMatching(
+              routeNames.featureGroup.edit,
+              routeNames.project.value,
+              true,
+              { id, fsId, fgId },
+            ),
+          )
+        }
         onClickRefresh={handleRefreshData}
         hasCommitDropdown={true}
         hasVersionDropdown={true}

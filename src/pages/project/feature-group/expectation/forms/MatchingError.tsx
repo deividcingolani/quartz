@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import { Callout, CalloutTypes, Value } from '@logicalclocks/quartz';
 
-import { FeatureGroup } from '../../../types/feature-group';
+import { FeatureGroup } from '../../../../../types/feature-group';
 
 export interface MatchingErrorProps {
   features: string[];

@@ -4,22 +4,33 @@ import React, { useCallback, useMemo } from 'react';
 import { Value, Badge, Labeling, Tooltip, Symbol } from '@logicalclocks/quartz';
 
 import { Box, Flex } from 'rebass';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FeatureGroup } from '../../../../types/feature-group';
 import useBasket from '../../../../hooks/useBasket';
 import icons from '../../../../sources/icons';
 import { Feature } from '../../../../types/feature';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const { isActiveFeature, isSwitch, handleBasket } = useBasket();
 
+  const { id, fsId, fgId } = useParams();
+
   const handleNavigate = useCallback(
-    (route: string) => (): void => {
-      navigate(route, 'p/:id/fs/:fsId/fg/:fgId');
+    (route: string, additionalParams: any) => (): void => {
+      navigate(
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          id,
+          fsId,
+          fgId,
+          ...additionalParams,
+        }),
+      );
     },
-    [navigate],
+    [id, fsId, fgId, navigate],
   );
 
   const groupComponents = useMemo(() => {
@@ -137,7 +148,10 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
                       height: '20px',
                     },
                   }}
-                  onClick={handleNavigate(`/statistics/f/${name}`)}
+                  onClick={handleNavigate(
+                    routeNames.featureGroup.statisticsViewOne,
+                    { featureName: name },
+                  )}
                 >
                   {icons.stats}
                 </Box>
@@ -160,7 +174,9 @@ const useFeatureListRowData = (features: Feature[], fg: FeatureGroup) => {
                       height: '20px',
                     },
                   }}
-                  onClick={handleNavigate(`/data-preview/${name}`)}
+                  onClick={handleNavigate(routeNames.featureGroup.previewOne, {
+                    featureName: name,
+                  })}
                 >
                   {icons.table}
                 </Box>

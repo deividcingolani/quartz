@@ -14,7 +14,7 @@ import {
 } from '@logicalclocks/quartz';
 
 // Services
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
@@ -23,9 +23,8 @@ import DateValue from '../list/DateValue';
 import KeywordsEditor from '../../../../components/keywords-editor/KeywordsEditor';
 import { Dispatch, RootState } from '../../../../store';
 import routeNames from '../../../../routes/routeNames';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import { NodeTypes } from '../../../../components/provenance/types';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 export interface SummaryDataProps {
   data: FeatureGroup;
@@ -36,8 +35,7 @@ const SummaryData: FC<SummaryDataProps> = ({ data, canEdit }) => {
   const { id: projectId, fgId: id, fsId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
-  const navigate = useNavigateRelative();
-  const getHref = useGetHrefForRoute();
+  const navigate = useNavigate();
 
   const featureCount = data.features.length;
 
@@ -58,22 +56,24 @@ const SummaryData: FC<SummaryDataProps> = ({ data, canEdit }) => {
     [dispatch, fsId, id, projectId],
   );
 
-  const handleNavigate = useCallback(
-    (connectorName: string, route: string) => (): void => {
-      navigate(
-        route.replace(':fsId', fsId).replace(':connectorName', connectorName),
-        routeNames.project.view,
-      );
+  const handleHref = useCallback(
+    (connectorName: string, route: string): string => {
+      return getHrefNoMatching(route, routeNames.project.value, true, {
+        id: projectId,
+        fgId: id,
+        fsId,
+        connectorName,
+      });
     },
-    [fsId, navigate],
+    [id, projectId, fsId],
   );
 
-  const handleHref = (connectorName: string, route: string): string => {
-    return getHref(
-      route.replace(':fsId', fsId).replace(':connectorName', connectorName),
-      routeNames.project.view,
-    );
-  };
+  const handleNavigate = useCallback(
+    (connectorName: string, route: string) => (): void => {
+      navigate(handleHref(connectorName, route));
+    },
+    [handleHref, navigate],
+  );
 
   const tdsCount = useMemo(() => {
     if (isLoading) return 0;

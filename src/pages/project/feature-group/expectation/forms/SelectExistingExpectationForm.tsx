@@ -15,19 +15,19 @@ import {
 
 // Types
 import { useNavigate, useParams } from 'react-router-dom';
-import { RootState } from '../../../store';
+import { RootState } from '../../../../../store';
 import { ExpectationTypeMatch } from '../types';
-import { Expectation } from '../../../types/expectation';
-import { FeatureGroupViewState } from '../../../store/models/feature/featureGroupView.model';
-import { selectExpectations } from '../../../store/models/expectations/expectations.selectors';
+import { Expectation } from '../../../../../types/expectation';
+import { FeatureGroupViewState } from '../../../../../store/models/feature/featureGroupView.model';
+import { selectExpectations } from '../../../../../store/models/expectations/expectations.selectors';
 // Utils
 import {
   filterExpectations,
   getMatchingFeatures,
   getNotMatchingFeatures,
 } from '../utilts';
-import getHrefNoMatching from '../../../utils/getHrefNoMatching';
-import routeNames from '../../../routes/routeNames';
+import getHrefNoMatching from '../../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../../routes/routeNames';
 
 const SelectExistingExpectationForm = () => {
   const [matchType, setMatchType] = useState<ExpectationTypeMatch>(

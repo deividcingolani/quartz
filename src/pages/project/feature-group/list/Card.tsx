@@ -19,14 +19,11 @@ import {
 import formatDistance from 'date-fns/formatDistance';
 import { Flex, Box } from 'rebass';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import routeNames from '../../../../routes/routeNames';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 
 // Types
 import { FeatureGroup } from '../../../../types/feature-group';
-// Utils
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Components
 import CardLabels from './CardLabels';
 import DateValue from './DateValue';
@@ -35,6 +32,7 @@ import styles from '../../styles/hoverable-card';
 import { RootState } from '../../../../store';
 import useBasket from '../../../../hooks/useBasket';
 import icons from '../../../../sources/icons';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const Card: FC<HoverableCardProps<FeatureGroup>> = ({
   data,
@@ -45,19 +43,33 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
 }) => {
   const { id: projectId } = useParams();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const { isActiveFeatures, handleBasket, isSwitch } = useBasket();
 
-  const getHref = useGetHrefForRoute();
+  const getHref = (
+    fgId: number,
+    fsId: number,
+    projectId: number,
+    route: string,
+  ) =>
+    getHrefNoMatching(route, routeNames.project.value, true, {
+      id: projectId,
+      fgId,
+      fsId,
+    });
 
   const handleNavigate = useCallback(
-    (id: number, fsId: number, route: string) => (): void => {
-      navigate(
-        route.replace(':fsId', String(fsId)).replace(':fgId', String(id)),
-        `/${routeNames.project.view}`,
-      );
-    },
+    (fgId: number, fsId: number, projectId: number, route: string) =>
+      (): void => {
+        navigate(
+          getHrefNoMatching(route, routeNames.project.value, true, {
+            id: projectId,
+            fgId,
+            fsId,
+          }),
+        );
+      },
     [navigate],
   );
 
@@ -81,26 +93,30 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
-                  if (hasMatchText) {
-                    navigate(
-                      `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}`,
-                    );
-                  } else {
-                    handleNavigate(
-                      data.id,
-                      data.featurestoreId,
-                      '/fs/:fsId/fg/:fgId',
-                    )();
-                  }
+
+                  const projectIdToUse = hasMatchText
+                    ? data.parentProjectId
+                    : +projectId;
+
+                  handleNavigate(
+                    data.id,
+                    data.featurestoreId,
+                    projectIdToUse,
+                    routeNames.featureGroup.overview,
+                  )();
                 }}
-                href={
-                  hasMatchText
-                    ? `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}`
-                    : getHref(
-                        `/fs/${data.featurestoreId}/fg/${data.id}`,
-                        `/${routeNames.project.view}`,
-                      )
-                }
+                href={(() => {
+                  const projectIdToUse = hasMatchText
+                    ? data.parentProjectId
+                    : +projectId;
+
+                  return getHref(
+                    data.id,
+                    data.featurestoreId,
+                    projectIdToUse,
+                    routeNames.featureGroup.overview,
+                  );
+                })()}
                 sx={{
                   textDecoration: 'none',
                   marginLeft: '20px',
@@ -168,11 +184,17 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               p="0"
               mt="15px"
               width="fit-content"
-              onClick={handleNavigate(
-                data.id,
-                data.featurestoreId,
-                routeNames.featureGroup.edit,
-              )}
+              onClick={() => {
+                const projectIdToUse = hasMatchText
+                  ? data.parentProjectId
+                  : +projectId;
+                handleNavigate(
+                  data.id,
+                  data.featurestoreId,
+                  projectIdToUse,
+                  routeNames.featureGroup.edit,
+                )();
+              }}
             >
               + add a description
             </Button>
@@ -237,17 +259,15 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               <Tooltip ml="40px" mainText="Overview">
                 <Flex
                   onClick={() => {
-                    if (hasMatchText) {
-                      navigate(
-                        `/p/${data.parentProjectId}/fs${data.featurestoreId}/fg/${data.id}`,
-                      );
-                    } else {
-                      handleNavigate(
-                        data.id,
-                        data.featurestoreId,
-                        '/fs/:fsId/fg/:fgId',
-                      )();
-                    }
+                    const projectIdToUse = hasMatchText
+                      ? data.parentProjectId
+                      : +projectId;
+                    handleNavigate(
+                      data.id,
+                      data.featurestoreId,
+                      projectIdToUse,
+                      routeNames.featureGroup.overview,
+                    )();
                   }}
                   justifyContent="center"
                   alignItems="center"
@@ -279,15 +299,16 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               >
                 <Flex
                   onClick={(e) => {
-                    if (hasMatchText) {
-                      navigate(
-                        `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}/statistics`,
-                      );
-                    } else if (data.statisticsConfig.enabled) {
+                    if (data.statisticsConfig.enabled) {
+                      const projectIdToUse = hasMatchText
+                        ? data.parentProjectId
+                        : +projectId;
+
                       handleNavigate(
                         data.id,
                         data.featurestoreId,
-                        '/fs/:fsId/fg/:fgId/statistics',
+                        projectIdToUse,
+                        routeNames.featureGroup.statistics,
                       )();
                     } else {
                       e.stopPropagation();
@@ -322,17 +343,16 @@ const Card: FC<HoverableCardProps<FeatureGroup>> = ({
               <Tooltip ml="6px" mainText="Activity">
                 <Flex
                   onClick={() => {
-                    if (hasMatchText) {
-                      navigate(
-                        `/p/${data.parentProjectId}/fs/${data.featurestoreId}/fg/${data.id}/activity`,
-                      );
-                    } else {
-                      handleNavigate(
-                        data.id,
-                        data.featurestoreId,
-                        '/fs/:fsId/fg/:fgId/activity',
-                      )();
-                    }
+                    const projectIdToUse = hasMatchText
+                      ? data.parentProjectId
+                      : +projectId;
+
+                    handleNavigate(
+                      data.id,
+                      data.featurestoreId,
+                      projectIdToUse,
+                      routeNames.featureGroup.activity,
+                    )();
                   }}
                   justifyContent="center"
                   alignItems="center"

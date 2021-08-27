@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button, DatePicker, Select } from '@logicalclocks/quartz';
 
@@ -22,7 +22,6 @@ import {
 } from '../../../../types/feature-group';
 // Hooks
 import useDrawer from '../../../../hooks/useDrawer';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Selectors
 import {
   selectFeatureGroupActivityLoadingFollowing,
@@ -33,6 +32,7 @@ import {
 import { getDatePickerTime } from '../utils';
 
 import routeNames from '../../../../routes/routeNames';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
   view,
@@ -55,20 +55,24 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
   handleLoadPreviousData,
   handleLoadFollowingData,
 }) => {
-  const { fgId, fsId } = useParams();
+  const { id, fgId, fsId } = useParams();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const { handleSelectItem, handleClose, isOpen } = useDrawer();
 
   const handleNavigate = useCallback(
-    (route: string) => (): void => {
+    (route: string, additionalParams) => (): void => {
       navigate(
-        route.replace(':fsId', fsId).replace(':fgId', fgId),
-        routeNames.project.view,
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          fsId,
+          fgId,
+          id,
+          ...additionalParams,
+        }),
       );
     },
-    [fgId, fsId, navigate],
+    [id, fgId, fsId, navigate],
   );
 
   const [selected, setSelected] = useState<ActivityItemData>();
@@ -79,9 +83,9 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
         [
           ActivityType.statistics,
           (commitTime: number) =>
-            handleNavigate(
-              `/fs/:fsId/fg/:fgId/statistics/commit/${commitTime}`,
-            )(),
+            handleNavigate(routeNames.featureGroup.statisticsViewCommit, {
+              commitTime,
+            })(),
         ],
         [
           ActivityType.validations,
@@ -121,7 +125,7 @@ const FeatureGroupActivityContent: FC<FeatureGroupActivityContentProps> = ({
           title={view?.name}
           idColor="labels.orange"
           onClickRefresh={handleRefreshData}
-          onClickEdit={handleNavigate(routeNames.featureGroup.edit)}
+          onClickEdit={handleNavigate(routeNames.featureGroup.edit, {})}
         />
 
         <Flex justifyContent="space-between" mt="65px">

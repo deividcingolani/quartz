@@ -3,12 +3,14 @@ import React, { ComponentType } from 'react';
 import { Box, Flex } from 'rebass';
 import { Button, Drawer, Labeling, Row, Value } from '@logicalclocks/quartz';
 
+import { useNavigate, useParams } from 'react-router-dom';
 import Rules from './Rules';
 import Loader from '../../../../../../components/loader/Loader';
 
 import { FeatureGroup } from '../../../../../../types/feature-group';
-import useNavigateRelative from '../../../../../../hooks/useNavigateRelative';
 import Activity from './Activity';
+import routeNames from '../../../../../../routes/routeNames';
+import getHrefNoMatching from '../../../../../../utils/getHrefNoMatching';
 
 export interface ExpectationDrawerProps {
   name: string;
@@ -23,7 +25,8 @@ const ExpectationDrawer = ({
   isOpen,
   handleToggle,
 }: ExpectationDrawerProps) => {
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
+  const { fsId, fgId, id } = useParams();
 
   const item = data.expectations.find((exp) => exp.name === name);
 
@@ -51,7 +54,14 @@ const ExpectationDrawer = ({
           <Value mr="10px">{name}</Value>
           <Button
             onClick={() =>
-              navigate(`/expectation/${item.name}`, 'p/:id/fs/:fsId/*')
+              navigate(
+                getHrefNoMatching(
+                  routeNames.expectation.edit,
+                  routeNames.project.value,
+                  true,
+                  { fsId, fgId, id, expName: item.name },
+                ),
+              )
             }
             intent="ghost"
           >
@@ -66,7 +76,14 @@ const ExpectationDrawer = ({
           <Button
             intent="ghost"
             onClick={() =>
-              navigate('/activity/VALIDATIONS', '/p/:id/fs/:fdId/fg/:fgId/*')
+              navigate(
+                getHrefNoMatching(
+                  routeNames.featureGroup.activityValidations,
+                  routeNames.project.value,
+                  true,
+                  { fsId, fgId, id },
+                ),
+              )
             }
           >
             View full expectation activity

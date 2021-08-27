@@ -4,8 +4,7 @@ import { Box } from 'rebass';
 import { Button, Select } from '@logicalclocks/quartz';
 // Hooks
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { useNavigate, useParams } from 'react-router-dom';
 import useUserPermissions from './useUserPermissions';
 // Components
 import Anchor from '../../../../components/anchor/Anchor';
@@ -25,6 +24,7 @@ import Expectations from './expectations/Expectations';
 import CardBoundary from '../../../../components/error-boundary/CardBoundary';
 // Selectors
 import { selectFeatureStoreData } from '../../../../store/models/feature/selectors';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 export interface ContentProps {
   data: FeatureGroup;
@@ -56,7 +56,7 @@ const OverviewContent: FC<ContentProps> = ({
   onClickRefresh,
   onClickEdit,
 }) => {
-  const { fsId } = useParams();
+  const { fsId, id } = useParams();
 
   const { data: featurestore } = useSelector((state: RootState) =>
     selectFeatureStoreData(state, +fsId),
@@ -89,7 +89,7 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
     ];
   }, [data, featurestore]);
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const latestVersion = useMemo(
     () => Math.max(...(data?.versions?.map(({ version }) => version) || [])),
@@ -114,10 +114,17 @@ val fg = fs.getFeatureGroup("${data.name}", ${data.version})`,
       const newId = data?.versions?.find(({ version }) => version === ver)?.id;
 
       if (newId) {
-        navigate(`/fs/${fsId}/fg/${newId}`, routeNames.project.view);
+        navigate(
+          getHrefNoMatching(
+            routeNames.featureGroup.overview,
+            routeNames.project.value,
+            true,
+            { fgId: newId, fsId, id },
+          ),
+        );
       }
     },
-    [data, navigate, fsId],
+    [id, data, navigate, fsId],
   );
 
   return (

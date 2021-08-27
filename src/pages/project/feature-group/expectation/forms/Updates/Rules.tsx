@@ -5,7 +5,7 @@ import Result from './Result';
 import Unchanged from './Unchanged';
 
 import { FormRule, rulesMap } from '../../types';
-import { ServerRule } from '../../../../types/expectation';
+import { ServerRule } from '../../../../../../types/expectation';
 import { getEditedRulesCount, mapRulesToForm } from '../../utilts';
 
 export interface RulesProps {

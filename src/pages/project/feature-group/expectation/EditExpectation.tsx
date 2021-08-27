@@ -5,25 +5,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 
 // Components
-import Loader from '../../components/loader/Loader';
+import Loader from '../../../../components/loader/Loader';
 import ExpectationForm from './forms/ExpectationForm';
 // Types
 import { ExpectationData } from './types';
-import { Dispatch, RootState } from '../../store';
+import { Dispatch, RootState } from '../../../../store';
 // Hooks
-import useTitle from '../../hooks/useTitle';
+import useTitle from '../../../../hooks/useTitle';
 // Selectors
 import {
   selectExpectationView,
   selectExpectationEditLoading,
   selectExpectationViewLoading,
-} from '../../store/models/expectations/expectations.selectors';
+} from '../../../../store/models/expectations/expectations.selectors';
 // Utils
 import { mapRules } from './utilts';
 
-import titles from '../../sources/titles';
-import routeNames from '../../routes/routeNames';
-import getHrefNoMatching from '../../utils/getHrefNoMatching';
+import titles from '../../../../sources/titles';
+import routeNames from '../../../../routes/routeNames';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 const EditExpectation: FC = () => {
   const { from, id: projectId, expName, fsId } = useParams();

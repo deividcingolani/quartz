@@ -3,17 +3,19 @@ import React, { useCallback, useMemo } from 'react';
 import { Box, Flex } from 'rebass';
 import { Value, Tooltip } from '@logicalclocks/quartz';
 
+import { useNavigate, useParams } from 'react-router-dom';
 import LastValidation from './LastValidation';
 import icons from '../../../../../sources/icons';
 import {
   ActivityItemData,
   FeatureGroup,
 } from '../../../../../types/feature-group';
-import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
-import { rulesMap } from '../../../../expectation/types';
+import { rulesMap } from '../../expectation/types';
 import { cropText } from '../../../storage-connectors/utils';
 import { getStatusCount } from '../../../../../components/activity/utils';
 import useUserPermissions from '../useUserPermissions';
+import getHrefNoMatching from '../../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../../routes/routeNames';
 
 const useExpectationsListRowData = (
   data: FeatureGroup,
@@ -30,13 +32,21 @@ const useExpectationsListRowData = (
     ]);
   }, [data]);
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
+  const { id, fsId, fgId } = useParams();
 
   const handleNavigate = useCallback(
-    (route: string) => (): void => {
-      navigate(route, 'p/:id/fs/:fsId/*');
+    (route: string, additionalParams: any) => (): void => {
+      navigate(
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          id,
+          fsId,
+          fgId,
+          ...additionalParams,
+        }),
+      );
     },
-    [navigate],
+    [id, fsId, fgId, navigate],
   );
 
   const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
@@ -136,7 +146,9 @@ const useExpectationsListRowData = (
                     }),
                   },
                 }}
-                onClick={handleNavigate(`/expectation/${name}`)}
+                onClick={handleNavigate(routeNames.expectation.edit, {
+                  expName: name,
+                })}
               >
                 {icons.edit}
               </Box>

@@ -4,26 +4,26 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Components
-import Loader from '../../components/loader/Loader';
+import Loader from '../../../../components/loader/Loader';
 import ExpectationForm from './forms/ExpectationForm';
 // Types
 import { ExpectationData, ExpectationType } from './types';
-import { Dispatch, RootState } from '../../store';
-import { FeatureGroupViewState } from '../../store/models/feature/featureGroupView.model';
+import { Dispatch, RootState } from '../../../../store';
+import { FeatureGroupViewState } from '../../../../store/models/feature/featureGroupView.model';
 // Hooks
-import useTitle from '../../hooks/useTitle';
+import useTitle from '../../../../hooks/useTitle';
 // Selectors
 import {
   selectExpectationAttachLoading,
   selectExpectationCreateLoading,
   selectExpectationsLoading,
-} from '../../store/models/expectations/expectations.selectors';
+} from '../../../../store/models/expectations/expectations.selectors';
 // Utils
 import { mapRules } from './utilts';
 
-import titles from '../../sources/titles';
-import getHrefNoMatching from '../../utils/getHrefNoMatching';
-import routeNames from '../../routes/routeNames';
+import titles from '../../../../sources/titles';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const CreateExpectation: FC = () => {
   const { id: projectId, fgId, fsId } = useParams();

@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { Box, Flex } from 'rebass';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -27,8 +27,6 @@ import { FeatureGroup } from '../../../../../types/feature-group';
 // Hooks
 import useDrawer from '../../../../../hooks/useDrawer';
 import useExpectationsListRowData from './useExpectationsListRowData';
-import useGetHrefForRoute from '../../../../../hooks/useGetHrefForRoute';
-import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
 
 // styles
 import icons from '../../../../../sources/icons';
@@ -45,7 +43,7 @@ export interface ExpectationsProps {
 }
 
 const Expectations: FC<ExpectationsProps> = ({ data, isOwnFs }) => {
-  const { id: projectId, fsId } = useParams();
+  const { id: projectId, fsId, fgId } = useParams();
 
   const { handleSelectItem, handleClose, isOpen, selectedId } =
     useDrawer<string>();
@@ -83,9 +81,7 @@ const Expectations: FC<ExpectationsProps> = ({ data, isOwnFs }) => {
     onDeleteItem,
   );
 
-  const navigate = useNavigateRelative();
-
-  const getHref = useGetHrefForRoute();
+  const navigate = useNavigate();
 
   const handleNavigate = useCallback(
     (id: number, route: string) => (): void => {
@@ -110,15 +106,21 @@ const Expectations: FC<ExpectationsProps> = ({ data, isOwnFs }) => {
       <Button
         p={0}
         intent="inline"
-        href={getHref(`/activity/VALIDATIONS`, '/p/:id/fs/:fdId/fg/:fgId/*')}
-        onClick={() =>
-          navigate(`/activity/VALIDATIONS`, '/p/:id/fs/:fdId/fg/:fgId/*')
-        }
+        href={getHrefNoMatching(
+          routeNames.featureGroup.activityValidations,
+          routeNames.project.value,
+          true,
+          { id: projectId, fsId, fgId },
+        )}
+        onClick={handleNavigate(
+          +fgId,
+          routeNames.featureGroup.activityValidations,
+        )}
       >
         see data validation activity
       </Button>
     ),
-    [navigate, getHref],
+    [handleNavigate, fgId, fsId, projectId],
   );
 
   const title = useMemo(

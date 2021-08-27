@@ -1,5 +1,5 @@
-import { FeatureGroup } from '../../types/feature-group';
-import labelValueMap from '../../utils/labelValueBind';
+import { FeatureGroup } from '../../../../types/feature-group';
+import labelValueMap from '../../../../utils/labelValueBind';
 
 export enum ExpectationType {
   existing = 'Pick an existing expectation',

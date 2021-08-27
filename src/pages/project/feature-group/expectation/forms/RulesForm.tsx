@@ -19,17 +19,17 @@ import {
 
 // Components
 import SingleRuleForm from './SingleRuleForm';
-import Loader from '../../../components/loader/Loader';
+import Loader from '../../../../../components/loader/Loader';
 // Selectors
 import {
   selectRules,
   selectRulesLoading,
-} from '../../../store/models/rules/rules.selectors';
+} from '../../../../../store/models/rules/rules.selectors';
 // Types
 import { FormRule, rulesMap, RuleTypes } from '../types';
 // Utils
 import { getNewRuleProps } from '../utilts';
-import randomString from '../../../utils/randomString';
+import randomString from '../../../../../utils/randomString';
 
 export interface RulesFormProps {
   isEdit?: boolean;

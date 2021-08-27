@@ -4,18 +4,20 @@ import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Callout, CalloutTypes, Value } from '@logicalclocks/quartz';
 // Types
+import { useNavigate } from 'react-router-dom';
 import { Roles } from '../forms/AddMembers';
 import { ProjectFormData } from '../forms/types';
 import { Dispatch, RootState } from '../../../store';
 // Hooks
 import useTitle from '../../../hooks/useTitle';
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Components
 import ProjectForm from '../forms/ProjectForm';
 
 import { selectIsAddingMember } from '../../../store/models/projects/selectors';
 
 import titles from '../../../sources/titles';
+import routeNames from '../../../routes/routeNames';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
 
 const ProjectCreate: FC = () => {
   useTitle(titles.createProject);
@@ -31,7 +33,7 @@ const ProjectCreate: FC = () => {
   const isAddingMembers = useSelector(selectIsAddingMember);
 
   const dispatch = useDispatch<Dispatch>();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const projects = useSelector((state: RootState) => state.projectsList);
 
@@ -95,9 +97,11 @@ const ProjectCreate: FC = () => {
           }
         }
 
-        navigate(`/p/${id}/view`);
+        navigate(
+          getHrefNoMatching(routeNames.project.viewHome, '', true, { id }),
+        );
       } else {
-        navigate(`/`);
+        navigate(routeNames.home);
       }
     },
     [dispatch, navigate, getProjectId],
@@ -107,7 +111,11 @@ const ProjectCreate: FC = () => {
     const project = await dispatch.project.createTour('fs');
 
     if (project) {
-      navigate(`/p/${project.id}/view`);
+      navigate(
+        getHrefNoMatching(routeNames.project.viewHome, '', true, {
+          id: project.id,
+        }),
+      );
     }
   }, [dispatch, navigate]);
 

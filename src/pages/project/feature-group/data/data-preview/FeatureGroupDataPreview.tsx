@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ReadOnlyTable,
@@ -23,7 +23,6 @@ import { StorageConnectorType } from '../../../../../types/feature-group-data-pr
 import { FeatureGroupViewState } from '../../../../../store/models/feature/featureGroupView.model';
 // Hooks
 import useFeatureFilter from '../../hooks/useFeatureFilters';
-import useNavigateRelative from '../../../../../hooks/useNavigateRelative';
 // Utils
 import sort from '../../../../../utils/sort';
 import createDataPreviewRows from './utils/createDataPreviewRows';
@@ -39,6 +38,7 @@ import useFeatureGroupView from '../../hooks/useFeatureGroupView';
 import FeatureDrawer from '../../../../../components/feature-drawer/FeatureDrawer';
 import useDrawer from '../../../../../hooks/useDrawer';
 import NoData from '../../../../../components/no-data/NoData';
+import getHrefNoMatching from '../../../../../utils/getHrefNoMatching';
 
 const FeatureGroupDataPreview: FC = () => {
   const { id, fgId, fsId } = useParams();
@@ -62,7 +62,7 @@ const FeatureGroupDataPreview: FC = () => {
   );
 
   const dispatch = useDispatch<Dispatch>();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
@@ -117,11 +117,14 @@ const FeatureGroupDataPreview: FC = () => {
   const handleNavigate = useCallback(
     (route: string) => (): void => {
       navigate(
-        route.replace(':fsId', fsId).replace(':fgId', fgId),
-        routeNames.project.view,
+        getHrefNoMatching(route, routeNames.project.value, true, {
+          fsId,
+          fgId,
+          id,
+        }),
       );
     },
-    [fgId, fsId, navigate],
+    [id, fgId, fsId, navigate],
   );
 
   const [selectColumn, setSelectColumn] = useState(null);
