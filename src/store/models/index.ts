@@ -50,6 +50,12 @@ import provenance from './provenance/provenance.model';
 import { trainingDatasetModel } from './training-dataset/training-dataset.model';
 import databricks from './databricks/databricks.model';
 import expectations from './expectations/expectations.model';
+import pythonEnvironment from './python/environment.model';
+// eslint-disable-next-line import/no-cycle
+import pythonLibrary from './python/library.model';
+// eslint-disable-next-line import/no-cycle
+import pythonConflict from './python/conflicts.model';
+// eslint-disable-next-line import/no-cycle
 import jupyter from './jupyter/jupyter.model';
 
 export interface RootModel extends Models<RootModel> {
@@ -102,6 +108,9 @@ export interface RootModel extends Models<RootModel> {
   crossProject: typeof crossProject;
   multistore: typeof multistore;
   provenance: typeof provenance;
+  pythonEnvironment: typeof pythonEnvironment;
+  pythonLibrary: typeof pythonLibrary;
+  pythonConflict: typeof pythonConflict;
   jupyter: typeof jupyter;
 }
 
@@ -155,6 +164,9 @@ const models: RootModel = {
   crossProject,
   multistore,
   provenance,
+  pythonEnvironment,
+  pythonLibrary,
+  pythonConflict,
   jupyter,
 };
 

@@ -71,6 +71,7 @@ const FileUploader = ({
 
   useEffect(() => {
     if (fileCounter > 0) {
+      console.log('effect, upload file');
       uploadFile(arrayToUpload[fileCounter - 1]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,6 +141,7 @@ const FileUploader = ({
   };
 
   const uploadChunk = async (chunk: any) => {
+    console.log('Uploading chunk');
     if (endOfTheChunk + flowChunkSize <= fileSize) {
       setFlowCurrentChunkSize(flowChunkSize);
       setEndOfTheChunk(endOfTheChunk + flowChunkSize);

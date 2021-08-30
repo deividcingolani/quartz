@@ -6,7 +6,6 @@ export default {
       ':nth-of-type(1)': {
         td: {
           my: '-10px',
-
           ':nth-of-type(2)': {
             pl: '20px',
           },

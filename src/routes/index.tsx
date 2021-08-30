@@ -238,6 +238,7 @@ const Routes: FC = () => {
       </RouterRoutes>
     );
   }
+
   return (
     <RouterRoutes>
       {/* Auth routes */}

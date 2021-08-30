@@ -27,6 +27,8 @@ import {
   ProjectView,
   GeneralSettings,
   ProjectEdit,
+  Python,
+  PythonWithEnvironment,
   TrainingDatasetOverview,
   TrainingDatasetStatistics,
   TrainingDatasetCorrelation,
@@ -44,7 +46,6 @@ import {
   JupyterSettings,
 } from './lazyComponents';
 import Integrations from './settings/Integrations';
-import Python from './settings/Python';
 import Alerts from './settings/Alerts';
 import Redirect from '../../components/redirect/Redirect';
 import getHrefNoMatching from '../../utils/getHrefNoMatching';
@@ -107,6 +108,10 @@ const Project: FC = () => {
         element={<GeneralSettings />}
       />
       <Route path={routeNames.project.settings.python} element={<Python />} />
+      <Route
+        path={routeNames.project.settings.pythonWithEnvironment}
+        element={<PythonWithEnvironment />}
+      />
       <Route path={routeNames.project.settings.alert} element={<Alerts />} />
       <Route
         path={routeNames.project.settings.integrations}

@@ -50,7 +50,7 @@ const CorrelationSelector: FC<CorrelationSelectorProps> = ({
 }) => {
   const features = Object.keys(correlation);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<string>('');
 
   const filteredFeatures = useMemo(() => {
     if (!search.trim()) {

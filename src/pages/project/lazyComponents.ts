@@ -1,6 +1,13 @@
 import React from 'react';
 
 export const ProjectView = React.lazy(() => import('./view/ProjectView'));
+
+export const Python = React.lazy(() => import('./settings/python/Python'));
+
+export const PythonWithEnvironment = React.lazy(
+  () => import('./settings/python/PythonWithEnvironment'),
+);
+
 export const GeneralSettings = React.lazy(
   () => import('./settings/GeneralSettings'),
 );

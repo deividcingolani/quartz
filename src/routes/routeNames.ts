@@ -40,6 +40,7 @@ const routeNames = {
       settings: '/settings',
       general: '/settings/general',
       python: '/settings/python',
+      pythonWithEnvironment: '/settings/python/:version',
       alert: '/settings/alert',
       integrations: '/settings/integrations',
     },

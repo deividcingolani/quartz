@@ -35,6 +35,7 @@ export interface Project {
   projectTeam: TeamMember[];
   featureGroupsCount?: number;
   trainingDatasetsCount?: number;
+  isOldDockerImage: boolean;
   opened: string; // only a frontend property.
 }
 

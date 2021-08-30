@@ -21,7 +21,6 @@ const NoData: FC<NoDataProps> = ({
         <Value
           fontFamily="Inter"
           fontSize="18px"
-          mb="11px"
           sx={{
             color: !isFilter ? 'gray' : 'black',
           }}
@@ -29,17 +28,12 @@ const NoData: FC<NoDataProps> = ({
           {mainText}
         </Value>
       )}
-      {!!mainText && isFilter && (
-        <Text fontFamily="Inter" mb="58px">
+      {!!mainText && !isFilter && secondaryText && (
+        <Text fontFamily="Inter" mt="8px">
           {secondaryText}
         </Text>
       )}
-      {!!mainText && !isFilter && (
-        <Value fontFamily="Inter" mb="58px">
-          {secondaryText}
-        </Value>
-      )}
-      <Flex>{children}</Flex>
+      {children && <Flex mt="60px">{children}</Flex>}
     </Flex>
   );
 };
