@@ -16,7 +16,6 @@ import BasketTutoPopup from '../../../../components/basket/BasketTutoPopup';
 // Types
 import { Dispatch, RootState } from '../../../../store';
 import { FeatureGroup } from '../../../../types/feature-group';
-import { SharedDataset } from '../../../../store/models/projects/multistore.model';
 // Utils
 import { sortOptions, filterFG, sortFG, searchFGText } from '../utils';
 import { isSelectionActive } from '../../../../components/basket/utils';
@@ -27,19 +26,27 @@ import Loader from '../../../../components/loader/Loader';
 import titles from '../../../../sources/titles';
 import icons from '../../../../sources/icons';
 // Hooks
-import useFeatureGroups, {
-  UseFeatureGroupsData,
-} from '../hooks/useFeatureGroups';
 import useTitle from '../../../../hooks/useTitle';
-import useMultiStoreSelect from '../../../../hooks/useMultiStoreSelect';
 import useUserPermissions from '../overview/useUserPermissions';
 import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 export interface FeatureGroupListProps {
-  sharedFrom: SharedDataset[];
+  selectFSValue: string[];
+  isLoading: boolean;
+  data: FeatureGroup[];
+  hasSharedFS: boolean;
+  selectFSOptions: string[];
+  handleFSSelectionChange: ([value]: any) => void;
 }
 
-const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
+const FeatureGroupList: FC<FeatureGroupListProps> = ({
+  selectFSValue,
+  isLoading,
+  data,
+  hasSharedFS,
+  selectFSOptions,
+  handleFSSelectionChange,
+}) => {
   const { id: projectId, fsId } = useParams();
   const [filter, setFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string[]>([Object.keys(sortOptions)[1]]);
@@ -47,15 +54,6 @@ const FeatureGroupList: FC<FeatureGroupListProps> = ({ sharedFrom }) => {
   const navigate = useNavigate();
 
   const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
-
-  const {
-    selectFSValue,
-    selectFSOptions,
-    handleFSSelectionChange,
-    data,
-    isLoading,
-    hasSharedFS,
-  } = useMultiStoreSelect<UseFeatureGroupsData>(useFeatureGroups, sharedFrom);
 
   const isKeywordsAndLastUpdateLoading = useSelector(
     (state: RootState) =>

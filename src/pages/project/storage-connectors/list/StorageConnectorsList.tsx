@@ -10,6 +10,8 @@ import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
 import { SharedDataset } from '../../../../store/models/projects/multistore.model';
 import useMultiStoreSelect from '../../../../hooks/useMultiStoreSelect';
+// Layouts
+import Error404 from '../../../error/404Error';
 
 export interface StorageConnectorListProps {
   sharedFrom: SharedDataset[];
@@ -26,11 +28,16 @@ const StorageConnectorsList: FC<StorageConnectorListProps> = ({
     handleFSSelectionChange,
     data,
     isLoading,
+    invalidFS,
     hasSharedFS,
   } = useMultiStoreSelect<UseStorageConnectorsData>(
     useStorageConnectorsData,
     sharedFrom,
   );
+
+  if (invalidFS) {
+    return <Error404 />;
+  }
 
   return (
     <StorageConnectorListContent

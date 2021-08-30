@@ -10,6 +10,7 @@ export interface UseLazyMultiStoreSelectOut {
   selectFSOptions: string[];
   handleFSSelectionChange: ([value]: any) => void;
   data: any;
+  invalidFS: boolean;
   isLoading: boolean;
   hasSharedFS: boolean;
 }
@@ -24,7 +25,7 @@ const useMultiStoreSelect = <T>(
   const [selectedFs, setSelectedFs] = useState(`${fsId}`);
   const datasetByFS = useLazyMultiStore<T>(hook);
 
-  const { data, isLoading } = datasetByFS[+selectedFs].get() as any;
+  const { data, isLoading, invalidFS } = datasetByFS[+selectedFs].get() as any;
 
   const buildPath = useCallback(
     (featurestoreId?: number): string => {
@@ -87,6 +88,7 @@ const useMultiStoreSelect = <T>(
     handleFSSelectionChange,
     data,
     isLoading,
+    invalidFS,
     hasSharedFS: acceptedSharedFrom.length > 0,
   };
 };

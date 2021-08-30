@@ -21,13 +21,10 @@ import Loader from '../../../../components/loader/Loader';
 import NoData from '../../../../components/no-data/NoData';
 // Hooks
 import useTitle from '../../../../hooks/useTitle';
-import useTrainingDatasets, {
-  UseTrainingDatasetsData,
-} from '../useTrainingDatasets';
+
 import TrainingDatasetListContent from './TrainingDatasetListContent';
 import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import useMultiStoreSelect from '../../../../hooks/useMultiStoreSelect';
 import useUserPermissions from '../../feature-group/overview/useUserPermissions';
 // Utils
 import { SortDirection } from '../../../../utils/sort';
@@ -41,7 +38,6 @@ import {
 import icons from '../../../../sources/icons';
 import titles from '../../../../sources/titles';
 import routeNames from '../../../../routes/routeNames';
-import { SharedDataset } from '../../../../store/models/projects/multistore.model';
 import TdInfoService from '../../../../services/localStorage/TdInfoService';
 
 export const sortOptions: { [key: string]: keyof TrainingDataset } = {
@@ -51,10 +47,22 @@ export const sortOptions: { [key: string]: keyof TrainingDataset } = {
 };
 
 export interface TrainingDatasetListProps {
-  sharedFrom: SharedDataset[];
+  selectFSValue: string[];
+  isLoading: boolean;
+  data: TrainingDataset[];
+  hasSharedFS: boolean;
+  selectFSOptions: string[];
+  handleFSSelectionChange: ([value]: any) => void;
 }
 
-const TrainingDatasetList: FC<TrainingDatasetListProps> = ({ sharedFrom }) => {
+const TrainingDatasetList: FC<TrainingDatasetListProps> = ({
+  selectFSValue,
+  isLoading,
+  data,
+  hasSharedFS,
+  selectFSOptions,
+  handleFSSelectionChange,
+}) => {
   useTitle(titles.trainingDatasets);
 
   const dispatch = useDispatch<Dispatch>();
@@ -69,18 +77,6 @@ const TrainingDatasetList: FC<TrainingDatasetListProps> = ({ sharedFrom }) => {
   const [search, setSearch] = useState<string>('');
 
   const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
-
-  const {
-    selectFSValue,
-    selectFSOptions,
-    handleFSSelectionChange,
-    data,
-    isLoading,
-    hasSharedFS,
-  } = useMultiStoreSelect<UseTrainingDatasetsData>(
-    useTrainingDatasets,
-    sharedFrom,
-  );
 
   const isKeywordsAndLastUpdateLoading = useSelector(
     (state: RootState) =>
