@@ -18,7 +18,7 @@ import featureStores from './feature/featureStores.model';
 import roleMappings from './role-mappings/role-mappings.model';
 import featureGroupView from './feature/featureGroupView.model';
 import featureGroupLabels from './feature/featureGroupLabels.model';
-import { trainingDatasetLabelModel } from './training-dataset-label';
+import trainingDatasetLabelModel from './training-dataset-label/training-dataset-label.model';
 import featureGroupRows from './feature/statistics/featureGroupRows.model';
 import trainingDatasetView from './training-dataset/trainingDatasetView.model';
 import featureGroupDataPreview from './feature/data/featureGroupsDataPreview.model';
@@ -47,13 +47,11 @@ import uploadFileData from './file-explorer/uploadFileData.model';
 import crossProject from './projects/crossProject.model';
 import multistore from './projects/multistore.model';
 import provenance from './provenance/provenance.model';
-import { trainingDatasetModel } from './training-dataset/training-dataset.model';
+import trainingDatasetModel from './training-dataset/training-dataset.model';
 import databricks from './databricks/databricks.model';
 import expectations from './expectations/expectations.model';
 import pythonEnvironment from './python/environment.model';
-// eslint-disable-next-line import/no-cycle
 import pythonLibrary from './python/library.model';
-// eslint-disable-next-line import/no-cycle
 import pythonConflict from './python/conflicts.model';
 // eslint-disable-next-line import/no-cycle
 import jupyter from './jupyter/jupyter.model';

@@ -5,10 +5,6 @@ import {
   PythonLibraryListDTO,
   PythonLibrarySearchListDTO,
 } from '../../../types/python';
-// eslint-disable-next-line import/no-cycle
-import { Dispatch } from '../../index';
-// eslint-disable-next-line import/no-cycle
-import { RootModel } from '../index';
 import { APIError } from '../../../types/error';
 
 export type PythonLibraryState = StateType;
@@ -18,7 +14,7 @@ interface StateType {
   libraries: PythonLibraryListDTO | APIError | undefined;
 }
 
-const pythonLibrary = createModel<RootModel>()({
+const pythonLibrary = createModel()({
   state: { library: undefined, libraries: undefined } as PythonLibraryState,
   reducers: {
     setPythonLibrary: (
@@ -34,7 +30,7 @@ const pythonLibrary = createModel<RootModel>()({
       return { library: currentState.library, libraries: payload };
     },
   },
-  effects: (dispatch: Dispatch) => ({
+  effects: (dispatch) => ({
     getPythonLibrary: async ({
       id,
       version,

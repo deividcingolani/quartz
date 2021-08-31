@@ -47,7 +47,7 @@ const attachTags = async (
   // }
 };
 
-export const trainingDatasetModel = createModel()({
+const trainingDatasetModel = createModel()({
   state: [] as TrainingDatasetState,
   reducers: {
     set: (
@@ -256,3 +256,5 @@ export const trainingDatasetModel = createModel()({
     },
   }),
 });
+
+export default trainingDatasetModel;

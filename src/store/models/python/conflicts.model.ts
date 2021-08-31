@@ -1,10 +1,6 @@
 import { createModel } from '@rematch/core';
 import PythonService from '../../../services/project/PythonService';
 import { PythonConflictListDTO } from '../../../types/python';
-// eslint-disable-next-line import/no-cycle
-import { Dispatch } from '../../index';
-// eslint-disable-next-line import/no-cycle
-import { RootModel } from '../index';
 import { APIError } from '../../../types/error';
 
 export type PythonConflictState = StateType;
@@ -13,7 +9,7 @@ interface StateType {
   conflicts: PythonConflictListDTO | APIError | undefined;
 }
 
-const pythonConflict = createModel<RootModel>()({
+const pythonConflict = createModel()({
   state: { conflicts: undefined } as StateType,
   reducers: {
     setPythonConflicts: (
@@ -23,7 +19,7 @@ const pythonConflict = createModel<RootModel>()({
       return { conflicts: payload };
     },
   },
-  effects: (dispatch: Dispatch) => ({
+  effects: (dispatch) => ({
     getPythonConflicts: async ({
       id,
       version,

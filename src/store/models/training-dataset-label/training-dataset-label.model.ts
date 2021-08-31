@@ -6,7 +6,7 @@ export interface TrainingDatasetLabelsState {
   [key: number]: TrainingDatasetLabel[] | undefined;
 }
 
-export const trainingDatasetLabelModel = createModel()({
+const trainingDatasetLabelModel = createModel()({
   state: {} as TrainingDatasetLabelsState,
   reducers: {
     set: (
@@ -61,3 +61,5 @@ export const trainingDatasetLabelModel = createModel()({
     },
   }),
 });
+
+export default trainingDatasetLabelModel;
