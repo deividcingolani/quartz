@@ -2,10 +2,10 @@
 import React, { FC, useMemo, useCallback } from 'react';
 import { Flex } from 'rebass';
 import { Labeling } from '@logicalclocks/quartz';
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
-import useGetHrefForRoute from '../../../hooks/useGetHrefForRoute';
+import { useNavigate, useParams } from 'react-router-dom';
 import routeNames from '../../../routes/routeNames';
 import icons from '../../../sources/icons';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
 
 export interface FixedItem {
   label: string;
@@ -16,38 +16,38 @@ export interface FixedItem {
 }
 
 const FixedShortcuts: FC<{ fsId: string }> = ({ fsId }) => {
-  const getHref = useGetHrefForRoute();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const { featureGroup, trainingDataset, project } = routeNames;
+  const { id } = useParams();
 
   const buildHref = useCallback(
     (to: string, relativeTo: string) => {
-      return getHref(to.replace(`:fsId`, fsId), relativeTo);
+      return getHrefNoMatching(to, relativeTo, true, { fsId, id });
     },
-    [fsId, getHref],
+    [id, fsId],
   );
 
   const handleNavigate = useCallback(
     (to: string, relativeTo: string) => {
-      navigate(to.replace(':fsId', fsId), relativeTo);
+      navigate(buildHref(to, relativeTo));
     },
-    [fsId, navigate],
+    [buildHref, navigate],
   );
 
   const fixedShortCuts: FixedItem[] = useMemo(
     () => [
       {
         label: 'Create New Feature Group',
-        onClick: () => handleNavigate(featureGroup.create, project.view),
-        href: buildHref(featureGroup.create, project.view),
+        onClick: () => handleNavigate(featureGroup.create, project.value),
+        href: buildHref(featureGroup.create, project.value),
         icon: icons.plus,
         key: 'fg',
       },
       {
         label: 'Create New Training Dataset',
-        onClick: () => handleNavigate(trainingDataset.create, project.view),
-        href: buildHref(trainingDataset.create, project.view),
+        onClick: () => handleNavigate(trainingDataset.create, project.value),
+        href: buildHref(trainingDataset.create, project.value),
         icon: icons.plus,
         key: 'td',
       },
@@ -64,7 +64,7 @@ const FixedShortcuts: FC<{ fsId: string }> = ({ fsId }) => {
       featureGroup.create,
       buildHref,
       handleNavigate,
-      project.view,
+      project.value,
       trainingDataset.create,
     ],
   );

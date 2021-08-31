@@ -27,7 +27,7 @@ import {
 } from '@logicalclocks/quartz';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // Default validators
 import * as yup from 'yup';
 import { name, shortText } from '../../../../utils/validators';
@@ -53,9 +53,9 @@ import {
   protocolVisualOptions,
 } from '../utils';
 import getInputValidation from '../../../../utils/getInputValidation';
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import featureStoreService from '../../../../services/project/FeatureStoresService';
 import useScreenWithScroll from '../../../../hooks/useScreenWithScroll';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
 
 export interface StorageConnectorsCreateFormProps {
   error?: EffectError<{ errorMsg: string }>;
@@ -83,7 +83,7 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
   isEdit,
   initialData,
 }) => {
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const getSchemaByProtocol = useMemo(() => getSchema(commonSchema), []);
 
@@ -329,8 +329,12 @@ const StorageConnectorsForm: FC<StorageConnectorsCreateFormProps> = ({
             intent="secondary"
             onClick={() =>
               navigate(
-                routeNames.storageConnector.list.replace(':fsId', fsId),
-                routeNames.project.view,
+                getHrefNoMatching(
+                  routeNames.storageConnector.list,
+                  routeNames.project.value,
+                  true,
+                  { id: projectId, fsId },
+                ),
               )
             }
           >

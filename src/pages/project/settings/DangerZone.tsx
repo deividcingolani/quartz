@@ -12,11 +12,11 @@ import {
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 import { useDispatch, useSelector } from 'react-redux';
-// Hooks
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Types
+import { useNavigate } from 'react-router-dom';
 import { Project } from '../../../types/project';
 import { Dispatch, RootState } from '../../../store';
+import routeNames from '../../../routes/routeNames';
 import ProjectsVisitService from '../../../services/localStorage/ProjectsVisitService';
 
 export interface DangerZoneProps {
@@ -34,18 +34,20 @@ const DangerZone: FC<DangerZoneProps> = ({ project }) => {
 
   const dispatch = useDispatch<Dispatch>();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const handleDelete = useCallback(async () => {
     if (projectConfirm !== project.projectName) {
       setInputError('Confirmation does not match current project name');
     } else {
       setInputError('');
+      await dispatch.project.delete({ id: project.projectId as number });
+
       if (project.projectId) {
         await dispatch.project.delete({ id: project.projectId as number });
         ProjectsVisitService.delete(project.projectId);
       }
-      navigate(`/`);
+      navigate(routeNames.home);
     }
   }, [
     project.projectId,

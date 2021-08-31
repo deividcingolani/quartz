@@ -1,10 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { TinyPopup, usePopup } from '@logicalclocks/quartz';
 // Hooks
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 import useTitle from '../../../../hooks/useTitle';
 // Types
 import StorageConnectorProtocol from '../types';
@@ -16,12 +15,14 @@ import StorageConnectorsForm from '../forms/StorageConnectorsForm';
 // Utils
 import { formatArguments, getDtoType, protocolOptions } from '../utils';
 import titles from '../../../../sources/titles';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const StorageConnectorsEdit: FC = () => {
   const { connectorName, id: projectId, fsId } = useParams();
 
   const dispatch = useDispatch<Dispatch>();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const [isPopupOpen, handleToggle] = usePopup();
 
@@ -92,7 +93,14 @@ const StorageConnectorsEdit: FC = () => {
 
       dispatch.featureStoreStorageConnectors.clear();
 
-      navigate('/storage-connectors', 'p/:id/fs/:fsId/*');
+      navigate(
+        getHrefNoMatching(
+          routeNames.storageConnector.list,
+          routeNames.project.value,
+          true,
+          { id: projectId, fsId },
+        ),
+      );
     },
     [dispatch, navigate, projectId, connectorName, fsId],
   );
@@ -110,7 +118,14 @@ const StorageConnectorsEdit: FC = () => {
 
     dispatch.featureStoreStorageConnectors.clear();
 
-    navigate('/storage-connectors', 'p/:id/fs/:fsId/*');
+    navigate(
+      getHrefNoMatching(
+        routeNames.storageConnector.list,
+        routeNames.project.value,
+        true,
+        { id: projectId, fsId },
+      ),
+    );
   }, [dispatch, fsId, projectId, navigate, connectorName]);
 
   useTitle(`${titles.editStorageConnector} - ${storageConnector?.name}`);

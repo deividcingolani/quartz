@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { ComponentType, FC, useMemo } from 'react';
+import React, { ComponentType, FC, useCallback, useMemo } from 'react';
 import {
   Row,
   Card,
@@ -12,6 +12,7 @@ import {
 } from '@logicalclocks/quartz';
 import { Box, Flex } from 'rebass';
 // Types
+import { useNavigate, useParams } from 'react-router-dom';
 import { FeatureStoreStorageConnector } from '../../../../types/feature-store';
 // Styles
 import styles from './storage-connector-list.styles';
@@ -19,9 +20,9 @@ import icons from '../../../../sources/icons';
 import Loader from '../../../../components/loader/Loader';
 import NoData from '../../../../components/no-data/NoData';
 // Hooks
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
-import useGetHrefForRoute from '../../../../hooks/useGetHrefForRoute';
 import useUserPermissions from '../../feature-group/overview/useUserPermissions';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 export interface StorageConnectorListContentProps {
   selectedFs: string[];
@@ -44,19 +45,32 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
   selectFSOpts,
   setSelectedFs,
 }) => {
-  const navigate = useNavigateRelative();
-
-  const handleCreate = () => {
-    navigate('/storage-connectors/new', 'p/:id/fs/:fsId/*');
-  };
+  const navigate = useNavigate();
+  const { id, fsId } = useParams();
 
   const { canEdit, isLoading: isPermissionsLoading } = useUserPermissions();
-
-  const getHref = useGetHrefForRoute();
 
   const cardText = `${data.length} storage connector${
     data.length > 1 ? 's' : ''
   }`;
+
+  const getHref = useCallback(
+    (route: string, additionalParams?: any) => {
+      return getHrefNoMatching(route, routeNames.project.value, true, {
+        id,
+        fsId,
+        ...additionalParams,
+      });
+    },
+    [id, fsId],
+  );
+
+  const handleNavigate = useCallback(
+    (route: string, additionalParams?: any) => (): void => {
+      navigate(getHref(route, additionalParams));
+    },
+    [navigate, getHref],
+  );
 
   const groupComponents = useMemo(() => {
     return new Array(data.length)
@@ -112,7 +126,9 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
             }}
             onClick={() => {
               if (userCanEdit) {
-                navigate(`/${name}/edit`, 'p/:id/fs/:fsId/storage-connectors');
+                handleNavigate(routeNames.storageConnector.edit, {
+                  connectorName: name,
+                })();
               }
             }}
           >
@@ -121,11 +137,7 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
         ),
       },
     ]);
-  }, [data, navigate, userCanEdit]);
-
-  const handleNavigate = (to: string) => () => {
-    navigate(to, 'p/:id/fs/:fsId/storage-connectors');
-  };
+  }, [data, handleNavigate, userCanEdit]);
 
   const CardContent = () => {
     if (isLoading) return <Loader />;
@@ -145,20 +157,17 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
             }
           >
             <Button
-              href={getHref('/new', 'p/:id/fs/:fsId/storage-connectors/')}
               intent="secondary"
-              onClick={handleNavigate('/new')}
+              href={getHref(routeNames.storageConnector.create)}
+              onClick={handleNavigate(routeNames.storageConnector.create)}
             >
               Set up a storage connector
             </Button>
             <Button
               ml="20px"
               intent="primary"
-              href={getHref(
-                '/import-sample',
-                'p/:id/fs/:fsId/storage-connectors/',
-              )}
-              onClick={handleNavigate('/import-sample')}
+              href={getHref(routeNames.storageConnector.importSample)}
+              onClick={handleNavigate(routeNames.storageConnector.importSample)}
             >
               Import Sample Data
             </Button>
@@ -198,8 +207,8 @@ const StorageConnectorListContent: FC<StorageConnectorListContentProps> = ({
             disabled={canEdit && !isPermissionsLoading}
           >
             <Button
-              href={getHref('/storage-connectors/new', 'p/:id/fs/:fsId/*')}
-              onClick={handleCreate}
+              href={getHref(routeNames.storageConnector.create)}
+              onClick={handleNavigate(routeNames.storageConnector.create)}
               disabled={!canEdit || isPermissionsLoading}
             >
               Set up new storage connector

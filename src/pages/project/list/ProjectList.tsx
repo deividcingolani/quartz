@@ -4,9 +4,8 @@ import { Flex } from 'rebass';
 import { Button, Value } from '@logicalclocks/quartz';
 import { useDispatch, useSelector } from 'react-redux';
 // Types
+import { useNavigate } from 'react-router-dom';
 import { Dispatch, RootState } from '../../../store';
-// Hooks
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
 import useSortedProjects from './hooks/useSortedProjects';
 // Utils
 import routeNames from '../../../routes/routeNames';
@@ -18,6 +17,7 @@ import NoProjects from '../../../components/no-projects/NoProjects';
 import useTitle from '../../../hooks/useTitle';
 import titles from '../../../sources/titles';
 import LastPathService from '../../../services/localStorage/LastPathService';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
 
 const ProjectList: FC = () => {
   useTitle(titles.projectList);
@@ -39,19 +39,24 @@ const ProjectList: FC = () => {
     [isGetProjects, isDeleting],
   );
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
     dispatch.projectsList.getProjects();
     const lastProject = LastPathService.getInfo(userId);
 
-    if (lastProject) navigate(`/p/${lastProject}/view`);
+    if (lastProject)
+      navigate(
+        getHrefNoMatching(routeNames.project.viewHome, '', true, {
+          id: lastProject,
+        }),
+      );
   }, [dispatch, navigate, userId]);
 
   // Handlers
   const handleCreate = useCallback(() => {
-    navigate(routeNames.project.create);
+    navigate(getHrefNoMatching(routeNames.project.create, '', true));
   }, [navigate]);
 
   if (isLoading) {

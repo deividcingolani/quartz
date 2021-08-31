@@ -3,13 +3,15 @@ import React, { FC } from 'react';
 import { Flex } from 'rebass';
 import { Button, Text } from '@logicalclocks/quartz';
 
-// Hooks
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
+import { useNavigate, useParams } from 'react-router-dom';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const StorageConnectorsImportSample: FC = () => {
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
+  const { id, fsId } = useParams();
 
   useTitle(titles.importSample);
 
@@ -25,7 +27,16 @@ const StorageConnectorsImportSample: FC = () => {
       </Text>
       <Flex mt="20px">
         <Button
-          onClick={() => navigate('/storage-connectors', 'p/:id/fs/:fsId/*')}
+          onClick={() =>
+            navigate(
+              getHrefNoMatching(
+                routeNames.storageConnector.list,
+                routeNames.project.value,
+                true,
+                { id, fsId },
+              ),
+            )
+          }
           intent="secondary"
         >
           Use another method

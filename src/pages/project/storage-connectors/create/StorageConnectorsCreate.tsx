@@ -1,10 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-// Hooks
-import useNavigateRelative from '../../../../hooks/useNavigateRelative';
 // Types
 import StorageConnectorProtocol from '../types';
 import { StorageConnectorsFormData } from '../forms/types';
@@ -16,6 +14,8 @@ import Loader from '../../../../components/loader/Loader';
 import { formatArguments, getDtoType, protocolOptions } from '../utils';
 import useTitle from '../../../../hooks/useTitle';
 import titles from '../../../../sources/titles';
+import getHrefNoMatching from '../../../../utils/getHrefNoMatching';
+import routeNames from '../../../../routes/routeNames';
 
 const StorageConnectorsCreate: FC = () => {
   useTitle(titles.createStorageConnector);
@@ -35,7 +35,7 @@ const StorageConnectorsCreate: FC = () => {
   );
 
   const dispatch = useDispatch<Dispatch>();
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const initialProtocol = Object.keys(StorageConnectorProtocol).includes(
     String(protocol),
@@ -80,7 +80,14 @@ const StorageConnectorsCreate: FC = () => {
       });
 
       dispatch.featureStoreStorageConnectors.clear();
-      navigate('/storage-connectors', 'p/:id/fs/:fsId/*');
+      navigate(
+        getHrefNoMatching(
+          routeNames.storageConnector.list,
+          routeNames.project.value,
+          true,
+          { id: projectId, fsId },
+        ),
+      );
     },
     [dispatch, navigate, projectId, fsId],
   );

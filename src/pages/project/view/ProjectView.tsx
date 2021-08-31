@@ -1,11 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, { FC, memo, useCallback } from 'react';
 // Hooks
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useTitle from '../../../hooks/useTitle';
 import useProject from '../settings/useProject';
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
 import useSharedWith from '../settings/useSharedWith';
 // Components
 import Loader from '../../../components/loader/Loader';
@@ -18,7 +17,7 @@ import routeNames from '../../../routes/routeNames';
 const ProjectView: FC = () => {
   const { id: projectId } = useParams();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
   const { project, isLoading } = useProject(+projectId);
@@ -47,7 +46,11 @@ const ProjectView: FC = () => {
         id: +projectId,
       });
       await dispatch.project.getProject(+projectId);
-      navigate(`/p/${projectId}/view`);
+      navigate(
+        getHrefNoMatching(routeNames.project.viewHome, '', true, {
+          id: projectId,
+        }),
+      );
     },
     [dispatch.project, projectId, navigate],
   );

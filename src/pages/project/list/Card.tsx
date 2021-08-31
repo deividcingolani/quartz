@@ -23,21 +23,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { Project } from '../../../types/project';
-// Hooks
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
-
 import routeNames from '../../../routes/routeNames';
 import { Dispatch, RootState } from '../../../store';
 import getInputValidation from '../../../utils/getInputValidation';
 import { shortText } from '../../../utils/validators';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
 
 export interface CardProps {
   data: Project;
 }
 
 const Card: FC<CardProps> = ({ data }: CardProps) => {
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
 
   const [isDescriptionPopupOpen, handleDescriptionToggle] = usePopup();
@@ -46,7 +45,9 @@ const Card: FC<CardProps> = ({ data }: CardProps) => {
 
   const handleNavigate = useCallback(
     (route: string) => () => {
-      navigate(route.replace(':id', project.id.toString()));
+      navigate(
+        getHrefNoMatching(route, '', true, { id: project.id.toString() }),
+      );
     },
     [navigate, project],
   );

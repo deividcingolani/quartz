@@ -3,11 +3,10 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Flex } from 'rebass';
 // Hooks
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Labeling, Subtitle } from '@logicalclocks/quartz';
 import useHistory from '../../../hooks/useHistory';
 import useSearchData from '../../../components/search/useSearchData';
-import useNavigateRelative from '../../../hooks/useNavigateRelative';
 // Components
 import ShortCutItem, { DTO } from './ShortcutItem';
 import FixedShortcuts from './FixedShortcuts';
@@ -19,6 +18,8 @@ import ShortcutsService, {
 // Utils
 import filterByRecentHistory from './filterByRecentHistory';
 import { selectFeatureStoreData } from '../../../store/models/feature/selectors';
+import routeNames from '../../../routes/routeNames';
+import getHrefNoMatching from '../../../utils/getHrefNoMatching';
 
 const MAX_RESULTS_COUNT = 10;
 
@@ -33,7 +34,7 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
   const { data } = useSearchData();
   const { history } = useHistory();
 
-  const navigate = useNavigateRelative();
+  const navigate = useNavigate();
 
   const { id: projectId } = useParams();
 
@@ -90,12 +91,26 @@ const Shortcuts: FC<ShortcutsProps> = ({ userId }) => {
   const handleNavigate = useCallback(
     (item: ShortcutItem) => {
       if (item.type === DTO.fg) {
-        navigate(`/fs/${item.featurestoreId}/fg/${item.id}`, `p/:id/*`);
+        navigate(
+          getHrefNoMatching(
+            routeNames.featureGroup.overview,
+            routeNames.project.value,
+            true,
+            { id: projectId, fsId: item.featurestoreId, fgId: item.id },
+          ),
+        );
       } else if (item.type === DTO.td) {
-        navigate(`/fs/${item.featurestoreId}/td/${item.id}`, `p/:id/*`);
+        navigate(
+          getHrefNoMatching(
+            routeNames.trainingDataset.overview,
+            routeNames.project.value,
+            true,
+            { id: projectId, fsId: item.featurestoreId, tdId: item.id },
+          ),
+        );
       }
     },
-    [navigate],
+    [navigate, projectId],
   );
 
   const pinnedIds = useMemo(() => pinned.map((x) => x.id), [pinned]);
