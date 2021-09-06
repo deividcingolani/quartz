@@ -1,5 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 // Components
 import {
   Labeling,
@@ -141,7 +148,9 @@ const GitForm: FC<GitFormProps> = ({
             {...getInputValidation('url', errors)}
             placeholder="https://github.com/organization/repository.git"
             value={url}
-            onChange={(event) => setUrl(event.target.value)}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setUrl(event.target.value)
+            }
             width="100%"
           />
 

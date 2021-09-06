@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, memo, useMemo, useState } from 'react';
+import React, { ChangeEvent, FC, memo, useMemo, useState } from 'react';
 // Components
 import { RadioGroup, Labeling, Input } from '@logicalclocks/quartz';
 import { Flex } from 'rebass';
@@ -61,7 +61,9 @@ const CondaForm: FC<CondaFormProps> = ({
               <Input
                 value={channel}
                 width="100%"
-                onChange={(event) => setChannel(event.target.value)}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setChannel(event.target.value)
+                }
               />
             </Flex>
             <NewLibrarySearch

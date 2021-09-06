@@ -1,6 +1,13 @@
 import { Box, Flex } from 'rebass';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Button, Input, Labeling } from '@logicalclocks/quartz';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -115,7 +122,7 @@ const NewLibraryName: FC<NewLibraryNameProps> = ({
           <Input
             placeholder="hops"
             width="100%"
-            onChange={(e) => {
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setLibraryName(e.target.value);
             }}
           />
@@ -133,7 +140,7 @@ const NewLibraryName: FC<NewLibraryNameProps> = ({
           <Input
             width="100%"
             placeholder="1.0"
-            onChange={(e) => {
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setLibraryVersion(e.target.value);
             }}
           />

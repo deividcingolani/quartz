@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
 import React, {
+  ChangeEvent,
   ComponentType,
   FC,
   memo,
@@ -376,7 +377,7 @@ const NewLibrarySearch: FC<NewLibrarySearchProps> = ({
           value={search}
           icon="search"
           placeholder="library name"
-          onChange={(event) => {
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
             setSearch(event.target.value);
           }}
           width="100%"
