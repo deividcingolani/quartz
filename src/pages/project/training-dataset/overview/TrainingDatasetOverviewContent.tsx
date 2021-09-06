@@ -168,7 +168,7 @@ val td = fs.getTrainingDataset("${data.name}", ${data.version})`,
       <Box mb="20px" mt="55px" width="100%">
         <TrainingDatasetOverviewSummary
           data={data}
-          canEdit={canEdit && isPermissionsLoading}
+          canEdit={canEdit && !isPermissionsLoading}
         />
         <Anchor groupName="tdOverview" anchor={featureList}>
           <CardBoundary mt="20px" title="Feature list">
