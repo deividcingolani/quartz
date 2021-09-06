@@ -59,6 +59,7 @@ export interface StorageConnectorsFormData {
   accountName: string;
   containerName?: string;
   // Snowflake
+  application: string;
   sfOptions?: SnowflakeFormDataSfOptions[];
 }
 

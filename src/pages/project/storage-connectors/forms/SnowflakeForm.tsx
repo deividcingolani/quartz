@@ -244,6 +244,35 @@ const SnowflakeForm: FC<StorageConnectorFormProps> = ({
             />
           </Label>
         </Box>
+        <Box
+          sx={{
+            borderColor: 'grayShade3',
+            borderStyle: 'solid',
+            borderWidth: '0.5px',
+            borderRight: 'none',
+            borderTop: 'none',
+            borderBottom: 'none',
+          }}
+          ml="15px"
+        >
+          <Label
+            text="Application"
+            action={
+              <Labeling gray ml="5px">
+                (optional)
+              </Labeling>
+            }
+            ml="15px"
+          >
+            <Input
+              name="application"
+              disabled={isDisabled}
+              placeholder="application identifier"
+              ref={register}
+              {...getInputValidation('application', errors)}
+            />
+          </Label>
+        </Box>
       </Flex>
 
       <Flex mt="10px">

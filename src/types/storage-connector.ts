@@ -77,5 +77,6 @@ export interface ICreateSnowflakeConnector {
   warehouse?: string;
   role?: string;
   table?: string;
+  application: string;
   sfOptions?: Options[];
 }
