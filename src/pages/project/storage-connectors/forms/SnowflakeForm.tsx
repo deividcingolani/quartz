@@ -30,7 +30,7 @@ export const schema = yup.object().shape({
   user: shortText.required().label('user'),
   token: shortText.when('authMethod', {
     is: 'Token',
-    then: shortText.required().label('token'),
+    then: yup.string().required().label('token'),
   }),
   password: shortText.when('authMethod', {
     is: 'Password',
