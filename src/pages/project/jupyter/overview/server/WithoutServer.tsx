@@ -116,7 +116,7 @@ const WithoutServer: FC<WithoutServerProps> = ({
                 height: '18px',
                 width: '18px',
                 path: {
-                  fill: 'primary',
+                  fill: !(isStarting || isStopping) ? 'primary' : 'black',
                 },
               },
             }}
